@@ -1,0 +1,136 @@
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Styles for Full HD (1920 x 1080) */
+@media (min-width: 1920px) and (max-width: 2560px) {
+  .navbar {
+    padding: 0 20px;
+  }
+  .logo-container {
+    width: 30%;
+  }
+  .nav-links {
+    width: 50%;
+  }
+  .user-actions {
+    width: 20%;
+  }
+}
+
+/* Styles for 2560 x 1440 */
+@media (min-width: 2560px) {
+  .navbar {
+    padding: 0 40px;
+  }
+  .logo-container {
+    width: 25%;
+  }
+  .nav-links {
+    width: 55%;
+  }
+  .user-actions {
+    width: 20%;
+  }
+}
+
+/* Styles for Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 10px;
+  }
+  .logo-container {
+    width: 40%;
+  }
+  .nav-links {
+    display: none; /* Hide navbar links on tablet */
+  }
+  .user-actions {
+    width: 60%;
+  }
+}
+
+/* Styles for Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    display: none; /* Hide navbar on mobile */
+  }
+}
+
+/* Styles for Tablet and Mobile */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 250px;
+  height: 100%;
+  background: white;
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+}
+
+.sidebar-links {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-links li {
+  padding: 10px;
+}
+
+.sidebar-links li.active {
+  background: #f0f0f0;
+}
+
+.sidebar-links .dropdown-menu {
+  list-style: none;
+  padding: 0;
+  padding-left: 20px;
+}
+
+.user-actions {
+  padding: 10px;
+}
+
+.btn {
+  display: block;
+  padding: 10px;
+  background: #ffcc00;
+  color: white;
+  text-align: center;
+  margin: 10px 0;
+  text-decoration: none;
+}
+
+.sidebar-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  z-index: 1001;
+}
