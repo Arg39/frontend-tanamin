@@ -1,9 +1,10 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
-import Login from "../pages/login";
-import Daftar from "../pages/daftar";
-import Beranda2 from "../pages/beranda_baru";
-import Beranda from "../pages/beranda";
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import Login from '../pages/login';
+import Daftar from '../pages/daftar';
+import Beranda2 from '../pages/beranda_baru';
+import Beranda from '../pages/beranda';
+import NotFound from '../pages/NotFound';
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/daftar" element={<Daftar />} />
       <Route path="/beranda" element={<Beranda />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
