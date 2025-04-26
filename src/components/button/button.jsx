@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
-import { f } from "html2pdf.js";
 
 export default function Button({
   children,
