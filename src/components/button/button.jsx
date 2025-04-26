@@ -1,61 +1,48 @@
-import React from "react";
-import PropTypes from "prop-types";
-import { motion } from "framer-motion";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
 
-export default function Button({
-  children,
-  onClick,
-  className,
-  variant = "primary",
-}) {
-  const variantClass = {
+export default function Button({ children, onClick, className = '', variant = 'primary' }) {
+  const variantAnimations = {
     login: {
-      styles: "bg-blue-600 text-white hover:bg-blue-700",
-      animation: {
-        hover: { scale: 1.1, backgroundColor: "#4a90e2" },
-      },
+      hover: { scale: 1.1 },
+      tap: { scale: 0.95 },
     },
     primary: {
-      styles: "bg-blue-600 text-white hover:bg-blue-700",
-      animation: {
-        hover: { scale: 1.2 },
-        tap: { scale: 0.9 },
-      },
+      hover: { scale: 1.2 },
+      tap: { scale: 0.9 },
     },
     danger: {
-      styles: "bg-red-600 text-white hover:bg-red-700",
-      animation: {
-        hover: { scale: 1.1, backgroundColor: "#ff4d4d" },
-        tap: { scale: 0.95, backgroundColor: "#e60000" },
-      },
+      hover: { scale: 1.1 },
+      tap: { scale: 0.95 },
     },
     secondary: {
-      styles: "bg-gray-200 text-gray-800 hover:bg-gray-300",
-      animation: {
-        hover: { scale: 1.05, opacity: 0.9 },
-        tap: { scale: 0.95, opacity: 1 },
-      },
+      hover: { scale: 1.05 },
+      tap: { scale: 0.95 },
     },
     outline: {
-      styles: "border border-gray-400 text-gray-800 hover:bg-gray-100",
-      animation: {
-        hover: { scale: 1.1, borderColor: "#000" },
-        tap: { scale: 0.95, borderColor: "#555" },
-      },
+      hover: { scale: 1.1 },
+      tap: { scale: 0.95 },
     },
   };
 
-  // Base styles for the button
-  const baseStyles =
-    "px-4 py-2 text-sm sm:text-base md:text-lg lg:text-xl font-medium rounded-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-2";
+  // Define classNames for each variant
+  const variantClasses = {
+    login: 'bg-blue-500 text-white rounded-lg p-2 px-4',
+    primary: 'bg-blue-500 text-white rounded-lg p-2 px-4',
+    danger: 'bg-blue-500 text-white rounded-lg p-2 px-4',
+    secondary: 'bg-blue-500 text-white rounded-lg p-2 px-4',
+    outline: 'bg-blue-500 text-white rounded-lg p-2 px-4',
+  };
 
-  // Get the styles and animation for the current variant
-  const { styles, animation } = variantClass[variant] || variantClass.primary;
+  // Get the animation and className for the current variant
+  const animation = variantAnimations[variant] || variantAnimations.primary;
+  const variantClassName = variantClasses[variant] || variantClasses.primary;
 
   return (
     <motion.button
       onClick={onClick}
-      className={`${baseStyles} ${styles} ${className}`}
+      className={`custom-button ${variantClassName} ${className}`}
       whileHover="hover"
       whileTap="tap"
       variants={animation}
@@ -70,11 +57,5 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
   className: PropTypes.string,
-  variant: PropTypes.oneOf([
-    "login",
-    "primary",
-    "danger",
-    "secondary",
-    "outline",
-  ]),
+  variant: PropTypes.oneOf(['login', 'primary', 'danger', 'secondary', 'outline']),
 };
