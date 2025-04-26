@@ -1,28 +1,26 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import FuzzyText from '../blocks/TextAnimations/FuzzyText/FuzzyText';
 
 export default function NotFound() {
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-black text-white text-center font-bold">
-      {/* Animasi Fuzzy Text untuk Heading */}
-      <motion.h1
-        className="text-[12vw] md:text-[14vw] sm:text-[16vw] font-extrabold"
-        initial={{ filter: 'blur(10px)', opacity: 0 }}
-        animate={{ filter: 'blur(0px)', opacity: 1 }}
-        transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}
+    <div className="flex flex-col justify-center items-center h-screen bg-black text-white text-center font-bold px-4">
+      <FuzzyText
+        baseIntensity={0.3}
+        hoverIntensity={true}
+        enableHover={true}
+        fontSize="clamp(8rem, 3vw, 4rem)"
       >
         404
-      </motion.h1>
-
-      {/* Animasi Fuzzy Text untuk Paragraf */}
-      <motion.p
-        className="text-[4vw] md:text-[5vw] sm:text-[6vw] font-bold mt-4"
-        initial={{ filter: 'blur(10px)', opacity: 0 }}
-        animate={{ filter: 'blur(0px)', opacity: 1 }}
-        transition={{ duration: 1.5, repeat: Infinity, repeatType: 'reverse' }}
+      </FuzzyText>
+      <FuzzyText
+        baseIntensity={0.3}
+        hoverIntensity={true}
+        enableHover={true}
+        fontWeight={600}
+        fontSize="clamp(4rem, 4vw, 4rem)"
       >
         Not Found
-      </motion.p>
+      </FuzzyText>
     </div>
   );
 }
