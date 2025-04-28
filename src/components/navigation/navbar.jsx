@@ -1,356 +1,223 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Button from '../button/button';
+import useMenuStore from '../../zustand/menuStore';
 import Icon from '../icon/iconHeroicons';
-import '../../css/navigation.css';
-import categories from '../../data/categories';
 
-const Navbar = ({ page }) => {
-  const isLoggedIn = false;
-  const name = 'Alfian';
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isDropdownHovered, setIsDropdownHovered] = useState(false);
-  const dropdownTimeoutRef = useRef(null);
+export default function Navbar() {
+  const { isMenuOpen, isAccountMenuOpen, toggleMenu, toggleAccountMenu, closeMenu, activeNav } =
+    useMenuStore();
 
-  const toggleMobileMenu = () => {
-    if (isMobileMenuOpen) {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setIsMobileMenuOpen(false);
-        setIsAnimating(false);
-      }, 300);
-    } else {
-      setIsMobileMenuOpen(true);
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Escape') {
-      toggleMobileMenu();
-    }
-  };
-
+  // Disable body scroll when Mobile Menu or Account Menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.addEventListener('keydown', handleKeyDown);
+    if (isMenuOpen || isAccountMenuOpen) {
+      document.body.style.overflow = 'hidden';
     } else {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto';
     }
-
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'auto';
     };
-  }, [isMobileMenuOpen]);
-
-  const handleMouseEnter = () => {
-    clearTimeout(dropdownTimeoutRef.current);
-    setIsDropdownOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setIsDropdownOpen(false);
-    }, 300);
-  };
-
-  const handleDropdownMouseEnter = () => {
-    clearTimeout(dropdownTimeoutRef.current);
-    setIsDropdownHovered(true);
-  };
-
-  const handleDropdownMouseLeave = () => {
-    dropdownTimeoutRef.current = setTimeout(() => {
-      setIsDropdownHovered(false);
-      setIsDropdownOpen(false);
-    }, 300);
-  };
+  }, [isMenuOpen, isAccountMenuOpen]);
 
   return (
-    <nav className="bg-white shadow-md flex items-center fixed top-0 w-full z-50 px-6 lg:px-52 text-xl py-2 lg:py-0">
-      <div className="w-full  flex items-center  justify-between">
-        <div className="w-full flex items-center">
-          <img src="assets/Logo-CodeLearn.png" alt="Logo" className="ml-1 lg:ml-0 h-10 lg:h-14" />
-          <div className="hidden lg:flex ml-24">
-            <ul className="lg:flex w-full justify-start space-x-8">
-              <li
-                className={`flex justify-center items-center cursor-pointer py-8 font-semibold ${
-                  page === 'beranda'
-                    ? ' border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
-                    : 'hover:text-amber-700'
-                }`}
-              >
-                <Link to="/" className="flex justify-center items-center cursor-pointer">
-                  Beranda
-                </Link>
-              </li>
-              <li
-                className={`flex justify-center items-center cursor-pointer py-8 font-semibold ${
-                  page === 'tentang-kami'
-                    ? ' border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
-                    : 'hover:text-amber-700'
-                }`}
-              >
-                <Link
-                  to="/tentang-kami"
-                  className="flex justify-center items-center cursor-pointer"
-                >
-                  Tentang Kami
-                </Link>
-              </li>
-              <li
-                className="relative flex justify-center items-center cursor-pointer font-semibold"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                <span
-                  className={`flex items-center gap-1 ${
-                    isDropdownOpen || isDropdownHovered ? 'text-amber-700' : ''
-                  } ${
-                    page.includes('kategori')
-                      ? 'py-8 border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
-                      : 'hover:text-amber-700'
-                  }`}
-                >
-                  <span>Kategori</span>
-                  <Icon type="dropdown" className="size-3" />
-                </span>
-                {isDropdownOpen && (
-                  <div
-                    className="absolute w-[800px] top-[100%] left-0 bg-white shadow-md border rounded-b-lg p-8 py-10 grid grid-cols-3 gap-4 text-sm"
-                    onMouseEnter={handleDropdownMouseEnter}
-                    onMouseLeave={handleDropdownMouseLeave}
-                  >
-                    {categories.map((category) => (
-                      <div
-                        className="w-full flex items-center justify-start px-4 hover:bg-gray-100"
-                        key={category.name}
-                      >
-                        <Link to={category.url} className="w-full py-2 hover:text-amber-700">
-                          {category.name}
-                        </Link>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </li>
-              <li
-                className={`flex justify-center items-center cursor-pointer font-semibold ${
-                  page === 'faq'
-                    ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700'
-                    : 'hover:text-amber-700'
-                }`}
-              >
-                <Link to="/faq" className="flex justify-center items-center cursor-pointer">
-                  FAQ
-                </Link>
-              </li>
-              <li
-                className={`flex justify-center items-center cursor-pointer font-semibold ${
-                  page === 'kontak-kami'
-                    ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700'
-                    : 'hover:text-amber-700'
-                }`}
-              >
-                <Link to="/kontak-kami" className="flex justify-center items-center cursor-pointer">
-                  Kontak Kami
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="w-full flex items-center justify-end lg:hidden">
-            <button className="mr-4">
-              <Icon type={'bell-alert'} className={'size-4'} />
-            </button>
-            <button className="mr-4">
-              <Icon type={'cart'} className={'size-4'} />
-            </button>
-            <button className="mr-4">
-              <Icon type={'magnifying-glass'} className={'size-4'} />
-            </button>
-            <button onClick={toggleMobileMenu} className="z-50">
-              <Icon
-                type={isMobileMenuOpen ? 'x-mark' : 'bars-3'}
-                className={`size-8 transition-transform duration-300 ${
-                  isMobileMenuOpen ? 'rotate-90' : 'rotate-0'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-        <div className="hidden w-1/3 h-full lg:flex items-center">
-          {isLoggedIn ? (
-            <>
-              <button className="mr-8">
-                <Icon type={'bell-alert'} />
-              </button>
-              <button className="mr-8">
-                <Icon type={'cart'} className={''} />
-              </button>
-              <button className="mr-2">
-                <Icon type={'magnifying-glass'} />
-              </button>
-              <div className="hidden md:block mr-2">
-                <Icon type={'vertical-line'} className={'size-12'} />
-              </div>
-              <div className="flex items-center">
-                <Icon type={'user'} />
-                <span className="ml-2 md:ml-4 font-medium">Halo, {name}</span>
-              </div>
-            </>
-          ) : (
-            <>
-              {page !== 'daftar' && (
-                <Link
-                  to={'/daftar'}
-                  className="p-2 px-8 rounded-3xl font-medium text-white bg-amber-700 mr-8"
-                >
-                  Daftar
-                </Link>
-              )}
-              {page !== 'login' && (
-                <Link
-                  to={'/login'}
-                  className="p-2 px-8 rounded-3xl font-medium text-white bg-amber-700 mr-8"
-                >
-                  Login
-                </Link>
-              )}
-            </>
-          )}
+    <div className="lg:px-8 lg:p-0 md px-2 py-2 bg-white-100 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-50 shadow-md">
+      {/* Logo */}
+      <div>
+        <img src="assets/Logo-CodeLearn.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
+      </div>
+
+      {/* Desktop Menu */}
+      <div className="hidden lg:flex space-x-8">
+        <a
+          href="beranda"
+          className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
+            activeNav === 'beranda'
+              ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+              : ''
+          }`}
+        >
+          Beranda
+        </a>
+        <a
+          href="tentang-kami"
+          className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
+            activeNav === 'tentang-kami'
+              ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+              : ''
+          }`}
+        >
+          Tentang Kami
+        </a>
+        <a
+          href="#category"
+          className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
+            activeNav === 'kategori'
+              ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+              : ''
+          }`}
+        >
+          Kategori
+        </a>
+        <a
+          href="faq"
+          className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
+            activeNav === 'faq'
+              ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+              : ''
+          }`}
+        >
+          FAQ
+        </a>
+        <a
+          href="kontak-kami"
+          className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
+            activeNav === 'kontak-kami'
+              ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+              : ''
+          }`}
+        >
+          Kontak Kami
+        </a>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <div className="lg:hidden">
+        <div className="flex space-x-4">
+          {/* User Icon for Account Menu */}
+          <motion.button
+            onClick={toggleAccountMenu}
+            className="text-gray-700 focus:outline-none"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: isAccountMenuOpen ? 180 : 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Icon type={isAccountMenuOpen ? 'x-mark' : 'user'} className="h-6 w-6" />
+          </motion.button>
+
+          {/* Hamburger Menu Icon */}
+          <motion.button
+            onClick={toggleMenu}
+            className="text-gray-700 focus:outline-none"
+            initial={{ rotate: 0 }}
+            animate={{ rotate: isMenuOpen ? 180 : 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <Icon type={isMenuOpen ? 'x-mark' : 'bars-3'} className="h-6 w-6" />
+          </motion.button>
         </div>
       </div>
 
-      {(isMobileMenuOpen || isAnimating) && (
-        <div
-          className={`fixed inset-0 bg-white z-40 flex flex-col items-center text-lg justify-start pt-20 ${
-            isMobileMenuOpen ? 'slide-in' : 'slide-out'
-          }`}
-        >
-          <ul className="flex flex-col w-full items-center space-y-6 overflow-y-auto scrollbar-hide">
-            {isLoggedIn ? (
-              <div className="flex items-center">
-                <Icon type={'user'} />
-                <span className="ml-2 md:ml-4 font-medium">Halo, {name}</span>
-              </div>
-            ) : (
-              <>
-                {page !== 'register' && (
-                  <li
-                    className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold `}
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-start"
+              onClick={closeMenu}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                initial={{ height: 0 }}
+                animate={{ height: 'auto' }}
+                exit={{ height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="overflow-hidden mt-16 w-full bg-white shadow-md lg:hidden"
+              >
+                <div className="flex flex-col space-y-4 bg-white-100 p-6">
+                  <a
+                    href="#home"
+                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                    onClick={closeMenu}
                   >
-                    <Link to="/daftar" onClick={toggleMobileMenu}>
-                      Register
-                    </Link>
-                  </li>
-                )}
-                {page !== 'login' && (
-                  <li
-                    className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold `}
+                    Beranda
+                  </a>
+                  <a
+                    href="#about"
+                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                    onClick={closeMenu}
                   >
-                    <Link to="/login" onClick={toggleMobileMenu}>
-                      Login
-                    </Link>
-                  </li>
-                )}
-              </>
-            )}
-            <li
-              className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === 'beranda' ? ' bg-amber-700' : ''
-              }`}
-            >
-              <Link
-                to="/"
-                onClick={toggleMobileMenu}
-                className={`${
-                  page === 'beranda' ? 'text-white border-b-2 !important bg-amber-700' : ''
-                }`}
-              >
-                Beranda
-              </Link>
-            </li>
-            <li
-              className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === 'tentang' ? ' bg-amber-700' : ''
-              }`}
-            >
-              <Link
-                to="/tentang"
-                onClick={toggleMobileMenu}
-                className={`${
-                  page === 'tentang' ? 'text-white border-b-2 !important bg-amber-700' : ''
-                }`}
-              >
-                Tentang
-              </Link>
-            </li>
-            <li className="flex flex-col w-full justify-center items-center cursor-pointer py-4 font-semibold">
-              <span
-                className="flex items-center"
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              >
-                Kategori
-                <Icon
-                  type={'dropdown'}
-                  className={`size-3 ml-1 transition-transform duration-300 ${
-                    isDropdownOpen ? 'rotate-180' : ''
-                  }`}
-                />
-              </span>
-              <div className={`dropdown-content ${isDropdownOpen ? 'show' : 'hide'}`}>
-                {isDropdownOpen && (
-                  <div className="w-full flex flex-col items-center text-base font-normal mt-4">
-                    {categories.map((category) => (
-                      <Link
-                        key={category.name}
-                        to={category.url}
-                        onClick={toggleMobileMenu}
-                        className="py-2"
-                      >
-                        {category.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </li>
-            <li
-              className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === 'faq' ? ' bg-amber-700' : ''
-              }`}
-            >
-              <Link
-                to="/faq"
-                onClick={toggleMobileMenu}
-                className={`${
-                  page === 'faq' ? 'text-white border-b-2 !important bg-amber-700' : ''
-                }`}
-              >
-                FAQ
-              </Link>
-            </li>
-            <li
-              className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === 'kontak-kami' ? ' bg-amber-700' : ''
-              }`}
-            >
-              <Link
-                to="/kontak-kami"
-                onClick={toggleMobileMenu}
-                className={`${
-                  page === 'kontak-kami' ? 'text-white border-b-2 !important bg-amber-700' : ''
-                }`}
-              >
-                Kontak Kami
-              </Link>
-            </li>
-            {/* Add more navigation links here */}
-          </ul>
-        </div>
-      )}
-    </nav>
-  );
-};
+                    Tentang Kami
+                  </a>
+                  <a
+                    href="#category"
+                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                    onClick={closeMenu}
+                  >
+                    Kategori
+                  </a>
+                  <a
+                    href="#faq"
+                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                    onClick={closeMenu}
+                  >
+                    FAQ
+                  </a>
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
-export default Navbar;
+      {/* Account Menu */}
+      <AnimatePresence>
+        {isAccountMenuOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              onClick={toggleAccountMenu}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            ></motion.div>
+
+            {/* Account Menu Content */}
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden fixed top-16 left-0 w-full bg-white shadow-md lg:hidden"
+            >
+              <div className="flex flex-col space-y-4 bg-white-100 p-6">
+                <Button
+                  variant="login"
+                  to={'masuk'}
+                  className="text-lg font-medium"
+                  onClick={closeMenu}
+                >
+                  Masuk
+                </Button>
+                <Button
+                  variant="login"
+                  to={'daftar'}
+                  className="text-lg font-medium"
+                  onClick={closeMenu}
+                >
+                  Daftar
+                </Button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Buttons */}
+      <div className="hidden lg:flex space-x-4">
+        <Button variant="login" to={'masuk'} className="text-md">
+          Masuk
+        </Button>
+        <Button variant="login" to={'daftar'} className="text-md">
+          Daftar
+        </Button>
+      </div>
+    </div>
+  );
+}
