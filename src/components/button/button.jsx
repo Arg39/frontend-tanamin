@@ -26,26 +26,27 @@ export default function Button({ children, onClick, className = '', variant = 'p
     },
   };
 
-  // Define classNames for each variant
+  // Define default Tailwind classes for each variant
   const variantClasses = {
-    login: 'bg-blue-500 text-white rounded-lg p-2 px-4',
-    primary: 'bg-blue-500 text-white rounded-lg p-2 px-4',
-    danger: 'bg-blue-500 text-white rounded-lg p-2 px-4',
-    secondary: 'bg-blue-500 text-white rounded-lg p-2 px-4',
-    outline: 'bg-blue-500 text-white rounded-lg p-2 px-4',
+    login: 'bg-primary-500 text-white rounded-full p-2 px-6',
+    primary: 'bg-blue-500 text-white rounded-lg p-2 px-6',
+    danger: 'bg-primary-500 text-white rounded-lg p-2 px-6',
+    secondary: 'bg-gray-500 text-white rounded-lg p-2 px-6',
+    outline: 'border border-blue-500 text-blue-500 rounded-lg p-2 px-6',
   };
 
-  // Get the animation and className for the current variant
-  const animation = variantAnimations[variant] || variantAnimations.primary;
-  const variantClassName = variantClasses[variant] || variantClasses.primary;
+  // Combine default styles with additional styles from `className`
+  const combinedClassName = `${
+    variantClasses[variant] || variantClasses.primary
+  } ${className}`.trim();
 
   return (
     <motion.button
       onClick={onClick}
-      className={`custom-button ${variantClassName} ${className}`}
+      className={combinedClassName} // Use combined styles
       whileHover="hover"
       whileTap="tap"
-      variants={animation}
+      variants={variantAnimations[variant] || variantAnimations.primary}
     >
       {children}
     </motion.button>
