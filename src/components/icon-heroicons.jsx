@@ -1,8 +1,8 @@
-import React from "react";
+import React from 'react';
 
 const Icon = ({ type, className }) => {
   switch (type) {
-    case "dropdown":
+    case 'dropdown':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -12,14 +12,10 @@ const Icon = ({ type, className }) => {
           stroke="currentColor"
           className={`size-6 ${className}`}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="m19.5 8.25-7.5 7.5-7.5-7.5"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
         </svg>
       );
-    case "bell-alert":
+    case 'bell-alert':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +32,7 @@ const Icon = ({ type, className }) => {
           />
         </svg>
       );
-    case "archive-box":
+    case 'archive-box':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +49,7 @@ const Icon = ({ type, className }) => {
           />
         </svg>
       );
-    case "magnifying-glass":
+    case 'magnifying-glass':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +66,7 @@ const Icon = ({ type, className }) => {
           />
         </svg>
       );
-    case "user":
+    case 'user':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +83,7 @@ const Icon = ({ type, className }) => {
           />
         </svg>
       );
-    case "star":
+    case 'star':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +96,7 @@ const Icon = ({ type, className }) => {
           <path d="m9.362 9.158-5.268.584c-.19.023-.358.15-.421.343s0 .394.14.521c1.566 1.429 3.919 3.569 3.919 3.569c-.002 0-.646 3.113-1.074 5.19a.496.496 0 0 0 .734.534c1.844-1.048 4.606-2.624 4.606-2.624l4.604 2.625c.168.092.378.09.541-.029a.5.5 0 0 0 .195-.505l-1.071-5.191l3.919-3.566a.499.499 0 0 0-.28-.865c-2.108-.236-5.269-.586-5.269-.586l-2.183-4.83a.499.499 0 0 0-.909 0z" />
         </svg>
       );
-    case "bookmark":
+    case 'bookmark':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +112,7 @@ const Icon = ({ type, className }) => {
           <path d="M16 3H8a2 2 0 0 0-2 2v16l6-3 6 3V5a2 2 0 0 0-2-2" />
         </svg>
       );
-    case "book":
+    case 'book':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -133,7 +129,7 @@ const Icon = ({ type, className }) => {
           <path d="M5 20.25c0 .414.336.75.75.75h10.652C17.565 21 18 20.635 18 19.4v-1.445M5 20.25A2.25 2.25 0 0 1 7.25 18h10.152q.339 0 .598-.045M5 20.25V6.2c0-1.136-.072-2.389 1.092-2.982C6.52 3 7.08 3 8.2 3h9.2c1.236 0 1.6.437 1.6 1.6v11.8c0 .995-.282 1.425-1 1.555" />
         </svg>
       );
-    case "clock":
+    case 'clock':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +148,7 @@ const Icon = ({ type, className }) => {
           </g>
         </svg>
       );
-    case "arrow-right":
+    case 'arrow-right':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -165,7 +161,7 @@ const Icon = ({ type, className }) => {
           <path d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414" />
         </svg>
       );
-    case "bars-3":
+    case 'bars-3':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -182,7 +178,7 @@ const Icon = ({ type, className }) => {
           />
         </svg>
       );
-    case "x-mark":
+    case 'x-mark':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -192,14 +188,10 @@ const Icon = ({ type, className }) => {
           stroke="currentColor"
           className={`size-6 ${className}`}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
       );
-    case "vertical-line":
+    case 'vertical-line':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -209,11 +201,10 @@ const Icon = ({ type, className }) => {
           stroke="currentColor"
           className={`size-6 ${className}`}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v88" /> //
-          Further adjusted path height
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v88" />
         </svg>
       );
-    case "cart":
+    case 'cart':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"

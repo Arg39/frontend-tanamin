@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
-export default function Button({ children, onClick, className = '', variant = 'primary' }) {
+export default function Button({ children, onClick, className = '', variant = 'primary', to }) {
+  const navigate = useNavigate();
+
   const variantAnimations = {
     login: {
       hover: { scale: 1.1 },
@@ -26,7 +29,6 @@ export default function Button({ children, onClick, className = '', variant = 'p
     },
   };
 
-  // Define default Tailwind classes for each variant
   const variantClasses = {
     login: 'bg-primary-500 text-white rounded-full p-2 px-6',
     primary: 'bg-blue-500 text-white rounded-lg p-2 px-6',
@@ -35,15 +37,24 @@ export default function Button({ children, onClick, className = '', variant = 'p
     outline: 'border border-blue-500 text-blue-500 rounded-lg p-2 px-6',
   };
 
-  // Combine default styles with additional styles from `className`
   const combinedClassName = `${
     variantClasses[variant] || variantClasses.primary
   } ${className}`.trim();
 
+  const handleClick = (event) => {
+    if (to) {
+      const absolutePath = to.startsWith('/') ? to : `/${to}`;
+      navigate(absolutePath);
+    }
+    if (onClick) {
+      onClick(event);
+    }
+  };
+
   return (
     <motion.button
-      onClick={onClick}
-      className={combinedClassName} // Use combined styles
+      onClick={handleClick}
+      className={combinedClassName}
       whileHover="hover"
       whileTap="tap"
       variants={variantAnimations[variant] || variantAnimations.primary}
@@ -53,10 +64,10 @@ export default function Button({ children, onClick, className = '', variant = 'p
   );
 }
 
-// Define PropTypes for better type checking
 Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
   className: PropTypes.string,
   variant: PropTypes.oneOf(['login', 'primary', 'danger', 'secondary', 'outline']),
+  to: PropTypes.string,
 };
