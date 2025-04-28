@@ -1,4 +1,4 @@
-import Icon from './icon/iconHeroicons';
+import Icon from '../icon/iconHeroicons';
 
 export default function CategoryCard({ category }) {
   return (

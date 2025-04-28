@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import SearchFields from './searchFields';
-import Icon from './icon/iconHeroicons';
+import SearchFields from '../search/searchFields';
+import Icon from '../icon/iconHeroicons';
 
 export default function FilterCard({ categories, course }) {
   const [checkedItemsCategory, setCheckedItemsCategory] = useState({});

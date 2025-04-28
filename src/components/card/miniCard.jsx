@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from './icon/iconHeroicons';
+import Icon from '../icon/iconHeroicons';
 
 export default function MiniCard({ course, content = 'true' }) {
   return (

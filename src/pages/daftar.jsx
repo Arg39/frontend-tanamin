@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Sidebar from '../components/navigation/sidebar';
 import Navbar from '../components/navigation/navbar';
-import LazyImage from '../components/lazyImage';
+import LazyImage from '../components/image/lazyImage';
 import { Link } from 'react-router-dom';
 
 export default class Daftar extends Component {

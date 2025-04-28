@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
-import Card from '../components/card';
-import CategoryCard from '../components/categoryCard';
+import Card from '../components/card/card';
+import CategoryCard from '../components/card/categoryCard';
 import Icon from '../components/icon/iconHeroicons';
-import MiniCard from '../components/miniCard';
-import CardInstructor from '../components/cardInstructor';
-import FilterCard from '../components/filterCard';
-import LargeCard from '../components/largeCard';
+import MiniCard from '../components/card/miniCard';
+import CardInstructor from '../components/card/cardInstructor';
+import FilterCard from '../components/card/filterCard';
+import LargeCard from '../components/card/largeCard';
 import { categories } from '../routes/categories';
 import Navbar from '../components/navigation/navbar';
 

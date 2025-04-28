@@ -1,4 +1,4 @@
-import Icon from './icon/iconHeroicons';
+import Icon from '../icon/iconHeroicons';
 
 export default function SearchFields({ categories }) {
   const handleSubmit = (event) => {
