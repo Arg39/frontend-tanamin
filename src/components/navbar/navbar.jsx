@@ -4,7 +4,7 @@ import Button from '../button/button';
 import useMenuStore from '../../zustand/menuStore';
 
 export default function Navbar() {
-  const { isMenuOpen, toggleMenu } = useMenuStore();
+  const { isMenuOpen, toggleMenu, activeNav } = useMenuStore();
 
   // Disable body scroll when Mobile Menu is open
   useEffect(() => {
@@ -27,7 +27,7 @@ export default function Navbar() {
 
       {/* Desktop Menu */}
       <div className="hidden lg:flex space-x-8">
-        <a href="#home" className="">
+        <a href="#home" className={`${activeNav === 'home' ? 'border-b-2 border-black' : ''}`}>
           Beranda
         </a>
         <a href="#about" className="">
