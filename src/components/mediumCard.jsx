@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from './icon/icon-heroicons';
+import Icon from './icon/iconHeroicons';
 
 export default function MediumCard({ course }) {
   return (

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import Card from '../components/card';
 import CategoryCard from '../components/categoryCard';
-import Icon from '../components/icon/icon-heroicons';
+import Icon from '../components/icon/iconHeroicons';
 import MiniCard from '../components/miniCard';
 import CardInstructor from '../components/cardInstructor';
 import FilterCard from '../components/filterCard';

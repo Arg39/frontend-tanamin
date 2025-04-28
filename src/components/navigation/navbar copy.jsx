@@ -1,8 +1,8 @@
-import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
-import Icon from "../icon/icon-heroicons";
-import { categories } from "../../routes/categories";
-import "../../css/navigation.css";
+import React, { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import Icon from '../icon/iconHeroicons';
+import { categories } from '../../routes/categories';
+import '../../css/navigation.css';
 
 const Navbar = ({ page, userName, isLogin }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -45,14 +45,10 @@ const Navbar = ({ page, userName, isLogin }) => {
     <>
       <nav className="bg-white shadow-md flex items-center fixed top-0 w-full z-50 px-2 lg:px-52 text-xl py-2 lg:py-0">
         <div className="flex w-full">
-          <img
-            src="assets/Logo-CodeLearn.png"
-            alt="Logo"
-            className="ml-1 lg:ml-0 h-8 lg:h-16"
-          />
+          <img src="assets/Logo-CodeLearn.png" alt="Logo" className="ml-1 lg:ml-0 h-8 lg:h-16" />
           <div className="w-full flex items-center justify-end lg:hidden">
             <button>
-              <Icon type={"bars-3"} className={"size-8"} />
+              <Icon type={'bars-3'} className={'size-8'} />
             </button>
           </div>
         </div>
@@ -60,9 +56,9 @@ const Navbar = ({ page, userName, isLogin }) => {
         <ul className="hidden lg:flex w-full justify-start space-x-8">
           <li
             className={`flex justify-center items-center hover:text-amber-700 cursor-pointer py-6 font-semibold ${
-              page === "beranda"
-                ? " border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown"
-                : ""
+              page === 'beranda'
+                ? ' border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
+                : ''
             }`}
           >
             <Link
@@ -74,9 +70,7 @@ const Navbar = ({ page, userName, isLogin }) => {
           </li>
           <li
             className={`flex justify-center items-center hover:text-amber-700 cursor-pointer font-semibold ${
-              page === "/tentang"
-                ? "w-full border-b-[3px] border-b-amber-700 text-amber-700"
-                : ""
+              page === '/tentang' ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700' : ''
             }`}
           >
             <Link
@@ -92,12 +86,11 @@ const Navbar = ({ page, userName, isLogin }) => {
             onMouseLeave={handleMouseLeave}
           >
             <span className="flex items-center cursor-pointer">
-              Kategori{" "}
-              {<Icon className={"size-4 flex mt-1 ml-1"} type={"dropdown"} />}
+              Kategori {<Icon className={'size-4 flex mt-1 ml-1'} type={'dropdown'} />}
             </span>
             <div
               className={`absolute top-full left-0 ${
-                isDropdownOpen ? "block" : "hidden"
+                isDropdownOpen ? 'block' : 'hidden'
               } flex justify-center bg-white shadow-lg mt-2 p-4 w-96 py-8`}
               onMouseEnter={handleDropdownMouseEnter}
               onMouseLeave={handleDropdownMouseLeave}
@@ -117,9 +110,7 @@ const Navbar = ({ page, userName, isLogin }) => {
           </li>
           <li
             className={`flex justify-center items-center hover:text-amber-700 cursor-pointer ${
-              page === "/faq"
-                ? "w-full border-b-[3px] border-b-amber-700 text-amber-700"
-                : ""
+              page === '/faq' ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700' : ''
             }`}
           >
             <Link
@@ -131,9 +122,7 @@ const Navbar = ({ page, userName, isLogin }) => {
           </li>
           <li
             className={`flex justify-center items-center hover:text-amber-700 cursor-pointer ${
-              page === "/kontak"
-                ? "w-full border-b-[3px] border-b-amber-700 text-amber-700"
-                : ""
+              page === '/kontak' ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700' : ''
             }`}
           >
             <Link
@@ -148,30 +137,30 @@ const Navbar = ({ page, userName, isLogin }) => {
           {isLogin ? (
             <>
               <i className="bell">
-                <Icon type={"bell-alert"} />
+                <Icon type={'bell-alert'} />
               </i>
               <i className="icon-chart">
-                <Icon type={"archive-box"} />
+                <Icon type={'archive-box'} />
               </i>
               <i className="icon-search">
-                <Icon type={"magnifying-glass"} />
+                <Icon type={'magnifying-glass'} />
               </i>
               <div className="w-px h-6 bg-gray-300"></div>
               <i className="icon-user">
-                <Icon type={"user"} />
+                <Icon type={'user'} />
               </i>
               <span className="font-medium">Halo, {userName}</span>
             </>
           ) : (
             <>
-              {page === "login" ? (
+              {page === 'login' ? (
                 <Link
                   to="/daftar"
                   className="py-1 px-8 rounded-full text-lg font-medium bg-amber-700 text-white"
                 >
                   Daftar
                 </Link>
-              ) : page === "daftar" ? (
+              ) : page === 'daftar' ? (
                 <Link
                   to="/login"
                   className="py-1 px-8 rounded-full text-lg font-medium bg-amber-700 text-white"
@@ -200,13 +189,13 @@ const Navbar = ({ page, userName, isLogin }) => {
       </nav>
       <div
         className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${
-          isSidebarOpen ? "block" : "hidden"
+          isSidebarOpen ? 'block' : 'hidden'
         }`}
         onClick={toggleSidebar}
       ></div>
       <div
         className={`fixed inset-y-0 left-0 bg-white shadow-lg z-50 w-64 transform ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out`}
       >
         <div className="p-4">
@@ -217,9 +206,7 @@ const Navbar = ({ page, userName, isLogin }) => {
             <li>
               <Link
                 to="/"
-                className={`block py-2 px-4 rounded ${
-                  page === "beranda" ? "bg-gray-200" : ""
-                }`}
+                className={`block py-2 px-4 rounded ${page === 'beranda' ? 'bg-gray-200' : ''}`}
                 onClick={toggleSidebar}
               >
                 Beranda
@@ -228,9 +215,7 @@ const Navbar = ({ page, userName, isLogin }) => {
             <li>
               <Link
                 to="/tentang"
-                className={`block py-2 px-4 rounded ${
-                  page === "/tentang" ? "bg-gray-200" : ""
-                }`}
+                className={`block py-2 px-4 rounded ${page === '/tentang' ? 'bg-gray-200' : ''}`}
                 onClick={toggleSidebar}
               >
                 Tentang
@@ -239,9 +224,7 @@ const Navbar = ({ page, userName, isLogin }) => {
             <li>
               <Link
                 to="/faq"
-                className={`block py-2 px-4 rounded ${
-                  page === "/faq" ? "bg-gray-200" : ""
-                }`}
+                className={`block py-2 px-4 rounded ${page === '/faq' ? 'bg-gray-200' : ''}`}
                 onClick={toggleSidebar}
               >
                 FAQ
@@ -250,9 +233,7 @@ const Navbar = ({ page, userName, isLogin }) => {
             <li>
               <Link
                 to="/kontak"
-                className={`block py-2 px-4 rounded ${
-                  page === "/kontak" ? "bg-gray-200" : ""
-                }`}
+                className={`block py-2 px-4 rounded ${page === '/kontak' ? 'bg-gray-200' : ''}`}
                 onClick={toggleSidebar}
               >
                 Kontak Kami
@@ -266,10 +247,8 @@ const Navbar = ({ page, userName, isLogin }) => {
                 >
                   Kategori
                   <Icon
-                    className={`ml-2 transform ${
-                      isDropdownOpen ? "rotate-180" : ""
-                    }`}
-                    type={"dropdown"}
+                    className={`ml-2 transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                    type={'dropdown'}
                   />
                 </button>
                 {isDropdownOpen && (
@@ -293,17 +272,17 @@ const Navbar = ({ page, userName, isLogin }) => {
             {isLogin ? (
               <>
                 <i className="bell">
-                  <Icon type={"bell-alert"} />
+                  <Icon type={'bell-alert'} />
                 </i>
                 <i className="icon-chart">
-                  <Icon type={"archive-box"} />
+                  <Icon type={'archive-box'} />
                 </i>
                 <i className="icon-search">
-                  <Icon type={"magnifying-glass"} />
+                  <Icon type={'magnifying-glass'} />
                 </i>
                 <div className="w-px h-6 bg-gray-300"></div>
                 <i className="icon-user">
-                  <Icon type={"user"} />
+                  <Icon type={'user'} />
                 </i>
                 <span className="font-medium">Halo, {userName}</span>
               </>

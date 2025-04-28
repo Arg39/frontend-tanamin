@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../button/button';
 import useMenuStore from '../../zustand/menuStore';
-import Icon from '../icon/icon-heroicons';
+import Icon from '../icon/iconHeroicons';
 
 export default function Navbar() {
   const { isMenuOpen, isAccountMenuOpen, toggleMenu, toggleAccountMenu, closeMenu, activeNav } =

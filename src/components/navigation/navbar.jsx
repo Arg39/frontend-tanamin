@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import Icon from "../icon/icon-heroicons";
-import "../../css/navigation.css";
-import categories from "../../data/categories";
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import Icon from '../icon/iconHeroicons';
+import '../../css/navigation.css';
+import categories from '../../data/categories';
 
 const Navbar = ({ page }) => {
   const isLoggedIn = false;
-  const name = "Alfian";
+  const name = 'Alfian';
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -26,20 +26,20 @@ const Navbar = ({ page }) => {
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Escape") {
+    if (event.key === 'Escape') {
       toggleMobileMenu();
     }
   };
 
   useEffect(() => {
     if (isMobileMenuOpen) {
-      document.addEventListener("keydown", handleKeyDown);
+      document.addEventListener('keydown', handleKeyDown);
     } else {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     }
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
     };
   }, [isMobileMenuOpen]);
 
@@ -70,32 +70,25 @@ const Navbar = ({ page }) => {
     <nav className="bg-white shadow-md flex items-center fixed top-0 w-full z-50 px-6 lg:px-52 text-xl py-2 lg:py-0">
       <div className="w-full  flex items-center  justify-between">
         <div className="w-full flex items-center">
-          <img
-            src="assets/Logo-CodeLearn.png"
-            alt="Logo"
-            className="ml-1 lg:ml-0 h-10 lg:h-14"
-          />
+          <img src="assets/Logo-CodeLearn.png" alt="Logo" className="ml-1 lg:ml-0 h-10 lg:h-14" />
           <div className="hidden lg:flex ml-24">
             <ul className="lg:flex w-full justify-start space-x-8">
               <li
                 className={`flex justify-center items-center cursor-pointer py-8 font-semibold ${
-                  page === "beranda"
-                    ? " border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown"
-                    : "hover:text-amber-700"
+                  page === 'beranda'
+                    ? ' border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
+                    : 'hover:text-amber-700'
                 }`}
               >
-                <Link
-                  to="/"
-                  className="flex justify-center items-center cursor-pointer"
-                >
+                <Link to="/" className="flex justify-center items-center cursor-pointer">
                   Beranda
                 </Link>
               </li>
               <li
                 className={`flex justify-center items-center cursor-pointer py-8 font-semibold ${
-                  page === "tentang-kami"
-                    ? " border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown"
-                    : "hover:text-amber-700"
+                  page === 'tentang-kami'
+                    ? ' border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
+                    : 'hover:text-amber-700'
                 }`}
               >
                 <Link
@@ -112,11 +105,11 @@ const Navbar = ({ page }) => {
               >
                 <span
                   className={`flex items-center gap-1 ${
-                    isDropdownOpen || isDropdownHovered ? "text-amber-700" : ""
+                    isDropdownOpen || isDropdownHovered ? 'text-amber-700' : ''
                   } ${
-                    page.includes("kategori")
-                      ? "py-8 border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown"
-                      : "hover:text-amber-700"
+                    page.includes('kategori')
+                      ? 'py-8 border-b-[3px] border-b-amber-700 text-amber-700 text-brown border-brown'
+                      : 'hover:text-amber-700'
                   }`}
                 >
                   <span>Kategori</span>
@@ -133,10 +126,7 @@ const Navbar = ({ page }) => {
                         className="w-full flex items-center justify-start px-4 hover:bg-gray-100"
                         key={category.name}
                       >
-                        <Link
-                          to={category.url}
-                          className="w-full py-2 hover:text-amber-700"
-                        >
+                        <Link to={category.url} className="w-full py-2 hover:text-amber-700">
                           {category.name}
                         </Link>
                       </div>
@@ -146,29 +136,23 @@ const Navbar = ({ page }) => {
               </li>
               <li
                 className={`flex justify-center items-center cursor-pointer font-semibold ${
-                  page === "faq"
-                    ? "w-full border-b-[3px] border-b-amber-700 text-amber-700"
-                    : "hover:text-amber-700"
+                  page === 'faq'
+                    ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700'
+                    : 'hover:text-amber-700'
                 }`}
               >
-                <Link
-                  to="/faq"
-                  className="flex justify-center items-center cursor-pointer"
-                >
+                <Link to="/faq" className="flex justify-center items-center cursor-pointer">
                   FAQ
                 </Link>
               </li>
               <li
                 className={`flex justify-center items-center cursor-pointer font-semibold ${
-                  page === "kontak-kami"
-                    ? "w-full border-b-[3px] border-b-amber-700 text-amber-700"
-                    : "hover:text-amber-700"
+                  page === 'kontak-kami'
+                    ? 'w-full border-b-[3px] border-b-amber-700 text-amber-700'
+                    : 'hover:text-amber-700'
                 }`}
               >
-                <Link
-                  to="/kontak-kami"
-                  className="flex justify-center items-center cursor-pointer"
-                >
+                <Link to="/kontak-kami" className="flex justify-center items-center cursor-pointer">
                   Kontak Kami
                 </Link>
               </li>
@@ -176,19 +160,19 @@ const Navbar = ({ page }) => {
           </div>
           <div className="w-full flex items-center justify-end lg:hidden">
             <button className="mr-4">
-              <Icon type={"bell-alert"} className={"size-4"} />
+              <Icon type={'bell-alert'} className={'size-4'} />
             </button>
             <button className="mr-4">
-              <Icon type={"cart"} className={"size-4"} />
+              <Icon type={'cart'} className={'size-4'} />
             </button>
             <button className="mr-4">
-              <Icon type={"magnifying-glass"} className={"size-4"} />
+              <Icon type={'magnifying-glass'} className={'size-4'} />
             </button>
             <button onClick={toggleMobileMenu} className="z-50">
               <Icon
-                type={isMobileMenuOpen ? "x-mark" : "bars-3"}
+                type={isMobileMenuOpen ? 'x-mark' : 'bars-3'}
                 className={`size-8 transition-transform duration-300 ${
-                  isMobileMenuOpen ? "rotate-90" : "rotate-0"
+                  isMobileMenuOpen ? 'rotate-90' : 'rotate-0'
                 }`}
               />
             </button>
@@ -198,35 +182,35 @@ const Navbar = ({ page }) => {
           {isLoggedIn ? (
             <>
               <button className="mr-8">
-                <Icon type={"bell-alert"} />
+                <Icon type={'bell-alert'} />
               </button>
               <button className="mr-8">
-                <Icon type={"cart"} className={""} />
+                <Icon type={'cart'} className={''} />
               </button>
               <button className="mr-2">
-                <Icon type={"magnifying-glass"} />
+                <Icon type={'magnifying-glass'} />
               </button>
               <div className="hidden md:block mr-2">
-                <Icon type={"vertical-line"} className={"size-12"} />
+                <Icon type={'vertical-line'} className={'size-12'} />
               </div>
               <div className="flex items-center">
-                <Icon type={"user"} />
+                <Icon type={'user'} />
                 <span className="ml-2 md:ml-4 font-medium">Halo, {name}</span>
               </div>
             </>
           ) : (
             <>
-              {page !== "daftar" && (
+              {page !== 'daftar' && (
                 <Link
-                  to={"/daftar"}
+                  to={'/daftar'}
                   className="p-2 px-8 rounded-3xl font-medium text-white bg-amber-700 mr-8"
                 >
                   Daftar
                 </Link>
               )}
-              {page !== "login" && (
+              {page !== 'login' && (
                 <Link
-                  to={"/login"}
+                  to={'/login'}
                   className="p-2 px-8 rounded-3xl font-medium text-white bg-amber-700 mr-8"
                 >
                   Login
@@ -240,18 +224,18 @@ const Navbar = ({ page }) => {
       {(isMobileMenuOpen || isAnimating) && (
         <div
           className={`fixed inset-0 bg-white z-40 flex flex-col items-center text-lg justify-start pt-20 ${
-            isMobileMenuOpen ? "slide-in" : "slide-out"
+            isMobileMenuOpen ? 'slide-in' : 'slide-out'
           }`}
         >
           <ul className="flex flex-col w-full items-center space-y-6 overflow-y-auto scrollbar-hide">
             {isLoggedIn ? (
               <div className="flex items-center">
-                <Icon type={"user"} />
+                <Icon type={'user'} />
                 <span className="ml-2 md:ml-4 font-medium">Halo, {name}</span>
               </div>
             ) : (
               <>
-                {page !== "register" && (
+                {page !== 'register' && (
                   <li
                     className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold `}
                   >
@@ -260,7 +244,7 @@ const Navbar = ({ page }) => {
                     </Link>
                   </li>
                 )}
-                {page !== "login" && (
+                {page !== 'login' && (
                   <li
                     className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold `}
                   >
@@ -273,16 +257,14 @@ const Navbar = ({ page }) => {
             )}
             <li
               className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === "beranda" ? " bg-amber-700" : ""
+                page === 'beranda' ? ' bg-amber-700' : ''
               }`}
             >
               <Link
                 to="/"
                 onClick={toggleMobileMenu}
                 className={`${
-                  page === "beranda"
-                    ? "text-white border-b-2 !important bg-amber-700"
-                    : ""
+                  page === 'beranda' ? 'text-white border-b-2 !important bg-amber-700' : ''
                 }`}
               >
                 Beranda
@@ -290,16 +272,14 @@ const Navbar = ({ page }) => {
             </li>
             <li
               className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === "tentang" ? " bg-amber-700" : ""
+                page === 'tentang' ? ' bg-amber-700' : ''
               }`}
             >
               <Link
                 to="/tentang"
                 onClick={toggleMobileMenu}
                 className={`${
-                  page === "tentang"
-                    ? "text-white border-b-2 !important bg-amber-700"
-                    : ""
+                  page === 'tentang' ? 'text-white border-b-2 !important bg-amber-700' : ''
                 }`}
               >
                 Tentang
@@ -312,17 +292,13 @@ const Navbar = ({ page }) => {
               >
                 Kategori
                 <Icon
-                  type={"dropdown"}
+                  type={'dropdown'}
                   className={`size-3 ml-1 transition-transform duration-300 ${
-                    isDropdownOpen ? "rotate-180" : ""
+                    isDropdownOpen ? 'rotate-180' : ''
                   }`}
                 />
               </span>
-              <div
-                className={`dropdown-content ${
-                  isDropdownOpen ? "show" : "hide"
-                }`}
-              >
+              <div className={`dropdown-content ${isDropdownOpen ? 'show' : 'hide'}`}>
                 {isDropdownOpen && (
                   <div className="w-full flex flex-col items-center text-base font-normal mt-4">
                     {categories.map((category) => (
@@ -341,16 +317,14 @@ const Navbar = ({ page }) => {
             </li>
             <li
               className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === "faq" ? " bg-amber-700" : ""
+                page === 'faq' ? ' bg-amber-700' : ''
               }`}
             >
               <Link
                 to="/faq"
                 onClick={toggleMobileMenu}
                 className={`${
-                  page === "faq"
-                    ? "text-white border-b-2 !important bg-amber-700"
-                    : ""
+                  page === 'faq' ? 'text-white border-b-2 !important bg-amber-700' : ''
                 }`}
               >
                 FAQ
@@ -358,16 +332,14 @@ const Navbar = ({ page }) => {
             </li>
             <li
               className={`flex w-full justify-center items-center cursor-pointer py-4 font-semibold ${
-                page === "kontak-kami" ? " bg-amber-700" : ""
+                page === 'kontak-kami' ? ' bg-amber-700' : ''
               }`}
             >
               <Link
                 to="/kontak-kami"
                 onClick={toggleMobileMenu}
                 className={`${
-                  page === "kontak-kami"
-                    ? "text-white border-b-2 !important bg-amber-700"
-                    : ""
+                  page === 'kontak-kami' ? 'text-white border-b-2 !important bg-amber-700' : ''
                 }`}
               >
                 Kontak Kami
