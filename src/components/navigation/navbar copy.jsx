@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import Icon from "../icon-heroicons";
+import Icon from "../icon/icon-heroicons";
 import { categories } from "../../routes/categories";
 import "../../css/navigation.css";
 

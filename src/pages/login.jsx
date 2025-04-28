@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import Sidebar from "../components/navigation/sidebar";
-import Navbar from "../components/navigation/navbar";
-import LazyImage from "../components/lazyImage";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import Sidebar from '../components/navigation/sidebar';
+import Navbar from '../components/navigation/navbar';
+import LazyImage from '../components/lazyImage';
+import { Link } from 'react-router-dom';
 
 export default class Login extends Component {
   state = {
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   };
 
   handleChange = (e) => {
@@ -26,11 +26,7 @@ export default class Login extends Component {
         <Navbar page="login" userName="John Doe" isLogin={false} />
         <div className="flex flex-col lg:flex-row justify-between items-center p-6 lg:p-20 mt-10 lg:mt-20 md:gap-20">
           <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-            <LazyImage
-              src="/images/login.png"
-              alt="Login"
-              className="w-full lg:w-[600px]"
-            />
+            <LazyImage src="/images/login.png" alt="Login" className="w-full lg:w-[600px]" />
           </div>
           <div className="w-full lg:w-1/2 flex justify-center">
             <div className="w-full lg:w-[600px] p-6 lg:p-20 py-10 lg:py-24 bg-white shadow-lg rounded-lg">
@@ -61,23 +57,15 @@ export default class Login extends Component {
                     <input type="checkbox" className="mr-2" />
                     Ingat Saya
                   </label>
-                  <button className="hover:underline ml-4">
-                    Lupa Password?
-                  </button>
+                  <button className="hover:underline ml-4">Lupa Password?</button>
                 </div>
                 <div className="text-start mb-6 lg:mb-10">
                   <span>Belum Memiliki Akun? </span>
-                  <Link
-                    to={"/daftar"}
-                    className="text-[#36C5F1] hover:underline"
-                  >
+                  <Link to={'/daftar'} className="text-[#36C5F1] hover:underline">
                     Daftar Sekarang
                   </Link>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full bg-[#36C5F1] text-white py-2 rounded-full"
-                >
+                <button type="submit" className="w-full bg-[#36C5F1] text-white py-2 rounded-full">
                   Masuk
                 </button>
               </form>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 const LazyImage = ({ src, alt, className }) => {
   const [loaded, setLoaded] = useState(false);
@@ -7,7 +7,7 @@ const LazyImage = ({ src, alt, className }) => {
     <div className={`relative ${className}`}>
       <div
         className={`absolute inset-0 flex items-center justify-center bg-gray-200 animate-pulse rounded-lg ${
-          loaded ? "hidden" : "block"
+          loaded ? 'hidden' : 'block'
         }`}
       >
         <div className="w-full h-full bg-gray-300 rounded-lg"></div>
@@ -16,7 +16,7 @@ const LazyImage = ({ src, alt, className }) => {
         src={src}
         alt={alt}
         className={`transition-opacity duration-500 rounded-lg ${
-          loaded ? "opacity-100" : "opacity-0"
+          loaded ? 'opacity-100' : 'opacity-0'
         }`}
         onLoad={() => setLoaded(true)}
       />

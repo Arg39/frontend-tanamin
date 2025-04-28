@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import SearchFields from "./searchFields";
-import Icon from "./icon-heroicons";
+import React, { useState } from 'react';
+import SearchFields from './searchFields';
+import Icon from './icon/icon-heroicons';
 
 export default function FilterCard({ categories, course }) {
   const [checkedItemsCategory, setCheckedItemsCategory] = useState({});
@@ -30,43 +30,33 @@ export default function FilterCard({ categories, course }) {
         <h1 className="text-2xl font-semibold">Kategori</h1>
         <hr className="my-4 border-t-2 border-gray-300" />
         <ul>
-          {(showAll ? categories : categories.slice(0, 7)).map(
-            (category, index) => (
-              <li
-                key={index}
-                className="w-full flex justify-between items-center my-2"
+          {(showAll ? categories : categories.slice(0, 7)).map((category, index) => (
+            <li key={index} className="w-full flex justify-between items-center my-2">
+              <label
+                className={`w-full pr-1 flex items-center font-semibold text-lg truncate ${
+                  checkedItemsCategory[index] ? 'text-[#AF3910]' : ''
+                }`}
               >
-                <label
-                  className={`w-full pr-1 flex items-center font-semibold text-lg truncate ${
-                    checkedItemsCategory[index] ? "text-[#AF3910]" : ""
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    className="mr-2 w-4 h-4"
-                    checked={!!checkedItemsCategory[index]}
-                    onChange={() => handleCheckboxChange(index)}
-                    style={{
-                      accentColor: checkedItemsCategory[index] ? "#AF3910" : "",
-                    }}
-                  />
-                  {category.name}
-                </label>
-                <div className="p-1 px-3 bg-gray-200 rounded-md">
-                  <span className="text-md font-semibold">
-                    {course.lotMaterial}
-                  </span>
-                </div>
-              </li>
-            )
-          )}
+                <input
+                  type="checkbox"
+                  className="mr-2 w-4 h-4"
+                  checked={!!checkedItemsCategory[index]}
+                  onChange={() => handleCheckboxChange(index)}
+                  style={{
+                    accentColor: checkedItemsCategory[index] ? '#AF3910' : '',
+                  }}
+                />
+                {category.name}
+              </label>
+              <div className="p-1 px-3 bg-gray-200 rounded-md">
+                <span className="text-md font-semibold">{course.lotMaterial}</span>
+              </div>
+            </li>
+          ))}
         </ul>
         {categories.length > 3 && (
-          <button
-            onClick={toggleShowAll}
-            className="mt-4 text-[#AF3910] hover:underline font-bold"
-          >
-            {showAll ? "Lihat lebih sedikit" : "Lihat lebih"}
+          <button onClick={toggleShowAll} className="mt-4 text-[#AF3910] hover:underline font-bold">
+            {showAll ? 'Lihat lebih sedikit' : 'Lihat lebih'}
           </button>
         )}
 
@@ -77,7 +67,7 @@ export default function FilterCard({ categories, course }) {
             <li key={index} className="flex justify-between items-center my-2">
               <label
                 className={`flex items-center font-semibold text-lg ${
-                  selectedRating === index ? "text-[#AF3910]" : ""
+                  selectedRating === index ? 'text-[#AF3910]' : ''
                 }`}
               >
                 <input
@@ -86,17 +76,15 @@ export default function FilterCard({ categories, course }) {
                   checked={selectedRating === index}
                   onChange={() => handleRadioChange(index)}
                   style={{
-                    accentColor: selectedRating === index ? "#AF3910" : "",
+                    accentColor: selectedRating === index ? '#AF3910' : '',
                   }}
-                />{" "}
+                />{' '}
                 {[...Array(5)].map((_, starIndex) => (
                   <Icon
                     key={starIndex}
-                    type={"star"}
+                    type={'star'}
                     className={`h-6 w-6 ${
-                      starIndex < 5 - index
-                        ? "text-yellow-500"
-                        : "text-gray-300"
+                      starIndex < 5 - index ? 'text-yellow-500' : 'text-gray-300'
                     }`}
                   />
                 ))}

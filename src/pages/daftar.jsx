@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import Sidebar from "../components/navigation/sidebar";
-import Navbar from "../components/navigation/navbar";
-import LazyImage from "../components/lazyImage";
-import { Link } from "react-router-dom";
+import React, { Component } from 'react';
+import Sidebar from '../components/navigation/sidebar';
+import Navbar from '../components/navigation/navbar';
+import LazyImage from '../components/lazyImage';
+import { Link } from 'react-router-dom';
 
 export default class Daftar extends Component {
   state = {
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   };
 
   handleChange = (e) => {
@@ -20,11 +20,7 @@ export default class Daftar extends Component {
         <Navbar page="daftar" userName="John Doe" isLogin={false} />
         <div className="flex flex-col lg:flex-row justify-between items-center p-6 lg:p-20 mt-10 lg:mt-20 md:gap-20">
           <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-            <LazyImage
-              src="/images/daftar.png"
-              alt="daftar"
-              className="w-full lg:w-[600px]"
-            />
+            <LazyImage src="/images/daftar.png" alt="daftar" className="w-full lg:w-[600px]" />
           </div>
           <div className="w-full lg:w-1/2 flex justify-center">
             <div className="w-full lg:w-[600px] p-6 lg:p-20 py-10 lg:py-24 bg-white shadow-lg rounded-lg">
@@ -88,17 +84,11 @@ export default class Daftar extends Component {
                 </div>
                 <div className="text-start mb-6 lg:mb-10">
                   <span>Sudah Memiliki Akun? </span>
-                  <Link
-                    to={"/login"}
-                    className="text-[#36C5F1] hover:underline"
-                  >
+                  <Link to={'/login'} className="text-[#36C5F1] hover:underline">
                     Login ke Akun Saya
                   </Link>
                 </div>
-                <button
-                  type="submit"
-                  className="w-full bg-[#36C5F1] text-white py-2 rounded-full"
-                >
+                <button type="submit" className="w-full bg-[#36C5F1] text-white py-2 rounded-full">
                   Masuk
                 </button>
               </form>
@@ -109,4 +99,3 @@ export default class Daftar extends Component {
     );
   }
 }
-

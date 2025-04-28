@@ -1,7 +1,7 @@
-import React, { useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import Icon from "../icon-heroicons";
-import { categories } from "../../routes/categories";
+import React, { useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import Icon from '../icon/icon-heroicons';
+import { categories } from '../../routes/categories';
 
 const Sidebar = ({ page, userName, isLogin }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,19 +15,19 @@ const Sidebar = ({ page, userName, isLogin }) => {
       <button className="sidebar-toggle" onClick={toggleSidebar}>
         <Icon type="menu" />
       </button>
-      <div className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <button className="close-btn" onClick={toggleSidebar}>
             <Icon type="x" />
           </button>
         </div>
         <ul className="sidebar-links">
-          <li className={page === "beranda" ? "active" : ""}>
+          <li className={page === 'beranda' ? 'active' : ''}>
             <Link to="/" onClick={toggleSidebar}>
               Beranda
             </Link>
           </li>
-          <li className={page === "/tentang" ? "active" : ""}>
+          <li className={page === '/tentang' ? 'active' : ''}>
             <Link to="/tentang" onClick={toggleSidebar}>
               Tentang
             </Link>
@@ -37,22 +37,19 @@ const Sidebar = ({ page, userName, isLogin }) => {
             <ul className="dropdown-menu">
               {categories.map((category, index) => (
                 <li key={index}>
-                  <Link
-                    to={`/kategori/${category.href}`}
-                    onClick={toggleSidebar}
-                  >
+                  <Link to={`/kategori/${category.href}`} onClick={toggleSidebar}>
                     {category.name}
                   </Link>
                 </li>
               ))}
             </ul>
           </li>
-          <li className={page === "/faq" ? "active" : ""}>
+          <li className={page === '/faq' ? 'active' : ''}>
             <Link to="/faq" onClick={toggleSidebar}>
               FAQ
             </Link>
           </li>
-          <li className={page === "/kontak" ? "active" : ""}>
+          <li className={page === '/kontak' ? 'active' : ''}>
             <Link to="/kontak" onClick={toggleSidebar}>
               Kontak Kami
             </Link>
@@ -62,16 +59,16 @@ const Sidebar = ({ page, userName, isLogin }) => {
           {isLogin ? (
             <>
               <i className="bell">
-                <Icon type={"bell-alert"} />
+                <Icon type={'bell-alert'} />
               </i>
               <i className="icon-chart">
-                <Icon type={"archive-box"} />
+                <Icon type={'archive-box'} />
               </i>
               <i className="icon-search">
-                <Icon type={"magnifying-glass"} />
+                <Icon type={'magnifying-glass'} />
               </i>
               <i className="icon-user">
-                <Icon type={"user"} />
+                <Icon type={'user'} />
               </i>
               <span>Halo, {userName}</span>
             </>
