@@ -211,10 +211,10 @@ export default function Navbar() {
 
       {/* Buttons */}
       <div className="hidden lg:flex space-x-4">
-        <Button variant="login" to={'masuk'} className="text-md">
+        <Button variant="primary" to={'masuk'} className="text-md">
           Masuk
         </Button>
-        <Button variant="login" to={'daftar'} className="text-md">
+        <Button variant="primary" to={'daftar'} className="text-md">
           Daftar
         </Button>
       </div>

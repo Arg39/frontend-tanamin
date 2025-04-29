@@ -7,13 +7,9 @@ export default function Button({ children, onClick, className = '', variant = 'p
   const navigate = useNavigate();
 
   const variantAnimations = {
-    login: {
+    primary: {
       hover: { scale: 1.1 },
       tap: { scale: 0.95 },
-    },
-    primary: {
-      hover: { scale: 1.2 },
-      tap: { scale: 0.9 },
     },
     danger: {
       hover: { scale: 1.1 },
@@ -30,8 +26,7 @@ export default function Button({ children, onClick, className = '', variant = 'p
   };
 
   const variantClasses = {
-    login: 'bg-primary-500 text-white rounded-full p-2 px-6',
-    primary: 'bg-blue-500 text-white rounded-lg p-2 px-6',
+    primary: 'bg-primary-500 text-white rounded-full p-2 px-6',
     danger: 'bg-primary-500 text-white rounded-lg p-2 px-6',
     secondary: 'bg-gray-500 text-white rounded-lg p-2 px-6',
     outline: 'border border-blue-500 text-blue-500 rounded-lg p-2 px-6',
