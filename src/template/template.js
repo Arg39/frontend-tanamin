@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Navbar from '../components/navigation/navbar';
 import useMenuStore from '../zustand/menuStore';
 
-export default function Template({ children, activeNav, className }) {
+export default function Template({ children, activeNav, className, style }) {
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
   useEffect(() => {
@@ -15,8 +15,9 @@ export default function Template({ children, activeNav, className }) {
       <Navbar />
 
       {/* Content */}
-      <div className="pt-14 lg:pt-20 w-screen flex-1 z-0 relative">
-        <div className={`${className}`}>{children}</div>
+      <div className={`w-screen flex-1 z-0 relative ${className}`} style={style}>
+        {/* Background Gradient */}
+        <div className="pt-16">{children}</div>
       </div>
     </div>
   );
