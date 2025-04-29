@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import axios from 'axios';
 
 const useAuthStore = create((set) => ({
-  user: null, // Tambahkan user ke state
+  user: null,
   token: null,
   error: null,
   login: async (login, password) => {
@@ -12,11 +12,11 @@ const useAuthStore = create((set) => ({
         password,
       });
       const tokenData = response.data.data.token;
-      const userData = response.data.data.user; // Asumsikan API mengembalikan data user
+      const userData = response.data.data.user;
 
       localStorage.setItem('authToken', tokenData);
+      localStorage.setItem('userData', JSON.stringify(userData));
 
-      // Update store dengan token dan user data
       set({ token: tokenData, user: userData, error: null });
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Login failed';
@@ -24,7 +24,6 @@ const useAuthStore = create((set) => ({
     }
   },
   logout: () => {
-    // Hapus token dan user data dari localStorage dan store
     localStorage.removeItem('authToken');
     set({ user: null, token: null, error: null });
   },
