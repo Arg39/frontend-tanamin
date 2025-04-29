@@ -5,7 +5,6 @@ import Icon from '../components/icon/iconHeroicons';
 import MiniCard from '../components/card/miniCard';
 import CardInstructor from '../components/card/cardInstructor';
 import FilterCard from '../components/card/filterCard';
-import LargeCard from '../components/card/largeCard';
 import { categories } from '../routes/categories';
 import Navbar from '../components/navigation/navbar';
 
