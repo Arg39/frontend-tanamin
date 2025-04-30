@@ -1,7 +1,6 @@
 import React from 'react';
 import Template from '../template/template';
 import GradientText from '../blocks/TextAnimations/FuzzyText/gradientColors';
-import Card from '../components/card/card';
 import useCourseStore from '../zustand/courseStore';
 import StackedCards from '../components/card/stackedCards';
 import Button from '../components/button/button';
