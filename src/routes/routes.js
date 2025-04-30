@@ -2,8 +2,8 @@ import React from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Login from '../pages/login';
 import Daftar from '../pages/daftar';
-import Beranda2 from '../pages/beranda_baru';
-import Beranda from '../pages/beranda';
+import Beranda2 from '../pages/beranda';
+import Beranda from '../pages/beranda_lama';
 import NotFound from '../pages/NotFound';
 
 const AppRoutes = () => {

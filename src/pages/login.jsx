@@ -32,10 +32,18 @@ export default function Login() {
         pending: 'Sedang memproses login...',
       });
 
-      const { token } = useAuthStore.getState();
+      const { token, user } = useAuthStore.getState();
       if (token) {
-        toast.success('Login berhasil! Selamat datang kembali!');
-        navigate('/');
+        if (user.role === 'admin') {
+          toast.success('Login berhasil! Selamat datang kembali!');
+          navigate('/admin/dashboard');
+        }
+        if (user.role === 'instructor') {
+          toast.success('Login berhasil! Selamat datang kembali!');
+          navigate('/instructor/dashboard');
+        } else if (user.role === 'student') {
+          navigate('/');
+        }
       } else {
         toast.error('Login gagal. Silakan periksa kredensial Anda.');
       }
@@ -55,7 +63,7 @@ export default function Login() {
         </div>
         <div className="w-full lg:w-1/2 flex justify-center">
           <div className="w-full lg:w-[600px] p-6 lg:p-20 py-10 lg:py-24 bg-white shadow-lg rounded-lg">
-            <h2 className="text-start text-xl lg:text-2xl font-bold mb-6 lg:mb-10">
+            <h2 className="text-start text-xl lg:text-2xl text-primary-900 font-bold mb-6 lg:mb-10">
               Masuk ke Akun Anda
             </h2>
             <form onSubmit={handleSubmit}>
@@ -90,7 +98,7 @@ export default function Login() {
               </div>
               <div className="text-start mb-6 lg:mb-10">
                 <span>Belum Memiliki Akun? </span>
-                <Link to={'/daftar'} className="text-[#36C5F1] hover:underline">
+                <Link to={'/daftar'} className="text-primary-800 font-semibold hover:underline">
                   Daftar Sekarang
                 </Link>
               </div>
