@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Icon = ({ type, className }) => {
+const Icon = ({ type, className, color = 'currentColor' }) => {
   switch (type) {
     case 'dropdown':
       return (
@@ -9,7 +9,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -22,7 +22,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path
@@ -39,7 +39,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path
@@ -56,7 +56,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path
@@ -73,7 +73,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path
@@ -90,7 +90,7 @@ const Icon = ({ type, className }) => {
           width="1em"
           height="1em"
           viewBox="0 0 24 24"
-          fill="currentColor"
+          fill={color}
           className={`size-6 ${className}`}
         >
           <path d="m9.362 9.158-5.268.584c-.19.023-.358.15-.421.343s0 .394.14.521c1.566 1.429 3.919 3.569 3.919 3.569c-.002 0-.646 3.113-1.074 5.19a.496.496 0 0 0 .734.534c1.844-1.048 4.606-2.624 4.606-2.624l4.604 2.625c.168.092.378.09.541-.029a.5.5 0 0 0 .195-.505l-1.071-5.191l3.919-3.566a.499.499 0 0 0-.28-.865c-2.108-.236-5.269-.586-5.269-.586l-2.183-4.83a.499.499 0 0 0-.909 0z" />
@@ -104,7 +104,7 @@ const Icon = ({ type, className }) => {
           height="1em"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
+          stroke={color}
           strokeLinecap="round"
           strokeLinejoin="round"
           className={`size-6 ${className}`}
@@ -120,7 +120,7 @@ const Icon = ({ type, className }) => {
           height="1em"
           viewBox="0 0 24 24"
           fill="none"
-          stroke="currentColor"
+          stroke={color}
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth="1.5"
@@ -136,13 +136,13 @@ const Icon = ({ type, className }) => {
           width="1em"
           height="1em"
           viewBox="0 0 24 24"
-          fill="currentColor"
+          fill={color}
           className={`size-6 ${className}`}
         >
           <g fill="none">
             <path d="m12.593 23.258-.011.002-.071.035-.02.004-.014-.004-.071-.035q-.016-.005-.024.005l-.004.01-.017.428.005.02.01.013.104.074.015.004.012-.004.104-.074.012-.016.004-.017-.017-.427q-.004-.016-.017-.018m.265-.113-.013.002-.185.093-.01.01-.003.011.018.43.005.012.008.007.201.093q.019.005.029-.008l.004-.014-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014-.034.614q.001.018.017.024l.015-.002.201-.093.01-.008.004-.011.017-.43-.003-.012-.01-.01z" />
             <path
-              fill="currentColor"
+              fill={color}
               d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2m0 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16m0 2a1 1 0 0 1 .993.883L13 7v4.586l2.707 2.707a1 1 0 0 1-1.32 1.497l-.094-.083-3-3a1 1 0 0 1-.284-.576L11 12V7a1 1 0 0 1 1-1"
             />
           </g>
@@ -155,7 +155,7 @@ const Icon = ({ type, className }) => {
           width="1em"
           height="1em"
           viewBox="0 0 15 15"
-          fill="currentColor"
+          fill={color}
           className={`size-6 ${className}`}
         >
           <path d="M8.293 2.293a1 1 0 0 1 1.414 0l4.5 4.5a1 1 0 0 1 0 1.414l-4.5 4.5a1 1 0 0 1-1.414-1.414L11 8.5H1.5a1 1 0 0 1 0-2H11L8.293 3.707a1 1 0 0 1 0-1.414" />
@@ -168,7 +168,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path
@@ -185,7 +185,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -198,7 +198,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 100"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v88" />
@@ -211,7 +211,7 @@ const Icon = ({ type, className }) => {
           fill="none"
           viewBox="0 0 24 24"
           strokeWidth={1.5}
-          stroke="currentColor"
+          stroke={color}
           className={`size-6 ${className}`}
         >
           <path
@@ -221,6 +221,17 @@ const Icon = ({ type, className }) => {
           />
         </svg>
       );
+    case 'round-dashboard':
+      return (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={color} className="size-6">
+          <path
+            fillRule="evenodd"
+            d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+
     // Add more cases for different icons here
     default:
       return null;

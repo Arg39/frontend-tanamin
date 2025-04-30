@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Icon from '../icon/iconHeroicons';
+import Icon from '../icons/icon';
 import { categories } from '../../routes/categories';
 
 const Sidebar = ({ page, userName, isLogin }) => {

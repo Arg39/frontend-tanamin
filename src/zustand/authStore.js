@@ -2,8 +2,8 @@ import { create } from 'zustand';
 import axios from 'axios';
 
 const useAuthStore = create((set, get) => ({
-  user: null,
-  token: null,
+  user: JSON.parse(localStorage.getItem('userData')) || null,
+  token: localStorage.getItem('authToken') || null,
   error: null,
   login: async (login, password) => {
     try {
@@ -25,6 +25,7 @@ const useAuthStore = create((set, get) => ({
   },
   logout: () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
     set({ user: null, token: null, error: null });
   },
   fetchUserData: async () => {
@@ -39,6 +40,7 @@ const useAuthStore = create((set, get) => ({
       });
       if (response.status === 200) {
         const userData = response.data.user;
+        localStorage.setItem('userData', JSON.stringify(userData));
         set({ user: userData });
         return userData;
       } else {
