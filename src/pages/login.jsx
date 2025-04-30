@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Navbar from '../components/navigation/navbar';
 import LazyImage from '../components/image/lazyImage';
 import { Link } from 'react-router-dom';
@@ -12,6 +13,7 @@ export default function Login() {
     username: '',
     password: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -23,13 +25,25 @@ export default function Login() {
     e.preventDefault();
     const { username, password } = state;
     const login = useAuthStore.getState().login;
-    await login(username, password);
 
-    const { user, error, token } = useAuthStore.getState();
-    if (token) {
-      navigate('/');
-    } else {
-      alert(error || 'Login failed');
+    setLoading(true);
+    try {
+      await toast.promise(login(username, password), {
+        pending: 'Sedang memproses login...',
+      });
+
+      const { token } = useAuthStore.getState();
+      if (token) {
+        toast.success('Login berhasil! Selamat datang kembali!');
+        navigate('/');
+      } else {
+        toast.error('Login gagal. Silakan periksa kredensial Anda.');
+      }
+    } catch (error) {
+      toast.error('Terjadi kesalahan saat login. Silakan coba lagi.');
+      console.error('Login error:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,6 +66,7 @@ export default function Login() {
                   className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
                   placeholder="Username atau Email"
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
               <div className="mb-4 lg:mb-6">
@@ -61,14 +76,17 @@ export default function Login() {
                   className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
                   placeholder="Password"
                   onChange={handleChange}
+                  disabled={loading}
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-6">
                 <label className="flex items-center mb-0 mr-4">
-                  <input type="checkbox" className="mr-2" />
+                  <input type="checkbox" className="mr-2" disabled={loading} />
                   Ingat Saya
                 </label>
-                <button className="hover:underline ml-4">Lupa Password?</button>
+                <button className="hover:underline ml-4" disabled={loading}>
+                  Lupa Password?
+                </button>
               </div>
               <div className="text-start mb-6 lg:mb-10">
                 <span>Belum Memiliki Akun? </span>
@@ -76,8 +94,8 @@ export default function Login() {
                   Daftar Sekarang
                 </Link>
               </div>
-              <Button variant="login" type="submit" className="">
-                Masuk
+              <Button variant="login" type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Memproses...' : 'Masuk'}
               </Button>
             </form>
           </div>
