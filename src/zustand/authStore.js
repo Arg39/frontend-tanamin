@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 
-const useAuthStore = create((set) => ({
+const useAuthStore = create((set, get) => ({
   user: null,
   token: null,
   error: null,
@@ -26,6 +26,30 @@ const useAuthStore = create((set) => ({
   logout: () => {
     localStorage.removeItem('authToken');
     set({ user: null, token: null, error: null });
+  },
+  fetchUserData: async () => {
+    const { token, logout } = get();
+    if (!token) return null;
+
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/user`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        const userData = response.data.user;
+        set({ user: userData });
+        return userData;
+      } else {
+        logout();
+        return null;
+      }
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+      logout();
+      return null;
+    }
   },
 }));
 

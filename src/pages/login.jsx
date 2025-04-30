@@ -34,13 +34,14 @@ export default function Login() {
       const { token, user } = useAuthStore.getState();
       if (token) {
         if (user.role === 'admin') {
-          toast.success('Login berhasil! Selamat datang kembali!');
+          toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/admin/dashboard');
         }
         if (user.role === 'instructor') {
-          toast.success('Login berhasil! Selamat datang kembali!');
+          toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/instructor/dashboard');
         } else if (user.role === 'student') {
+          toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/');
         }
       } else {
