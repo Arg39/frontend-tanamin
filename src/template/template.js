@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Navbar from '../components/navigation/navbar';
+import Navbar from '../components/navigation/public/navbar';
 import useMenuStore from '../zustand/menuStore';
 
 export default function Template({ children, activeNav, className, style }) {

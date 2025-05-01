@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SidebarAdmin from '../components/navigation/sidebar/sidebarAdmin';
+import SidebarAdmin from '../components/navigation/admin/navAdmin';
 import useMenuStore from '../zustand/menuStore';
 
 export default function AdminTemplate({ children, activeNav, className, style }) {

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import Sidebar from '../components/navigation/sidebar123';
-import Navbar from '../components/navigation/navbar';
+import Navbar from '../components/navigation/public/navbar';
 import LazyImage from '../components/image/lazyImage';
 import { Link } from 'react-router-dom';
 

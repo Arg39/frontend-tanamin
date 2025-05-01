@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Sidebar from './sidebar';
+import Sidebar from './sidebar/sidebar';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useAuthStore from '../../../zustand/authStore';
@@ -28,35 +28,35 @@ export default function SidebarAdmin({ activeNav }) {
 
   const navigations = [
     {
-      label: 'Gambaran umum',
-      links: [{ text: 'Dashboard', href: '/admin/dashboard', icon: 'round-dashboard' }],
+      label: 'gambaran umum',
+      links: [{ text: 'dashboard', href: '/admin/dashboard', icon: 'round-dashboard' }],
     },
     {
-      label: 'Konten',
+      label: 'konten',
       links: [
-        { text: 'Course Terbaik', href: '/admin/course-terbaik', icon: 'star' },
-        { text: 'Informasi Perusahaan', href: '/admin/informasi', icon: 'book' },
-        { text: 'FAQ', href: '/admin/faq', icon: 'bookmark' },
+        { text: 'course terbaik', href: '/admin/course-terbaik', icon: 'star' },
+        { text: 'informasi perusahaan', href: '/admin/informasi', icon: 'book' },
+        { text: 'faq', href: '/admin/faq', icon: 'bookmark' },
       ],
     },
     {
-      label: 'Pengguna',
+      label: 'pengguna',
       links: [
-        { text: 'Instruktur', href: '/admin/instruktur', icon: 'user' },
-        { text: 'Siswa', href: '/admin/siswa', icon: 'user' },
+        { text: 'instruktur', href: '/admin/instruktur', icon: 'user' },
+        { text: 'siswa', href: '/admin/siswa', icon: 'user' },
       ],
     },
     {
-      label: 'Kursus',
+      label: 'kursus',
       links: [
-        { text: 'Kategori', href: '/admin/kategori', icon: 'archive-box' },
+        { text: 'kategori', href: '/admin/kategori', icon: 'archive-box' },
         { text: 'kursus', href: '/admin/kursus', icon: 'book' },
-        { text: 'Info Pembayaran', href: '/admin/info-pembayaran', icon: 'cart' },
+        { text: 'info pembayaran', href: '/admin/info-pembayaran', icon: 'cart' },
       ],
     },
     {
-      label: 'Pesan',
-      links: [{ text: 'Pesan', href: '/admin/pesan', icon: 'bell-alert' }],
+      label: 'pesan',
+      links: [{ text: 'pesan', href: '/admin/pesan', icon: 'bell-alert' }],
     },
   ];
 

@@ -6,7 +6,7 @@ import MiniCard from '../components/card/miniCard';
 import CardInstructor from '../components/card/cardInstructor';
 import FilterCard from '../components/card/filterCard';
 import { categories } from '../routes/categories';
-import Navbar from '../components/navigation/navbar';
+import Navbar from '../components/navigation/public/navbar';
 
 export default function Beranda() {
   const course = {
