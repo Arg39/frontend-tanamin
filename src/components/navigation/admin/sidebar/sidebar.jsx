@@ -28,10 +28,10 @@ export default function Sidebar({ navigations, activeNav, onLogout }) {
                       <Link
                         key={linkIndex}
                         to={link.href}
-                        className={` hover:bg-primary-700 text-white text-lg py-1 px-2 rounded flex items-center ${
+                        className={` hover:bg-primary-800 text-white text-lg py-1 px-2 rounded flex items-center ${
                           activeNav === link.text
-                            ? 'bg-primary-600 border-l-4 border-primary-700'
-                            : 'border border-primary-900'
+                            ? 'bg-primary-800 border-l-4 border-primary-700'
+                            : 'border border-primary-800'
                         }`}
                       >
                         {link.icon && (
