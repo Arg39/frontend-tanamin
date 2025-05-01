@@ -5,8 +5,8 @@ import Icon from '../../../icons/icon';
 export default function Sidebar({ navigations, activeNav, onLogout }) {
   console.log('activeNav', activeNav);
   return (
-    <div className="h-screen p-2">
-      <div className="h-full w-80 rounded-lg bg-white-100 text-white flex flex-col">
+    <div className="h-screen p-4">
+      <div className="h-full w-80 rounded-lg bg-white-100 shadow-md text-white flex flex-col">
         {/* Header */}
         <div className="flex justify-center items-center py-6">
           <img src="/assets/Logo-CodeLearn.png" alt="Logo-Tanamin" className="h-10 lg:h-16" />
@@ -59,15 +59,6 @@ export default function Sidebar({ navigations, activeNav, onLogout }) {
                 </li>
               ))}
           </ul>
-        </div>
-        {/* Logout Button */}
-        <div className="p-4">
-          <button
-            onClick={onLogout}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded"
-          >
-            Logout
-          </button>
         </div>
       </div>
     </div>

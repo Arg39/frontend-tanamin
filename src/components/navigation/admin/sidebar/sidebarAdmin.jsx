@@ -1,31 +1,7 @@
-import React, { useState } from 'react';
-import Sidebar from './sidebar/sidebar';
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import useAuthStore from '../../../zustand/authStore';
-import { useNavigate } from 'react-router-dom';
-import ConfirmationModal from '../../modal/confirmationModal';
+import React from 'react';
+import Sidebar from './sidebar';
 
 export default function SidebarAdmin({ activeNav }) {
-  const logout = useAuthStore((state) => state.logout);
-  const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleLogout = () => {
-    setIsModalOpen(true);
-  };
-
-  const confirmLogout = () => {
-    logout();
-    toast.success('Logout berhasil! Sampai jumpa lagi.');
-    navigate('/');
-    setIsModalOpen(false);
-  };
-
-  const cancelLogout = () => {
-    setIsModalOpen(false);
-  };
-
   const navigations = [
     {
       label: 'gambaran umum',
@@ -62,19 +38,7 @@ export default function SidebarAdmin({ activeNav }) {
 
   return (
     <>
-      <Sidebar
-        title="Admin Panel"
-        navigations={navigations}
-        onLogout={handleLogout}
-        activeNav={activeNav}
-      />
-      <ConfirmationModal
-        isOpen={isModalOpen}
-        title="Konfirmasi Logout"
-        message="Apakah Anda yakin ingin keluar?"
-        onConfirm={confirmLogout}
-        onCancel={cancelLogout}
-      />
+      <Sidebar title="Admin Panel" navigations={navigations} activeNav={activeNav} />
     </>
   );
 }
