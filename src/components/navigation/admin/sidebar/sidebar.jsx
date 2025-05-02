@@ -17,7 +17,7 @@ export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
             <div className="flex justify-between items-center py-6 px-4">
               <img src="/assets/Logo-CodeLearn.png" alt="Logo-Tanamin" className="h-10 lg:h-16" />
               <button className="lg:hidden text-black" onClick={onClose}>
-                ✕
+                <Icon type="x-mark" color="black" />
               </button>
             </div>
             {/* Navigation */}

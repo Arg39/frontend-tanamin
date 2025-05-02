@@ -1,6 +1,7 @@
 import React from 'react';
 import SearchBar from '../../../searchbar/searchbar';
 import ProfileDropdown from '../../../profile/profileDropdown';
+import Icon from '../../../icons/icon';
 
 export default function TopbarAdmin({ onMenuClick }) {
   return (
@@ -8,7 +9,7 @@ export default function TopbarAdmin({ onMenuClick }) {
       <div className="mx-auto flex justify-between items-center">
         <div className="flex flex-row gap-4 w-full">
           <button className="lg:hidden text-black" onClick={onMenuClick}>
-            ☰
+            <Icon type="bars-3" color="black" />
           </button>
           <SearchBar onSearch={(query) => console.log(query)} width="w-2/5" />
         </div>
