@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import SidebarAdmin from '../components/navigation/admin/sidebar/sidebarAdmin';
 import useMenuStore from '../zustand/menuStore';
 import TopbarAdmin from '../components/navigation/admin/topbar/topbarAdmin';
@@ -9,6 +9,7 @@ import useNavigationStore from '../zustand/navigationStore';
 export default function AdminTemplate({ children, activeNav, className, style }) {
   const location = useLocation();
   const { navigationAdmin } = useNavigationStore();
+  const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar visibility
 
   // Find the current breadcrumb based on the URL
   const currentPath = location.pathname;
@@ -31,11 +32,15 @@ export default function AdminTemplate({ children, activeNav, className, style })
   return (
     <div className="min-h-screen w-screen flex bg-white-500">
       {/* Sidebar */}
-      <SidebarAdmin activeNav={activeNav} />
+      <SidebarAdmin
+        activeNav={activeNav}
+        isOpen={isSidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+      />
 
       {/* Content */}
-      <div className={`flex-1`} style={style}>
-        <TopbarAdmin />
+      <div className={`flex-1 ml-4 lg:ml-0`} style={style}>
+        <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
         <div className={`mt-2 ${className}`}>
           <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
           {children}
