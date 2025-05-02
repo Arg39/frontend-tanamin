@@ -7,31 +7,36 @@ const useNavigationStore = create((set) => ({
       links: [{ text: 'dashboard', href: '/admin/dashboard', icon: 'round-dashboard' }],
     },
     {
+      label: 'kursus',
+      links: [
+        { text: 'kategori', href: '/admin/kategori', icon: 'swatch' },
+        { text: 'kursus', href: '/admin/kursus', icon: 'book' },
+      ],
+    },
+    {
+      label: 'keuangan',
+      links: [
+        { text: 'pembayaran kursus', href: '/admin/pembayaran-kursus', icon: 'payment-solid' },
+        { text: 'pemasukan', href: '/admin/pemasukan', icon: 'money' },
+      ],
+    },
+    {
       label: 'konten',
       links: [
-        { text: 'course terbaik', href: '/admin/course-terbaik', icon: 'star' },
-        { text: 'informasi perusahaan', href: '/admin/informasi', icon: 'book' },
-        { text: 'faq', href: '/admin/faq', icon: 'bookmark' },
+        { text: 'informasi perusahaan', href: '/admin/informasi', icon: 'info-rounded' },
+        { text: 'faq', href: '/admin/faq', icon: 'faq' },
       ],
     },
     {
       label: 'pengguna',
       links: [
-        { text: 'instruktur', href: '/admin/instruktur', icon: 'user' },
-        { text: 'siswa', href: '/admin/siswa', icon: 'user' },
-      ],
-    },
-    {
-      label: 'kursus',
-      links: [
-        { text: 'kategori', href: '/admin/kategori', icon: 'archive-box' },
-        { text: 'kursus', href: '/admin/kursus', icon: 'book' },
-        { text: 'info pembayaran', href: '/admin/info-pembayaran', icon: 'cart' },
+        { text: 'instruktur', href: '/admin/instruktur', icon: 'user-filled' },
+        { text: 'siswa', href: '/admin/siswa', icon: 'user-filled' },
       ],
     },
     {
       label: 'pesan',
-      links: [{ text: 'pesan', href: '/admin/pesan', icon: 'bell-alert' }],
+      links: [{ text: 'pesan', href: '/admin/pesan', icon: 'message-question' }],
     },
   ],
   setNavigationAdmin: (newNavigation) => set({ navigationAdmin: newNavigation }),

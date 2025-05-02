@@ -1,7 +1,6 @@
 import React from 'react';
 import Icon from '../icons/icon';
 
-// Komponen untuk memformat angka
 const formatNumber = (num) => {
   if (num >= 1e9) {
     return (num / 1e9).toFixed(1).replace('.0', '') + 'B';
@@ -13,12 +12,11 @@ const formatNumber = (num) => {
   return num.toString();
 };
 
-// Komponen StatCard
 const StatCard = ({ icon, label, value }) => {
   return (
     <div className="flex flex-col items-center justify-center p-4 bg-white-100 rounded-lg">
       <div className="flex justify-center items-center mb-2 bg-primary-800 rounded-full w-24 h-24">
-        <Icon type={icon} className="size-16 text-4xl text-primary" color="white" />
+        <Icon type={icon} className="size-12" color="white" />
       </div>
       <p className="text-center font-semibold">{label}</p>
       <p className="text-center text-3xl font-bold">{formatNumber(value)}</p>

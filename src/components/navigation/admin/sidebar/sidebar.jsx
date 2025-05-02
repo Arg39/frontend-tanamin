@@ -28,7 +28,7 @@ export default function Sidebar({ navigations, activeNav, onLogout }) {
                       <Link
                         key={linkIndex}
                         to={link.href}
-                        className={` hover:bg-primary-800 text-white text-lg py-1 px-2 rounded flex items-center ${
+                        className={` hover:bg-primary-800 text-white py-2 px-4 rounded flex items-center ${
                           activeNav === link.text
                             ? 'bg-primary-800 border-l-4 border-primary-700'
                             : 'border border-primary-800'
@@ -37,12 +37,12 @@ export default function Sidebar({ navigations, activeNav, onLogout }) {
                         {link.icon && (
                           <Icon
                             type={link.icon}
-                            className="w-4 h-4"
+                            className="size-5"
                             color={activeNav === link.text ? 'white' : 'black'}
                           />
                         )}
                         <p
-                          className={`px-2 font-normal ${
+                          className={`px-2 font-normal text-lg ${
                             activeNav === link.text ? 'text-white-100' : ''
                           }`}
                         >

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../button/button';
 import useMenuStore from '../../../zustand/menuStore';
 import Icon from '../../icons/icon';
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
   const { isMenuOpen, isAccountMenuOpen, toggleMenu, toggleAccountMenu, closeMenu, activeNav } =
@@ -29,8 +30,8 @@ export default function Navbar() {
 
       {/* Desktop Menu */}
       <div className="hidden lg:flex space-x-8">
-        <a
-          href="beranda"
+        <Link
+          to="/beranda"
           className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
             activeNav === 'beranda'
               ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
@@ -38,9 +39,9 @@ export default function Navbar() {
           }`}
         >
           Beranda
-        </a>
-        <a
-          href="tentang-kami"
+        </Link>
+        <Link
+          to="/tentang-kami"
           className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
             activeNav === 'tentang-kami'
               ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
@@ -48,9 +49,9 @@ export default function Navbar() {
           }`}
         >
           Tentang Kami
-        </a>
-        <a
-          href="#category"
+        </Link>
+        <Link
+          to="/#category"
           className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
             activeNav === 'kategori'
               ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
@@ -58,9 +59,9 @@ export default function Navbar() {
           }`}
         >
           Kategori
-        </a>
-        <a
-          href="faq"
+        </Link>
+        <Link
+          to="/faq"
           className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
             activeNav === 'faq'
               ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
@@ -68,9 +69,9 @@ export default function Navbar() {
           }`}
         >
           FAQ
-        </a>
-        <a
-          href="kontak-kami"
+        </Link>
+        <Link
+          to="/kontak-kami"
           className={`flex justify-center items-center cursor-pointer py-4 font-semibold ${
             activeNav === 'kontak-kami'
               ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
@@ -78,7 +79,7 @@ export default function Navbar() {
           }`}
         >
           Kontak Kami
-        </a>
+        </Link>
       </div>
 
       {/* Mobile Menu Button */}
@@ -129,34 +130,41 @@ export default function Navbar() {
                 className="overflow-hidden mt-16 w-full bg-white shadow-md lg:hidden"
               >
                 <div className="flex flex-col space-y-4 bg-white-100 p-6">
-                  <a
-                    href="#home"
+                  <Link
+                    to="/beranda"
                     className="text-lg font-medium text-gray-800 hover:text-primary-700"
                     onClick={closeMenu}
                   >
                     Beranda
-                  </a>
-                  <a
-                    href="#about"
+                  </Link>
+                  <Link
+                    to="/tenatang-kami"
                     className="text-lg font-medium text-gray-800 hover:text-primary-700"
                     onClick={closeMenu}
                   >
                     Tentang Kami
-                  </a>
-                  <a
-                    href="#category"
+                  </Link>
+                  <Link
+                    to="/#category"
                     className="text-lg font-medium text-gray-800 hover:text-primary-700"
                     onClick={closeMenu}
                   >
                     Kategori
-                  </a>
-                  <a
-                    href="#faq"
+                  </Link>
+                  <Link
+                    to="/faq"
                     className="text-lg font-medium text-gray-800 hover:text-primary-700"
                     onClick={closeMenu}
                   >
                     FAQ
-                  </a>
+                  </Link>
+                  <Link
+                    to="/kontak-kami"
+                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                    onClick={closeMenu}
+                  >
+                    Kontak Kami
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>
