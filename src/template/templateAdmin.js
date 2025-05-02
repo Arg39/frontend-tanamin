@@ -39,9 +39,9 @@ export default function AdminTemplate({ children, activeNav, className, style })
       />
 
       {/* Content */}
-      <div className={`flex-1 ml-4 lg:ml-0`} style={style}>
+      <div className={`flex-1 mx-4 lg:mx-0`} style={style}>
         <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
-        <div className={`mt-2 ${className}`}>
+        <div className={`mt-2 mr-4 ${className}`}>
           <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
           {children}
         </div>
