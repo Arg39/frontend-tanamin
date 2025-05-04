@@ -7,6 +7,7 @@ import Beranda2 from '../pages/beranda';
 import Beranda from '../pages/beranda_lama';
 import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
+import Category from '../pages/admin/category';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -43,17 +44,33 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 const AppRoutes = () => {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="*" element={<NotFound />} />
       <Route path="/" element={<Navigate to="/beranda" replace />} />
       <Route path="/beranda" element={<Beranda2 />} />
       <Route path="/masuk" element={<Login />} />
       <Route path="/daftar" element={<Daftar />} />
       <Route path="/beranda-lama" element={<Beranda />} />
+
+      {/* Group route for admin */}
       <Route
-        path="/admin/dashboard"
+        path="/admin/*"
         element={
           <ProtectedRoute requiredRole="admin">
-            <DashboardAdmin />
+            <Routes>
+              <Route path="dashboard" element={<DashboardAdmin />} />
+              <Route path="kategori" element={<Category />} />
+            </Routes>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Group route for instructor */}
+      <Route
+        path="/instructor/*"
+        element={
+          <ProtectedRoute requiredRole="instructor">
+            <Routes>{/* Add instructor routes here */}</Routes>
           </ProtectedRoute>
         }
       />
