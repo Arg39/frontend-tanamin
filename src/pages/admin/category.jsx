@@ -11,11 +11,10 @@ export default function Category() {
     fetchCategories();
   }, [fetchCategories]);
 
-  const handleSortChange = (column) => {
-    const newSortOrder = sortBy === column && sortOrder === 'asc' ? 'desc' : 'asc';
+  const handleSortChange = (column, order) => {
     fetchCategories({
       sortBy: column,
-      sortOrder: newSortOrder,
+      sortOrder: order,
       perPage,
       page: pagination.currentPage,
     });
@@ -35,22 +34,17 @@ export default function Category() {
       accessor: 'name',
     },
     {
-      Header: 'Dibuat/Diperbarui Pada',
-      accessor: (row) => {
-        const formatDate = (date) => {
-          const options = {
-            day: 'numeric',
-            month: 'numeric',
-            year: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-          };
-          return new Date(date).toLocaleString('id-ID', options);
+      Header: 'Dibuat Pada',
+      accessor: 'created_at',
+      Cell: ({ value }) => {
+        const options = {
+          day: 'numeric',
+          month: 'numeric',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
         };
-
-        return row.created_at === row.updated_at
-          ? formatDate(row.created_at)
-          : formatDate(row.updated_at);
+        return new Date(value).toLocaleString('id-ID', options);
       },
     },
   ];
@@ -65,10 +59,12 @@ export default function Category() {
             columns={columns}
             data={categories}
             numbering={true}
-            pagination={pagination}
             onSortChange={handleSortChange}
+            pagination={{ ...pagination, perPage }}
             onPageChange={handlePageChange}
             onPageSizeChange={handlePageSizeChange}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
           />
         </div>
       </AdminTemplate>

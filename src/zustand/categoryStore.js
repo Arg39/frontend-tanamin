@@ -44,6 +44,9 @@ const useCategoryStore = create((set) => ({
             lastPage: pagination.last_page,
             total: pagination.total,
           },
+          sortBy: sortBy || 'name',
+          sortOrder: sortOrder || 'asc',
+          perPage: perPage || 10,
           error: null,
         });
       }
