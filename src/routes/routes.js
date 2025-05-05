@@ -4,7 +4,6 @@ import useAuthStore from '../zustand/authStore';
 import Login from '../pages/login';
 import Daftar from '../pages/daftar';
 import Beranda2 from '../pages/beranda';
-import Beranda from '../pages/beranda_lama';
 import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
 import Category from '../pages/admin/category';
@@ -50,7 +49,6 @@ const AppRoutes = () => {
       <Route path="/beranda" element={<Beranda2 />} />
       <Route path="/masuk" element={<Login />} />
       <Route path="/daftar" element={<Daftar />} />
-      <Route path="/beranda-lama" element={<Beranda />} />
 
       {/* Group route for admin */}
       <Route
