@@ -40,7 +40,10 @@ export default function AdminTemplate({ children, activeNav, className, style })
 
       {/* Content */}
       <div className={`flex-1 mx-4 lg:mx-0`} style={style}>
-        <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
+        {/* Topbar with sticky positioning */}
+        <div className="sticky top-2 z-20">
+          <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
+        </div>
         <div className={`mt-2 mr-4 ${className}`}>
           <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
           {children}

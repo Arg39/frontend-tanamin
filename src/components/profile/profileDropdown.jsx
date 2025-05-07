@@ -35,7 +35,7 @@ export default function ProfileDropdown() {
     <div className="relative">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center space-x-4 p-1 border border-black-200 rounded-md hover:bg-gray-300"
+        className="flex items-center space-x-2 md:space-x-4 p-1 border border-black-200 rounded-md hover:bg-gray-300"
       >
         {/* Profile Picture */}
         <div className="w-8 h-8 flex items-center justify-center bg-gray-300 rounded-full overflow-hidden">
@@ -46,7 +46,7 @@ export default function ProfileDropdown() {
           )}
         </div>
         {/* User Info */}
-        <div className="text-left">
+        <div className="text-left hidden md:block">
           <p className="text-sm font-medium">{user?.first_name || 'Guest'}</p>
           <p className="text-xs text-gray-500">{user?.role || 'Role not set'}</p>
         </div>
