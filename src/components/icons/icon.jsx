@@ -144,6 +144,19 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           </g>
         </svg>
       );
+    case 'arrow-left':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="1em"
+          height="1em"
+          viewBox="0 0 15 15"
+          fill={color}
+          className={`size-6 ${className}`}
+        >
+          <path d="M6.707 2.293a1 1 0 0 0-1.414 0l-4.5 4.5a1 1 0 0 0 0 1.414l4.5 4.5a1 1 0 0 0 1.414-1.414L4 8.5h9.5a1 1 0 0 0 0-2H4l2.707-2.707a1 1 0 0 0 0-1.414" />
+        </svg>
+      );
     case 'arrow-right':
       return (
         <svg

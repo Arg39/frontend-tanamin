@@ -12,11 +12,9 @@ import useConfirmationModalStore from '../zustand/confirmationModalStore';
 
 export default function AdminTemplate({ children, activeNav, className, style }) {
   const location = useLocation();
-  const navigate = useNavigate();
   const { navigationAdmin } = useNavigationStore();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const logout = useAuthStore((state) => state.logout);
   const { isOpen, title, message, onConfirm, onCancel, closeModal } = useConfirmationModalStore();
 
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
@@ -30,11 +28,19 @@ export default function AdminTemplate({ children, activeNav, className, style })
   let breadcrumb = { label: '', text: '' };
   navigationAdmin.forEach((section) => {
     section.links.forEach((link) => {
-      if (link.href === currentPath) {
+      if (currentPath.startsWith(link.href)) {
         breadcrumb = { label: section.label, text: link.text };
       }
     });
   });
+
+  // Add additional breadcrumb text based on the last segment of the path
+  const pathSegments = currentPath.split('/').filter(Boolean);
+  const lastSegment = pathSegments[pathSegments.length - 1];
+
+  if (lastSegment && isNaN(lastSegment)) {
+    breadcrumb.text += ` / ${lastSegment.charAt(0).toUpperCase()}${lastSegment.slice(1)}`;
+  }
 
   return (
     <div className="min-h-screen w-screen flex bg-white-500">

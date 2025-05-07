@@ -7,6 +7,7 @@ import Beranda2 from '../pages/beranda';
 import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
 import Category from '../pages/admin/category/category';
+import CategoryAdd from '../pages/admin/category/categoryAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -40,6 +41,12 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   return children;
 };
 
+const adminRoutes = [
+  { path: 'dashboard', element: <DashboardAdmin /> },
+  { path: 'kategori', element: <Category /> },
+  { path: 'kategori/tambah', element: <CategoryAdd /> },
+];
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -56,9 +63,10 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute requiredRole="admin">
             <Routes>
-              <Route path="dashboard" element={<DashboardAdmin />} />
-              <Route path="kategori" element={<Category />} />
-              <Route path="*" element={<NotFound />} /> {/* Tambahkan fallback ini */}
+              {adminRoutes.map((route, index) => (
+                <Route key={index} path={route.path} element={route.element} />
+              ))}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </ProtectedRoute>
         }
@@ -70,8 +78,8 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute requiredRole="instructor">
             <Routes>
-              {/* Tambahkan rute instruktur di sini */}
-              <Route path="*" element={<NotFound />} /> {/* Tambahkan fallback ini */}
+              {/* Add instructor routes here */}
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </ProtectedRoute>
         }
