@@ -12,7 +12,7 @@ export default function ReactTable({
   sortBy,
   sortOrder,
 }) {
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow } = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups } = useTable(
     {
       columns,
       data,
