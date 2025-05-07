@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTable, usePagination } from 'react-table';
+import Icon from '../icons/icon';
 
 export default function ReactTable({
   columns,
@@ -55,7 +56,17 @@ export default function ReactTable({
                     className="border border-gray-300 px-4 py-2 text-left cursor-pointer select-none"
                   >
                     {column.render('Header')}
-                    <span className="ml-1">{isSorted ? (isDesc ? ' 🔽' : ' 🔼') : ' ↕️'}</span>
+                    <span className="ml-1">
+                      {isSorted ? (
+                        isDesc ? (
+                          <Icon type="sort-down" className="inline-block" />
+                        ) : (
+                          <Icon type="sort-up" className="inline-block" />
+                        )
+                      ) : (
+                        <Icon type="sort" className="inline-block" />
+                      )}
+                    </span>
                   </th>
                 );
               })}

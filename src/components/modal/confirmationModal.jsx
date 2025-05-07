@@ -11,13 +11,13 @@ export default function ConfirmationModal({ isOpen, title, message, onConfirm, o
         <div className="flex justify-end space-x-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+            className="px-4 py-2 bg-gray-300 text-black-700 rounded hover:bg-gray-400"
           >
             Tidak
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white-900 rounded hover:bg-red-600"
+            className="px-4 py-2 bg-red-500 text-white-100 rounded hover:bg-red-600"
           >
             Ya
           </button>

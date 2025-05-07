@@ -7,16 +7,16 @@ export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
     <>
       {/* Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={onClose}></div>
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-30" onClick={onClose}></div>
       )}
       <div
-        className={`fixed top-0 left-0 h-screen z-50 transform ${
+        className={`fixed top-0 left-0 h-screen z-40 transform ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 lg:relative lg:translate-x-0`}
       >
         {/* Wrapper with padding to create margin */}
         <div className="h-full xl:w-80 p-4 lg:w-[calc(20rem-32px)] box-border">
-          <div className="h-full w-full rounded-lg bg-white-100 shadow-md">
+          <div className="h-full w-full rounded-lg z-0 bg-white-100 shadow-md">
             <div className="h-full w-full text-white flex flex-col">
               {/* Header */}
               <div className="flex justify-between items-center py-6 px-4">
