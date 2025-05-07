@@ -27,16 +27,17 @@ export default function ReactTable({
     if (sortBy === columnId && sortOrder === 'asc') {
       newOrder = 'desc';
     } else if (sortBy === columnId && sortOrder === 'desc') {
-      newOrder = 'asc'; // Toggle back to asc
+      newOrder = 'asc';
     }
     onSortChange(columnId, newOrder);
   };
 
   return (
     <div className="overflow-x-auto">
+      {/* Table for larger screens */}
       <table
         {...getTableProps()}
-        className="table-auto w-full border-collapse border border-gray-300"
+        className="table-auto w-full border-collapse border border-gray-300 hidden sm:table"
       >
         <thead>
           {headerGroups.map((headerGroup) => (
@@ -85,8 +86,33 @@ export default function ReactTable({
         </tbody>
       </table>
 
-      <div className="pagination mt-4 flex justify-between items-center">
-        <div className="space-x-10">
+      {/* Responsive table for smaller screens */}
+      <div className="block sm:hidden">
+        {data.map((row, i) => (
+          <div
+            key={row.id || i}
+            className="border border-gray-300 rounded-lg mb-4 p-4 bg-white shadow"
+          >
+            {numbering && (
+              <div className="mb-2">
+                <strong>No:</strong> {(pagination.currentPage - 1) * pagination.perPage + i + 1}
+              </div>
+            )}
+            {columns.map((col, ci) => {
+              const accessor =
+                typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
+              return (
+                <div key={ci} className="mb-2">
+                  <strong>{col.Header}:</strong> {accessor}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+
+      <div className="pagination mt-4 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+        <div className="flex space-x-4">
           <button
             onClick={() => onPageChange(pagination.currentPage - 1)}
             disabled={pagination.currentPage === 1}
@@ -94,7 +120,7 @@ export default function ReactTable({
           >
             Previous
           </button>
-          <span>
+          <span className="text-center">
             Page{' '}
             <strong>
               {pagination.currentPage} of {pagination.lastPage}
@@ -108,17 +134,19 @@ export default function ReactTable({
             Next
           </button>
         </div>
-        <select
-          value={pagination.perPage}
-          onChange={(e) => onPageSizeChange(Number(e.target.value))}
-          className="ml-4 px-2 py-1 border border-gray-300 rounded"
-        >
-          {[10, 20, 30, 40, 50].map((size) => (
-            <option key={size} value={size}>
-              Show {size}
-            </option>
-          ))}
-        </select>
+        <div className="flex justify-center sm:justify-end">
+          <select
+            value={pagination.perPage}
+            onChange={(e) => onPageSizeChange(Number(e.target.value))}
+            className="px-2 py-1 border border-gray-300 rounded"
+          >
+            {[10, 20, 30, 40, 50].map((size) => (
+              <option key={size} value={size}>
+                Show {size}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
     </div>
   );
