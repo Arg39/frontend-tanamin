@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
-export default function ConfirmationModal({ isOpen, title, message, onConfirm, onCancel }) {
+export default function ConfirmationModal({
+  isOpen,
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  closeModal,
+}) {
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        closeModal();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, closeModal]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-900 bg-opacity-65">
-      <div className="bg-white-100 rounded-lg shadow-lg p-6 w-96">
+      <div ref={modalRef} className="bg-white-100 rounded-lg shadow-lg p-6 w-96">
         <h2 className="text-lg font-bold mb-4">{title}</h2>
         <p className="text-gray-700 mb-6">{message}</p>
         <div className="flex justify-end space-x-4">

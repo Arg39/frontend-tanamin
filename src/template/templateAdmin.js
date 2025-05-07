@@ -68,6 +68,7 @@ export default function AdminTemplate({ children, activeNav, className, style })
           onCancel();
           closeModal();
         }}
+        closeModal={closeModal}
       />
     </div>
   );
