@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import SidebarAdmin from '../components/navigation/admin/sidebar/sidebarAdmin';
 import useMenuStore from '../zustand/menuStore';
 import TopbarAdmin from '../components/navigation/admin/topbar/topbarAdmin';
@@ -8,27 +8,16 @@ import useNavigationStore from '../zustand/navigationStore';
 import ConfirmationModal from '../components/modal/confirmationModal';
 import { toast } from 'react-toastify';
 import useAuthStore from '../zustand/authStore';
+import useConfirmationModalStore from '../zustand/confirmationModalStore';
 
 export default function AdminTemplate({ children, activeNav, className, style }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { navigationAdmin } = useNavigationStore();
-  const [isSidebarOpen, setSidebarOpen] = useState(false); // State for sidebar visibility
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for ConfirmationModal
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const logout = useAuthStore((state) => state.logout);
-
-  // Find the current breadcrumb based on the URL
-  const currentPath = location.pathname;
-  let breadcrumb = { label: '', text: '' };
-
-  navigationAdmin.forEach((section) => {
-    section.links.forEach((link) => {
-      if (link.href === currentPath) {
-        breadcrumb = { label: section.label, text: link.text };
-      }
-    });
-  });
+  const { isOpen, title, message, onConfirm, onCancel, closeModal } = useConfirmationModalStore();
 
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
@@ -36,20 +25,16 @@ export default function AdminTemplate({ children, activeNav, className, style })
     setActiveNav(activeNav);
   }, [activeNav, setActiveNav]);
 
-  const handleLogout = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
-
-  const confirmLogout = useCallback(() => {
-    logout();
-    toast.success('Logout berhasil! Sampai jumpa lagi.');
-    navigate('/');
-    setIsModalOpen(false);
-  }, [logout, navigate]);
-
-  const cancelLogout = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
+  // Breadcrumb logic
+  const currentPath = location.pathname;
+  let breadcrumb = { label: '', text: '' };
+  navigationAdmin.forEach((section) => {
+    section.links.forEach((link) => {
+      if (link.href === currentPath) {
+        breadcrumb = { label: section.label, text: link.text };
+      }
+    });
+  });
 
   return (
     <div className="min-h-screen w-screen flex bg-white-500">
@@ -60,14 +45,9 @@ export default function AdminTemplate({ children, activeNav, className, style })
         onClose={() => setSidebarOpen(false)}
       />
 
-      {/* Content */}
       <div className={`flex-1 mx-4 lg:mx-0`} style={style}>
-        {/* Topbar with sticky positioning */}
         <div className="sticky top-2 z-20">
-          <TopbarAdmin
-            onMenuClick={() => setSidebarOpen(!isSidebarOpen)}
-            onLogoutRequest={handleLogout}
-          />
+          <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
         </div>
         <div className={`mt-2 mr-4 ${className}`}>
           <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
@@ -75,13 +55,19 @@ export default function AdminTemplate({ children, activeNav, className, style })
         </div>
       </div>
 
-      {/* Confirmation Modal */}
+      {/* Global Confirmation Modal */}
       <ConfirmationModal
-        isOpen={isModalOpen}
-        title="Konfirmasi Logout"
-        message="Apakah Anda yakin ingin keluar?"
-        onConfirm={confirmLogout}
-        onCancel={cancelLogout}
+        isOpen={isOpen}
+        title={title}
+        message={message}
+        onConfirm={() => {
+          onConfirm();
+          closeModal();
+        }}
+        onCancel={() => {
+          onCancel();
+          closeModal();
+        }}
       />
     </div>
   );

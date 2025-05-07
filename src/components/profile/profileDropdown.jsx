@@ -1,12 +1,32 @@
+// profileDropdown.jsx
 import React, { useState } from 'react';
 import Icon from '../icons/icon';
 import useAuthStore from '../../zustand/authStore';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import useConfirmationModalStore from '../../zustand/confirmationModalStore';
 
-export default function ProfileDropdown({ onLogoutRequest }) {
+export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
 
   const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+  const navigate = useNavigate();
+  const openModal = useConfirmationModalStore((state) => state.openModal);
+
+  const handleLogoutRequest = () => {
+    openModal({
+      title: 'Konfirmasi Logout',
+      message: 'Apakah Anda yakin ingin keluar?',
+      onConfirm: () => {
+        logout();
+        toast.success('Logout berhasil! Sampai jumpa lagi.');
+        navigate('/');
+      },
+      onCancel: () => {},
+    });
+  };
 
   return (
     <div className="relative">
@@ -33,7 +53,7 @@ export default function ProfileDropdown({ onLogoutRequest }) {
           <button
             onClick={() => {
               setIsOpen(false);
-              onLogoutRequest();
+              handleLogoutRequest();
             }}
             className="block w-full px-4 py-2 text-left hover:bg-gray-100"
           >
