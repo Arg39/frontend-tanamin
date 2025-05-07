@@ -6,7 +6,7 @@ import Daftar from '../pages/daftar';
 import Beranda2 from '../pages/beranda';
 import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
-import Category from '../pages/admin/category';
+import Category from '../pages/admin/category/category';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -58,6 +58,7 @@ const AppRoutes = () => {
             <Routes>
               <Route path="dashboard" element={<DashboardAdmin />} />
               <Route path="kategori" element={<Category />} />
+              <Route path="*" element={<NotFound />} /> {/* Tambahkan fallback ini */}
             </Routes>
           </ProtectedRoute>
         }
@@ -68,7 +69,10 @@ const AppRoutes = () => {
         path="/instructor/*"
         element={
           <ProtectedRoute requiredRole="instructor">
-            <Routes>{/* Add instructor routes here */}</Routes>
+            <Routes>
+              {/* Tambahkan rute instruktur di sini */}
+              <Route path="*" element={<NotFound />} /> {/* Tambahkan fallback ini */}
+            </Routes>
           </ProtectedRoute>
         }
       />

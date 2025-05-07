@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
-import AdminTemplate from '../../template/templateAdmin';
-import useCategoryStore from '../../zustand/categoryStore';
-import ReactTable from '../../components/table/reactTable';
+import AdminTemplate from '../../../template/templateAdmin';
+import useCategoryStore from '../../../zustand/categoryStore';
+import ReactTable from '../../../components/table/reactTable';
+import Button from '../../../components/button/button';
+import Icon from '../../../components/icons/icon';
 
 export default function Category() {
   const { categories, fetchCategories, pagination, sortBy, sortOrder, perPage, error } =
@@ -53,7 +55,17 @@ export default function Category() {
     <div>
       <AdminTemplate activeNav="kategori">
         <div className="bg-white-100 p-6 rounded-lg shadow-md">
-          <h1 className="text-2xl font-bold mb-4">Daftar Kategori</h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold">Daftar Kategori</h1>
+            <Button
+              variant="primary"
+              className="flex items-center px-2 gap-2"
+              to={'/admin/kategori/tambah'}
+            >
+              <Icon type="plus" className="size-6" color="black" />
+              <span className="text-lg font-normal">Kategori</span>
+            </Button>
+          </div>
           {error && <p className="text-red-500">{error}</p>}
           <ReactTable
             columns={columns}

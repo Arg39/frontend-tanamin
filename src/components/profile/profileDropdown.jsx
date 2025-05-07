@@ -33,7 +33,7 @@ export default function ProfileDropdown({ onLogoutRequest }) {
           <button
             onClick={() => {
               setIsOpen(false);
-              onLogoutRequest(); // Trigger logout modal (yang ada di templateAdmin)
+              onLogoutRequest();
             }}
             className="block w-full px-4 py-2 text-left hover:bg-gray-100"
           >
