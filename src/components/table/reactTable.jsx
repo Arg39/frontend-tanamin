@@ -13,7 +13,7 @@ export default function ReactTable({
   sortBy,
   sortOrder,
 }) {
-  const { getTableProps, getTableBodyProps, headerGroups } = useTable(
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
       data,
@@ -42,31 +42,40 @@ export default function ReactTable({
       >
         <thead>
           {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-200">
-              {numbering && <th className="border border-gray-300 px-4 py-2 text-left">No</th>}
+            <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
+              {numbering && (
+                <th className="border border-gray-300 px-4 py-2 text-left text-sm w-12">No</th>
+              )}
               {headerGroup.headers.map((column) => {
-                const columnId = column.id || column.accessor; // Ensure correct id
+                const columnId = column.id || column.accessor;
                 const isSorted = sortBy === columnId;
                 const isDesc = sortOrder === 'desc';
+                const isSortable = !column.disableSort;
 
                 return (
                   <th
                     key={columnId}
-                    onClick={() => toggleSort(columnId)}
-                    className="border border-gray-300 px-4 py-2 text-left cursor-pointer select-none"
+                    onClick={() => {
+                      if (isSortable) toggleSort(columnId);
+                    }}
+                    className={`border border-gray-300 px-4 py-2 text-left ${
+                      isSortable ? 'cursor-pointer select-none' : ''
+                    }`}
                   >
                     {column.render('Header')}
-                    <span className="ml-1">
-                      {isSorted ? (
-                        isDesc ? (
-                          <Icon type="sort-down" className="inline-block" />
+                    {isSortable && (
+                      <span className="ml-1">
+                        {isSorted ? (
+                          isDesc ? (
+                            <Icon type="sort-down" className="inline-block" />
+                          ) : (
+                            <Icon type="sort-up" className="inline-block" />
+                          )
                         ) : (
-                          <Icon type="sort-up" className="inline-block" />
-                        )
-                      ) : (
-                        <Icon type="sort" className="inline-block" />
-                      )}
-                    </span>
+                          <Icon type="sort" className="inline-block" />
+                        )}
+                      </span>
+                    )}
                   </th>
                 );
               })}
@@ -74,26 +83,25 @@ export default function ReactTable({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {data.map((row, i) => {
-            return (
-              <tr key={row.id || i} className="hover:bg-gray-100">
-                {numbering && (
-                  <td className="border border-gray-300 px-4 py-2">
-                    {(pagination.currentPage - 1) * pagination.perPage + i + 1}
+          {data.map((row, i) => (
+            <tr key={row.id || i} className="hover:bg-gray-100">
+              {numbering && (
+                <td className="border border-gray-300 px-4 py-2 text-sm w-12 text-center">
+                  {(pagination.currentPage - 1) * pagination.perPage + i + 1}
+                </td>
+              )}
+              {columns.map((col, ci) => {
+                const value =
+                  typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
+
+                return (
+                  <td key={ci} className="border border-gray-300 px-4 py-2">
+                    {col.Cell ? col.Cell({ value }) : value}
                   </td>
-                )}
-                {columns.map((col, ci) => {
-                  const accessor =
-                    typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
-                  return (
-                    <td key={ci} className="border border-gray-300 px-4 py-2">
-                      {accessor}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+                );
+              })}
+            </tr>
+          ))}
         </tbody>
       </table>
 
@@ -110,11 +118,11 @@ export default function ReactTable({
               </div>
             )}
             {columns.map((col, ci) => {
-              const accessor =
+              const value =
                 typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
               return (
                 <div key={ci} className="mb-2">
-                  <strong>{col.Header}:</strong> {accessor}
+                  <strong>{col.Header}:</strong> {col.Cell ? col.Cell({ value }) : value}
                 </div>
               );
             })}

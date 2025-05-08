@@ -15,7 +15,7 @@ export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
         } transition-transform duration-300 lg:relative lg:translate-x-0`}
       >
         {/* Wrapper with padding to create margin */}
-        <div className="h-full xl:w-80 p-4 lg:w-[calc(20rem-32px)] box-border">
+        <div className="h-screen xl:w-80 p-4 lg:w-[calc(20rem-32px)] box-border overflow-y-auto">
           <div className="h-full w-full rounded-lg z-0 bg-white-100 shadow-md">
             <div className="h-full w-full text-white flex flex-col">
               {/* Header */}

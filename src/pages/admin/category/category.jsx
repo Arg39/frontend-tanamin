@@ -36,17 +36,27 @@ export default function Category() {
       accessor: 'name',
     },
     {
+      Header: 'Gambar',
+      accessor: 'image',
+      disableSort: true, // <- disable sorting untuk gambar
+      Cell: ({ value }) => (
+        <img
+          src={`${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${value}`}
+          alt="Category"
+          className="sm:mx-auto h-24 object-cover rounded"
+        />
+      ),
+    },
+    {
       Header: 'Dibuat Pada',
       accessor: 'created_at',
       Cell: ({ value }) => {
         const options = {
           day: 'numeric',
-          month: 'numeric',
+          month: 'long', // Menggunakan nama bulan penuh
           year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric',
         };
-        return new Date(value).toLocaleString('id-ID', options);
+        return new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
       },
     },
   ];
