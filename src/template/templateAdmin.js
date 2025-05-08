@@ -54,13 +54,15 @@ export default function AdminTemplate({ children, activeNav, className, style })
 
       {/* Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="sticky top-2 z-20 mx-4 lg:mx-0">
-          <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
-        </div>
+        <div className={`flex-1 overflow-y-auto ${className}`} style={style}>
+          <div className="pr-4 lg:pl-0 pl-4">
+            <div className="sticky top-4 z-20 mb-6 lg:mx-0">
+              <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
+            </div>
 
-        <div className={`flex-1 overflow-y-auto mt-2 mr-4 ${className}`} style={style}>
-          <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
-          {children}
+            <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
+            {children}
+          </div>
         </div>
       </div>
 
