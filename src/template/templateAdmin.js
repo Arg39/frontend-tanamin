@@ -24,7 +24,6 @@ export default function AdminTemplate({ children, activeNav, className, style })
     setActiveNav(activeNav);
   }, [activeNav, setActiveNav]);
 
-  // Breadcrumb logic
   const currentPath = location.pathname;
   let breadcrumb = { label: '', text: '' };
   navigationAdmin.forEach((section) => {
@@ -34,14 +33,6 @@ export default function AdminTemplate({ children, activeNav, className, style })
       }
     });
   });
-
-  // Add additional breadcrumb text based on the last segment of the path
-  const pathSegments = currentPath.split('/').filter(Boolean);
-  const lastSegment = pathSegments[pathSegments.length - 1];
-
-  if (lastSegment && isNaN(lastSegment)) {
-    breadcrumb.text += ` / ${lastSegment.charAt(0).toUpperCase()}${lastSegment.slice(1)}`;
-  }
 
   return (
     <div className="h-screen w-screen flex overflow-hidden bg-white-500">

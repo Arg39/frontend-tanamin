@@ -34,11 +34,13 @@ export default function Category() {
     {
       Header: 'Nama',
       accessor: 'name',
+      width: '20%',
     },
     {
       Header: 'Gambar',
       accessor: 'image',
-      disableSort: true, // <- disable sorting untuk gambar
+      width: '40%',
+      disableSort: true,
       Cell: ({ value }) => (
         <img
           src={`${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${value}`}
@@ -50,25 +52,23 @@ export default function Category() {
     {
       Header: 'Tanggal',
       accessor: 'created_at',
+      width: '25%',
       Cell: ({ value }) => {
-        const options = {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric',
-        };
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
         return new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
       },
     },
     {
       Header: 'Aksi',
       accessor: 'id',
+      width: '15%',
       disableSort: true, // <- disable sorting untuk aksi
       Cell: ({ value }) => (
         <div className="flex flex-col gap-2">
           <Button
             variant="primary"
             to={`/admin/kategori/edit/${value}`}
-            className="px-2 py-1 text-sm"
+            className="sm:w-fit px-2 py-1 text-sm"
           >
             Edit
           </Button>
@@ -78,7 +78,7 @@ export default function Category() {
               // Handle delete action here
               console.log(`Delete category with ID: ${value}`);
             }}
-            className="px-2 py-1 text-sm"
+            className="sm:w-fit px-2 py-1 text-sm"
           >
             Hapus
           </Button>

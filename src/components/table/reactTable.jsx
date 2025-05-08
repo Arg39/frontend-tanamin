@@ -44,13 +44,14 @@ export default function ReactTable({
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
               {numbering && (
-                <th className="border border-gray-300 px-4 py-2 text-left text-sm w-12">No</th>
+                <th className="border border-gray-300 px-2 py-2 text-sm w-12 text-center">No</th>
               )}
               {headerGroup.headers.map((column) => {
                 const columnId = column.id || column.accessor;
                 const isSorted = sortBy === columnId;
                 const isDesc = sortOrder === 'desc';
                 const isSortable = !column.disableSort;
+                const widthStyle = column.width ? { width: column.width } : {};
 
                 return (
                   <th
@@ -58,7 +59,8 @@ export default function ReactTable({
                     onClick={() => {
                       if (isSortable) toggleSort(columnId);
                     }}
-                    className={`border border-gray-300 px-4 py-2 text-left ${
+                    style={widthStyle}
+                    className={`border border-gray-300 px-4 py-2 text-center ${
                       isSortable ? 'cursor-pointer select-none' : ''
                     }`}
                   >
@@ -94,8 +96,10 @@ export default function ReactTable({
                 const value =
                   typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
 
+                const widthStyle = col.width ? { width: col.width } : {};
+
                 return (
-                  <td key={ci} className="border border-gray-300 px-4 py-2">
+                  <td key={ci} style={widthStyle} className="border border-gray-300 px-4 py-2">
                     {col.Cell ? col.Cell({ value }) : value}
                   </td>
                 );

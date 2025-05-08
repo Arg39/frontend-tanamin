@@ -62,6 +62,7 @@ export default function CategoryAdd() {
           <Icon type="arrow-left" className="size-4" color="currentColor" />
           <span>Kembali</span>
         </button>
+        <h2 className="text-2xl font-bold">Tambah Kategori</h2>
         <form onSubmit={handleSubmit} className="w-full mt-4 space-y-4">
           <TextInput
             label="Nama Kategori"
