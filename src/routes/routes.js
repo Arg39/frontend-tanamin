@@ -8,6 +8,7 @@ import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
 import Category from '../pages/admin/category/category';
 import CategoryAdd from '../pages/admin/category/categoryAdd';
+import Course from '../pages/admin/course/course';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -45,6 +46,7 @@ const adminRoutes = [
   { path: 'dashboard', element: <DashboardAdmin /> },
   { path: 'kategori', element: <Category /> },
   { path: 'kategori/tambah', element: <CategoryAdd /> },
+  { path: 'kursus', element: <Course /> },
 ];
 
 const AppRoutes = () => {
