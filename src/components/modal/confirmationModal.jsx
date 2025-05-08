@@ -7,6 +7,7 @@ export default function ConfirmationModal({
   onConfirm,
   onCancel,
   closeModal,
+  variant,
 }) {
   const modalRef = useRef(null);
 
@@ -42,7 +43,11 @@ export default function ConfirmationModal({
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-500 text-white-100 rounded hover:bg-red-600"
+            className={`px-4 py-2 text-white-100 rounded ${
+              variant === 'primary'
+                ? 'bg-green-600 hover:bg-primary-900'
+                : 'bg-red-500 hover:bg-red-600'
+            }`}
           >
             Ya
           </button>

@@ -15,7 +15,8 @@ export default function AdminTemplate({ children, activeNav, className, style })
   const { navigationAdmin } = useNavigationStore();
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
-  const { isOpen, title, message, onConfirm, onCancel, closeModal } = useConfirmationModalStore();
+  const { isOpen, title, message, onConfirm, onCancel, closeModal, variant } =
+    useConfirmationModalStore();
 
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
@@ -75,6 +76,7 @@ export default function AdminTemplate({ children, activeNav, className, style })
           closeModal();
         }}
         closeModal={closeModal}
+        variant={variant}
       />
     </div>
   );

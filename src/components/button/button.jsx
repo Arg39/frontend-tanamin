@@ -23,6 +23,10 @@ export default function Button({ children, onClick, className = '', variant = 'p
       hover: { scale: 1.1 },
       tap: { scale: 0.95 },
     },
+    form: {
+      hover: { scale: 1.05 },
+      tap: { scale: 0.95 },
+    },
   };
 
   const variantClasses = {
@@ -30,6 +34,7 @@ export default function Button({ children, onClick, className = '', variant = 'p
     danger: 'bg-primary-500 text-white rounded-lg p-2 px-6',
     secondary: 'bg-gray-500 text-white rounded-lg p-2 px-6',
     outline: 'border border-blue-500 text-blue-500 rounded-lg p-2 px-6',
+    form: 'bg-primary-800 text-white-100 px-8 py-2 rounded-md hover:bg-primary-900',
   };
 
   const combinedClassName = `${
@@ -63,6 +68,6 @@ Button.propTypes = {
   children: PropTypes.node.isRequired,
   onClick: PropTypes.func,
   className: PropTypes.string,
-  variant: PropTypes.oneOf(['login', 'primary', 'danger', 'secondary', 'outline']),
+  variant: PropTypes.oneOf(['login', 'primary', 'danger', 'secondary', 'outline', 'form']),
   to: PropTypes.string,
 };

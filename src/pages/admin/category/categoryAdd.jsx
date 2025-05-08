@@ -3,7 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import AdminTemplate from '../../../template/templateAdmin';
 import Icon from '../../../components/icons/icon';
 import TextInput from '../../../components/form/textInput';
-import FileInput from '../../../components/form/fileInput';
+import ImagePicker from '../../../components/form/imagePicker';
+import Button from '../../../components/button/button';
+import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
+import useCategoryStore from '../../../zustand/categoryStore';
 
 export default function CategoryAdd() {
   const navigate = useNavigate();
@@ -11,6 +14,9 @@ export default function CategoryAdd() {
     name: '',
     image: null,
   });
+
+  const { openModal, closeModal } = useConfirmationModalStore();
+  const { addCategory } = useCategoryStore();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,8 +29,26 @@ export default function CategoryAdd() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Add logic to handle form submission (e.g., API call)
+
+    openModal({
+      title: 'Konfirmasi Simpan',
+      message: 'Apakah Anda yakin ingin menyimpan kategori ini?',
+      variant: 'primary',
+      onConfirm: () => {
+        closeModal();
+        const formDataToSend = new FormData();
+        formDataToSend.append('name', formData.name);
+        formDataToSend.append('image', formData.image);
+
+        addCategory(formDataToSend).then(() => {
+          navigate('/admin/kategori');
+        });
+      },
+      onCancel: () => {
+        closeModal();
+        console.log('Aksi dibatalkan');
+      },
+    });
   };
 
   return (
@@ -38,7 +62,7 @@ export default function CategoryAdd() {
           <Icon type="arrow-left" className="size-4" color="currentColor" />
           <span>Kembali</span>
         </button>
-        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+        <form onSubmit={handleSubmit} className="w-full mt-4 space-y-4">
           <TextInput
             label="Nama Kategori"
             name="name"
@@ -46,13 +70,12 @@ export default function CategoryAdd() {
             onChange={handleInputChange}
             placeholder="Masukkan nama kategori"
           />
-          <FileInput label="Gambar Kategori" name="image" onChange={handleFileChange} />
-          <button
-            type="submit"
-            className="bg-primary-900 text-white-100 px-4 py-2 rounded-md hover:bg-primary-800"
-          >
-            Simpan
-          </button>
+          <ImagePicker label="Gambar Kategori" name="image" onChange={handleFileChange} />
+          <div className="w-full flex justify-end">
+            <Button type="submit" variant="form">
+              Simpan
+            </Button>
+          </div>
         </form>
       </div>
     </AdminTemplate>
