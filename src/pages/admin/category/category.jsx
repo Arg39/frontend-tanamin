@@ -48,16 +48,42 @@ export default function Category() {
       ),
     },
     {
-      Header: 'Dibuat Pada',
+      Header: 'Tanggal',
       accessor: 'created_at',
       Cell: ({ value }) => {
         const options = {
           day: 'numeric',
-          month: 'long', // Menggunakan nama bulan penuh
+          month: 'long',
           year: 'numeric',
         };
         return new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
       },
+    },
+    {
+      Header: 'Aksi',
+      accessor: 'id',
+      disableSort: true, // <- disable sorting untuk aksi
+      Cell: ({ value }) => (
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="primary"
+            to={`/admin/kategori/edit/${value}`}
+            className="px-2 py-1 text-sm"
+          >
+            Edit
+          </Button>
+          <Button
+            variant="danger"
+            onClick={() => {
+              // Handle delete action here
+              console.log(`Delete category with ID: ${value}`);
+            }}
+            className="px-2 py-1 text-sm"
+          >
+            Hapus
+          </Button>
+        </div>
+      ),
     },
   ];
 

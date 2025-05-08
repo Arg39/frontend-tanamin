@@ -31,7 +31,7 @@ export default function Button({ children, onClick, className = '', variant = 'p
 
   const variantClasses = {
     primary: 'bg-primary-500 text-white rounded-full p-2 px-6',
-    danger: 'bg-primary-500 text-white rounded-lg p-2 px-6',
+    danger: 'bg-red-500 text-white rounded-full p-2 px-6',
     secondary: 'bg-gray-500 text-white rounded-lg p-2 px-6',
     outline: 'border border-blue-500 text-blue-500 rounded-lg p-2 px-6',
     form: 'bg-primary-800 text-white-100 px-8 py-2 rounded-md hover:bg-primary-900',
