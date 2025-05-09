@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 export default function ImagePicker({ label, name, onChange, preview }) {
   const [localPreview, setLocalPreview] = useState(preview || null);
 
-  // Update localPreview whenever preview changes
   useEffect(() => {
     setLocalPreview(
       preview ? `${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${preview}` : null
@@ -19,30 +18,12 @@ export default function ImagePicker({ label, name, onChange, preview }) {
     }
   };
 
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      setLocalPreview(URL.createObjectURL(file));
-      const event = { target: { name, files: [file] } };
-      onChange(event);
-    }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  };
-
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700">
         {label}
       </label>
-      <div
-        className="border border-gray-300 rounded-md px-3 py-6 focus:outline-none focus:ring-2 focus:ring-primary-500 flex items-center justify-center relative h-48"
-        onDrop={handleDrop}
-        onDragOver={handleDragOver}
-      >
+      <div className="border border-gray-300 rounded-md px-3 py-6 focus:outline-none focus:ring-2 focus:ring-primary-500 flex items-center justify-center relative h-48">
         {localPreview ? (
           <img src={localPreview} alt="Preview" className="max-h-full object-contain" />
         ) : (

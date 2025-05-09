@@ -123,8 +123,10 @@ const useCategoryStore = create((set) => ({
       return;
     }
 
+    categoryData.append('_method', 'PUT');
+
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
         categoryData,
         {
