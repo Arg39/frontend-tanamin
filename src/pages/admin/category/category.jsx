@@ -4,10 +4,19 @@ import useCategoryStore from '../../../zustand/categoryStore';
 import ReactTable from '../../../components/table/reactTable';
 import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
+import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 
 export default function Category() {
-  const { categories, fetchCategories, pagination, sortBy, sortOrder, perPage, error } =
-    useCategoryStore();
+  const {
+    categories,
+    fetchCategories,
+    pagination,
+    sortBy,
+    sortOrder,
+    perPage,
+    error,
+    deleteCategory,
+  } = useCategoryStore();
 
   useEffect(() => {
     fetchCategories();
@@ -29,6 +38,7 @@ export default function Category() {
   const handlePageSizeChange = (size) => {
     fetchCategories({ sortBy, sortOrder, perPage: size, page: 1 });
   };
+  const openModal = useConfirmationModalStore((state) => state.openModal);
 
   const columns = [
     {
@@ -62,7 +72,7 @@ export default function Category() {
       Header: 'Aksi',
       accessor: 'id',
       width: '15%',
-      disableSort: true, // <- disable sorting untuk aksi
+      disableSort: true,
       Cell: ({ value }) => (
         <div className="flex flex-col gap-2">
           <Button
@@ -75,8 +85,14 @@ export default function Category() {
           <Button
             variant="danger"
             onClick={() => {
-              // Handle delete action here
-              console.log(`Delete category with ID: ${value}`);
+              openModal({
+                title: 'Konfirmasi Logout',
+                message: 'Apakah Anda yakin ingin keluar?',
+                onConfirm: () => {
+                  deleteCategory(value);
+                },
+                onCancel: () => {},
+              });
             }}
             className="sm:w-fit px-2 py-1 text-sm"
           >

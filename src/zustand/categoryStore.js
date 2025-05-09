@@ -145,6 +145,35 @@ const useCategoryStore = create((set) => ({
       toast.error(errorMessage);
     }
   },
+
+  deleteCategory: async (id) => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      toast.error('Unauthorized: No token found');
+      return;
+    }
+
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success('Kategori berhasil dihapus');
+        set((state) => ({
+          categories: state.categories.filter((category) => category.id !== id),
+        }));
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Gagal menghapus kategori';
+      toast.error(errorMessage);
+    }
+  },
 }));
 
 export default useCategoryStore;
