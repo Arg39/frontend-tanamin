@@ -10,6 +10,7 @@ import Category from '../pages/admin/category/category';
 import CategoryAdd from '../pages/admin/category/categoryAdd';
 import CategoryEdit from '../pages/admin/category/categoryEdit';
 import Course from '../pages/admin/course/course';
+import Instructor from '../pages/admin/user/instructor';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -49,6 +50,7 @@ const adminRoutes = [
   { path: 'kategori/tambah', element: <CategoryAdd /> },
   { path: 'kategori/edit/:id', element: <CategoryEdit /> },
   { path: 'kursus', element: <Course /> },
+  { path: 'instruktur', element: <Instructor /> },
 ];
 
 const AppRoutes = () => {

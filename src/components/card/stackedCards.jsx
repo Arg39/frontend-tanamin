@@ -4,9 +4,8 @@ import Card from '../card/card';
 
 const coursesMock = [
   {
-    image:
-      'https://cpr.heart.org/-/media/CPR-Images/Find-a-Course/AHA-IAN-3940-HiRes-find-a-course.jpg',
-    title: 'Full Stack JavaScript Next JS Developer',
+    image: 'https://img-c.udemycdn.com/course/750x422/3562677_668e.jpg',
+    title: 'Full Stack Web Development using JavaScript',
     rating: 4,
     lotMaterial: 3,
     duration: 4,
@@ -16,8 +15,9 @@ const coursesMock = [
     priceBeforeDiscount: 399000,
   },
   {
-    image: 'https://miro.medium.com/v2/resize:fit:1400/1*lUPtvDuiWf-sU47_1P20LQ.png',
-    title: 'Master Laravel & Vue.js for Web Development',
+    image:
+      'https://i.ytimg.com/vi/-I1s6WqLOF4/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLAysWK2u0R3BOXMpJKwqBWOtYhTKg',
+    title: 'Master Laravel for create RESTful API',
     rating: 5,
     lotMaterial: 5,
     duration: 10,
@@ -27,7 +27,8 @@ const coursesMock = [
     priceBeforeDiscount: 499000,
   },
   {
-    image: 'https://code.visualstudio.com/assets/docs/languages/typescript/hero.png',
+    image:
+      'https://www.rabitsolutions.com/wp-content/uploads/2023/09/typescript-cover-cropped-1300x600.jpeg',
     title: 'TypeScript from Zero to Hero',
     rating: 4,
     lotMaterial: 4,
@@ -47,7 +48,7 @@ export default function StackedCards({ count = 3 }) {
     const interval = setInterval(() => {
       const nextCourse = coursesMock[(activeIndex + 1) % coursesMock.length];
       setStackedCourses((prev) => {
-        const newStack = [...prev.slice(1), nextCourse]; // Geser kartu ke belakang
+        const newStack = [...prev.slice(1), nextCourse];
         return newStack;
       });
       setActiveIndex((prev) => (prev + 1) % coursesMock.length);
@@ -72,8 +73,8 @@ export default function StackedCards({ count = 3 }) {
             className="absolute"
             style={{
               zIndex,
-              marginLeft: `${offset * 20}px`,
-              marginBottom: `${offset * 8}px`,
+              marginLeft: `${offset * 10}px`,
+              marginBottom: `${offset * 4}px`,
               transform: `rotate(${offset * 2.5}deg)`,
             }}
           >
