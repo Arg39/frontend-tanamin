@@ -8,6 +8,7 @@ import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
 import Category from '../pages/admin/category/category';
 import CategoryAdd from '../pages/admin/category/categoryAdd';
+import CategoryEdit from '../pages/admin/category/categoryEdit';
 import Course from '../pages/admin/course/course';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
@@ -46,6 +47,7 @@ const adminRoutes = [
   { path: 'dashboard', element: <DashboardAdmin /> },
   { path: 'kategori', element: <Category /> },
   { path: 'kategori/tambah', element: <CategoryAdd /> },
+  { path: 'kategori/edit/:id', element: <CategoryEdit /> },
   { path: 'kursus', element: <Course /> },
 ];
 

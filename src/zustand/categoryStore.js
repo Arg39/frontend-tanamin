@@ -72,7 +72,7 @@ const useCategoryStore = create((set) => ({
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data', // For handling file uploads
+            'Content-Type': 'multipart/form-data',
           },
         }
       );
@@ -85,6 +85,61 @@ const useCategoryStore = create((set) => ({
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Gagal menambahkan kategori';
+      toast.error(errorMessage);
+    }
+  },
+
+  fetchCategoryById: async (id) => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      toast.error('Unauthorized: No token found');
+      return null;
+    }
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data.data;
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Gagal mengambil data kategori';
+      toast.error(errorMessage);
+      return null;
+    }
+  },
+
+  updateCategory: async (id, categoryData) => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      toast.error('Unauthorized: No token found');
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
+        categoryData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.success('Kategori berhasil diperbarui');
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Gagal memperbarui kategori';
       toast.error(errorMessage);
     }
   },

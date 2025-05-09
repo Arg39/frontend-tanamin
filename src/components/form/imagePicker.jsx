@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-export default function ImagePicker({ label, name, onChange }) {
-  const [preview, setPreview] = useState(null);
+export default function ImagePicker({ label, name, onChange, preview }) {
+  const [localPreview, setLocalPreview] = useState(preview || null);
+
+  // Update localPreview whenever preview changes
+  useEffect(() => {
+    setLocalPreview(
+      preview ? `${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${preview}` : null
+    );
+  }, [preview]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPreview(URL.createObjectURL(file));
+      setLocalPreview(URL.createObjectURL(file));
       onChange(e);
     }
   };
@@ -16,7 +23,7 @@ export default function ImagePicker({ label, name, onChange }) {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
     if (file) {
-      setPreview(URL.createObjectURL(file));
+      setLocalPreview(URL.createObjectURL(file));
       const event = { target: { name, files: [file] } };
       onChange(event);
     }
@@ -36,8 +43,8 @@ export default function ImagePicker({ label, name, onChange }) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
-        {preview ? (
-          <img src={preview} alt="Preview" className="max-h-full object-contain" />
+        {localPreview ? (
+          <img src={localPreview} alt="Preview" className="max-h-full object-contain" />
         ) : (
           <span className="text-gray-500 text-center">
             Drag and drop an image here or click to select
@@ -60,4 +67,5 @@ ImagePicker.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  preview: PropTypes.string,
 };
