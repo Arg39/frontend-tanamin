@@ -33,7 +33,7 @@ export default function Instructor() {
     {
       Header: 'Nama',
       accessor: (row) => `${row.first_name} ${row.last_name}`,
-      width: '40%',
+      width: '30%',
       Cell: ({ value }) => <span>{value}</span>,
     },
     {
@@ -56,13 +56,46 @@ export default function Instructor() {
       ),
     },
     {
-      Header: 'Tanggal Dibuat',
+      Header: 'Tanggal bergabung',
       accessor: 'created_at',
       width: '20%',
       Cell: ({ value }) => {
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         return new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
       },
+    },
+    {
+      Header: 'Aksi',
+      accessor: 'id',
+      width: '10%',
+      Cell: ({ value }) => (
+        <div className="w-fit flex flex-col gap-4 justify-center items-start text-md">
+          <button
+            className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
+            onClick={() => {
+              console.log('View instructor with ID:', value);
+            }}
+          >
+            view
+          </button>
+          <button
+            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white-100"
+            onClick={() => {
+              console.log('Edit instructor with ID:', value);
+            }}
+          >
+            Edit
+          </button>
+          <button
+            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
+            onClick={() => {
+              console.log('Delete instructor with ID:', value);
+            }}
+          >
+            delete
+          </button>
+        </div>
+      ),
     },
   ];
 

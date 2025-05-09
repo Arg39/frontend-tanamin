@@ -49,7 +49,7 @@ export default function Category() {
     {
       Header: 'Gambar',
       accessor: 'image',
-      width: '40%',
+      width: '45%',
       disableSort: true,
       Cell: ({ value }) => (
         <img
@@ -71,14 +71,14 @@ export default function Category() {
     {
       Header: 'Aksi',
       accessor: 'id',
-      width: '15%',
+      width: '10%',
       disableSort: true,
       Cell: ({ value }) => (
-        <div className="flex flex-col gap-2">
+        <div className="w-fit flex flex-col gap-4 justify-center items-start text-md">
           <Button
             variant="primary"
             to={`/admin/kategori/edit/${value}`}
-            className="sm:w-fit px-2 py-1 text-sm"
+            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white-100"
           >
             Edit
           </Button>
@@ -94,7 +94,7 @@ export default function Category() {
                 onCancel: () => {},
               });
             }}
-            className="sm:w-fit px-2 py-1 text-sm"
+            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
           >
             Hapus
           </Button>
@@ -107,7 +107,7 @@ export default function Category() {
     <div>
       <AdminTemplate activeNav="kategori">
         <div className="bg-white-100 p-6 rounded-lg shadow-md">
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
             <h1 className="text-2xl font-bold">Daftar Kategori</h1>
             <Button
               variant="primary"
