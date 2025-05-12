@@ -16,7 +16,6 @@ export default function Navbar() {
     activeNav,
   } = useMenuStore();
 
-  // Disable body scroll when Mobile Menu or Account Menu is open
   useEffect(() => {
     if (isMenuOpen || isAccountMenuOpen) {
       document.body.style.overflow = 'hidden';
