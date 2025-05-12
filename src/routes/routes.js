@@ -13,6 +13,7 @@ import Course from '../pages/admin/course/course';
 import Instructor from '../pages/admin/user/instructor';
 import InstructorAdd from '../pages/admin/user/instructorAdd';
 import DashboardInstructor from '../pages/instructor/dashboard';
+import Payment from '../pages/student/testPayment';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -67,6 +68,7 @@ const AppRoutes = () => {
       <Route path="/beranda" element={<Beranda2 />} />
       <Route path="/masuk" element={<Login />} />
       <Route path="/daftar" element={<Daftar />} />
+      <Route path="/coba-payment" element={<Payment />} />
 
       {/* Group route for admin */}
       <Route
