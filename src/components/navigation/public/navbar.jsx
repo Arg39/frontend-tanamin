@@ -6,8 +6,15 @@ import Icon from '../../icons/icon';
 import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-  const { isMenuOpen, isAccountMenuOpen, toggleMenu, toggleAccountMenu, closeMenu, activeNav } =
-    useMenuStore();
+  const {
+    isMenuOpen,
+    isAccountMenuOpen,
+    toggleMenu,
+    toggleAccountMenu,
+    closeMenu,
+    closeAccountMenu,
+    activeNav,
+  } = useMenuStore();
 
   // Disable body scroll when Mobile Menu or Account Menu is open
   useEffect(() => {
@@ -121,52 +128,54 @@ export default function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden mt-16 w-full bg-white shadow-md lg:hidden fixed left-0 top-0 z-50"
+              style={{ marginTop: '64px' }}
             >
-              <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: 'auto' }}
-                exit={{ height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="overflow-hidden mt-16 w-full bg-white shadow-md lg:hidden"
-              >
-                <div className="flex flex-col space-y-4 bg-white-100 p-6">
-                  <Link
-                    to="/beranda"
-                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
-                    onClick={closeMenu}
-                  >
-                    Beranda
-                  </Link>
-                  <Link
-                    to="/tenatang-kami"
-                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
-                    onClick={closeMenu}
-                  >
-                    Tentang Kami
-                  </Link>
-                  <Link
-                    to="/#category"
-                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
-                    onClick={closeMenu}
-                  >
-                    Kategori
-                  </Link>
-                  <Link
-                    to="/faq"
-                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
-                    onClick={closeMenu}
-                  >
-                    FAQ
-                  </Link>
-                  <Link
-                    to="/kontak-kami"
-                    className="text-lg font-medium text-gray-800 hover:text-primary-700"
-                    onClick={closeMenu}
-                  >
-                    Kontak Kami
-                  </Link>
-                </div>
-              </motion.div>
+              <div className="flex flex-col space-y-4 bg-white-100 p-6 relative">
+                <Link
+                  to="/beranda"
+                  className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                  onClick={closeMenu}
+                >
+                  Beranda
+                </Link>
+                <Link
+                  to="/tentang-kami"
+                  className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                  onClick={closeMenu}
+                >
+                  Tentang Kami
+                </Link>
+                <Link
+                  to="/#category"
+                  className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                  onClick={closeMenu}
+                >
+                  Kategori
+                </Link>
+                <Link
+                  to="/faq"
+                  className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                  onClick={closeMenu}
+                >
+                  FAQ
+                </Link>
+                <Link
+                  to="/kontak-kami"
+                  className="text-lg font-medium text-gray-800 hover:text-primary-700"
+                  onClick={closeMenu}
+                >
+                  Kontak Kami
+                </Link>
+              </div>
             </motion.div>
           </>
         )}
@@ -179,12 +188,12 @@ export default function Navbar() {
             {/* Overlay */}
             <motion.div
               className="fixed inset-0 bg-black bg-opacity-50 z-40"
-              onClick={toggleAccountMenu}
+              onClick={closeAccountMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-            ></motion.div>
+            />
 
             {/* Account Menu Content */}
             <motion.div
@@ -192,14 +201,14 @@ export default function Navbar() {
               animate={{ height: 'auto' }}
               exit={{ height: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden fixed top-16 left-0 w-full bg-white shadow-md lg:hidden"
+              className="overflow-hidden fixed top-16 left-0 w-full bg-white shadow-md lg:hidden z-50"
             >
-              <div className="flex flex-col space-y-4 bg-white-100 p-6">
+              <div className="flex flex-col space-y-4 bg-white-100 p-6 relative">
                 <Button
                   variant="login"
                   to={'masuk'}
                   className="text-lg font-medium"
-                  onClick={closeMenu}
+                  onClick={closeAccountMenu}
                 >
                   Masuk
                 </Button>
@@ -207,7 +216,7 @@ export default function Navbar() {
                   variant="login"
                   to={'daftar'}
                   className="text-lg font-medium"
-                  onClick={closeMenu}
+                  onClick={closeAccountMenu}
                 >
                   Daftar
                 </Button>

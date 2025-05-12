@@ -41,7 +41,7 @@ export default function Beranda2() {
               Jelajahi Course
             </Button>
           </div>
-          <div className="flex w-full lg:w-1/2 mt-8 lg:mt-[-2.5rem] justify-center items-start">
+          <div className="flex w-full h-[25rem] sm:h-0 lg:w-1/2 mt-8 lg:mt-[-2.5rem] justify-center items-start">
             <StackedCards course={course} count={3} />
           </div>
         </div>
