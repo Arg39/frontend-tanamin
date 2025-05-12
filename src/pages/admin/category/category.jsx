@@ -108,7 +108,7 @@ export default function Category() {
       <AdminTemplate activeNav="kategori">
         <div className="bg-white-100 p-6 rounded-lg shadow-md">
           <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
-            <h1 className="text-2xl font-bold">Daftar Kategori</h1>
+            <h2 className="text-2xl font-bold">Daftar Kategori</h2>
             <Button
               variant="primary"
               className="flex items-center px-2 gap-2"

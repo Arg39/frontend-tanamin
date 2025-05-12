@@ -11,6 +11,7 @@ import CategoryAdd from '../pages/admin/category/categoryAdd';
 import CategoryEdit from '../pages/admin/category/categoryEdit';
 import Course from '../pages/admin/course/course';
 import Instructor from '../pages/admin/user/instructor';
+import InstructorAdd from '../pages/admin/user/instructorAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -51,6 +52,7 @@ const adminRoutes = [
   { path: 'kategori/edit/:id', element: <CategoryEdit /> },
   { path: 'kursus', element: <Course /> },
   { path: 'instruktur', element: <Instructor /> },
+  { path: 'instruktur/tambah', element: <InstructorAdd /> },
 ];
 
 const AppRoutes = () => {

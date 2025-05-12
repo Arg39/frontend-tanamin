@@ -2,13 +2,14 @@ import React, { useEffect } from 'react';
 import AdminTemplate from '../../../template/templateAdmin';
 import useInstructorStore from '../../../zustand/instructorStore';
 import ReactTable from '../../../components/table/reactTable';
+import Button from '../../../components/button/button';
+import Icon from '../../../components/icons/icon';
 
 export default function Instructor() {
   const { instructors, fetchInstructors, pagination, sortBy, sortOrder, perPage, error } =
     useInstructorStore();
 
   useEffect(() => {
-    // Fetch instructors with default sorting by first_name in ascending order
     fetchInstructors({ sortBy: 'first_name', sortOrder: 'asc' });
   }, [fetchInstructors]);
 
@@ -45,6 +46,7 @@ export default function Instructor() {
       Header: 'Status',
       accessor: 'status',
       width: '15%',
+      disableSort: true,
       Cell: ({ value }) => (
         <span
           className={`px-2 py-1 rounded ${
@@ -68,8 +70,9 @@ export default function Instructor() {
       Header: 'Aksi',
       accessor: 'id',
       width: '10%',
+      disableSort: true,
       Cell: ({ value }) => (
-        <div className="w-fit flex flex-col gap-4 justify-center items-start text-md">
+        <div className="w-fit flex flex-row md:flex-col gap-2 md:gap-4 justify-center items-start text-md mt-2 md:mt-0">
           <button
             className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
             onClick={() => {
@@ -102,7 +105,17 @@ export default function Instructor() {
   return (
     <AdminTemplate activeNav="instruktur">
       <div className="bg-white-100 p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Daftar Instruktur</h2>
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
+          <h2 className="text-2xl font-bold mb-4">Daftar Instruktur</h2>
+          <Button
+            variant="primary"
+            className="flex items-center px-2 gap-2"
+            to={'/admin/instruktur/tambah'}
+          >
+            <Icon type="plus" className="size-6" color="black" />
+            <span className="text-lg font-normal">instruktur</span>
+          </Button>
+        </div>
         {error && <p className="text-red-500">{error}</p>}
         <ReactTable
           columns={columns}
