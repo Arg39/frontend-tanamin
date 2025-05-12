@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import Navbar from '../components/navigation/public/navbar';
 import useMenuStore from '../zustand/menuStore';
+import { AnimatePresence, motion } from 'framer-motion';
 
-export default function Template({ children, activeNav, className, style }) {
+export default function Template({ children, activeNav, className, style, locationKey }) {
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
   useEffect(() => {
@@ -17,7 +18,18 @@ export default function Template({ children, activeNav, className, style }) {
       {/* Content */}
       <div className={`w-screen flex-1 z-0 relative ${className}`} style={style}>
         {/* Background Gradient */}
-        <div className="pt-16">{children}</div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={locationKey}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="pt-16 h-full"
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

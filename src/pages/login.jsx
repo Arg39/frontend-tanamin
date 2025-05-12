@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LazyImage from '../components/image/lazyImage';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import useAuthStore from '../zustand/authStore';
 import Template from '../template/template';
 
 export default function Login() {
+  const location = useLocation();
   const [state, setState] = useState({
     username: '',
     password: '',
@@ -56,7 +57,7 @@ export default function Login() {
   };
 
   return (
-    <Template activeNav="login">
+    <Template activeNav="login" locationKey={location.key}>
       <div className="flex flex-col lg:flex-row justify-between items-center pt-12">
         <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
           <LazyImage src="/images/login.png" alt="Login" className="w-full lg:w-[600px]" />

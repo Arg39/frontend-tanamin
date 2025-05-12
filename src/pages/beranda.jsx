@@ -4,14 +4,17 @@ import GradientText from '../blocks/TextAnimations/FuzzyText/gradientColors';
 import useCourseStore from '../zustand/courseStore';
 import StackedCards from '../components/card/stackedCards';
 import Button from '../components/button/button';
+import { useLocation } from 'react-router-dom';
 
 export default function Beranda2() {
   const course = useCourseStore((state) => state.course);
+  const location = useLocation();
 
   return (
     <Template
       activeNav="beranda"
       className="h-screen w-screen bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white-100 to-100%"
+      locationKey={location.key}
     >
       <div className="xl:p-20 lg:p-10 md:p-14 sm:p-8 p-8 w-full">
         <div className="mt-16 gap-8 w-full flex flex-col lg:flex-row">
