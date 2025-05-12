@@ -6,9 +6,11 @@ import Button from '../../../components/button/button';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../components/icons/icon';
 import PasswordInputGenerator from '../../../components/form/passwordInputGenerator';
+import useInstructorStore from '../../../zustand/instructorStore';
 
 export default function InstructorAdd() {
   const navigate = useNavigate();
+  const addInstructor = useInstructorStore((state) => state.addInstructor);
   const [form, setForm] = useState({
     name: '',
     username: '',
@@ -16,12 +18,27 @@ export default function InstructorAdd() {
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      alert('Password dan konfirmasi password tidak sama');
+      return;
+    }
+    setLoading(true);
+    const result = await addInstructor(form);
+    setLoading(false);
+    if (result.success) {
+      navigate('/admin/instruktur');
+    }
   };
 
   return (
@@ -36,7 +53,7 @@ export default function InstructorAdd() {
           <span>Kembali</span>
         </button>
         <h2 className="text-2xl font-bold">Tambah Instruktur</h2>
-        <form className="w-full mt-4 space-y-4">
+        <form className="w-full mt-4 space-y-4" onSubmit={handleSubmit}>
           <TextInput
             label="Nama Instruktur"
             name="name"
@@ -76,8 +93,8 @@ export default function InstructorAdd() {
             showGenerate={false}
           />
           <div className="w-full flex justify-end">
-            <Button type="submit" variant="form">
-              Simpan
+            <Button type="submit" variant="form" disabled={loading}>
+              {loading ? 'Menyimpan...' : 'Simpan'}
             </Button>
           </div>
         </form>

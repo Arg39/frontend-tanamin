@@ -10,8 +10,8 @@ const useInstructorStore = create((set) => ({
     lastPage: 1,
     total: 0,
   },
-  sortBy: 'first_name', // Default sorting by first_name
-  sortOrder: 'asc', // Default sorting order asc
+  // sortBy: 'first_name',
+  sortOrder: 'asc',
   perPage: 10,
   error: null,
 
@@ -58,6 +58,47 @@ const useInstructorStore = create((set) => ({
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to fetch instructors';
       set({ error: errorMessage });
+    }
+  },
+
+  addInstructor: async (formData) => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      set({ error: 'Unauthorized: No token found' });
+      toast.error('Unauthorized: No token found');
+      return { success: false, message: 'Unauthorized: No token found' };
+    }
+
+    try {
+      const params = {
+        ...formData,
+        role: 'instructor',
+        password_confirmation: formData.confirmPassword,
+      };
+      delete params.confirmPassword;
+
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/register`,
+        params,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201 || response.status === 200) {
+        toast.success('Instruktur berhasil ditambahkan');
+        return { success: true };
+      } else {
+        toast.error('Gagal menambah instruktur');
+        return { success: false, message: 'Gagal menambah instruktur' };
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Gagal menambah instruktur';
+      set({ error: errorMessage });
+      toast.error(errorMessage);
+      return { success: false, message: errorMessage };
     }
   },
 }));

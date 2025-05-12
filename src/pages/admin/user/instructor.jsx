@@ -72,7 +72,7 @@ export default function Instructor() {
       width: '10%',
       disableSort: true,
       Cell: ({ value }) => (
-        <div className="w-fit flex flex-row md:flex-col gap-2 md:gap-4 justify-center items-start text-md mt-2 md:mt-0">
+        <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
           <button
             className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
             onClick={() => {

@@ -39,7 +39,26 @@ const useNavigationStore = create((set) => ({
       links: [{ text: 'pesan', href: '/admin/pesan', icon: 'message-question' }],
     },
   ],
-  setNavigationAdmin: (newNavigation) => set({ navigationAdmin: newNavigation }),
+  navigationInstructor: [
+    {
+      label: 'gambaran umum',
+      links: [{ text: 'dashboard', href: '/instruktur/dashboard', icon: 'round-dashboard' }],
+    },
+    {
+      label: 'kursus',
+      links: [
+        { text: 'kursus saya', href: '/instruktur/kursus-saya', icon: 'book' },
+        { text: 'kategori', href: '/instruktur/kategori', icon: 'swatch' },
+      ],
+    },
+    {
+      label: 'keuangan',
+      links: [
+        { text: 'pemasukan', href: '/instruktur/pemasukan', icon: 'money' },
+        { text: 'pembayaran kursus', href: '/instruktur/pembayaran-kursus', icon: 'payment-solid' },
+      ],
+    },
+  ],
 }));
 
 export default useNavigationStore;

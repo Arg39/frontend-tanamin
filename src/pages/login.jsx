@@ -39,7 +39,7 @@ export default function Login() {
         }
         if (user.role === 'instructor') {
           toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
-          navigate('/instructor/dashboard');
+          navigate('/instruktur/dashboard');
         } else if (user.role === 'student') {
           toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/');

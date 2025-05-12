@@ -12,6 +12,7 @@ import CategoryEdit from '../pages/admin/category/categoryEdit';
 import Course from '../pages/admin/course/course';
 import Instructor from '../pages/admin/user/instructor';
 import InstructorAdd from '../pages/admin/user/instructorAdd';
+import DashboardInstructor from '../pages/instructor/dashboard';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -55,6 +56,8 @@ const adminRoutes = [
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
 ];
 
+const instructorRoutes = [{ path: 'dashboard', element: <DashboardInstructor /> }];
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -82,11 +85,13 @@ const AppRoutes = () => {
 
       {/* Group route for instructor */}
       <Route
-        path="/instructor/*"
+        path="/instruktur/*"
         element={
           <ProtectedRoute requiredRole="instructor">
             <Routes>
-              {/* Add instructor routes here */}
+              {instructorRoutes.map((route, index) => (
+                <Route key={index} path={route.path} element={route.element} />
+              ))}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </ProtectedRoute>
