@@ -69,12 +69,12 @@ export default function ReactTable({
                       <span className="ml-1">
                         {isSorted ? (
                           isDesc ? (
-                            <Icon type="sort-down" className="inline-block" />
+                            <Icon type="sort-down" className="size-[1.3rem] inline-block" />
                           ) : (
-                            <Icon type="sort-up" className="inline-block" />
+                            <Icon type="sort-up" className="size-[1.3rem] inline-block" />
                           )
                         ) : (
-                          <Icon type="sort" className="inline-block" />
+                          <Icon type="sort" className="size-[1.3rem] inline-block" />
                         )}
                       </span>
                     )}
