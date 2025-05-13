@@ -1,20 +1,52 @@
 import { create } from 'zustand';
+import useAuthStore from './authStore';
 
-const useCourseStore = create((set) => ({
-  course: {
-    image:
-      'https://cpr.heart.org/-/media/CPR-Images/Find-a-Course/AHA-IAN-3940-HiRes-find-a-course.jpg?h=641&iar=0&mw=960&w=960&sc_lang=en',
-    title: 'Full Stack JavaScript Next JS Developer: Build Job Portal Website ',
-    rating: 4,
-    lotMaterial: 3,
-    duration: 4,
-    participant: 100,
-    instructor: 'John Doe',
-    price: 199000,
-    priceBeforeDiscount: 399000,
-    categry: 'Fullstack',
+const useCourseStore = create((set, get) => ({
+  courses: [],
+  pagination: {
+    currentPage: 1,
+    lastPage: 1,
+    total: 0,
+    perPage: 10,
   },
-  setCourse: (newCourse) => set({ course: newCourse }),
+  sortBy: 'title',
+  sortOrder: 'asc',
+  perPage: 10,
+  error: null,
+  loading: false,
+  async fetchCourses({ sortBy = 'title', sortOrder = 'asc', perPage = 10, page = 1 } = {}) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?sortBy=${sortBy}&sortOrder=${sortOrder}&perPage=${perPage}&page=${page}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal mengambil data kursus');
+      set({
+        courses: json.data.items,
+        pagination: {
+          currentPage: json.data.pagination.current_page,
+          lastPage: json.data.pagination.last_page,
+          total: json.data.pagination.total,
+          perPage,
+        },
+        sortBy,
+        sortOrder,
+        perPage,
+        error: null,
+        loading: false,
+      });
+    } catch (e) {
+      set({ error: e.message, loading: false });
+    }
+  },
 }));
 
 export default useCourseStore;
