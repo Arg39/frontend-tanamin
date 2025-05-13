@@ -14,37 +14,12 @@ const useCourseStore = create((set, get) => ({
   perPage: 10,
   error: null,
   loading: false,
-  filters: {
-    status: '',
-    instructor: '',
-    category: '',
-    tanggal: '',
-  },
-  async fetchCourses({
-    sortBy = 'title',
-    sortOrder = 'asc',
-    perPage = 10,
-    page = 1,
-    filters = {},
-  } = {}) {
+  async fetchCourses({ sortBy = 'title', sortOrder = 'asc', perPage = 10, page = 1 } = {}) {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
-      // Build query params
-      const params = new URLSearchParams({
-        sortBy,
-        sortOrder,
-        perPage,
-        page,
-      });
-      if (filters.status !== undefined && filters.status !== '')
-        params.append('status', filters.status);
-      if (filters.instructor) params.append('instructor', filters.instructor);
-      if (filters.category) params.append('category', filters.category);
-      if (filters.tanggal) params.append('tanggal', filters.tanggal);
-
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?${params.toString()}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?sortBy=${sortBy}&sortOrder=${sortOrder}&perPage=${perPage}&page=${page}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -65,7 +40,6 @@ const useCourseStore = create((set, get) => ({
         sortBy,
         sortOrder,
         perPage,
-        filters: { ...get().filters, ...filters },
         error: null,
         loading: false,
       });

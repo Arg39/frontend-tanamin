@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect } from 'react';
 import AdminTemplate from '../../../template/templateAdmin';
 import useCourseStore from '../../../zustand/courseStore';
 import ReactTable from '../../../components/table/reactTable';
@@ -7,57 +7,13 @@ import Icon from '../../../components/icons/icon';
 import useAuthStore from '../../../zustand/authStore';
 
 export default function Course() {
-  const {
-    courses,
-    fetchCourses,
-    pagination,
-    sortBy,
-    sortOrder,
-    perPage,
-    error,
-    loading,
-    filters: storeFilters,
-  } = useCourseStore();
+  const { courses, fetchCourses, pagination, sortBy, sortOrder, perPage, error, loading } =
+    useCourseStore();
   const { token } = useAuthStore();
-
-  // Local filter state
-  const [filters, setFilters] = useState({
-    status: '',
-    instructor: '',
-    category: '',
-    tanggal: '',
-  });
-
-  // Extract filter options from courses
-  const filterOptions = useMemo(() => {
-    const instructors = {};
-    const categories = {};
-    courses.forEach((c) => {
-      if (c.instructor) instructors[c.instructor.id] = c.instructor.full_name;
-      if (c.category) categories[c.category.id] = c.category.name;
-    });
-    return {
-      status: [
-        { value: '', label: 'Semua' },
-        { value: '1', label: 'Published' },
-        { value: '0', label: 'Draft' },
-      ],
-      instructor: [{ value: '', label: 'Semua' }].concat(
-        Object.entries(instructors).map(([id, name]) => ({ value: id, label: name }))
-      ),
-      category: [{ value: '', label: 'Semua' }].concat(
-        Object.entries(categories).map(([id, name]) => ({ value: id, label: name }))
-      ),
-    };
-  }, [courses]);
 
   useEffect(() => {
     if (token) {
-      fetchCourses({
-        sortBy: 'title',
-        sortOrder: 'asc',
-        filters,
-      });
+      fetchCourses({ sortBy: 'title', sortOrder: 'asc' });
     }
   }, [fetchCourses, token]);
 
@@ -67,27 +23,15 @@ export default function Course() {
       sortOrder: order,
       perPage,
       page: pagination.currentPage,
-      filters,
     });
   };
 
   const handlePageChange = (page) => {
-    fetchCourses({ sortBy, sortOrder, perPage, page, filters });
+    fetchCourses({ sortBy, sortOrder, perPage, page });
   };
 
   const handlePageSizeChange = (size) => {
-    fetchCourses({ sortBy, sortOrder, perPage: size, page: 1, filters });
-  };
-
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-    fetchCourses({
-      sortBy,
-      sortOrder,
-      perPage,
-      page: 1,
-      filters: newFilters,
-    });
+    fetchCourses({ sortBy, sortOrder, perPage: size, page: 1 });
   };
 
   const columns = [
@@ -202,10 +146,6 @@ export default function Course() {
             onPageSizeChange={handlePageSizeChange}
             sortBy={sortBy}
             sortOrder={sortOrder}
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            filterOptions={filterOptions}
-            enableFiltering={true}
           />
         )}
       </div>

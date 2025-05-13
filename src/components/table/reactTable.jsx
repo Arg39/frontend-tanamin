@@ -12,10 +12,6 @@ export default function ReactTable({
   onPageSizeChange,
   sortBy,
   sortOrder,
-  filters,
-  onFilterChange,
-  filterOptions,
-  enableFiltering = false,
 }) {
   const { getTableProps, getTableBodyProps, headerGroups } = useTable(
     {
@@ -37,76 +33,8 @@ export default function ReactTable({
     onSortChange(columnId, newOrder);
   };
 
-  // Filtering UI
-  const renderFilters = () => (
-    <div className="flex flex-wrap gap-4 mb-4">
-      {/* Status */}
-      {filterOptions?.status && (
-        <div>
-          <label className="block text-sm font-medium mb-1">Status</label>
-          <select
-            className="border px-2 py-1 rounded"
-            value={filters.status}
-            onChange={(e) => onFilterChange({ ...filters, status: e.target.value })}
-          >
-            {filterOptions.status.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {/* Instruktur */}
-      {filterOptions?.instructor && (
-        <div>
-          <label className="block text-sm font-medium mb-1">Instruktur</label>
-          <select
-            className="border px-2 py-1 rounded"
-            value={filters.instructor}
-            onChange={(e) => onFilterChange({ ...filters, instructor: e.target.value })}
-          >
-            {filterOptions.instructor.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {/* Kategori */}
-      {filterOptions?.category && (
-        <div>
-          <label className="block text-sm font-medium mb-1">Kategori</label>
-          <select
-            className="border px-2 py-1 rounded"
-            value={filters.category}
-            onChange={(e) => onFilterChange({ ...filters, category: e.target.value })}
-          >
-            {filterOptions.category.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {/* Tanggal */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Tanggal</label>
-        <input
-          type="date"
-          className="border px-2 py-1 rounded"
-          value={filters.tanggal}
-          onChange={(e) => onFilterChange({ ...filters, tanggal: e.target.value })}
-        />
-      </div>
-    </div>
-  );
-
   return (
     <div className="overflow-x-auto">
-      {enableFiltering && renderFilters()}
       {/* Table for larger screens */}
       <table
         {...getTableProps()}
