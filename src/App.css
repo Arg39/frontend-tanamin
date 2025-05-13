@@ -134,3 +134,33 @@
   font-size: 24px;
   z-index: 1001;
 }
+
+/* Dropdown Scroll Styles */
+.select-dropdown {
+  position: relative;
+}
+
+.select-dropdown ul {
+  max-height: 12rem; /* Limit height to 192px */
+  overflow-y: auto;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #c4c4c4 transparent; /* For Firefox */
+}
+
+.select-dropdown ul::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.select-dropdown ul::-webkit-scrollbar-thumb {
+  background-color: #c4c4c4; /* Scrollbar color */
+  border-radius: 4px; /* Rounded edges */
+}
+
+.select-dropdown ul::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a0; /* Hover color */
+}
+
+.select-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+}

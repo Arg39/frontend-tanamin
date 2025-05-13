@@ -14,6 +14,7 @@ import Instructor from '../pages/admin/user/instructor';
 import InstructorAdd from '../pages/admin/user/instructorAdd';
 import DashboardInstructor from '../pages/instructor/dashboard';
 import Payment from '../pages/student/testPayment';
+import CourseAdd from '../pages/admin/course/courseAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -52,12 +53,16 @@ const adminRoutes = [
   { path: 'kategori', element: <Category /> },
   { path: 'kategori/tambah', element: <CategoryAdd /> },
   { path: 'kategori/edit/:id', element: <CategoryEdit /> },
-  { path: 'kursus', element: <Course /> },
   { path: 'instruktur', element: <Instructor /> },
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
+  { path: 'kursus', element: <Course /> },
+  { path: 'kursus/tambah', element: <CourseAdd /> },
 ];
 
-const instructorRoutes = [{ path: 'dashboard', element: <DashboardInstructor /> }];
+const instructorRoutes = [
+  { path: 'dashboard', element: <DashboardInstructor /> },
+  // Add more instructor-specific routes here
+];
 
 const AppRoutes = () => {
   return (
