@@ -12,6 +12,20 @@ export default function TableFilter({
     onFilterChange({ ...values, [key]: value });
   };
 
+  // Tambahkan fungsi reset
+  const handleReset = () => {
+    const resetValues = {};
+    filters.forEach((filter) => {
+      if (filter.type === 'dateRange') {
+        resetValues[filter.key] = { start: '', end: '' };
+      } else {
+        resetValues[filter.key] = '';
+      }
+    });
+    onFilterChange(resetValues);
+    if (setSearchInput) setSearchInput('');
+  };
+
   return (
     <div className="flex flex-wrap gap-4 mb-4 items-end">
       {filters.map((filter) => {
@@ -113,6 +127,14 @@ export default function TableFilter({
         }
         return null;
       })}
+      {/* Tombol Reset */}
+      <button
+        type="button"
+        onClick={handleReset}
+        className="px-4 py-2 rounded bg-red-700 text-white-100 hover:bg-red-800 text-sm font-medium"
+      >
+        Reset
+      </button>
     </div>
   );
 }
