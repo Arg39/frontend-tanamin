@@ -153,6 +153,12 @@ const useCategoryStore = create((set) => ({
       return;
     }
 
+    const category = useCategoryStore.getState().categories.find((cat) => cat.id === id);
+    if (category && category.used > 0) {
+      toast.info('Kategori tidak bisa dihapus karena sedang digunakan.');
+      return;
+    }
+
     try {
       const response = await axios.delete(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,

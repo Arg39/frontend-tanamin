@@ -59,6 +59,7 @@ export default function Category() {
         />
       ),
     },
+    { Header: 'penggunaan', accessor: 'used', width: '5%', disableSort: true },
     {
       Header: 'Tanggal',
       accessor: 'created_at',
@@ -74,7 +75,7 @@ export default function Category() {
       width: '10%',
       disableSort: true,
       Cell: ({ value }) => (
-        <div className="w-fit flex flex-col gap-4 justify-center items-start text-md">
+        <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
           <Button
             variant="primary"
             to={`/admin/kategori/edit/${value}`}
@@ -86,8 +87,8 @@ export default function Category() {
             variant="danger"
             onClick={() => {
               openModal({
-                title: 'Konfirmasi Logout',
-                message: 'Apakah Anda yakin ingin keluar?',
+                title: 'Konfirmasi hapus',
+                message: 'Apakah Anda yakin menghapus?',
                 onConfirm: () => {
                   deleteCategory(value);
                 },
