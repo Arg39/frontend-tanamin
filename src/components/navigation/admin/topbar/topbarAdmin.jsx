@@ -1,5 +1,4 @@
 import React from 'react';
-import SearchBar from '../../../searchbar/searchbar';
 import ProfileDropdown from '../../../profile/profileDropdown';
 import Icon from '../../../icons/icon';
 
@@ -11,10 +10,9 @@ export default function TopbarAdmin({ onMenuClick }) {
           <button className="lg:hidden text-black" onClick={onMenuClick}>
             <Icon type="bars-3" color="black" />
           </button>
-          <SearchBar
-            onSearch={(query) => console.log(query)}
-            width="xl:w-2/5 lg:w-3/5 md:w-4/5 w-4/5"
-          />
+          <h2 className="text-black text-xl md:text-3xl text-primary-800 font-bold">
+            Tanamin Course
+          </h2>
         </div>
         <ProfileDropdown />
       </div>
