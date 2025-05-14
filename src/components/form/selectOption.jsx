@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../icons/icon';
 
-export default function SelectInput({ label, name, value, onChange, options, placeholder }) {
+export default function SelectOption({ label, name, value, onChange, options, placeholder }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (optionValue) => {
@@ -61,7 +61,7 @@ export default function SelectInput({ label, name, value, onChange, options, pla
   );
 }
 
-SelectInput.propTypes = {
+SelectOption.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,
@@ -75,7 +75,7 @@ SelectInput.propTypes = {
   placeholder: PropTypes.string,
 };
 
-SelectInput.defaultProps = {
+SelectOption.defaultProps = {
   value: '',
   placeholder: 'Select an option',
 };

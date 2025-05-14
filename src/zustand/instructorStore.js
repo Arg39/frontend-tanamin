@@ -5,6 +5,7 @@ import useAuthStore from './authStore';
 
 const useInstructorStore = create((set) => ({
   instructors: [],
+  instructorSelectOptions: [],
   pagination: {
     currentPage: 1,
     lastPage: 1,
@@ -58,6 +59,36 @@ const useInstructorStore = create((set) => ({
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Failed to fetch instructors';
       set({ error: errorMessage });
+    }
+  },
+
+  fetchInstructorSelectOptions: async () => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      set({ error: 'Unauthorized: No token found' });
+      return [];
+    }
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor-select`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        const options = response.data.data.map((instructor) => ({
+          value: instructor.id,
+          label: instructor.name,
+        }));
+        set({ instructorSelectOptions: options, error: null });
+        return options;
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Failed to fetch instructor options';
+      set({ error: errorMessage });
+      return [];
     }
   },
 

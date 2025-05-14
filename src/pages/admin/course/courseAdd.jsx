@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import AdminTemplate from '../../../template/templateAdmin';
 import Icon from '../../../components/icons/icon';
 import TextInput from '../../../components/form/textInput';
-import ImagePicker from '../../../components/form/imagePicker';
 import Button from '../../../components/button/button';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import useCategoryStore from '../../../zustand/categoryStore';
-import SelectInput from '../../../components/form/selectOption';
+import SelectOption from '../../../components/form/selectOption';
+import useInstructorStore from '../../../zustand/instructorStore';
 
 export default function CourseAdd() {
   const navigate = useNavigate();
@@ -15,11 +15,14 @@ export default function CourseAdd() {
     name: '',
     image: null,
     category: '',
+    instructor: '', // add instructor to formData
   });
 
   const [categoryOptions, setCategoryOptions] = useState([]);
+  const [instructorOptions, setInstructorOptions] = useState([]);
   const { openModal, closeModal } = useConfirmationModalStore();
   const { addCategory, fetchCategoryOptions } = useCategoryStore();
+  const { fetchInstructorSelectOptions } = useInstructorStore();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -27,6 +30,14 @@ export default function CourseAdd() {
       setCategoryOptions(options);
     };
     loadCategories();
+  }, []);
+
+  useEffect(() => {
+    const loadInstructors = async () => {
+      const options = await fetchInstructorSelectOptions();
+      setInstructorOptions(options);
+    };
+    loadInstructors();
   }, []);
 
   const handleInputChange = (e) => {
@@ -52,7 +63,8 @@ export default function CourseAdd() {
         formDataToSend.append('image', formData.image);
 
         addCategory(formDataToSend).then(() => {
-          navigate('/admin/kategori');
+          // navigate('/admin/kategori');
+          console.log(formDataToSend);
         });
       },
       onCancel: () => {
@@ -77,31 +89,26 @@ export default function CourseAdd() {
         <form onSubmit={handleSubmit} className="w-full mt-4 space-y-4">
           <TextInput
             label="Nama Kursus"
-            name="name"
+            name="name-course"
             value={formData.name}
             onChange={handleInputChange}
-            placeholder="Masukkan nama kategori"
+            placeholder="Masukkan nama kursus"
           />
-          <SelectInput
-            label="Pilih Kategori"
+          <SelectOption
+            label="Kategori terkait"
             name="category"
             value={formData.category}
             onChange={handleInputChange}
             options={categoryOptions}
-            placeholder="Pilih kategori"
+            placeholder="Pilih kategori yang berkaitan dengan kursus"
           />
-          <SelectInput
-            label="Pilih instruktur"
+          <SelectOption
+            label="Instruktur penanggung jawab"
             name="instructor"
             value={formData.instructor}
             onChange={handleInputChange}
-            options={[
-              { value: '12s2-31dsa', label: 'george' },
-              { value: 'sdas-123s', label: 'bram' },
-              { value: '902w-ada2', label: 'Design' },
-              { value: '8342-asca', label: 'Design' },
-            ]}
-            placeholder="Pilih kategori"
+            options={instructorOptions}
+            placeholder="Pilih instruktur yang akan bertanggung jawab"
           />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">
