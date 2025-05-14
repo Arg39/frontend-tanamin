@@ -30,7 +30,6 @@ export default function Course() {
   }, []);
 
   useEffect(() => {
-    // Sinkronkan searchInput dengan filterValues.search saat filterValues berubah (misal reset filter)
     setSearchInput(filterValues.search || '');
   }, [filterValues.search]);
 

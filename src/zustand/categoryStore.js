@@ -15,46 +15,52 @@ const useCategoryStore = create((set) => ({
   perPage: 5,
   error: null,
 
-  fetchCategories: async (params = {}) => {
-    const { token } = useAuthStore.getState();
-    if (!token) {
-      set({ error: 'Unauthorized: No token found' });
-      return;
-    }
-
-    const { sortBy, sortOrder, perPage, page } = params;
-
+  fetchCategories: async ({
+    sortBy = 'name',
+    sortOrder = 'asc',
+    perPage = 5,
+    page = 1,
+    name = '',
+    dateRange = { start: '', end: '' },
+  } = {}) => {
+    set({ error: null });
     try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          sortBy: sortBy || 'name',
-          sortOrder: sortOrder || 'asc',
-          perPage: perPage || 5,
-          page: page || 1,
-        },
+      const token = useAuthStore.getState().token;
+      const params = new URLSearchParams({
+        sortBy,
+        sortOrder,
+        perPage,
+        page,
       });
+      if (name) params.append('name', name);
+      if (dateRange.start) params.append('startDate', dateRange.start);
+      if (dateRange.end) params.append('endDate', dateRange.end);
 
-      if (response.status === 200) {
-        const { items, pagination } = response.data.data;
-        set({
-          categories: items,
-          pagination: {
-            currentPage: pagination.current_page,
-            lastPage: pagination.last_page,
-            total: pagination.total,
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories?${params.toString()}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
-          sortBy: sortBy || 'name',
-          sortOrder: sortOrder || 'asc',
-          perPage: perPage || 5,
-          error: null,
-        });
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Failed to fetch categories';
-      set({ error: errorMessage });
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch categories');
+      set({
+        categories: json.data.items,
+        pagination: {
+          currentPage: json.data.pagination.current_page,
+          lastPage: json.data.pagination.last_page,
+          total: json.data.pagination.total,
+        },
+        sortBy,
+        sortOrder,
+        perPage,
+        error: null,
+      });
+    } catch (e) {
+      set({ error: e.message });
     }
   },
 

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminTemplate from '../../../template/templateAdmin';
 import useCategoryStore from '../../../zustand/categoryStore';
 import ReactTable from '../../../components/table/reactTable';
 import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
+import TableFilter from '../../../components/table/tableFilter';
 
 export default function Category() {
   const {
@@ -18,9 +19,26 @@ export default function Category() {
     deleteCategory,
   } = useCategoryStore();
 
+  const [filterValues, setFilterValues] = useState({
+    search: '',
+    dateRange: { start: '', end: '' },
+  });
+  const [searchInput, setSearchInput] = useState('');
+
   useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
+    setSearchInput(filterValues.search || '');
+  }, [filterValues.search]);
+
+  useEffect(() => {
+    fetchCategories({
+      sortBy,
+      sortOrder,
+      perPage,
+      page: pagination.currentPage,
+      name: filterValues.search,
+      dateRange: filterValues.dateRange,
+    });
+  }, [sortBy, sortOrder, perPage, pagination.currentPage, filterValues]);
 
   const handleSortChange = (column, order) => {
     fetchCategories({
@@ -28,17 +46,49 @@ export default function Category() {
       sortOrder: order,
       perPage,
       page: pagination.currentPage,
+      name: filterValues.search,
+      dateRange: filterValues.dateRange,
     });
   };
 
   const handlePageChange = (page) => {
-    fetchCategories({ sortBy, sortOrder, perPage, page });
+    fetchCategories({
+      sortBy,
+      sortOrder,
+      perPage,
+      page,
+      name: filterValues.search,
+      dateRange: filterValues.dateRange,
+    });
   };
 
   const handlePageSizeChange = (size) => {
-    fetchCategories({ sortBy, sortOrder, perPage: size, page: 1 });
+    fetchCategories({
+      sortBy,
+      sortOrder,
+      perPage: size,
+      page: 1,
+      name: filterValues.search,
+      dateRange: filterValues.dateRange,
+    });
   };
+
   const openModal = useConfirmationModalStore((state) => state.openModal);
+
+  const filterConfigs = [
+    {
+      key: 'search',
+      type: 'search',
+      label: 'Cari Nama',
+      placeholder: 'Cari kategori...',
+      withButton: true,
+    },
+    {
+      key: 'dateRange',
+      type: 'dateRange',
+      label: 'Tanggal',
+    },
+  ];
 
   const columns = [
     {
@@ -127,6 +177,16 @@ export default function Category() {
               <Icon type="plus" className="size-6" color="black" />
               <span className="text-lg font-normal">Kategori</span>
             </Button>
+          </div>
+          <h4 className="mb-4 md:mb-2">Filtering</h4>
+          <div className="mb-2 md:mb-6">
+            <TableFilter
+              filters={filterConfigs}
+              values={filterValues}
+              onFilterChange={setFilterValues}
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+            />
           </div>
           {error && <p className="text-red-500">{error}</p>}
           <ReactTable
