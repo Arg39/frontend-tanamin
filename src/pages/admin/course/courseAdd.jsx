@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminTemplate from '../../../template/templateAdmin';
 import Icon from '../../../components/icons/icon';
@@ -14,10 +14,20 @@ export default function CourseAdd() {
   const [formData, setFormData] = useState({
     name: '',
     image: null,
+    category: '',
   });
 
+  const [categoryOptions, setCategoryOptions] = useState([]);
   const { openModal, closeModal } = useConfirmationModalStore();
-  const { addCategory } = useCategoryStore();
+  const { addCategory, fetchCategoryOptions } = useCategoryStore();
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const options = await fetchCategoryOptions();
+      setCategoryOptions(options);
+    };
+    loadCategories();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -77,24 +87,22 @@ export default function CourseAdd() {
             name="category"
             value={formData.category}
             onChange={handleInputChange}
+            options={categoryOptions}
+            placeholder="Pilih kategori"
+          />
+          <SelectInput
+            label="Pilih instruktur"
+            name="instructor"
+            value={formData.instructor}
+            onChange={handleInputChange}
             options={[
-              { value: 'programming', label: 'Programming' },
-              { value: 'design', label: 'Design' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
-              { value: 'marketing', label: 'Marketing' },
+              { value: '12s2-31dsa', label: 'george' },
+              { value: 'sdas-123s', label: 'bram' },
+              { value: '902w-ada2', label: 'Design' },
+              { value: '8342-asca', label: 'Design' },
             ]}
             placeholder="Pilih kategori"
           />
-          <ImagePicker label="Gambar Kategori" name="image" onChange={handleFileChange} />
-          <ImagePicker label="Gambar Kategori" name="image" onChange={handleFileChange} />
-          <ImagePicker label="Gambar Kategori" name="image" onChange={handleFileChange} />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">
               Simpan

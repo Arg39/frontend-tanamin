@@ -26,7 +26,11 @@ export default function SelectInput({ label, name, value, onChange, options, pla
           }`}
           onClick={() => setIsOpen(!isOpen)}
         >
-          {value ? options.find((option) => option.value === value)?.label : placeholder}
+          {value ? (
+            options.find((option) => option.value === value)?.label
+          ) : (
+            <span className="text-gray-400">{placeholder}</span>
+          )}
         </div>
         {value && (
           <button

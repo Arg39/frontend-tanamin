@@ -174,6 +174,37 @@ const useCategoryStore = create((set) => ({
       toast.error(errorMessage);
     }
   },
+
+  fetchCategoryOptions: async () => {
+    const { token } = useAuthStore.getState();
+    if (!token) {
+      toast.error('Unauthorized: No token found');
+      return [];
+    }
+
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories-select`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const categories = response.data.data.map((item) => ({
+          value: item.id,
+          label: item.name,
+        }));
+        return categories;
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Gagal mengambil daftar kategori';
+      toast.error(errorMessage);
+      return [];
+    }
+  },
 }));
 
 export default useCategoryStore;
