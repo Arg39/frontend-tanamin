@@ -68,11 +68,14 @@ export default function Category() {
     },
     {
       Header: 'Tanggal',
-      accessor: 'created_at',
-      width: '25%',
+      accessor: 'updated_at',
+      width: '15%',
       Cell: ({ value }) => {
+        if (!value) return '-';
+        const date = new Date(value);
+        if (isNaN(date.getTime())) return '-';
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
+        return new Intl.DateTimeFormat('id-ID', options).format(date);
       },
     },
     {
