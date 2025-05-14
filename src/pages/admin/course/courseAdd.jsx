@@ -8,20 +8,22 @@ import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import useCategoryStore from '../../../zustand/categoryStore';
 import SelectOption from '../../../components/form/selectOption';
 import useInstructorStore from '../../../zustand/instructorStore';
+import useCourseStore from '../../../zustand/courseStore';
 
 export default function CourseAdd() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
-    category: '',
-    instructor: '',
+    id_category: '',
+    id_instructor: '',
   });
 
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [instructorOptions, setInstructorOptions] = useState([]);
   const { openModal, closeModal } = useConfirmationModalStore();
-  const { addCategory, fetchCategoryOptions } = useCategoryStore();
+  const { fetchCategoryOptions } = useCategoryStore();
   const { fetchInstructorSelectOptions } = useInstructorStore();
+  const { addCourse } = useCourseStore();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -49,23 +51,21 @@ export default function CourseAdd() {
 
     openModal({
       title: 'Konfirmasi Simpan',
-      message: 'Apakah Anda yakin ingin menyimpan kategori ini?',
+      message: 'Apakah Anda yakin ingin menyimpan kursus ini?',
       variant: 'primary',
-      onConfirm: () => {
+      onConfirm: async () => {
         closeModal();
-        const formDataToSend = new FormData();
-        formDataToSend.append('title', formData.title);
-        formDataToSend.append('category', formData.category);
-        formDataToSend.append('instructor', formData.instructor);
-
-        addCategory(formDataToSend).then(() => {
-          // console log formDataToSend
-          console.log('Form data:', {
+        try {
+          const result = await addCourse({
             title: formData.title,
-            category: formData.category,
-            instructor: formData.instructor,
+            id_category: formData.id_category,
+            id_instructor: formData.id_instructor,
           });
-        });
+          console.log('Course created:', result);
+          navigate(-1); // Kembali setelah sukses
+        } catch (err) {
+          alert('Gagal menambah kursus: ' + err.message);
+        }
       },
       onCancel: () => {
         closeModal();
@@ -96,16 +96,16 @@ export default function CourseAdd() {
           />
           <SelectOption
             label="Kategori terkait"
-            name="category"
-            value={formData.category}
+            name="id_category"
+            value={formData.id_category}
             onChange={handleInputChange}
             options={categoryOptions}
             placeholder="Pilih kategori yang berkaitan dengan kursus"
           />
           <SelectOption
             label="Instruktur penanggung jawab"
-            name="instructor"
-            value={formData.instructor}
+            name="id_instructor"
+            value={formData.id_instructor}
             onChange={handleInputChange}
             options={instructorOptions}
             placeholder="Pilih instruktur yang akan bertanggung jawab"
