@@ -14,12 +14,14 @@ const formatNumber = (num) => {
 
 const StatCard = ({ icon, label, value }) => {
   return (
-    <div className="flex flex-col items-center justify-center p-4 bg-white-100 rounded-lg">
-      <div className="flex justify-center items-center mb-2 bg-primary-800 rounded-full w-24 h-24">
-        <Icon type={icon} className="size-12" color="white" />
+    <div className="flex flex-row lg:flex-col gap-6 lg:gap-4 items-center justify-center p-4 bg-white-100 rounded-lg shadow-md">
+      <div className="flex justify-center items-center mb-2 bg-primary-800 rounded-full w-16 h-16 md:w-20 md:h-20">
+        <Icon type={icon} className="size-8 md:size-10" color="white" />
       </div>
-      <p className="text-center font-semibold">{label}</p>
-      <p className="text-center text-3xl font-bold">{formatNumber(value)}</p>
+      <div className="flex flex-col text-start lg:text-center">
+        <p className="text-sm md:text-base font-semibold">{label}</p>
+        <p className="text-2xl md:text-3xl font-bold">{formatNumber(value)}</p>
+      </div>
     </div>
   );
 };

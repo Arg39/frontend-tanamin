@@ -4,6 +4,7 @@ import StatCard from '../../components/card/statCard';
 import dashboardStore from '../../zustand/temporaryDummyData/dashboardStore';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons/icon';
+import LineChart from '../../components/chart/lineChart';
 
 export default function DashboardAdmin() {
   const { data } = dashboardStore();
@@ -25,13 +26,12 @@ export default function DashboardAdmin() {
 
   return (
     <AdminTemplate activeNav="dashboard">
-      <div className="grid grid-cols-1 gap-4">
-        <div className="grid grid-cols-12 gap-4">
+      <div className="grid grid-cols-1 gap-6 p-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Grid pertama dengan width 40% */}
-          <div className="col-span-12 lg:col-span-5 grid grid-cols-1 gap-4">
+          <div className="col-span-12 lg:col-span-5 grid grid-cols-1 gap-6">
             {chunkedStats.map((chunk, index) => (
-              <div key={index} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {/* col 1-3 */}
+              <div key={index} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {chunk.map((stat) => (
                   <StatCard
                     key={stat.key}
@@ -44,34 +44,34 @@ export default function DashboardAdmin() {
             ))}
 
             {/* col 2, row 1- row 2 */}
-            <div className="flex flex-col gap-4 bg-white-100 rounded-md p-4 h-full">
-              <div className="flex justify-between items-start ">
-                <h4 className="text-xl font-bold">Total Pendapatan</h4>
-                <Link
-                  to="/admin/pemasukan"
-                  // className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-                >
+            <div className="flex flex-col gap-4 bg-white-100 rounded-md p-4 px-8 shadow-md">
+              <div className="flex justify-between items-center">
+                <h4 className="text-lg md:text-xl font-bold">Total Pendapatan</h4>
+                <Link to="/admin/pemasukan">
                   <Icon
-                    type={'arrow-top-right'}
-                    className={'size-8 border border-primary-800 rounded-md'}
+                    type="arrow-top-right"
+                    className="size-6 md:size-8 border border-primary-800 rounded-md"
                     color="green"
                   />
                 </Link>
               </div>
-              <p className="text-4xl font-bold">
+              <p className="text-3xl md:text-4xl font-bold">
                 Rp. <span>{formatCurrency(5354000)}</span>
               </p>
-              <p className="text-gray-500 text-sm">12% mengalami kenaikan dari sebelumnya</p>
+              <p className="text-gray-500 text-sm md:text-base">
+                12% mengalami kenaikan dari sebelumnya
+              </p>
             </div>
           </div>
 
           {/* Grid kedua dengan width 60% */}
-          <div className="col-span-12 lg:col-span-7 bg-white-100 rounded-md p-4">
-            <p>Status order baru</p>
+          <div className="col-span-12 lg:col-span-7 bg-white-100 rounded-md p-4 shadow-md">
+            <p className="text-xl font-semibold">Grafik Pendapatan Bulanan</p>
+            <LineChart data={data.chartData} />
           </div>
         </div>
-        <div className="bg-white-100 rounded-md p-4">
-          <p>Total Pendapatan Bulanan</p>
+        <div className="bg-white-100 rounded-md p-4 shadow-md">
+          <p className="text-lg font-semibold">Total Pendapatan Bulanan</p>
         </div>
       </div>
     </AdminTemplate>
