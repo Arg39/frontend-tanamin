@@ -225,13 +225,16 @@ export default function Course() {
           <div className="text-center py-8">Loading...</div>
         ) : (
           <>
-            <TableFilter
-              filters={filterConfigs}
-              values={filterValues}
-              onFilterChange={setFilterValues}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-            />
+            <h4 className="mb-4 md:mb-2">Filtering</h4>
+            <div className="mb-2 md:mb-6">
+              <TableFilter
+                filters={filterConfigs}
+                values={filterValues}
+                onFilterChange={setFilterValues}
+                searchInput={searchInput}
+                setSearchInput={setSearchInput}
+              />
+            </div>
             <ReactTable
               columns={columns}
               data={courses}
