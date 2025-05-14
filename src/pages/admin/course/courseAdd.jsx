@@ -22,7 +22,7 @@ export default function CourseAdd() {
   const [instructorOptions, setInstructorOptions] = useState([]);
   const { openModal, closeModal } = useConfirmationModalStore();
   const { fetchCategoryOptions } = useCategoryStore();
-  const { fetchInstructorSelectOptions } = useInstructorStore();
+  const { fetchInstructoryOptions } = useInstructorStore();
   const { addCourse } = useCourseStore();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function CourseAdd() {
 
   useEffect(() => {
     const loadInstructors = async () => {
-      const options = await fetchInstructorSelectOptions();
+      const options = await fetchInstructoryOptions();
       setInstructorOptions(options);
     };
     loadInstructors();

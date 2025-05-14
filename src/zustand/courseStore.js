@@ -15,12 +15,34 @@ const useCourseStore = create((set, get) => ({
   error: null,
   loading: false,
 
-  async fetchCourses({ sortBy = 'title', sortOrder = 'asc', perPage = 5, page = 1 } = {}) {
+  async fetchCourses({
+    sortBy = 'title',
+    sortOrder = 'asc',
+    perPage = 5,
+    page = 1,
+    search = '',
+    category = '',
+    instructor = '',
+    dateStart = '',
+    dateEnd = '',
+  } = {}) {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
+      const params = new URLSearchParams({
+        sortBy,
+        sortOrder,
+        perPage,
+        page,
+      });
+      if (search) params.append('search', search);
+      if (category) params.append('category', category);
+      if (instructor) params.append('instructor', instructor);
+      if (dateStart) params.append('dateStart', dateStart);
+      if (dateEnd) params.append('dateEnd', dateEnd);
+
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?sortBy=${sortBy}&sortOrder=${sortOrder}&perPage=${perPage}&page=${page}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?${params.toString()}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -67,7 +89,6 @@ const useCourseStore = create((set, get) => ({
       });
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah kursus');
-      // Optionally, update courses state here if needed
       set({ loading: false, error: null });
       return json;
     } catch (e) {

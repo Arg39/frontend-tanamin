@@ -1,21 +1,48 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import AdminTemplate from '../../../template/templateAdmin';
 import useCourseStore from '../../../zustand/courseStore';
 import ReactTable from '../../../components/table/reactTable';
 import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
 import useAuthStore from '../../../zustand/authStore';
+import useCategoryStore from '../../../zustand/categoryStore';
+import useInstructorStore from '../../../zustand/instructorStore';
+import TableFilter from '../../../components/table/tableFilter';
 
 export default function Course() {
   const { courses, fetchCourses, pagination, sortBy, sortOrder, perPage, error, loading } =
     useCourseStore();
   const { token } = useAuthStore();
+  const { categories, fetchCategoryOptions } = useCategoryStore();
+  const { instructorSelectOptions, fetchInstructoryOptions } = useInstructorStore();
+
+  const [filterValues, setFilterValues] = useState({
+    search: '',
+    category: '',
+    instructor: '',
+    date: { start: '', end: '' },
+  });
+
+  useEffect(() => {
+    fetchCategoryOptions();
+    fetchInstructoryOptions();
+  }, []);
 
   useEffect(() => {
     if (token) {
-      fetchCourses({ sortBy: 'title', sortOrder: 'asc' });
+      fetchCourses({
+        sortBy,
+        sortOrder,
+        perPage,
+        page: pagination.currentPage,
+        search: filterValues.search,
+        category: filterValues.category,
+        instructor: filterValues.instructor,
+        dateStart: filterValues.date.start,
+        dateEnd: filterValues.date.end,
+      });
     }
-  }, [fetchCourses, token]);
+  }, [token, sortBy, sortOrder, perPage, pagination.currentPage, filterValues]);
 
   const handleSortChange = (column, order) => {
     fetchCourses({
@@ -23,17 +50,72 @@ export default function Course() {
       sortOrder: order,
       perPage,
       page: pagination.currentPage,
+      search: filterValues.search,
+      category: filterValues.category,
+      instructor: filterValues.instructor,
+      dateStart: filterValues.date.start,
+      dateEnd: filterValues.date.end,
     });
   };
 
   const handlePageChange = (page) => {
-    fetchCourses({ sortBy, sortOrder, perPage, page });
+    fetchCourses({
+      sortBy,
+      sortOrder,
+      perPage,
+      page,
+      search: filterValues.search,
+      category: filterValues.category,
+      instructor: filterValues.instructor,
+      dateStart: filterValues.date.start,
+      dateEnd: filterValues.date.end,
+    });
   };
 
   const handlePageSizeChange = (size) => {
-    fetchCourses({ sortBy, sortOrder, perPage: size, page: 1 });
+    fetchCourses({
+      sortBy,
+      sortOrder,
+      perPage: size,
+      page: 1,
+      search: filterValues.search,
+      category: filterValues.category,
+      instructor: filterValues.instructor,
+      dateStart: filterValues.date.start,
+      dateEnd: filterValues.date.end,
+    });
   };
 
+  // Filtering table
+  const filterConfigs = [
+    {
+      key: 'search',
+      type: 'search',
+      label: 'Cari Judul',
+      placeholder: 'Cari kursus...',
+    },
+    {
+      key: 'category',
+      type: 'select',
+      label: 'Kategori',
+      placeholder: 'Semua Kategori',
+      options: categories.map((cat) => ({ value: cat.id, label: cat.name })),
+    },
+    {
+      key: 'instructor',
+      type: 'select',
+      label: 'Instruktur',
+      placeholder: 'Semua Instruktur',
+      options: instructorSelectOptions,
+    },
+    {
+      key: 'date',
+      type: 'dateRange',
+      label: 'Tanggal',
+    },
+  ];
+
+  // Table columns
   const columns = [
     {
       Header: 'Judul Kursus',
@@ -135,17 +217,24 @@ export default function Course() {
         ) : loading ? (
           <div className="text-center py-8">Loading...</div>
         ) : (
-          <ReactTable
-            columns={columns}
-            data={courses}
-            numbering={true}
-            onSortChange={handleSortChange}
-            pagination={{ ...pagination, perPage }}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-          />
+          <>
+            <TableFilter
+              filters={filterConfigs}
+              values={filterValues}
+              onFilterChange={setFilterValues}
+            />
+            <ReactTable
+              columns={columns}
+              data={courses}
+              numbering={true}
+              onSortChange={handleSortChange}
+              pagination={{ ...pagination, perPage }}
+              onPageChange={handlePageChange}
+              onPageSizeChange={handlePageSizeChange}
+              sortBy={sortBy}
+              sortOrder={sortOrder}
+            />
+          </>
         )}
       </div>
     </AdminTemplate>

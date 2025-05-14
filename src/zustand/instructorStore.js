@@ -62,7 +62,7 @@ const useInstructorStore = create((set) => ({
     }
   },
 
-  fetchInstructorSelectOptions: async () => {
+  fetchInstructoryOptions: async () => {
     const { token } = useAuthStore.getState();
     if (!token) {
       set({ error: 'Unauthorized: No token found' });
