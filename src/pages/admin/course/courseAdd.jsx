@@ -12,10 +12,9 @@ import useInstructorStore from '../../../zustand/instructorStore';
 export default function CourseAdd() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    image: null,
+    title: '',
     category: '',
-    instructor: '', // add instructor to formData
+    instructor: '',
   });
 
   const [categoryOptions, setCategoryOptions] = useState([]);
@@ -45,10 +44,6 @@ export default function CourseAdd() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, image: e.target.files[0] });
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -59,12 +54,17 @@ export default function CourseAdd() {
       onConfirm: () => {
         closeModal();
         const formDataToSend = new FormData();
-        formDataToSend.append('name', formData.name);
-        formDataToSend.append('image', formData.image);
+        formDataToSend.append('title', formData.title);
+        formDataToSend.append('category', formData.category);
+        formDataToSend.append('instructor', formData.instructor);
 
         addCategory(formDataToSend).then(() => {
-          // navigate('/admin/kategori');
-          console.log(formDataToSend);
+          // console log formDataToSend
+          console.log('Form data:', {
+            title: formData.title,
+            category: formData.category,
+            instructor: formData.instructor,
+          });
         });
       },
       onCancel: () => {
@@ -88,11 +88,11 @@ export default function CourseAdd() {
         <h2 className="text-2xl font-bold">Tambah Kursus</h2>
         <form onSubmit={handleSubmit} className="w-full mt-4 space-y-4">
           <TextInput
-            label="Nama Kursus"
-            name="name-course"
-            value={formData.name}
+            label="Judul Kursus"
+            name="title"
+            value={formData.title}
             onChange={handleInputChange}
-            placeholder="Masukkan nama kursus"
+            placeholder="Masukkan judul kursus"
           />
           <SelectOption
             label="Kategori terkait"
