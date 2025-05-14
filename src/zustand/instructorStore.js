@@ -109,7 +109,7 @@ const useInstructorStore = create((set) => ({
       delete params.confirmPassword;
 
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/register`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/register`,
         params,
         {
           headers: {

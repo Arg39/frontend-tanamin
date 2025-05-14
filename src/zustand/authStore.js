@@ -5,6 +5,20 @@ const useAuthStore = create((set, get) => ({
   user: JSON.parse(localStorage.getItem('userData')) || null,
   token: localStorage.getItem('authToken') || null,
   error: null,
+
+  register: async (data) => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/register`,
+        data
+      );
+      return response.data;
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Registration failed';
+      throw new Error(errorMessage); // Throw error for error handling
+    }
+  },
+
   login: async (login, password) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/login`, {
@@ -23,11 +37,13 @@ const useAuthStore = create((set, get) => ({
       set({ error: errorMessage });
     }
   },
+
   logout: () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     set({ user: null, token: null, error: null });
   },
+
   fetchUserData: async () => {
     const { token, logout } = get();
     if (!token) return null;

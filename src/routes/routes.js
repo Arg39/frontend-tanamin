@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import useAuthStore from '../zustand/authStore';
 import Login from '../pages/login';
-import Daftar from '../pages/daftar';
+import Register from '../pages/register';
 import Beranda2 from '../pages/beranda';
 import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
@@ -72,7 +72,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Navigate to="/beranda" replace />} />
       <Route path="/beranda" element={<Beranda2 />} />
       <Route path="/masuk" element={<Login />} />
-      <Route path="/daftar" element={<Daftar />} />
+      <Route path="/daftar" element={<Register />} />
       <Route path="/coba-payment" element={<Payment />} />
 
       {/* Group route for admin */}
