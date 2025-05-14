@@ -13,7 +13,7 @@ const useInstructorStore = create((set) => ({
   },
   // sortBy: 'first_name',
   sortOrder: 'asc',
-  perPage: 10,
+  perPage: 5,
   error: null,
 
   fetchInstructors: async (params = {}) => {
@@ -35,7 +35,7 @@ const useInstructorStore = create((set) => ({
           params: {
             sortBy: sortBy || 'first_name',
             sortOrder: sortOrder || 'asc',
-            perPage: perPage || 10,
+            perPage: perPage || 5,
             page: page || 1,
           },
         }
@@ -52,7 +52,7 @@ const useInstructorStore = create((set) => ({
           },
           sortBy: sortBy || 'first_name',
           sortOrder: sortOrder || 'asc',
-          perPage: perPage || 10,
+          perPage: perPage || 5,
           error: null,
         });
       }

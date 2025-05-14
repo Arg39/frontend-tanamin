@@ -7,15 +7,15 @@ const useCourseStore = create((set, get) => ({
     currentPage: 1,
     lastPage: 1,
     total: 0,
-    perPage: 10,
+    perPage: 5,
   },
   sortBy: 'title',
   sortOrder: 'asc',
-  perPage: 10,
+  perPage: 5,
   error: null,
   loading: false,
 
-  async fetchCourses({ sortBy = 'title', sortOrder = 'asc', perPage = 10, page = 1 } = {}) {
+  async fetchCourses({ sortBy = 'title', sortOrder = 'asc', perPage = 5, page = 1 } = {}) {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;

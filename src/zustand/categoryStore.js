@@ -12,7 +12,7 @@ const useCategoryStore = create((set) => ({
   },
   sortBy: 'name',
   sortOrder: 'asc',
-  perPage: 10,
+  perPage: 5,
   error: null,
 
   fetchCategories: async (params = {}) => {
@@ -32,7 +32,7 @@ const useCategoryStore = create((set) => ({
         params: {
           sortBy: sortBy || 'name',
           sortOrder: sortOrder || 'asc',
-          perPage: perPage || 10,
+          perPage: perPage || 5,
           page: page || 1,
         },
       });
@@ -48,7 +48,7 @@ const useCategoryStore = create((set) => ({
           },
           sortBy: sortBy || 'name',
           sortOrder: sortOrder || 'asc',
-          perPage: perPage || 10,
+          perPage: perPage || 5,
           error: null,
         });
       }
