@@ -61,8 +61,7 @@ export default function CourseAdd() {
             id_category: formData.id_category,
             id_instructor: formData.id_instructor,
           });
-          console.log('Course created:', result);
-          navigate(-1); // Kembali setelah sukses
+          navigate('/admin/kursus');
         } catch (err) {
           alert('Gagal menambah kursus: ' + err.message);
         }

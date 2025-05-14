@@ -69,7 +69,6 @@ export default function Course() {
         </span>
       ),
     },
-    // tanggal
     {
       Header: 'Tanggal',
       accessor: 'updated_at',
