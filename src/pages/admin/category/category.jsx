@@ -59,7 +59,13 @@ export default function Category() {
         />
       ),
     },
-    { Header: 'penggunaan', accessor: 'used', width: '5%', disableSort: true },
+    {
+      Header: 'penggunaan',
+      accessor: 'used',
+      width: '5%',
+      disableSort: true,
+      Cell: ({ value }) => <p className="flex md:justify-center">{value} course</p>,
+    },
     {
       Header: 'Tanggal',
       accessor: 'created_at',
