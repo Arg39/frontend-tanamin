@@ -22,11 +22,17 @@ export default function Course() {
     instructor: '',
     date: { start: '', end: '' },
   });
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     fetchCategoryOptions();
     fetchInstructoryOptions();
   }, []);
+
+  useEffect(() => {
+    // Sinkronkan searchInput dengan filterValues.search saat filterValues berubah (misal reset filter)
+    setSearchInput(filterValues.search || '');
+  }, [filterValues.search]);
 
   useEffect(() => {
     if (token) {
@@ -93,6 +99,7 @@ export default function Course() {
       type: 'search',
       label: 'Cari Judul',
       placeholder: 'Cari kursus...',
+      withButton: true, // tambahkan properti ini
     },
     {
       key: 'category',
@@ -222,6 +229,8 @@ export default function Course() {
               filters={filterConfigs}
               values={filterValues}
               onFilterChange={setFilterValues}
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
             />
             <ReactTable
               columns={columns}
