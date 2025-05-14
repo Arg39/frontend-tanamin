@@ -163,7 +163,7 @@ export default function ReactTable({
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
             className="px-2 py-1 border border-gray-300 rounded"
           >
-            {[10, 20, 30, 40, 50].map((size) => (
+            {[5, 10, 20, 30, 40, 50].map((size) => (
               <option key={size} value={size}>
                 Show {size}
               </option>
