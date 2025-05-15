@@ -5,6 +5,7 @@ import dashboardStore from '../../zustand/temporaryDummyData/dashboardStore';
 import { Link } from 'react-router-dom';
 import Icon from '../../components/icons/icon';
 import LineChart from '../../components/chart/lineChart';
+import CourseTopicChart from '../../components/chart/courseTopicChart';
 
 export default function DashboardAdmin() {
   const { data } = dashboardStore();
@@ -66,12 +67,13 @@ export default function DashboardAdmin() {
 
           {/* Grid kedua dengan width 60% */}
           <div className="col-span-12 lg:col-span-7 bg-white-100 rounded-md p-4 shadow-md">
-            <p className="text-xl font-semibold">Grafik Pendapatan Bulanan</p>
-            <LineChart data={data.chartData} />
+            <p className="text-xl font-semibold">Progress course</p>
+            <CourseTopicChart />
           </div>
         </div>
         <div className="bg-white-100 rounded-md p-4 shadow-md">
-          <p className="text-lg font-semibold">Total Pendapatan Bulanan</p>
+          <p className="text-xl font-semibold">Grafik Pendapatan Bulanan</p>
+          <LineChart data={data.chartData} />
         </div>
       </div>
     </AdminTemplate>
