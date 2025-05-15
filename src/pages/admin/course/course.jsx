@@ -182,14 +182,6 @@ export default function Course() {
             View
           </button>
           <button
-            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white-100"
-            onClick={() => {
-              console.log('Edit course with ID:', value);
-            }}
-          >
-            Edit
-          </button>
-          <button
             className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
             onClick={() => {
               console.log('Delete course with ID:', value);

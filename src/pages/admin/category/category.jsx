@@ -6,6 +6,7 @@ import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import TableFilter from '../../../components/table/tableFilter';
+import { Link } from 'react-router-dom';
 
 export default function Category() {
   const {
@@ -135,15 +136,14 @@ export default function Category() {
       disableSort: true,
       Cell: ({ value }) => (
         <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
-          <Button
-            variant="primary"
-            to={`/admin/kategori/edit/${value}`}
+          <Link
             className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white-100"
+            to={`/admin/kategori/edit/${value}`}
           >
             Edit
-          </Button>
-          <Button
-            variant="danger"
+          </Link>
+          <button
+            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
             onClick={() => {
               openModal({
                 title: 'Konfirmasi hapus',
@@ -154,10 +154,9 @@ export default function Category() {
                 onCancel: () => {},
               });
             }}
-            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
           >
             Hapus
-          </Button>
+          </button>
         </div>
       ),
     },

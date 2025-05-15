@@ -15,6 +15,7 @@ import InstructorAdd from '../pages/admin/user/instructorAdd';
 import DashboardInstructor from '../pages/instructor/dashboard';
 import Payment from '../pages/student/testPayment';
 import CourseAdd from '../pages/admin/course/courseAdd';
+import CourseAdmin from '../pages/instructor/course.jsx/course';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -61,6 +62,7 @@ const adminRoutes = [
 
 const instructorRoutes = [
   { path: 'dashboard', element: <DashboardInstructor /> },
+  { path: 'kursus', element: <CourseAdmin /> },
   // Add more instructor-specific routes here
 ];
 
