@@ -98,7 +98,7 @@ export default function Course() {
       type: 'search',
       label: 'Cari Judul',
       placeholder: 'Cari kursus...',
-      withButton: true, // tambahkan properti ini
+      withButton: true,
     },
     {
       key: 'category',

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import InstructorTemplate from '../../../template/templateInstructor';
 import Icon from '../../../components/icons/icon';
 import ResponsiveList from '../../../components/table/responsiveList';
+import TableFilter from '../../../components/table/tableFilter';
 import useCourseStore from '../../../zustand/courseStore';
 import { Link } from 'react-router-dom';
 
@@ -9,24 +10,69 @@ export default function CourseAdmin() {
   const { instructorCourses, instructorPagination, fetchInstructorCourses, loading } =
     useCourseStore();
 
+  const [filterValues, setFilterValues] = useState({
+    search: '',
+    date: { start: '', end: '' },
+  });
+  const [searchInput, setSearchInput] = useState('');
+
+  useEffect(() => {
+    setSearchInput(filterValues.search || '');
+  }, [filterValues.search]);
+
   useEffect(() => {
     fetchInstructorCourses({
       page: instructorPagination.currentPage,
       perPage: instructorPagination.perPage,
+      search: filterValues.search,
+      dateStart: filterValues.date.start,
+      dateEnd: filterValues.date.end,
     });
-    // eslint-disable-next-line
-  }, [instructorPagination.currentPage, instructorPagination.perPage]);
+  }, [
+    instructorPagination.currentPage,
+    instructorPagination.perPage,
+    filterValues.search,
+    filterValues.date.start,
+    filterValues.date.end,
+  ]);
 
   const handlePageChange = (page) => {
-    fetchInstructorCourses({ page, perPage: instructorPagination.perPage });
+    fetchInstructorCourses({
+      page,
+      perPage: instructorPagination.perPage,
+      search: filterValues.search,
+      dateStart: filterValues.date.start,
+      dateEnd: filterValues.date.end,
+    });
   };
 
   const handlePageSizeChange = (perPage) => {
-    fetchInstructorCourses({ page: 1, perPage });
+    fetchInstructorCourses({
+      page: 1,
+      perPage,
+      search: filterValues.search,
+      dateStart: filterValues.date.start,
+      dateEnd: filterValues.date.end,
+    });
   };
 
+  const filterConfigs = [
+    {
+      key: 'search',
+      type: 'search',
+      label: 'Cari Nama',
+      placeholder: 'Cari kursus...',
+      withButton: true,
+    },
+    {
+      key: 'date',
+      type: 'dateRange',
+      label: 'Tanggal',
+    },
+  ];
+
   return (
-    <InstructorTemplate activeNav="dashboard">
+    <InstructorTemplate activeNav="kursus">
       <div className="w-full bg-white-100 rounded-md flex flex-col p-4 shadow-md">
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
           <p className="text-xl md:text-2xl font-bold mb-2 md:mb-0">Kursus</p>
@@ -41,6 +87,14 @@ export default function CourseAdmin() {
             </div>
           </div>
         </div>
+
+        <TableFilter
+          filters={filterConfigs}
+          values={filterValues}
+          onFilterChange={setFilterValues}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+        />
 
         <ResponsiveList
           data={instructorCourses}

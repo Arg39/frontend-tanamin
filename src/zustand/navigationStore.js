@@ -47,7 +47,7 @@ const useNavigationStore = create((set) => ({
     {
       label: 'kursus',
       links: [
-        { text: 'kursus saya', href: '/instruktur/kursus', icon: 'book' },
+        { text: 'kursus', href: '/instruktur/kursus', icon: 'book' },
         { text: 'kategori', href: '/instruktur/kategori', icon: 'swatch' },
       ],
     },
