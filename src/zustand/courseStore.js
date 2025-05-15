@@ -9,6 +9,13 @@ const useCourseStore = create((set, get) => ({
     total: 0,
     perPage: 5,
   },
+  instructorCourses: [],
+  instructorPagination: {
+    currentPage: 1,
+    lastPage: 1,
+    total: 0,
+    perPage: 5,
+  },
   sortBy: 'title',
   sortOrder: 'asc',
   perPage: 5,
@@ -94,6 +101,57 @@ const useCourseStore = create((set, get) => ({
     } catch (e) {
       set({ error: e.message, loading: false });
       throw e;
+    }
+  },
+
+  async fetchInstructorCourses({
+    sortBy = 'title',
+    sortOrder = 'asc',
+    perPage = 5,
+    page = 1,
+    search = '',
+    category = '',
+    dateStart = '',
+    dateEnd = '',
+  } = {}) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const params = new URLSearchParams({
+        sortBy,
+        sortOrder,
+        perPage,
+        page,
+      });
+      if (search) params.append('search', search);
+      if (category) params.append('category', category);
+      if (dateStart) params.append('dateStart', dateStart);
+      if (dateEnd) params.append('dateEnd', dateEnd);
+
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses-instructor?${params.toString()}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal mengambil data kursus');
+      set({
+        instructorCourses: json.data.items,
+        instructorPagination: {
+          currentPage: json.data.pagination.current_page,
+          lastPage: json.data.pagination.last_page,
+          total: json.data.pagination.total,
+          perPage,
+        },
+        error: null,
+        loading: false,
+      });
+    } catch (e) {
+      set({ error: e.message, loading: false });
     }
   },
 }));
