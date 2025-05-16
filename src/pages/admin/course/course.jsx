@@ -8,8 +8,10 @@ import useAuthStore from '../../../zustand/authStore';
 import useCategoryStore from '../../../zustand/categoryStore';
 import useInstructorStore from '../../../zustand/instructorStore';
 import TableFilter from '../../../components/table/tableFilter';
+import { useNavigate } from 'react-router-dom';
 
 export default function Course() {
+  const navigate = useNavigate();
   const { courses, fetchCourses, pagination, sortBy, sortOrder, perPage, error, loading } =
     useCourseStore();
   const { token } = useAuthStore();
@@ -176,10 +178,10 @@ export default function Course() {
           <button
             className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
             onClick={() => {
-              console.log('View course with ID:', value);
+              navigate(`/admin/kursus/lihat/${value}/ringkasan`);
             }}
           >
-            View
+            Lihat
           </button>
           <button
             className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"

@@ -17,6 +17,7 @@ import Payment from '../pages/student/testPayment';
 import CourseAdd from '../pages/admin/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
+import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -59,6 +60,7 @@ const adminRoutes = [
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
+  { path: 'kursus/lihat/:id/:tab', element: <CuourseDetailAdmin /> },
 ];
 
 const instructorRoutes = [

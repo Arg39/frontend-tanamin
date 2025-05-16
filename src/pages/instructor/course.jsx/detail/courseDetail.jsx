@@ -6,6 +6,7 @@ import CoursePersyaratan from './persyaratan';
 import CourseDeskripsi from './deskripsi';
 import CourseMateri from './materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
+import useAuthStore from '../../../../zustand/authStore';
 
 const tabComponents = {
   ringkasan: CourseRingkasan,
@@ -14,7 +15,8 @@ const tabComponents = {
   materi: CourseMateri,
 };
 
-export default function CuourseDetail() {
+export default function CuourseDetail({ editable }) {
+  const role = useAuthStore((state) => state.user.role);
   const navigate = useNavigate();
   const { id, tab } = useParams();
   const activeTab = tab || 'ringkasan';
@@ -22,7 +24,12 @@ export default function CuourseDetail() {
   const tabs = useNavigationStore((state) => state.courseDetailTabs);
 
   const handleTabChange = (tabName) => {
-    navigate(`/instruktur/kursus/lihat/${id}/${tabName}`);
+    // buat kalau role admin
+    if (role === 'admin') {
+      navigate(`/admin/kursus/lihat/${id}/${tabName}`);
+    } else if (role === 'instructor') {
+      navigate(`/instruktur/kursus/lihat/${id}/${tabName}`);
+    }
   };
 
   const ActiveComponent = tabComponents[activeTab] || CourseRingkasan;
@@ -32,7 +39,13 @@ export default function CuourseDetail() {
       <div>
         <button
           className="flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
-          onClick={() => navigate('/instruktur/kursus')}
+          onClick={() => {
+            if (role === 'admin') {
+              navigate('/admin/kursus');
+            } else if (role === 'instructor') {
+              navigate('/instruktur/kursus');
+            }
+          }}
         >
           <Icon type="arrow-left" className="size-[1rem] text-white-100" />
           <span className="text-white-100">Kembali</span>
@@ -55,7 +68,7 @@ export default function CuourseDetail() {
         ))}
       </div>
       <div className="border border-gray-200 p-2 sm:p-4 rounded-md bg-white-100 ">
-        <ActiveComponent />
+        <ActiveComponent editable={editable} />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import CuourseDetail from './detail/courseDetail';
 export default function CuourseDetailInstructor() {
   return (
     <InstructorTemplate activeNav="kursus">
-      <CuourseDetail />
+      <CuourseDetail editable={true} />
     </InstructorTemplate>
   );
 }
