@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
   // Sidebar content as a function to avoid code duplication
   const SidebarContent = () => (
-    <div className="h-screen xl:w-80 p-4 lg:w-[calc(20rem-32px)] box-border overflow-y-auto">
+    <div className="h-screen xl:w-80 p-4 box-border overflow-y-auto">
       <div className="h-full w-full rounded-lg z-0 bg-white-100 shadow-md">
         <div className="h-full w-full text-white flex flex-col">
           {/* Header */}

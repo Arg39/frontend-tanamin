@@ -125,16 +125,16 @@ export default function CourseAdmin() {
       Cell: ({ value }) => (
         <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
           <Link
-            to={`/instruktur/kursus/${value}`}
+            to={`/instruktur/kursus/lihat/${value}/ringkasan`}
             className="p-2 px-4 rounded-md bg-secondary-500 hover:bg-secondary-700"
           >
-            Edit Kursus
+            Lihat Kursus
           </Link>
           <Link
             to={`/instruktur/kursus/peserta/${value}`}
             className="p-2 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
           >
-            Peserta
+            Lihat Peserta
           </Link>
         </div>
       ),

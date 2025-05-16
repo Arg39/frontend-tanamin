@@ -39,6 +39,7 @@ const useNavigationStore = create((set) => ({
       links: [{ text: 'pesan', href: '/admin/pesan', icon: 'message-question' }],
     },
   ],
+
   navigationInstructor: [
     {
       label: 'gambaran umum',
@@ -58,6 +59,13 @@ const useNavigationStore = create((set) => ({
         { text: 'pembayaran kursus', href: '/instruktur/pembayaran-kursus', icon: 'payment-solid' },
       ],
     },
+  ],
+
+  courseDetailTabs: [
+    { key: 'ringkasan', label: 'Ringkasan' },
+    { key: 'persyaratan', label: 'Persyaratan' },
+    { key: 'deskripsi', label: 'Deskripsi' },
+    { key: 'materi', label: 'Materi' },
   ],
 }));
 
