@@ -55,7 +55,7 @@ export default function InstructorTemplate({ children, activeNav, className, sty
               />
             </div>
           </div>
-          <div className="pr-4 lg:pl-0 pl-4 pt-8">
+          <div className="px-4 pb-4 lg:pl-0 pt-8">
             <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
             {children}
           </div>

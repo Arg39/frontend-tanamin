@@ -67,20 +67,31 @@ const instructorRoutes = [
   { path: 'dashboard', element: <DashboardInstructor /> },
   { path: 'kursus', element: <CourseAdmin /> },
   { path: 'kursus/lihat/:id/:tab', element: <CuourseDetailInstructor /> },
-  // Add more instructor-specific routes here
 ];
+
+const publicRoutes = [
+  { path: '/', element: <Navigate to="/beranda" replace /> },
+  { path: '/beranda', element: <Beranda2 /> },
+  { path: '/masuk', element: <Login /> },
+  { path: '/daftar', element: <Register /> },
+  { path: '/coba-fungsi', element: <Payment /> },
+];
+
+const PublicRoute = ({ children }) => {
+  const { user } = useAuthStore();
+  if (user && (user.role === 'admin' || user.role === 'instructor')) {
+    return <NotFound />;
+  }
+  return children;
+};
 
 const AppRoutes = () => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="*" element={<NotFound />} />
-      <Route path="/" element={<Navigate to="/beranda" replace />} />
-      <Route path="/beranda" element={<Beranda2 />} />
-      <Route path="/masuk" element={<Login />} />
-      <Route path="/daftar" element={<Register />} />
-      <Route path="/coba-payment" element={<Payment />} />
-
+      {publicRoutes.map((route, idx) => (
+        <Route key={idx} path={route.path} element={<PublicRoute>{route.element}</PublicRoute>} />
+      ))}
       {/* Group route for admin */}
       <Route
         path="/admin/*"
@@ -110,6 +121,8 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       />
+      {/* Catch all */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };

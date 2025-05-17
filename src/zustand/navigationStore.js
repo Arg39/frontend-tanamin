@@ -66,6 +66,7 @@ const useNavigationStore = create((set) => ({
     { key: 'persyaratan', label: 'Persyaratan' },
     { key: 'deskripsi', label: 'Deskripsi' },
     { key: 'materi', label: 'Materi' },
+    { key: 'ulasan', label: 'Ulasan' },
   ],
 }));
 

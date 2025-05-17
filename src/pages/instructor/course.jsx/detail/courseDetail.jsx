@@ -1,18 +1,20 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
-import CourseInformasiUtama from './ringkasan';
+import CourseInformasiUtama from './informasiUtama';
 import CoursePersyaratan from './persyaratan';
 import CourseDeskripsi from './deskripsi';
 import CourseMateri from './materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import useAuthStore from '../../../../zustand/authStore';
+import UlasanCourse from './ulasan';
 
 const tabComponents = {
   informasiUtama: CourseInformasiUtama,
   persyaratan: CoursePersyaratan,
   deskripsi: CourseDeskripsi,
   materi: CourseMateri,
+  ulasan: UlasanCourse,
 };
 
 export default function CuourseDetail({ editable }) {
