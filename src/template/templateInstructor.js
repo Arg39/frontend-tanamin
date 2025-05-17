@@ -46,11 +46,16 @@ export default function InstructorTemplate({ children, activeNav, className, sty
       {/* Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className={`flex-1 overflow-y-auto ${className}`} style={style}>
-          <div className="pr-4 lg:pl-0 pl-4">
-            <div className="sticky top-4 z-20 mb-6 lg:mx-0">
-              <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
+          <div className="sticky top-0 lg:mx-0">
+            <div className="w-full bg-white-500 h-6  absolute top-0 left-0 z-10"></div>
+            <div className="pr-4 lg:pl-0 pl-4">
+              <TopbarAdmin
+                className={'relative top-4 z-20'}
+                onMenuClick={() => setSidebarOpen(!isSidebarOpen)}
+              />
             </div>
-
+          </div>
+          <div className="pr-4 lg:pl-0 pl-4 pt-8">
             <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
             {children}
           </div>

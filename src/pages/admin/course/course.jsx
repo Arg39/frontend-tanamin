@@ -178,7 +178,7 @@ export default function Course() {
           <button
             className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
             onClick={() => {
-              navigate(`/admin/kursus/lihat/${value}/ringkasan`);
+              navigate(`/admin/kursus/lihat/${value}/informasi-utama`);
             }}
           >
             Lihat
