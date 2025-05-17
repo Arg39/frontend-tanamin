@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
 import CourseInformasiUtama from './informasiUtama';
@@ -7,6 +7,7 @@ import CourseDeskripsi from './deskripsi';
 import CourseMateri from './materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import useAuthStore from '../../../../zustand/authStore';
+import useCourseStore from '../../../../zustand/courseStore';
 import UlasanCourse from './ulasan';
 
 const tabComponents = {
@@ -22,11 +23,18 @@ export default function CuourseDetail({ editable }) {
   const navigate = useNavigate();
   const { id, tab } = useParams();
   const activeTab = tab || 'informasi-utama';
-
   const tabs = useNavigationStore((state) => state.courseDetailTabs);
 
+  const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
+    useCourseStore();
+
+  useEffect(() => {
+    if (id && activeTab) {
+      fetchCourseDetailByTab({ tab: activeTab, id });
+    }
+  }, [id, activeTab, fetchCourseDetailByTab]);
+
   const handleTabChange = (tabName) => {
-    // buat kalau role admin
     if (role === 'admin') {
       navigate(`/admin/kursus/lihat/${id}/${tabName}`);
     } else if (role === 'instructor') {
@@ -70,7 +78,13 @@ export default function CuourseDetail({ editable }) {
         ))}
       </div>
       <div className="border border-gray-200 p-2 sm:p-4 rounded-md bg-white-100 ">
-        <ActiveComponent editable={editable} />
+        {courseDetailLoading ? (
+          <div>Loading...</div>
+        ) : courseDetailError ? (
+          <div className="text-red-500">{courseDetailError}</div>
+        ) : (
+          <ActiveComponent editable={editable} data={courseDetailByTab} />
+        )}
       </div>
     </div>
   );

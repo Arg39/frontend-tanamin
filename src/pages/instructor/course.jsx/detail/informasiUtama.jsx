@@ -1,8 +1,20 @@
 import React from 'react';
 
-export default function CourseInformasiUtama({ editable }) {
-  const imageUrl =
-    'https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+function displayValue(value) {
+  return value === null || value === undefined || value === ''
+    ? 'belum diatur, silahkan edit untuk mengaturnya'
+    : value;
+}
+
+export default function CourseInformasiUtama({ editable, data }) {
+  // fallback if data is not loaded yet
+  if (!data) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
+  const imageUrl = data.image_video
+    ? data.image_video
+    : 'https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
 
   return (
     <>
@@ -21,38 +33,42 @@ export default function CourseInformasiUtama({ editable }) {
             <span className="text-2xl">📚</span>
             <div>
               <p className="font-semibold text-lg text-primary-800 mb-2">Nama Kursus</p>
-              <p className="text-md text-gray-700">
-                Bersama instruktur <span className="font-bold">Beatrice Jasmine</span>, Anda akan
-                mempelajari UI Design plus UI Illustration
-              </p>
+              <p className="text-md text-gray-700">{displayValue(data.title)}</p>
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="text-2xl">📚</span>
             <div>
               <p className="font-semibold text-lg text-primary-800 mb-2">Nama Instruktur</p>
-              <p className="text-md text-gray-700">Beatrice Jasmine</p>
+              <p className="text-md text-gray-700">{displayValue(data.instructor?.full_name)}</p>
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="text-2xl">🎯</span>
             <div>
               <p className="font-semibold text-lg text-primary-800 mb-2">Level</p>
-              <p className="text-md text-gray-700">Menengah</p>
+              <p className="text-md text-gray-700">{displayValue(data.level)}</p>
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="text-2xl">💸</span>
             <div>
               <p className="font-semibold text-lg text-primary-800 mb-2">Harga</p>
-              <p className="text-md text-gray-700">Rp. 100.000</p>
+              <p className="text-md text-gray-700">
+                {data.price === null || data.price === undefined
+                  ? 'belum diatur, silahkan edit untuk mengaturnya'
+                  : `Rp. ${data.price.toLocaleString('id-ID')}`}
+              </p>
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span className="text-2xl">🎓</span>
             <div>
               <p className="font-semibold text-lg text-primary-800 mb-2">Sertifikat</p>
-              <p className="text-md text-gray-700">Dibuatkan</p>
+              <p className="text-md text-gray-700">
+                {/* Sertifikat info, fallback to belum diatur */}
+                {displayValue(data.certificate)}
+              </p>
             </div>
           </div>
         </div>
@@ -73,15 +89,7 @@ export default function CourseInformasiUtama({ editable }) {
       {/* desc col full */}
       <div className="flex flex-col">
         <p className="font-semibold text-lg text-primary-800 mb-2">Detail yang akan dipelajari</p>
-        <p className="text-md text-gray-700 leading-relaxed">
-          Bersama instruktur <span className="font-bold">Beatrice Jasmine</span>, Anda akan
-          mempelajari UI Design plus UI Illustration dengan hasil akhir project design sebuah
-          website.
-          <br />
-          Dengan mempelajari cara memahami brief client berdasarkan request yang diberikan, dan
-          mempelajari cara berkolaborasi dengan designer lainnya, Anda akan memahami design process
-          lebih baik lagi.
-        </p>
+        <p className="text-md text-gray-700 leading-relaxed">{displayValue(data.detail)}</p>
       </div>
     </>
   );

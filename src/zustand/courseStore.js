@@ -21,6 +21,9 @@ const useCourseStore = create((set, get) => ({
   perPage: 5,
   error: null,
   loading: false,
+  courseDetailByTab: null,
+  courseDetailLoading: false,
+  courseDetailError: null,
 
   async fetchCourses({
     sortBy = 'title',
@@ -129,7 +132,7 @@ const useCourseStore = create((set, get) => ({
       if (dateEnd) params.append('dateEnd', dateEnd);
 
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses-instructor?${params.toString()}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses?${params.toString()}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -152,6 +155,32 @@ const useCourseStore = create((set, get) => ({
       });
     } catch (e) {
       set({ error: e.message, loading: false });
+    }
+  },
+
+  async fetchCourseDetailByTab({ tab, id }) {
+    set({ courseDetailLoading: true, courseDetailError: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/${tab}/${id}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success')
+        throw new Error(json.message || 'Gagal mengambil detail kursus');
+      set({
+        courseDetailByTab: json.data,
+        courseDetailLoading: false,
+        courseDetailError: null,
+      });
+    } catch (e) {
+      set({ courseDetailError: e.message, courseDetailLoading: false, courseDetailByTab: null });
     }
   },
 }));
