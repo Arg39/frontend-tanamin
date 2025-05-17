@@ -17,41 +17,41 @@ export default function CourseInformasiUtama({ editable }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
         {/* Left Column */}
         <div className="flex flex-col gap-4 col-span-1">
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2">
             <span className="text-2xl">📚</span>
             <div>
-              <p className="font-semibold text-lg text-primary-800 mb-4">Nama Kursus</p>
+              <p className="font-semibold text-lg text-primary-800 mb-2">Nama Kursus</p>
               <p className="text-md text-gray-700">
                 Bersama instruktur <span className="font-bold">Beatrice Jasmine</span>, Anda akan
                 mempelajari UI Design plus UI Illustration
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2">
             <span className="text-2xl">📚</span>
             <div>
-              <p className="font-semibold text-lg text-primary-800 mb-4">Nama Instruktur</p>
+              <p className="font-semibold text-lg text-primary-800 mb-2">Nama Instruktur</p>
               <p className="text-md text-gray-700">Beatrice Jasmine</p>
             </div>
           </div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2">
             <span className="text-2xl">🎯</span>
             <div>
-              <p className="font-semibold text-lg text-primary-800 mb-4">Level</p>
+              <p className="font-semibold text-lg text-primary-800 mb-2">Level</p>
               <p className="text-md text-gray-700">Menengah</p>
             </div>
           </div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2">
             <span className="text-2xl">💸</span>
             <div>
-              <p className="font-semibold text-lg text-primary-800 mb-4">Harga</p>
+              <p className="font-semibold text-lg text-primary-800 mb-2">Harga</p>
               <p className="text-md text-gray-700">Rp. 100.000</p>
             </div>
           </div>
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-2">
             <span className="text-2xl">🎓</span>
             <div>
-              <p className="font-semibold text-lg text-primary-800 mb-4">Sertifikat</p>
+              <p className="font-semibold text-lg text-primary-800 mb-2">Sertifikat</p>
               <p className="text-md text-gray-700">Dibuatkan</p>
             </div>
           </div>
@@ -59,8 +59,8 @@ export default function CourseInformasiUtama({ editable }) {
         {/* Divider for mobile */}
         <div className="block md:hidden border-t border-gray-200 my-4 col-span-full" />
         {/* Right Column */}
-        <div className="flex flex-col gap-4 col-span-1">
-          <p className="font-semibold text-lg text-primary-800">Gambar</p>
+        <div className="flex flex-col col-span-1">
+          <p className="font-semibold text-lg text-primary-800 mb-2">Gambar</p>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center">
             <img
               src={imageUrl}
