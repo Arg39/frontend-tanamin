@@ -51,6 +51,25 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   return children;
 };
 
+const RoleBasedRedirect = () => {
+  const { user } = useAuthStore();
+
+  if (!user) {
+    return <Navigate to="/beranda" replace />;
+  }
+
+  if (user.role === 'admin') {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  if (user.role === 'instructor') {
+    return <Navigate to="/instruktur/dashboard" replace />;
+  }
+
+  // fallback jika role tidak dikenali
+  return <Navigate to="/beranda" replace />;
+};
+
 const adminRoutes = [
   { path: 'dashboard', element: <DashboardAdmin /> },
   { path: 'kategori', element: <Category /> },
@@ -70,7 +89,7 @@ const instructorRoutes = [
 ];
 
 const publicRoutes = [
-  { path: '/', element: <Navigate to="/beranda" replace /> },
+  { path: '/', element: <RoleBasedRedirect /> },
   { path: '/beranda', element: <Beranda2 /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
@@ -88,10 +107,14 @@ const PublicRoute = ({ children }) => {
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public routes */}
-      {publicRoutes.map((route, idx) => (
-        <Route key={idx} path={route.path} element={<PublicRoute>{route.element}</PublicRoute>} />
-      ))}
+      {/* Route '/' tanpa PublicRoute */}
+      <Route path="/" element={<RoleBasedRedirect />} />
+      {/* Public routes lain */}
+      {publicRoutes
+        .filter((route) => route.path !== '/')
+        .map((route, idx) => (
+          <Route key={idx} path={route.path} element={<PublicRoute>{route.element}</PublicRoute>} />
+        ))}
       {/* Group route for admin */}
       <Route
         path="/admin/*"
