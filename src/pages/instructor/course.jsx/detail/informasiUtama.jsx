@@ -1,13 +1,55 @@
 import React from 'react';
+import Icon from '../../../../components/icons/icon';
 
+// Komponen pesan default
+function BelumDiatur() {
+  return <span className="text-red-600">Belum diatur, silahkan edit untuk mengaturnya!</span>;
+}
+
+// Utilitas untuk menampilkan value atau pesan default
 function displayValue(value) {
-  return value === null || value === undefined || value === ''
-    ? 'belum diatur, silahkan edit untuk mengaturnya'
-    : value;
+  if (value === null || value === undefined || value === '') {
+    return <BelumDiatur />;
+  }
+  return value;
+}
+
+// Utilitas untuk format tanggal
+function formatTanggal(value) {
+  if (!value) {
+    return <BelumDiatur />;
+  }
+  const bulan = [
+    'Januari',
+    'Februari',
+    'Maret',
+    'April',
+    'Mei',
+    'Juni',
+    'Juli',
+    'Agustus',
+    'September',
+    'Oktober',
+    'November',
+    'Desember',
+  ];
+  const dateObj = new Date(value);
+  if (isNaN(dateObj)) return <BelumDiatur />;
+  const tanggal = dateObj.getDate();
+  const bulanNama = bulan[dateObj.getMonth()];
+  const tahun = dateObj.getFullYear();
+  return `${tanggal} ${bulanNama} ${tahun}`;
+}
+
+// Utilitas untuk format harga
+function displayHarga(price) {
+  if (price === null || price === undefined || price === '') {
+    return <BelumDiatur />;
+  }
+  return `Rp. ${Number(price).toLocaleString('id-ID')}`;
 }
 
 export default function CourseInformasiUtama({ editable, data }) {
-  // fallback if data is not loaded yet
   if (!data) {
     return <div>Data tidak ditemukan</div>;
   }
@@ -26,71 +68,77 @@ export default function CourseInformasiUtama({ editable, data }) {
           </button>
         )}
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+
+      {/* Main Content */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Left Column */}
-        <div className="flex flex-col gap-4 col-span-1">
-          <div className="flex items-start gap-2">
-            <span className="text-2xl">📚</span>
-            <div>
-              <p className="font-semibold text-lg text-primary-800 mb-2">Nama Kursus</p>
-              <p className="text-md text-gray-700">{displayValue(data.title)}</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-2xl">📚</span>
-            <div>
-              <p className="font-semibold text-lg text-primary-800 mb-2">Nama Instruktur</p>
-              <p className="text-md text-gray-700">{displayValue(data.instructor?.full_name)}</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-2xl">🎯</span>
-            <div>
-              <p className="font-semibold text-lg text-primary-800 mb-2">Level</p>
-              <p className="text-md text-gray-700">{displayValue(data.level)}</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-2xl">💸</span>
-            <div>
-              <p className="font-semibold text-lg text-primary-800 mb-2">Harga</p>
-              <p className="text-md text-gray-700">
-                {data.price === null || data.price === undefined
-                  ? 'belum diatur, silahkan edit untuk mengaturnya'
-                  : `Rp. ${data.price.toLocaleString('id-ID')}`}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <span className="text-2xl">🎓</span>
-            <div>
-              <p className="font-semibold text-lg text-primary-800 mb-2">Sertifikat</p>
-              <p className="text-md text-gray-700">
-                {/* Sertifikat info, fallback to belum diatur */}
-                {displayValue(data.certificate)}
-              </p>
-            </div>
-          </div>
+        <div className="flex flex-col gap-6 col-span-2">
+          <InfoItem icon="book" label="Nama Kursus" value={displayValue(data.title)} />
+          <InfoItem
+            icon="user"
+            label="Nama Instruktur"
+            value={displayValue(data.instructor?.full_name)}
+          />
+          <InfoItem icon="star-circle-outline" label="Level" value={displayValue(data.level)} />
+          <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
+          <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.created_at)} />
         </div>
-        {/* Divider for mobile */}
-        <div className="block md:hidden border-t border-gray-200 my-4 col-span-full" />
-        {/* Right Column */}
-        <div className="flex flex-col col-span-1">
-          <p className="font-semibold text-lg text-primary-800 mb-2">Gambar</p>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex flex-col items-center">
+        {/* Right Column (Image) */}
+        <div className="flex flex-col items-start col-span-1">
+          <div className="flex justify-start items-center gap-4 mb-4">
+            <span className="text-3xl bg-secondary-100 rounded-full p-2">
+              <Icon type="image" className="h-6 w-6 text-primary-700" />
+            </span>
+            <p className="font-semibold text-lg text-primary-800 mb-2">Gambar</p>
+          </div>
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col items-center w-full">
             <img
               src={imageUrl}
               alt="Course"
-              className="w-full max-w-80 max-h-80 object-cover rounded-lg shadow border"
+              className="w-full max-w-64 max-h-64 object-cover rounded-lg shadow border"
             />
           </div>
         </div>
       </div>
-      {/* desc col full */}
+
+      {/* Divider */}
+      <div className="border-t border-gray-200 my-8" />
+
+      {/* Description */}
+      <div className="flex flex-col">
+        <div className="flex flex-col mb-6">
+          <p className="font-semibold text-lg text-primary-800 mb-2">Persyaratan</p>
+          <p className="text-md text-gray-700 leading-relaxed">{displayValue(data.requirement)}</p>
+        </div>
+        <div className="flex flex-col mb-6">
+          <p className="font-semibold text-lg text-primary-800 mb-2">Deskripsi</p>
+          <p className="text-md text-gray-700 leading-relaxed">{displayValue(data.description)}</p>
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-gray-200 my-8" />
+
+      {/* Detail yang akan dipelajari */}
       <div className="flex flex-col">
         <p className="font-semibold text-lg text-primary-800 mb-2">Detail yang akan dipelajari</p>
         <p className="text-md text-gray-700 leading-relaxed">{displayValue(data.detail)}</p>
       </div>
     </>
+  );
+}
+
+// Komponen InfoItem untuk merapikan tampilan info utama
+function InfoItem({ icon, label, value }) {
+  return (
+    <div className="flex items-start gap-4">
+      <span className="text-3xl bg-secondary-100 rounded-full p-2">
+        <Icon type={icon} className="h-6 w-6 text-primary-700" />
+      </span>
+      <div>
+        <p className="font-semibold text-lg text-primary-800">{label}</p>
+        <p className="text-md text-gray-700">{value}</p>
+      </div>
+    </div>
   );
 }

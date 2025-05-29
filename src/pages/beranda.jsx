@@ -25,7 +25,7 @@ export default function Beranda2() {
             <h1 className="text-3xl lg:text-4xl font-semibold mt-16 lg:mt-32">
               Platform{' '}
               <GradientText
-                className="bg-gradient-to-r from-primary-700 via-secondary-500 to-accent-800"
+                className="bg-gradient-to-r from-primary-700 via-secondary-500 to-secondary-800"
                 duration={6}
                 fontSize="2rem lg:2.5rem"
               >
