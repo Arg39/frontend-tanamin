@@ -3,7 +3,11 @@ import Icon from '../../../../components/icons/icon';
 
 // Komponen pesan default
 function BelumDiatur() {
-  return <span className="text-red-600">Belum diatur, silahkan edit untuk mengaturnya!</span>;
+  return (
+    <span className="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-md">
+      Belum diatur, silahkan edit untuk mengaturnya!
+    </span>
+  );
 }
 
 // Utilitas untuk menampilkan value atau pesan default
@@ -54,9 +58,9 @@ export default function CourseInformasiUtama({ editable, data }) {
     return <div>Data tidak ditemukan</div>;
   }
 
-  const imageUrl = data.image_video
-    ? data.image_video
-    : 'https://images.unsplash.com/photo-1545235617-9465d2a55698?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+  // Cek apakah gambar sudah diatur
+  const isImageSet = !!data.image_video && data.image_video !== '';
+  const imageUrl = isImageSet ? data.image_video : null;
 
   return (
     <>
@@ -91,12 +95,19 @@ export default function CourseInformasiUtama({ editable, data }) {
             </span>
             <p className="font-semibold text-lg text-primary-800 mb-2">Gambar</p>
           </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col items-center w-full">
-            <img
-              src={imageUrl}
-              alt="Course"
-              className="w-full max-w-64 max-h-64 object-cover rounded-lg shadow border"
-            />
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col items-center w-full min-h-64">
+            {isImageSet ? (
+              <img
+                src={imageUrl}
+                alt="Course"
+                className="w-full max-w-64 max-h-64 object-cover rounded-lg shadow border"
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center w-full h-48">
+                <Icon type="image-off" className="h-12 w-12 text-gray-400 mb-2" />
+                <BelumDiatur />
+              </div>
+            )}
           </div>
         </div>
       </div>
