@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '../../../../components/icons/icon';
+import Icon from '../../../../../components/icons/icon';
 
 // Komponen pesan default
 function BelumDiatur() {

@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
-import CourseInformasiUtama from './informasiUtama';
-import CoursePersyaratan from './persyaratan';
-import CourseDeskripsi from './deskripsi';
-import CourseMateri from './materi';
+import CourseInformasiUtama from './tab/informasiUtama';
+import CoursePersyaratan from './tab/persyaratan';
+import CourseDeskripsi from './tab/deskripsi';
+import CourseMateri from './tab/materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import useAuthStore from '../../../../zustand/authStore';
 import useCourseStore from '../../../../zustand/courseStore';
-import UlasanCourse from './ulasan';
+import UlasanCourse from './tab/ulasan';
 
 const tabComponents = {
   informasiUtama: CourseInformasiUtama,
