@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import useCourseStore from '../../../../../zustand/courseStore';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 // Komponen pesan default
 function BelumDiatur() {
@@ -90,10 +90,13 @@ export default function CourseInformasiUtama({ editable }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <p className="text-2xl font-bold text-primary-900">Informasi Utama</p>
         {editable && (
-          <button className="flex items-center gap-2 bg-secondary-500 text-white-100 px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base">
+          <Link
+            to={`/instruktur/kursus/edit/${id}/informasi-utama`}
+            className="flex items-center gap-2 bg-secondary-500 text-white-100 px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
+          >
             <Icon type="edit-light" className="h-5 w-5" />
             Edit
-          </button>
+          </Link>
         )}
       </div>
 
