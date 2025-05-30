@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Icon from '../../../../../components/icons/icon';
+import useCourseStore from '../../../../../zustand/courseStore';
+import { useParams } from 'react-router-dom';
 
 // Komponen pesan default
 function BelumDiatur() {
@@ -53,7 +55,28 @@ function displayHarga(price) {
   return `Rp. ${Number(price).toLocaleString('id-ID')}`;
 }
 
-export default function CourseInformasiUtama({ editable, data }) {
+export default function CourseInformasiUtama({ editable }) {
+  const { id, tab } = useParams();
+  const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
+    useCourseStore();
+
+  useEffect(() => {
+    if (id && tab) {
+      fetchCourseDetailByTab({ tab, id });
+    }
+  }, [id, tab, fetchCourseDetailByTab]);
+
+  if (courseDetailLoading) {
+    return <div>Loading...</div>;
+  }
+  if (courseDetailError) {
+    return <div className="text-red-500">{courseDetailError}</div>;
+  }
+  if (!courseDetailByTab) {
+    return <div>Data tidak ditemukan</div>;
+  }
+
+  const data = courseDetailByTab;
   if (!data) {
     return <div>Data tidak ditemukan</div>;
   }

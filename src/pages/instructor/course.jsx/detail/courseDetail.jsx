@@ -25,15 +25,6 @@ export default function CuourseDetail({ editable }) {
   const activeTab = tab || 'informasi-utama';
   const tabs = useNavigationStore((state) => state.courseDetailTabs);
 
-  const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
-    useCourseStore();
-
-  useEffect(() => {
-    if (id && activeTab) {
-      fetchCourseDetailByTab({ tab: activeTab, id });
-    }
-  }, [id, activeTab, fetchCourseDetailByTab]);
-
   const handleTabChange = (tabName) => {
     if (role === 'admin') {
       navigate(`/admin/kursus/lihat/${id}/${tabName}`);
@@ -78,13 +69,8 @@ export default function CuourseDetail({ editable }) {
         ))}
       </div>
       <div className="border border-gray-200 p-2 sm:p-4 rounded-md bg-white-100 ">
-        {courseDetailLoading ? (
-          <div>Loading...</div>
-        ) : courseDetailError ? (
-          <div className="text-red-500">{courseDetailError}</div>
-        ) : (
-          <ActiveComponent editable={editable} data={courseDetailByTab} />
-        )}
+        {/* Only pass editable, let tab component handle fetching */}
+        <ActiveComponent editable={editable} />
       </div>
     </div>
   );
