@@ -67,7 +67,8 @@ export default function CourseInformasiUtama({ editable, data }) {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <p className="text-2xl font-bold text-primary-900">Informasi Utama</p>
         {editable && (
-          <button className="bg-secondary-500 text-black-900 px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base">
+          <button className="flex items-center gap-2 bg-secondary-500 text-white-100 px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base">
+            <Icon type="edit-light" className="h-5 w-5" />
             Edit
           </button>
         )}

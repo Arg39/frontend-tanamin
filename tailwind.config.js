@@ -107,6 +107,9 @@ module.exports = {
           900: '#565857', // whiteDarker
         },
       },
+      fontFamily: {
+        montserrat: ['Montserrat', 'sans-serif'],
+      },
     },
   },
   plugins: [],
