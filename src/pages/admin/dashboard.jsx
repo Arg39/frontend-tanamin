@@ -27,7 +27,7 @@ export default function DashboardAdmin() {
 
   return (
     <AdminTemplate activeNav="dashboard">
-      <div className="grid grid-cols-1 gap-6 p-4">
+      <div className="grid grid-cols-1 gap-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Grid pertama dengan width 40% */}
           <div className="col-span-12 lg:col-span-5 grid grid-cols-1 gap-6">

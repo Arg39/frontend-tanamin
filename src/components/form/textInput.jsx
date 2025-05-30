@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../icons/icon';
 
-export default function TextInput({ label, name, value, onChange, placeholder }) {
+export default function TextInput({ label, name, value, onChange, placeholder, type = 'text' }) {
   const handleClear = () => {
     onChange({ target: { name, value: '' } });
   };
@@ -14,7 +14,7 @@ export default function TextInput({ label, name, value, onChange, placeholder })
       </label>
       <div className="relative flex">
         <input
-          type="text"
+          type={type}
           id={name}
           name={name}
           value={value}
@@ -26,7 +26,7 @@ export default function TextInput({ label, name, value, onChange, placeholder })
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 px-1 py-1 rounded"
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 px-1 py-1 rounded z-10"
             tabIndex={-1}
             aria-label="Hapus input"
           >

@@ -80,6 +80,11 @@ body {
   z-index: 1000;
 }
 
+.topbar-admin-z {
+  z-index: 50; /* pastikan lebih tinggi dari input/form */
+  position: relative; /* atau sticky/fixed jika perlu */
+}
+
 .sidebar.open {
   left: 0;
 }

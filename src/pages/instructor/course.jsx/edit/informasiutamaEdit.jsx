@@ -6,6 +6,7 @@ import useCourseStore from '../../../../zustand/courseStore';
 import ImagePicker from '../../../../components/form/imagePicker';
 import TextInput from '../../../../components/form/textInput';
 import SelectOption from '../../../../components/form/selectOption';
+import WysiwygInput from '../../../../components/form/wysiwygInput';
 
 const LEVEL_OPTIONS = [
   { value: 'Beginner', label: 'Beginner' },
@@ -140,6 +141,7 @@ export default function InformasiutamaEdit() {
         <form className="flex flex-col gap-4" onSubmit={handleSubmit} encType="multipart/form-data">
           {/* Nama Kursus */}
           <TextInput
+            type="text"
             label="Nama Kursus"
             name="title"
             value={form.title}
@@ -150,7 +152,7 @@ export default function InformasiutamaEdit() {
           <div>
             <label className="mb-2 text-sm font-medium text-gray-700 block">Nama Instruktur</label>
             <input
-              type="text"
+              //   type="text"
               value={courseDetailByTab.instructor?.full_name || ''}
               className="w-full border border-gray-200 rounded px-3 py-2 bg-gray-100"
               readOnly
@@ -169,15 +171,14 @@ export default function InformasiutamaEdit() {
           {/* Harga */}
           <div>
             <label className="mb-2 text-sm font-medium text-gray-700 block">Harga</label>
-            <input
+            <TextInput
               type="number"
               name="price"
               value={form.price}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 w-full"
+              placeholder="Masukkan harga"
               min={0}
               required
-              placeholder="Masukkan harga"
             />
           </div>
           {/* Persyaratan */}
@@ -216,17 +217,15 @@ export default function InformasiutamaEdit() {
             <label className="mb-2 text-sm font-medium text-gray-700 block">
               Detail yang akan dipelajari
             </label>
-            <textarea
+            <WysiwygInput
               name="detail"
               value={form.detail}
               onChange={handleChange}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 w-full"
-              rows={3}
               placeholder="Masukkan detail yang akan dipelajari"
             />
           </div>
           {/* Submit */}
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center justify-end">
             <button
               type="submit"
               className="bg-primary-700 text-white-100 px-6 py-2 rounded hover:bg-primary-800 font-semibold"
