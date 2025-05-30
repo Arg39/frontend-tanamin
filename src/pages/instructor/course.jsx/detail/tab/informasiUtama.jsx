@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import useCourseStore from '../../../../../zustand/courseStore';
 import { useParams } from 'react-router-dom';

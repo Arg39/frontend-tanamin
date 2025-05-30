@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
 import CourseInformasiUtama from './tab/informasiUtama';
@@ -7,7 +6,6 @@ import CourseDeskripsi from './tab/deskripsi';
 import CourseMateri from './tab/materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import useAuthStore from '../../../../zustand/authStore';
-import useCourseStore from '../../../../zustand/courseStore';
 import UlasanCourse from './tab/ulasan';
 
 const tabComponents = {
