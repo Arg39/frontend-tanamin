@@ -2,12 +2,31 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 export default function ImagePicker({ label, name, onChange, preview }) {
-  const [localPreview, setLocalPreview] = useState(preview || null);
+  const [localPreview, setLocalPreview] = useState(null);
 
   useEffect(() => {
-    setLocalPreview(
-      preview ? `${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${preview}` : null
-    );
+    if (!preview) {
+      setLocalPreview(null);
+    } else if (typeof preview === 'string') {
+      // Jika preview sudah berupa URL lokal (blob: atau data:), pakai langsung
+      if (
+        preview.startsWith('blob:') ||
+        preview.startsWith('data:') ||
+        preview.startsWith('http')
+      ) {
+        setLocalPreview(preview);
+      } else {
+        // Anggap ini nama file dari backend
+        setLocalPreview(`${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${preview}`);
+      }
+    } else if (preview instanceof File) {
+      setLocalPreview(URL.createObjectURL(preview));
+      // Clean up object URL jika file berubah
+      return () => {
+        URL.revokeObjectURL(localPreview);
+      };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preview]);
 
   const handleFileChange = (e) => {
@@ -48,5 +67,9 @@ ImagePicker.propTypes = {
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
-  preview: PropTypes.string,
+  preview: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.instanceOf(File),
+    PropTypes.oneOf([null]),
+  ]),
 };
