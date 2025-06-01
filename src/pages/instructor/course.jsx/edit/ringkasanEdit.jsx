@@ -14,7 +14,7 @@ const LEVEL_OPTIONS = [
   { value: 'Advanced', label: 'Advanced' },
 ];
 
-export default function InformasiutamaEdit() {
+export default function RingkasanEdit() {
   const { id, tab } = useParams();
   const navigate = useNavigate();
   const {

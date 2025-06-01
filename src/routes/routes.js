@@ -18,7 +18,7 @@ import CourseAdd from '../pages/admin/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
 import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
-import InformasiutamaEdit from '../pages/instructor/course.jsx/edit/informasiutamaEdit';
+import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -87,7 +87,7 @@ const instructorRoutes = [
   { path: 'dashboard', element: <DashboardInstructor /> },
   { path: 'kursus', element: <CourseAdmin /> },
   { path: 'kursus/lihat/:id/:tab', element: <CuourseDetailInstructor /> },
-  { path: 'kursus/edit/:id/:tab/:id2?', element: <InformasiutamaEdit /> },
+  { path: 'kursus/edit/:id/:tab/:id2?', element: <RingkasanEdit /> },
 ];
 
 const publicRoutes = [
