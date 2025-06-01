@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
-import CourseInformasiUtama from './tab/informasiUtama';
+import CourseRingkasan from './tab/ringkasan';
 import CoursePersyaratan from './tab/persyaratan';
 import CourseDeskripsi from './tab/deskripsi';
 import CourseMateri from './tab/materi';
@@ -9,7 +9,7 @@ import useAuthStore from '../../../../zustand/authStore';
 import UlasanCourse from './tab/ulasan';
 
 const tabComponents = {
-  informasiUtama: CourseInformasiUtama,
+  informasiUtama: CourseRingkasan,
   persyaratan: CoursePersyaratan,
   deskripsi: CourseDeskripsi,
   materi: CourseMateri,
@@ -20,7 +20,7 @@ export default function CuourseDetail({ editable }) {
   const role = useAuthStore((state) => state.user.role);
   const navigate = useNavigate();
   const { id, tab } = useParams();
-  const activeTab = tab || 'informasi-utama';
+  const activeTab = tab || 'ringkasan';
   const tabs = useNavigationStore((state) => state.courseDetailTabs);
 
   const handleTabChange = (tabName) => {
@@ -31,7 +31,7 @@ export default function CuourseDetail({ editable }) {
     }
   };
 
-  const ActiveComponent = tabComponents[activeTab] || CourseInformasiUtama;
+  const ActiveComponent = tabComponents[activeTab] || CourseRingkasan;
 
   return (
     <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4 ">

@@ -137,7 +137,7 @@ export default function InformasiutamaEdit() {
           <Icon type="arrow-left" className="size-[1rem] text-white-100" />
           Kembali
         </button>
-        <h1 className="text-2xl font-bold mb-4 text-primary-900">Edit Informasi Utama</h1>
+        <h1 className="text-2xl font-bold mb-4 text-primary-900">Edit Ringkasan</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit} encType="multipart/form-data">
           {/* Nama Kursus */}
           <TextInput
