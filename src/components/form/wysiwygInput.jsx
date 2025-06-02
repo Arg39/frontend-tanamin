@@ -8,8 +8,7 @@ const modules = {
     ['bold', 'italic', 'underline', 'strike'],
     [{ color: [] }, { background: [] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image'],
-    ['clean'],
+    ['link', 'image', 'code-block'],
   ],
 };
 
@@ -116,6 +115,18 @@ const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, 
 
   return (
     <div>
+      <style>
+        {`
+        .ql-snow .ql-editor pre.ql-syntax {
+          background: #222 !important;
+          color: #fff !important;
+          border-radius: 5px;
+          padding: 12px;
+          font-family: 'Fira Mono', 'Consolas', 'Monaco', monospace;
+          font-size: 0.95em;
+        }
+      `}
+      </style>
       {label && <label className="block mb-2">{label}</label>}
       <ReactQuill
         ref={quillRef}
