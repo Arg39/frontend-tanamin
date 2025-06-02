@@ -75,13 +75,33 @@ const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, 
             const data = await res.json();
 
             console.log('Gambar berhasil diupload:', data.url);
-            img.setAttribute('src', data.url);
+            let finalUrl = data.url;
+            if (finalUrl && !finalUrl.startsWith('http')) {
+              if (finalUrl.startsWith('/')) {
+                finalUrl = baseUrl + finalUrl;
+              } else {
+                finalUrl = baseUrl + '/' + finalUrl;
+              }
+            }
+            img.setAttribute('src', finalUrl);
           } catch (e) {
             console.error('Gagal upload gambar lokal:', e);
           }
         }
       }
     }
+
+    const imgsAfter = editor.root.querySelectorAll('img');
+    imgsAfter.forEach((img) => {
+      const src = img.getAttribute('src');
+      if (src && !src.startsWith('http')) {
+        if (src.startsWith('/')) {
+          img.setAttribute('src', baseUrl + src);
+        } else {
+          img.setAttribute('src', baseUrl + '/' + src);
+        }
+      }
+    });
 
     const finalContent = editor.root.innerHTML;
     setContent(finalContent);
