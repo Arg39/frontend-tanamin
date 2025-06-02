@@ -180,30 +180,6 @@ export default function RingkasanEdit() {
               required
             />
           </div>
-          {/* Persyaratan */}
-          <div>
-            <label className="mb-2 text-sm font-medium text-gray-700 block">Persyaratan</label>
-            <textarea
-              name="requirement"
-              value={form.requirement}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 w-full"
-              rows={2}
-              placeholder="Masukkan persyaratan"
-            />
-          </div>
-          {/* Deskripsi */}
-          <div>
-            <label className="mb-2 text-sm font-medium text-gray-700 block">Deskripsi</label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 w-full"
-              rows={3}
-              placeholder="Masukkan deskripsi"
-            />
-          </div>
           {/* Gambar */}
           <ImagePicker
             label="Gambar"
