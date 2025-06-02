@@ -14,10 +14,6 @@ const LEVEL_OPTIONS = [
   { value: 'Intermediate', label: 'Intermediate' },
   { value: 'Advanced', label: 'Advanced' },
 ];
-let localImages = [];
-const setLocalImages = (images) => {
-  localImages = images;
-};
 
 export default function RingkasanEdit() {
   const { id, tab } = useParams();
@@ -69,13 +65,11 @@ export default function RingkasanEdit() {
     }
   }, [courseDetailByTab]);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle image upload
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -119,7 +113,7 @@ export default function RingkasanEdit() {
   if (courseDetailError) {
     return (
       <InstructorTemplate activeNav="kursus">
-        <div className="p-8 text-red-500">{courseDetailError}</div>
+        <div className="p-8 text-red-500">{submitError}</div>
       </InstructorTemplate>
     );
   }
