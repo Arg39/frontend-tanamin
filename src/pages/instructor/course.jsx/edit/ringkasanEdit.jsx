@@ -7,12 +7,18 @@ import ImagePicker from '../../../../components/form/imagePicker';
 import TextInput from '../../../../components/form/textInput';
 import SelectOption from '../../../../components/form/selectOption';
 import WysiwygInput from '../../../../components/form/wysiwygInput';
+import useAuthStore from '../../../../zustand/authStore';
 
 const LEVEL_OPTIONS = [
   { value: 'Beginner', label: 'Beginner' },
   { value: 'Intermediate', label: 'Intermediate' },
   { value: 'Advanced', label: 'Advanced' },
 ];
+const localImages = []; // Array to hold local images
+const setLocalImages = (images) => {
+  localImages.length = 0; // Clear previous images
+  localImages.push(...images); // Add new images
+};
 
 export default function RingkasanEdit() {
   const { id, tab } = useParams();
@@ -24,6 +30,8 @@ export default function RingkasanEdit() {
     courseDetailError,
     updateCourseDetail,
   } = useCourseStore();
+
+  const token = useAuthStore((state) => state.token); // Use token inside the component
 
   const [form, setForm] = useState({
     title: '',
@@ -85,19 +93,60 @@ export default function RingkasanEdit() {
     setSubmitSuccess(false);
 
     try {
+      const uploadedImageURLs = {};
+
+      // 1. Upload all local images
+      for (const image of localImages) {
+        const formData = new FormData();
+        formData.append('image', image);
+
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/image`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: '*/*',
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Gagal mengunggah gambar lokal');
+        }
+
+        const result = await response.json();
+
+        // Mapping: original local URL -> URL dari backend
+        const localURL = URL.createObjectURL(image);
+        uploadedImageURLs[localURL] = result.url;
+      }
+
+      // 2. Replace all local image URLs in form.detail with URLs from backend
+      let updatedDetail = form.detail;
+      Object.entries(uploadedImageURLs).forEach(([local, remote]) => {
+        updatedDetail = updatedDetail.replace(new RegExp(local, 'g'), remote);
+      });
+
+      // 3. Prepare final payload
       let payload;
       if (form.image_video instanceof File) {
         payload = new FormData();
         Object.entries(form).forEach(([key, value]) => {
-          payload.append(key, value);
+          if (key === 'detail') {
+            payload.append(key, updatedDetail); // gunakan detail yang sudah diupdate
+          } else {
+            payload.append(key, value);
+          }
         });
       } else {
-        payload = { ...form };
+        payload = { ...form, detail: updatedDetail };
       }
+
+      // Submit final payload
       await updateCourseDetail({ id, tab, data: payload });
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 2000);
     } catch (err) {
+      console.error(err);
       setSubmitError('Gagal menyimpan perubahan.');
     } finally {
       setSubmitting(false);
@@ -221,6 +270,7 @@ export default function RingkasanEdit() {
               name="detail"
               value={form.detail}
               onChange={handleChange}
+              onLocalImagesChange={(images) => setLocalImages(images)} // Capture local images
               placeholder="Masukkan detail yang akan dipelajari"
             />
           </div>
@@ -236,7 +286,7 @@ export default function RingkasanEdit() {
             {submitSuccess && (
               <span className="text-green-600 font-semibold">Berhasil disimpan!</span>
             )}
-            {submitError && <span className="text-red-600 font-semibold">{submitError}</span>}
+            {/* {submitError && <span className="text-red-600 font-semibold">{submitError}</span>} */}
           </div>
         </form>
       </div>

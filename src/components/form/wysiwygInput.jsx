@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -14,10 +14,25 @@ const modules = {
   ],
 };
 
-export default function WysiwygInput({ label, name, value, onChange, placeholder }) {
+export default function WysiwygInput({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder,
+  onLocalImagesChange,
+}) {
   const quillRef = useRef(null);
+  const [localImages, setLocalImages] = useState([]);
 
   const handleChange = (content) => {
+    const editor = quillRef.current?.getEditor?.();
+    const images = Array.from(editor?.root?.querySelectorAll('img') || []);
+    const localImages = images.map((img) => img.src).filter((src) => !src.startsWith('http')); // Filter out images from URLs
+
+    setLocalImages(localImages);
+    onLocalImagesChange(localImages); // Notify parent component about local images
+
     onChange({
       target: {
         name,
