@@ -1,49 +1,31 @@
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-// Custom toolbar options including color and background
 const modules = {
   toolbar: [
     [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline', 'strike'],
-    [{ color: [] }, { background: [] }], // color pickers
+    [{ color: [] }, { background: [] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image'],
     ['clean'],
   ],
 };
 
-export default function WysiwygInput({
-  label,
-  name,
-  value,
-  onChange,
-  placeholder,
-  onLocalImagesChange,
-}) {
+const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, ref) => {
   const quillRef = useRef(null);
-  const [localImages, setLocalImages] = useState([]);
+  const [content, setContent] = useState(value || '');
 
   const handleChange = (content) => {
-    const editor = quillRef.current?.getEditor?.();
-    const images = Array.from(editor?.root?.querySelectorAll('img') || []);
-    const localImages = images.map((img) => img.src).filter((src) => !src.startsWith('http')); // Filter out images from URLs
-
-    setLocalImages(localImages);
-    onLocalImagesChange(localImages); // Notify parent component about local images
-
+    setContent(content);
     onChange({
-      target: {
-        name,
-        value: content,
-      },
+      target: { name, value: content },
     });
   };
 
-  // Auto-resize logic
   useEffect(() => {
-    const editor = quillRef.current?.getEditor?.().root;
+    const editor = quillRef.current?.getEditor()?.root;
     if (editor) {
       editor.style.height = 'auto';
       editor.style.minHeight = '200px';
@@ -55,7 +37,62 @@ export default function WysiwygInput({
       editor.style.transition = 'height 0.2s';
       editor.style.height = editor.scrollHeight + 'px';
     }
-  }, [value]);
+  }, [content]);
+
+  const uploadLocalImages = async (token) => {
+    const editor = quillRef.current?.getEditor();
+    if (!editor) return content;
+
+    const imgs = editor.root.querySelectorAll('img');
+
+    const baseUrlRaw = process.env.REACT_APP_BACKEND_BASE_URL || '';
+    const baseUrl = baseUrlRaw.endsWith('/') ? baseUrlRaw.slice(0, -1) : baseUrlRaw;
+
+    for (const img of imgs) {
+      const src = img.getAttribute('src');
+      if (!src) continue;
+
+      if (!src.startsWith('http')) {
+        if (src.startsWith('/')) {
+          img.setAttribute('src', baseUrl + src);
+        } else {
+          try {
+            const blob = await (await fetch(src)).blob();
+            const formData = new FormData();
+            formData.append('image', blob, `image_${Date.now()}.png`);
+
+            const res = await fetch(`${baseUrl}/api/image`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: 'application/json',
+              },
+              body: formData,
+            });
+
+            if (!res.ok) throw new Error('Upload gambar gagal');
+
+            const data = await res.json();
+
+            console.log('Gambar berhasil diupload:', data.url);
+            img.setAttribute('src', data.url);
+          } catch (e) {
+            console.error('Gagal upload gambar lokal:', e);
+          }
+        }
+      }
+    }
+
+    const finalContent = editor.root.innerHTML;
+    setContent(finalContent);
+    onChange({ target: { name, value: finalContent } });
+
+    return finalContent;
+  };
+
+  useImperativeHandle(ref, () => ({
+    uploadLocalImages,
+  }));
 
   return (
     <div>
@@ -63,7 +100,7 @@ export default function WysiwygInput({
       <ReactQuill
         ref={quillRef}
         theme="snow"
-        value={value}
+        value={content}
         onChange={handleChange}
         placeholder={placeholder}
         className="bg-white-100"
@@ -71,4 +108,6 @@ export default function WysiwygInput({
       />
     </div>
   );
-}
+});
+
+export default WysiwygInput;

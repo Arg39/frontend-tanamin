@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import InstructorTemplate from '../../../../template/templateInstructor';
 import Icon from '../../../../components/icons/icon';
@@ -45,6 +45,7 @@ export default function RingkasanEdit() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const wysiwygRef = useRef(null);
 
   // Fetch data awal
   useEffect(() => {
@@ -91,38 +92,18 @@ export default function RingkasanEdit() {
     setSubmitSuccess(false);
 
     try {
-      const uploadedImageURLs = {};
+      const finalDetail = await wysiwygRef.current.uploadLocalImages(token);
 
-      for (const src of localImages) {
-        const fileBlob = await fetch(src).then((r) => r.blob());
-        const fileName = `image_${Date.now()}.png`; // default file name
+      const formToSend = { ...form, detail: finalDetail };
 
-        const formData = new FormData();
-        formData.append('image', fileBlob, fileName);
-
-        const response = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/image`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            Accept: 'application/json',
-          },
-          body: formData,
-        });
-
-        if (!response.ok) throw new Error('Gagal upload gambar');
-
-        const result = await response.json();
-        uploadedImageURLs[src] = result.url;
-      }
-
-      console.log('Uploaded Image URLs:', uploadedImageURLs);
-      alert('Upload gambar berhasil! Cek console log.');
+      console.log('Data yang akan dikirim:', formToSend);
+      console.log('Detail:', formToSend.detail);
 
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 2000);
     } catch (err) {
       console.error(err);
-      setSubmitError('Gagal upload gambar.');
+      setSubmitError('Gagal menyimpan data');
     } finally {
       setSubmitting(false);
     }
@@ -242,10 +223,10 @@ export default function RingkasanEdit() {
               Detail yang akan dipelajari
             </label>
             <WysiwygInput
+              ref={wysiwygRef}
               name="detail"
               value={form.detail}
-              onChange={handleChange}
-              onLocalImagesChange={(images) => setLocalImages(images)} // Capture local images
+              onChange={(e) => setForm((prev) => ({ ...prev, detail: e.target.value }))}
               placeholder="Masukkan detail yang akan dipelajari"
             />
           </div>
