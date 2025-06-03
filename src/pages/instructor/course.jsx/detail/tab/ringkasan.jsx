@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import useCourseStore from '../../../../../zustand/courseStore';
 import { Link, useParams } from 'react-router-dom';
+import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
 
 // Komponen pesan default
 function BelumDiatur() {
@@ -55,6 +56,21 @@ function displayHarga(price) {
   return `Rp. ${Number(price).toLocaleString('id-ID')}`;
 }
 
+// Komponen InfoItem untuk merapikan tampilan info utama
+function InfoItem({ icon, label, value }) {
+  return (
+    <div className="flex items-start gap-4">
+      <span className="text-3xl bg-secondary-100 rounded-full p-2">
+        <Icon type={icon} className="h-6 w-6 text-primary-700" />
+      </span>
+      <div>
+        <p className="font-semibold text-lg text-primary-800">{label}</p>
+        <p className="text-md text-gray-700">{value}</p>
+      </div>
+    </div>
+  );
+}
+
 export default function CourseRingkasan({ editable }) {
   const { id, tab } = useParams();
   const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
@@ -66,20 +82,12 @@ export default function CourseRingkasan({ editable }) {
     }
   }, [id, tab, fetchCourseDetailByTab]);
 
-  if (courseDetailLoading) {
-    return <div>Loading...</div>;
-  }
-  if (courseDetailError) {
-    return <div className="text-red-500">{courseDetailError}</div>;
-  }
-  if (!courseDetailByTab) {
-    return <div>Data tidak ditemukan</div>;
-  }
+  if (courseDetailLoading) return <div>Loading...</div>;
+  if (courseDetailError) return <div className="text-red-500">{courseDetailError}</div>;
+  if (!courseDetailByTab) return <div>Data tidak ditemukan</div>;
 
   const data = courseDetailByTab;
-  if (!data) {
-    return <div>Data tidak ditemukan</div>;
-  }
+  if (!data) return <div>Data tidak ditemukan</div>;
 
   // Cek apakah gambar sudah diatur
   const isImageSet = !!data.image_video && data.image_video !== '';
@@ -110,6 +118,7 @@ export default function CourseRingkasan({ editable }) {
             label="Nama Instruktur"
             value={displayValue(data.instructor?.full_name)}
           />
+          <InfoItem icon="book" label="Kategori" value={displayValue(data.category.name)} />
           <InfoItem icon="star-circle-outline" label="Level" value={displayValue(data.level)} />
           <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
           <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.created_at)} />
@@ -145,23 +154,12 @@ export default function CourseRingkasan({ editable }) {
       {/* Detail yang akan dipelajari */}
       <div className="flex flex-col">
         <p className="font-semibold text-lg text-primary-800 mb-2">Detail yang akan dipelajari</p>
-        <p className="text-md text-gray-700 leading-relaxed">{displayValue(data.detail)}</p>
+        {!data.detail || data.detail === '' ? (
+          <BelumDiatur />
+        ) : (
+          <WysiwygContent html={data.detail} />
+        )}
       </div>
     </>
-  );
-}
-
-// Komponen InfoItem untuk merapikan tampilan info utama
-function InfoItem({ icon, label, value }) {
-  return (
-    <div className="flex items-start gap-4">
-      <span className="text-3xl bg-secondary-100 rounded-full p-2">
-        <Icon type={icon} className="h-6 w-6 text-primary-700" />
-      </span>
-      <div>
-        <p className="font-semibold text-lg text-primary-800">{label}</p>
-        <p className="text-md text-gray-700">{value}</p>
-      </div>
-    </div>
   );
 }

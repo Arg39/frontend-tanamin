@@ -48,7 +48,7 @@ export default function InstructorTemplate({ children, activeNav, className, sty
         <div className={`flex-1 overflow-y-auto ${className}`} style={style}>
           <div className="sticky top-0 z-30 px-4 md:px-0 md:pr-4">
             <div className="relative " style={{ minHeight: '56px' }}>
-              <div className="w-full bg-white-500 h-8 absolute top-0 left-0 z-0"></div>
+              <div className="absolute w-full bg-white-500 h-8 top-0 left-0 z-0"></div>
               <div className="absolute top-4 left-0 w-full z-10">
                 <TopbarAdmin
                   className={'z-30'}
