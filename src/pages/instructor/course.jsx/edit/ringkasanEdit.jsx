@@ -8,6 +8,8 @@ import TextInput from '../../../../components/form/textInput';
 import SelectOption from '../../../../components/form/selectOption';
 import WysiwygInput from '../../../../components/form/wysiwygInput';
 import useAuthStore from '../../../../zustand/authStore';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LEVEL_OPTIONS = [
   { value: 'pemula', label: 'Pemula' },
@@ -88,16 +90,37 @@ export default function RingkasanEdit() {
     try {
       const finalDetail = await wysiwygRef.current.uploadLocalImages(token);
 
-      const formToSend = { ...form, detail: finalDetail };
+      // Prepare FormData for file upload
+      const formData = new FormData();
+      formData.append('title', form.title);
+      formData.append('level', form.level);
+      formData.append('price', form.price);
+      formData.append('requirement', form.requirement);
+      formData.append('description', form.description);
+      formData.append('detail', finalDetail);
+      if (form.image_video instanceof File) {
+        formData.append('image_video', form.image_video);
+      }
 
-      console.log('Data yang akan dikirim:', formToSend);
-      console.log('Detail:', formToSend.detail);
+      // Call updateCourseSummary from store
+      const res = await updateCourseDetail({
+        id,
+        data: formData,
+      });
 
-      setSubmitSuccess(true);
-      setTimeout(() => setSubmitSuccess(false), 2000);
+      if (res.status === 'success') {
+        toast.success(res.message || 'Berhasil memperbarui ringkasan!');
+        setSubmitSuccess(true);
+        setTimeout(() => setSubmitSuccess(false), 2000);
+        navigate(-1);
+      } else {
+        toast.error(res.message || 'Gagal memperbarui ringkasan');
+        setSubmitError(res.message || 'Gagal memperbarui ringkasan');
+      }
     } catch (err) {
       console.error(err);
-      setSubmitError('Gagal menyimpan data');
+      toast.error(err.message || 'Gagal menyimpan data');
+      setSubmitError(err.message || 'Gagal menyimpan data');
     } finally {
       setSubmitting(false);
     }

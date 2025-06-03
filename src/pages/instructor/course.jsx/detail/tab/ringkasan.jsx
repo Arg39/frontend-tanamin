@@ -118,7 +118,7 @@ export default function CourseRingkasan({ editable }) {
             label="Nama Instruktur"
             value={displayValue(data.instructor?.full_name)}
           />
-          <InfoItem icon="book" label="Kategori" value={displayValue(data.category.name)} />
+          <InfoItem icon="book" label="Kategori" value={displayValue(data.category?.name)} />
           <InfoItem icon="star-circle-outline" label="Level" value={displayValue(data.level)} />
           <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
           <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.created_at)} />

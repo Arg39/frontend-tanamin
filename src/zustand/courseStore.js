@@ -183,6 +183,41 @@ const useCourseStore = create((set, get) => ({
       set({ courseDetailError: e.message, courseDetailLoading: false, courseDetailByTab: null });
     }
   },
+
+  async updateCourseDetail({ id, data }) {
+    set({ courseDetailLoading: true, courseDetailError: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/ringkasan/${id}/update`,
+        {
+          method: 'POST', // or 'PUT' if needed
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            // 'Content-Type' intentionally omitted for FormData
+          },
+          body: data,
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') {
+        set({
+          courseDetailError: json.message || 'Gagal memperbarui ringkasan',
+          courseDetailLoading: false,
+        });
+        return json;
+      }
+      set({
+        courseDetailByTab: json.data,
+        courseDetailLoading: false,
+        courseDetailError: null,
+      });
+      return json;
+    } catch (e) {
+      set({ courseDetailError: e.message, courseDetailLoading: false });
+      return { status: 'error', message: e.message };
+    }
+  },
 }));
 
 export default useCourseStore;
