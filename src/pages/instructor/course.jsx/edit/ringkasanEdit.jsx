@@ -10,9 +10,9 @@ import WysiwygInput from '../../../../components/form/wysiwygInput';
 import useAuthStore from '../../../../zustand/authStore';
 
 const LEVEL_OPTIONS = [
-  { value: 'Beginner', label: 'Beginner' },
-  { value: 'Intermediate', label: 'Intermediate' },
-  { value: 'Advanced', label: 'Advanced' },
+  { value: 'pemula', label: 'Pemula' },
+  { value: 'menengah', label: 'Menengah' },
+  { value: 'mahir', label: 'Mahir' },
 ];
 
 export default function RingkasanEdit() {
@@ -151,8 +151,17 @@ export default function RingkasanEdit() {
           <div>
             <label className="mb-2 text-sm font-medium text-gray-700 block">Nama Instruktur</label>
             <input
-              //   type="text"
               value={courseDetailByTab.instructor?.full_name || ''}
+              className="w-full border border-gray-200 rounded px-3 py-2 bg-gray-100"
+              readOnly
+              tabIndex={-1}
+            />
+          </div>
+          {/* Nama Instruktur */}
+          <div>
+            <label className="mb-2 text-sm font-medium text-gray-700 block">Kategori</label>
+            <input
+              value={courseDetailByTab.category?.name || ''}
               className="w-full border border-gray-200 rounded px-3 py-2 bg-gray-100"
               readOnly
               tabIndex={-1}
