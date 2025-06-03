@@ -16,6 +16,14 @@ const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, 
   const quillRef = useRef(null);
   const [content, setContent] = useState(value || '');
 
+  // Sinkronisasi value prop ke state content
+  useEffect(() => {
+    if (value !== content) {
+      setContent(value || '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
+
   const handleChange = (content) => {
     setContent(content);
     onChange({
