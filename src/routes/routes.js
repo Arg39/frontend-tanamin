@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useAuthStore from '../zustand/authStore';
 import Login from '../pages/login';
 import Register from '../pages/register';
@@ -19,6 +19,7 @@ import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
 import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
 import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
+import PersyaratanAdd from '../pages/instructor/course.jsx/tambah/persyaratanAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -71,6 +72,17 @@ const RoleBasedRedirect = () => {
   return <Navigate to="/beranda" replace />;
 };
 
+const ValidatedCourseDetailInstructor = () => {
+  const { tab } = useParams();
+  const validTabs = ['ringkasan', 'persyaratan', 'deskripsi', 'materi', 'ulasan'];
+
+  if (!validTabs.includes(tab)) {
+    return <Navigate to="/not-found" replace />;
+  }
+
+  return <CuourseDetailInstructor />;
+};
+
 const adminRoutes = [
   { path: 'dashboard', element: <DashboardAdmin /> },
   { path: 'kategori', element: <Category /> },
@@ -80,14 +92,15 @@ const adminRoutes = [
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
-  { path: 'kursus/lihat/:id/:tab', element: <CuourseDetailAdmin /> },
+  { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
 ];
 
 const instructorRoutes = [
   { path: 'dashboard', element: <DashboardInstructor /> },
   { path: 'kursus', element: <CourseAdmin /> },
-  { path: 'kursus/lihat/:id/:tab', element: <CuourseDetailInstructor /> },
-  { path: 'kursus/edit/:id/:tab/:id2?', element: <RingkasanEdit /> },
+  { path: 'kursus/:id/lihat/:tab', element: <ValidatedCourseDetailInstructor /> },
+  { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEdit /> },
+  { path: 'kursus/:id/tambah/persyaratan', element: <PersyaratanAdd /> },
 ];
 
 const publicRoutes = [

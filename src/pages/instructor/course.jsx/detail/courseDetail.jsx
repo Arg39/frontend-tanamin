@@ -25,16 +25,16 @@ export default function CuourseDetail({ editable }) {
 
   const handleTabChange = (tabName) => {
     if (role === 'admin') {
-      navigate(`/admin/kursus/lihat/${id}/${tabName}`);
+      navigate(`/admin/kursus/${id}/lihat/${tabName}`);
     } else if (role === 'instructor') {
-      navigate(`/instruktur/kursus/lihat/${id}/${tabName}`);
+      navigate(`/instruktur/kursus/${id}/lihat/${tabName}`);
     }
   };
 
   const ActiveComponent = tabComponents[activeTab] || CourseRingkasan;
 
   return (
-    <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4 ">
+    <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
       <div>
         <button
           className="flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
