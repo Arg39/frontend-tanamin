@@ -12,9 +12,9 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LEVEL_OPTIONS = [
-  { value: 'pemula', label: 'Pemula' },
-  { value: 'menengah', label: 'Menengah' },
-  { value: 'mahir', label: 'Mahir' },
+  { value: 'beginner', label: 'Pemula' },
+  { value: 'intermediate', label: 'Menengah' },
+  { value: 'advance', label: 'Mahir' },
 ];
 
 export default function RingkasanEdit() {
@@ -36,7 +36,7 @@ export default function RingkasanEdit() {
     requirement: '',
     description: '',
     detail: '',
-    image_video: '',
+    image: '',
   });
 
   const [imagePreview, setImagePreview] = useState('');
@@ -61,9 +61,9 @@ export default function RingkasanEdit() {
         requirement: courseDetailByTab.requirement || '',
         description: courseDetailByTab.description || '',
         detail: courseDetailByTab.detail || '',
-        image_video: courseDetailByTab.image_video || '',
+        image: courseDetailByTab.image || '',
       });
-      setImagePreview(courseDetailByTab.image_video || '');
+      setImagePreview(courseDetailByTab.image || '');
     }
   }, [courseDetailByTab]);
 
@@ -75,7 +75,7 @@ export default function RingkasanEdit() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setForm((prev) => ({ ...prev, image_video: file }));
+      setForm((prev) => ({ ...prev, image: file }));
       setImagePreview(URL.createObjectURL(file));
     }
   };
@@ -98,8 +98,8 @@ export default function RingkasanEdit() {
       formData.append('requirement', form.requirement);
       formData.append('description', form.description);
       formData.append('detail', finalDetail);
-      if (form.image_video instanceof File) {
-        formData.append('image_video', form.image_video);
+      if (form.image instanceof File) {
+        formData.append('image', form.image);
       }
 
       // Call updateCourseSummary from store
@@ -215,9 +215,9 @@ export default function RingkasanEdit() {
           {/* Gambar */}
           <ImagePicker
             label="Gambar"
-            name="image_video"
+            name="image"
             onChange={handleImageChange}
-            preview={form.image_video instanceof File ? imagePreview : form.image_video}
+            preview={form.image instanceof File ? imagePreview : form.image}
           />
           {/* Detail yang akan dipelajari */}
           <div>

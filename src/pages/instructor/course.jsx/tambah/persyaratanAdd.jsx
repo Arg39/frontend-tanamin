@@ -39,7 +39,7 @@ export default function PersyaratanAdd() {
           <Icon type="arrow-left" className="size-[1rem] text-white-100" />
           Kembali
         </button>
-        <div className="text-2xl font-bold">Tambah Persyaratan</div>
+        <div className="text-2xl font-bold">Tambah Persyaratan/Deskripsi</div>
         {/* content add */}
         <TextInput
           type="text"

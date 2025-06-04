@@ -90,8 +90,8 @@ export default function CourseRingkasan({ editable }) {
   if (!data) return <div>Data tidak ditemukan</div>;
 
   // Cek apakah gambar sudah diatur
-  const isImageSet = !!data.image_video && data.image_video !== '';
-  const imageUrl = isImageSet ? data.image_video : null;
+  const isImageSet = !!data.image && data.image !== '';
+  const imageUrl = isImageSet ? data.image : null;
 
   return (
     <>

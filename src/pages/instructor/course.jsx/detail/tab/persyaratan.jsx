@@ -2,6 +2,33 @@ import React from 'react';
 import Icon from '../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 
+function DeskripsiItem({ number, text, onEdit, onDelete }) {
+  return (
+    <div className="flex justify-between items-center bg-white-100 px-4 py-1 rounded-lg border border-primary-700">
+      <div className="flex items-center gap-2">
+        <p>{number}.</p>
+        <p>{text}</p>
+      </div>
+      <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <button
+            className="bg-primary-700 text-white-100 px-4 py-1 rounded hover:bg-primary-800"
+            onClick={onEdit}
+          >
+            Edit
+          </button>
+          <button
+            className="bg-red-700 text-white-100 px-4 py-1 rounded hover:bg-red-800"
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function CoursePersyaratan({ editable }) {
   const { id, tab } = useParams();
   const navigate = useNavigate();
@@ -26,47 +53,24 @@ export default function CoursePersyaratan({ editable }) {
       {/* persyaratan */}
       <div className="p-2">
         <p className="text-lg text-tertiary-600 font-bold">Persyaratan:</p>
-        <div className="flex justify-between items-center bg-white-100 px-4 py-1 rounded-lg border border-primary-700 mb-4">
-          <div className="flex items-center gap-2">
-            <p>1.</p>
-            <p>Memiliki perangkat komputer atau laptop dengan koneksi internet stabil</p>
-          </div>
-          <div className="flex gap-2">
-            <div className="flex items-center gap-2">
-              <button className="bg-primary-700 text-white-100 px-4 py-1 rounded hover:bg-primary-800">
-                Edit
-              </button>
-              <button className="bg-red-700 text-white-100 px-4 py-1 rounded hover:bg-red-800">
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeskripsiItem
+          number={1}
+          text="Memiliki perangkat komputer atau laptop dengan koneksi internet stabil"
+          // onEdit dan onDelete bisa diisi sesuai kebutuhan
+        />
       </div>
 
-      {/* deskripsi */}
+      {/* Deskripsi */}
       <div className="p-2">
         <p className="text-lg text-tertiary-600 font-bold">Deskripsi:</p>
-        <div className="flex justify-between items-center bg-white-100 px-4 py-1 rounded-lg border border-primary-700 mb-4">
-          <div className="flex gap-2">
-            <p>1.</p>
-            <p className="w-[95%]">
-              Memiliki perangkat komputer atau laptop dengan koneksi internet stabil Memiliki
-              perangkat komputer atau laptop dengan koneksi internet stabil Memiliki perangkat
-              komputer atau laptop dengan koneksi internet stabil
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="bg-primary-700 text-white-100 px-4 py-1 rounded hover:bg-primary-800">
-              Edit
-            </button>
-            <button className="bg-red-700 text-white-100 px-4 py-1 rounded hover:bg-red-800">
-              Delete
-            </button>
-          </div>
+        <div className="flex flex-col gap-2">
+          <DeskripsiItem
+            number={1}
+            text="Pengenalan konsep UI dan UX serta perbedaannya"
+            // onEdit dan onDelete bisa diisi sesuai kebutuhan
+          />
         </div>
       </div>
-      {/* Table yang akan digunakan untuk CRUD persyaratan */}
     </>
   );
 }
