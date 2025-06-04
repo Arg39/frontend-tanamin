@@ -19,7 +19,8 @@ import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
 import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
 import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
-import PersyaratanAdd from '../pages/instructor/course.jsx/tambah/persyaratanAdd';
+import PersyaratanDeskripsiAdd from '../pages/instructor/course.jsx/tambah/PersyaratanDeskripsiAdd';
+import PersyaratanDeskripsiEdit from '../pages/instructor/course.jsx/edit/persyaratanDeskripsiEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -74,7 +75,7 @@ const RoleBasedRedirect = () => {
 
 const ValidatedCourseDetailInstructor = () => {
   const { tab } = useParams();
-  const validTabs = ['ringkasan', 'persyaratan', 'deskripsi', 'materi', 'ulasan'];
+  const validTabs = ['ringkasan', 'persyaratan-deskripsi', 'materi', 'ulasan'];
 
   if (!validTabs.includes(tab)) {
     return <Navigate to="/not-found" replace />;
@@ -100,7 +101,8 @@ const instructorRoutes = [
   { path: 'kursus', element: <CourseAdmin /> },
   { path: 'kursus/:id/lihat/:tab', element: <ValidatedCourseDetailInstructor /> },
   { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEdit /> },
-  { path: 'kursus/:id/tambah/persyaratan', element: <PersyaratanAdd /> },
+  { path: 'kursus/:id/tambah/persyaratan-deskripsi', element: <PersyaratanDeskripsiAdd /> },
+  { path: 'kursus/:id/edit/persyaratan-deskripsi/:id2?', element: <PersyaratanDeskripsiEdit /> },
 ];
 
 const publicRoutes = [

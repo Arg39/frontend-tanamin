@@ -4,14 +4,17 @@ import InstructorTemplate from '../../../../template/templateInstructor';
 import Icon from '../../../../components/icons/icon';
 import TextInput from '../../../../components/form/textInput';
 import SelectOption from '../../../../components/form/selectOption';
+import useCourseStore from '../../../../zustand/courseStore';
+import { toast } from 'react-toastify';
 
-export default function PersyaratanAdd() {
+export default function PersyaratanDeskripsiAdd() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const addCourseInfo = useCourseStore((state) => state.addCourseInfo);
 
   // State untuk form
   const [form, setForm] = useState({
-    title: '',
+    content: '',
     type: '',
   });
 
@@ -25,8 +28,22 @@ export default function PersyaratanAdd() {
   };
 
   // Handle simpan
-  const handleSave = () => {
-    console.log('Data yang disimpan:', form);
+  const handleSave = async () => {
+    try {
+      const res = await addCourseInfo({
+        id,
+        content: form.content,
+        type: form.type,
+      });
+      if (res.status === 'success') {
+        toast.success(res.message || 'Berhasil menambah informasi');
+        navigate(-1);
+      } else {
+        toast.error(res.message || 'Gagal menambah informasi');
+      }
+    } catch (e) {
+      toast.error(e.message || 'Terjadi kesalahan');
+    }
   };
 
   return (
@@ -43,20 +60,20 @@ export default function PersyaratanAdd() {
         {/* content add */}
         <TextInput
           type="text"
-          label="Judul"
-          name="title"
-          value={form.title}
+          label="Informasi"
+          name="content"
+          value={form.content}
           onChange={handleChange}
-          placeholder="Masukkan persyaratan kursus"
+          placeholder="Masukkan informasi kursus"
         />
         <SelectOption
-          label="Tipe"
+          label="Tipe informasi"
           name="type"
           value={form.type}
           onChange={handleChange}
           options={[
-            { value: 'persyaratan', label: 'Persyaratan' },
-            { value: 'deskripsi', label: 'Deskripsi' },
+            { value: 'prerequisite', label: 'Persyaratan' },
+            { value: 'description', label: 'Deskripsi' },
           ]}
           placeholder="Pilih tipe persyaratan"
         />

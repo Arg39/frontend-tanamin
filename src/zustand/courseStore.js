@@ -24,6 +24,9 @@ const useCourseStore = create((set, get) => ({
   courseDetailByTab: null,
   courseDetailLoading: false,
   courseDetailError: null,
+  courseInfo: null,
+  courseInfoLoading: false,
+  courseInfoError: null,
 
   async fetchCourses({
     sortBy = 'title',
@@ -216,6 +219,55 @@ const useCourseStore = create((set, get) => ({
     } catch (e) {
       set({ courseDetailError: e.message, courseDetailLoading: false });
       return { status: 'error', message: e.message };
+    }
+  },
+
+  async addCourseInfo({ id, content, type }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const params = new URLSearchParams({
+        content,
+        type,
+      }).toString();
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/info/${id}/add?${params}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      return json;
+    } catch (e) {
+      return { status: 'error', message: e.message };
+    }
+  },
+
+  async fetchCourseInfo({ id }) {
+    set({ courseInfoLoading: true, courseInfoError: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/info/${id}/view`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal mengambil info kursus');
+      set({
+        courseInfo: json.data,
+        courseInfoLoading: false,
+        courseInfoError: null,
+      });
+    } catch (e) {
+      set({ courseInfoError: e.message, courseInfoLoading: false, courseInfo: null });
     }
   },
 }));

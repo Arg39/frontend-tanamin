@@ -1,8 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
 import CourseRingkasan from './tab/ringkasan';
-import CoursePersyaratan from './tab/persyaratan';
-import CourseDeskripsi from './tab/deskripsi';
+import CoursePersyaratanDeskripsi from './tab/persyaratanDeskripsi';
 import CourseMateri from './tab/materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import useAuthStore from '../../../../zustand/authStore';
@@ -10,8 +9,7 @@ import UlasanCourse from './tab/ulasan';
 
 const tabComponents = {
   informasiUtama: CourseRingkasan,
-  persyaratan: CoursePersyaratan,
-  deskripsi: CourseDeskripsi,
+  'persyaratan-deskripsi': CoursePersyaratanDeskripsi,
   materi: CourseMateri,
   ulasan: UlasanCourse,
 };
@@ -67,7 +65,6 @@ export default function CuourseDetail({ editable }) {
         ))}
       </div>
       <div className="border border-gray-200 p-2 sm:p-4 rounded-md bg-white-100 ">
-        {/* Only pass editable, let tab component handle fetching */}
         <ActiveComponent editable={editable} />
       </div>
     </div>
