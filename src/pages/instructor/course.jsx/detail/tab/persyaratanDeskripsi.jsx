@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 import useCourseStore from '../../../../../zustand/courseStore';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
+import { toast } from 'react-toastify';
 
 function DeskripsiItem({ number, text, onEdit, onDelete, editable }) {
   return (
@@ -33,12 +35,34 @@ function DeskripsiItem({ number, text, onEdit, onDelete, editable }) {
 export default function CoursePersyaratanDeskripsi({ editable }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { courseInfo, courseInfoLoading, courseInfoError, fetchCourseInfo } = useCourseStore();
+  const { courseInfo, courseInfoLoading, courseInfoError, fetchCourseInfo, deleteCourseInfo } =
+    useCourseStore();
 
   useEffect(() => {
     if (id) fetchCourseInfo({ id });
   }, [id, fetchCourseInfo]);
 
+  const { openModal, closeModal } = useConfirmationModalStore();
+
+  // Handler for deleting prerequisite or description
+  const handleDelete = (id_info, type) => {
+    openModal({
+      title: 'Konfirmasi Hapus',
+      message: 'Yakin ingin menghapus item ini?',
+      variant: 'danger',
+      onConfirm: async () => {
+        const res = await deleteCourseInfo({ id, id_info, type });
+        if (res.status === 'success') {
+          fetchCourseInfo({ id });
+          toast.success('Berhasil menghapus data');
+        } else {
+          toast.error(res.message || 'Gagal menghapus data');
+        }
+        closeModal();
+      },
+      onCancel: closeModal,
+    });
+  };
   return (
     <>
       {/* Header */}
@@ -70,7 +94,7 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
                 onEdit={() =>
                   navigate(`/instruktur/kursus/${id}/edit/persyaratan-deskripsi/${item.id}`)
                 }
-                // onDelete={() => ...}
+                onDelete={() => handleDelete(item.id, 'prerequisite')}
               />
             ))
           : !courseInfoLoading && <p className="text-base text-gray-500">Belum ada persyaratan.</p>}
@@ -90,7 +114,7 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
                   onEdit={() =>
                     navigate(`/instruktur/kursus/${id}/edit/persyaratan-deskripsi/${item.id}`)
                   }
-                  // onDelete={() => ...}
+                  onDelete={() => handleDelete(item.id, 'description')}
                 />
               ))
             : !courseInfoLoading && <p className="text-base text-gray-500">Belum ada deskripsi.</p>}

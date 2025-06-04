@@ -270,6 +270,50 @@ const useCourseStore = create((set, get) => ({
       set({ courseInfoError: e.message, courseInfoLoading: false, courseInfo: null });
     }
   },
+
+  async updateCourseInfo({ id, id_info, content, type }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const body = JSON.stringify({ content, type });
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/info/${id}/update${id_info}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body,
+        }
+      );
+      const json = await res.json();
+      return json;
+    } catch (e) {
+      return { status: 'error', message: e.message };
+    }
+  },
+
+  async deleteCourseInfo({ id, id_info, type }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const body = JSON.stringify({ type });
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/info/${id}/delete${id_info}`,
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body,
+        }
+      );
+      const json = await res.json();
+      return json;
+    } catch (e) {
+      return { status: 'error', message: e.message };
+    }
+  },
 }));
 
 export default useCourseStore;
