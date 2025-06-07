@@ -31,7 +31,7 @@ export default function Navbar() {
     <div className="lg:px-8 lg:p-0 md px-2 py-2 bg-white-100 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
       {/* Logo */}
       <div>
-        <img src="assets/Logo-CodeLearn.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
+        <img src="assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
       </div>
 
       {/* Desktop Menu */}

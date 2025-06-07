@@ -1,4 +1,3 @@
-// profileDropdown.jsx
 import React, { useState } from 'react';
 import Icon from '../icons/icon';
 import useAuthStore from '../../zustand/authStore';
@@ -28,11 +27,24 @@ export default function ProfileDropdown() {
     });
   };
 
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleClick = (e) => {
+      if (!e.target.closest('.profile-dropdown-parent')) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [isOpen]);
+
   return (
-    <div className="relative">
+    <div className="relative profile-dropdown-parent z-50">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex items-center space-x-2 md:space-x-4 p-1 border border-black-200 rounded-md hover:bg-gray-300"
+        type="button"
       >
         <div className="w-8 h-8 flex items-center justify-center bg-gray-300 rounded-full overflow-hidden">
           {profilePicture ? (
@@ -49,13 +61,14 @@ export default function ProfileDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white-100 border rounded-md shadow-lg">
+        <div className="absolute right-0 mt-2 w-48 bg-white-100 border rounded-md shadow-lg z-50">
           <button
             onClick={() => {
               setIsOpen(false);
               handleLogoutRequest();
             }}
             className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+            type="button"
           >
             Logout
           </button>

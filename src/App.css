@@ -2,15 +2,24 @@ body {
   font-family: 'Montserrat', sans-serif;
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
+/* Di app.css atau global CSS */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
-.scrollbar-hide {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* ini yang bikin track scroll tidak ada bg */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2); /* warna thumb scroll */
+  border-radius: 4px;
+}
+
+.custom-scrollbar {
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; /* Firefox */
+  scrollbar-width: thin; /* Firefox */
 }
 
 /* Styles for Full HD (1920 x 1080) */

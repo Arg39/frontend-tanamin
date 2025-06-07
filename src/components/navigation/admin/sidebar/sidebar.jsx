@@ -10,8 +10,8 @@ export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
       <div className="h-full w-full rounded-lg z-0 bg-white-100 shadow-md">
         <div className="h-full w-full text-white flex flex-col">
           {/* Header */}
-          <div className="flex justify-between items-center py-6 px-4">
-            <img src="/assets/Logo-CodeLearn.png" alt="Logo-Tanamin" className="h-10 lg:h-16" />
+          <div className="flex justify-between md:justify-center items-center py-6 px-4">
+            <img src="/assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-16" />
             <button className="lg:hidden text-black" onClick={onClose}>
               <Icon type="x-mark" color="black" />
             </button>

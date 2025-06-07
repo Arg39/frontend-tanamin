@@ -76,6 +76,9 @@ export default function RingkasanEdit() {
     const file = e.target.files[0];
     if (file) {
       setForm((prev) => ({ ...prev, image: file }));
+      if (imagePreview && imagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(imagePreview);
+      }
       setImagePreview(URL.createObjectURL(file));
     }
   };
@@ -218,6 +221,8 @@ export default function RingkasanEdit() {
             name="image"
             onChange={handleImageChange}
             preview={form.image instanceof File ? imagePreview : form.image}
+            crop={true}
+            cropAspect={16 / 9}
           />
           {/* Detail yang akan dipelajari */}
           <div>

@@ -1,14 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '../../utils/cropImage';
 
-export default function ImagePicker({ label, name, onChange, preview }) {
+export default function ImagePicker({
+  label,
+  name,
+  onChange,
+  preview,
+  crop = false,
+  cropAspect = 1,
+}) {
   const [localPreview, setLocalPreview] = useState(null);
+  const [showCrop, setShowCrop] = useState(false);
+  const [cropState, setCropState] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [rawFile, setRawFile] = useState(null);
+  const [inputKey, setInputKey] = useState(Date.now()); // for resetting input
 
   useEffect(() => {
     if (!preview) {
       setLocalPreview(null);
     } else if (typeof preview === 'string') {
-      // Jika preview sudah berupa URL lokal (blob: atau data:), pakai langsung
       if (
         preview.startsWith('blob:') ||
         preview.startsWith('data:') ||
@@ -16,14 +30,13 @@ export default function ImagePicker({ label, name, onChange, preview }) {
       ) {
         setLocalPreview(preview);
       } else {
-        // Anggap ini nama file dari backend
         setLocalPreview(`${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${preview}`);
       }
     } else if (preview instanceof File) {
-      setLocalPreview(URL.createObjectURL(preview));
-      // Clean up object URL jika file berubah
+      const url = URL.createObjectURL(preview);
+      setLocalPreview(url);
       return () => {
-        URL.revokeObjectURL(localPreview);
+        URL.revokeObjectURL(url);
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -32,9 +45,38 @@ export default function ImagePicker({ label, name, onChange, preview }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLocalPreview(URL.createObjectURL(file));
-      onChange(e);
+      setInputKey(Date.now()); // reset input so user can pick same file again
+      if (crop) {
+        setRawFile(file);
+        setLocalPreview(URL.createObjectURL(file));
+        setCropState({ x: 0, y: 0 });
+        setZoom(1);
+        setShowCrop(true);
+      } else {
+        setLocalPreview(URL.createObjectURL(file));
+        onChange(e);
+      }
     }
+  };
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  }, []);
+
+  const handleCropSave = async () => {
+    const croppedImage = await getCroppedImg(localPreview, croppedAreaPixels);
+    setLocalPreview(croppedImage.url);
+    setShowCrop(false);
+
+    // Convert blob to File and trigger onChange
+    const croppedFile = new File([croppedImage.blob], rawFile.name, { type: rawFile.type });
+    const event = {
+      target: {
+        name,
+        files: [croppedFile],
+      },
+    };
+    onChange(event);
   };
 
   return (
@@ -51,6 +93,7 @@ export default function ImagePicker({ label, name, onChange, preview }) {
           </span>
         )}
         <input
+          key={inputKey}
           type="file"
           id={name}
           name={name}
@@ -59,6 +102,39 @@ export default function ImagePicker({ label, name, onChange, preview }) {
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
       </div>
+      {crop && showCrop && (
+        <div className="fixed inset-0 bg-black-900 bg-opacity-60 flex items-center justify-center z-100">
+          <div className="bg-white-100 p-4 rounded shadow-lg relative w-[90vw] max-w-lg h-[60vw] max-h-[80vh] flex flex-col">
+            <div className="relative flex-1">
+              <Cropper
+                image={localPreview}
+                crop={cropState}
+                zoom={zoom}
+                aspect={cropAspect}
+                onCropChange={setCropState}
+                onZoomChange={setZoom}
+                onCropComplete={onCropComplete}
+              />
+            </div>
+            <div className="flex justify-end gap-2 mt-4">
+              <button
+                type="button"
+                className="px-4 py-2 bg-gray-300 rounded"
+                onClick={() => setShowCrop(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="px-4 py-2 bg-primary-500 text-white-100 rounded"
+                onClick={handleCropSave}
+              >
+                Crop & Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -72,4 +148,6 @@ ImagePicker.propTypes = {
     PropTypes.instanceOf(File),
     PropTypes.oneOf([null]),
   ]),
+  crop: PropTypes.bool,
+  cropAspect: PropTypes.number,
 };
