@@ -5,13 +5,10 @@ import 'react-quill/dist/quill.snow.css';
 const modules = {
   toolbar: [
     [{ header: [1, 2, false] }],
-    ['bold', 'italic', 'underline', 'strike'],
+    [{ align: [] }, 'bold', 'italic', 'underline', 'strike'],
     [{ color: [] }, { background: [] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image', 'code-block'],
-    [
-      { align: [] }, // Tambahkan opsi align
-    ],
   ],
 };
 
