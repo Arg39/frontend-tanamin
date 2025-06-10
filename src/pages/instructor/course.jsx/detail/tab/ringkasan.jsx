@@ -60,15 +60,36 @@ function displayHarga(price) {
 function InfoItem({ icon, label, value }) {
   return (
     <div className="flex items-start gap-4">
-      <span className="text-3xl bg-secondary-100 rounded-full p-2">
+      <span className="text-3xl bg-secondary-100 rounded-full p-2 flex items-center justify-center w-12 h-12">
         <Icon type={icon} className="h-6 w-6 text-primary-700" />
       </span>
       <div>
         <p className="font-semibold text-lg text-primary-800">{label}</p>
-        <p className="text-md text-gray-700">{value}</p>
+        {label === 'Level' && value && typeof value === 'object' && value.label ? (
+          <span
+            className={`inline-block ${value.bg} p-2 rounded text-center min-w-[80px]`}
+            style={{ minWidth: '80px' }}
+          >
+            {value.label}
+          </span>
+        ) : (
+          <p className="text-md text-gray-700">{value}</p>
+        )}
       </div>
     </div>
   );
+}
+
+function displayLevel(level) {
+  if (!level) return null;
+  const mapping = {
+    beginner: { label: 'Pemula', bg: 'bg-primary-100 text-primary-700' },
+    intermediate: { label: 'Menengah', bg: 'bg-yellow-100 text-yellow-700' },
+    advance: { label: 'Mahir', bg: 'bg-blue-100 text-blue-700' },
+  };
+  const info = mapping[level.toLowerCase()];
+  if (!info) return { label: level, bg: 'bg-gray-100 text-gray-700' };
+  return info;
 }
 
 export default function CourseRingkasan({ editable }) {
@@ -119,7 +140,7 @@ export default function CourseRingkasan({ editable }) {
             value={displayValue(data.instructor?.full_name)}
           />
           <InfoItem icon="book" label="Kategori" value={displayValue(data.category?.name)} />
-          <InfoItem icon="star-circle-outline" label="Level" value={displayValue(data.level)} />
+          <InfoItem icon="star-circle-outline" label="Level" value={displayLevel(data.level)} />
           <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
           <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.created_at)} />
         </div>

@@ -18,7 +18,8 @@ const LEVEL_OPTIONS = [
 ];
 
 export default function RingkasanEdit() {
-  const { id, tab } = useParams();
+  const { id } = useParams();
+  const tab = 'ringkasan';
   const navigate = useNavigate();
   const {
     fetchCourseDetailByTab,
