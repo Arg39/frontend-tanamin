@@ -124,13 +124,14 @@ function DroppableOutline({ outline, children, isOver, onAddMateri, onDeleteOutl
     >
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg font-semibold">{outline.title}</h2>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-fit">
           <button
-            className="text-green-600 hover:text-green-800 text-sm flex items-center gap-1"
+            className="border border-primary-700 rounded-md p-2 text-green-600 hover:text-green-800 text-sm flex items-center gap-1"
             onClick={() => onAddMateri(outline.id)}
             title="Tambah Materi"
           >
-            <Icon type="plus" /> <span className="hidden md:inline">Tambah Materi</span>
+            <Icon type="plus" />
+            <span className="hidden md:inline">Materi</span>
           </button>
           <button
             className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
