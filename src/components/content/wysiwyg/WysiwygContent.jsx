@@ -73,7 +73,7 @@ export default function WysiwygContent({ html }) {
             margin-left: 1.5em;
             padding-left: 1.5em;
           }
-            .wysiwyg-content img {
+          .wysiwyg-content img {
             max-width: 100%;
             height: auto;
             border-radius: 8px;
@@ -83,6 +83,29 @@ export default function WysiwygContent({ html }) {
             object-fit: contain;
             background: #f8fafc;
             padding: 8px;
+          }
+
+          /* Alignment styles */
+          .wysiwyg-content .ql-align-center {
+            text-align: center;
+          }
+          .wysiwyg-content .ql-align-left {
+            text-align: left;
+          }
+          .wysiwyg-content .ql-align-right {
+            text-align: right;
+          }
+
+          .wysiwyg-content img.ql-align-center {
+            margin: 0 auto;
+          }
+          .wysiwyg-content img.ql-align-left {
+            margin: 0;
+            float: left;
+          }
+          .wysiwyg-content img.ql-align-right {
+            margin: 0;
+            float: right;
           }
         `}
       </style>

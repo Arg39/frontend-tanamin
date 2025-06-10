@@ -103,7 +103,7 @@ export default function ImagePicker({
         />
       </div>
       {crop && showCrop && (
-        <div className="fixed inset-0 bg-black-900 bg-opacity-60 flex items-center justify-center z-100">
+        <div className="fixed inset-0 bg-black-900 bg-opacity-60 flex items-center justify-center z-100 crop-overlay">
           <div className="bg-white-100 p-4 rounded shadow-lg relative w-[90vw] max-w-lg h-[60vw] max-h-[80vh] flex flex-col">
             <div className="relative flex-1">
               <Cropper

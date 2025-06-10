@@ -9,6 +9,9 @@ const modules = {
     [{ color: [] }, { background: [] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
     ['link', 'image', 'code-block'],
+    [
+      { align: [] }, // Tambahkan opsi align
+    ],
   ],
 };
 
@@ -125,15 +128,18 @@ const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, 
     <div>
       <style>
         {`
-        .ql-snow .ql-editor pre.ql-syntax {
-          background: #222 !important;
-          color: #fff !important;
-          border-radius: 5px;
-          padding: 12px;
-          font-family: 'Fira Mono', 'Consolas', 'Monaco', monospace;
-          font-size: 0.95em;
-        }
-      `}
+          .ql-snow .ql-editor pre.ql-syntax {
+            background: #222 !important;
+            color: #fff !important;
+            border-radius: 5px;
+            padding: 12px;
+            font-family: 'Fira Mono', 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+          }
+          .crop-overlay {
+            z-index: 9999 !important; /* Ensure crop overlay is on top */
+          }
+        `}
       </style>
       {label && <label className="block mb-2">{label}</label>}
       <ReactQuill
