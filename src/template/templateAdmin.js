@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SidebarAdmin from '../components/navigation/admin/sidebar/sidebarAdmin';
 import useMenuStore from '../zustand/menuStore';
 import TopbarAdmin from '../components/navigation/admin/topbar/topbarAdmin';
@@ -19,6 +19,8 @@ export default function AdminTemplate({ children, activeNav, className, style })
     useConfirmationModalStore();
 
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
+  const [isBreadcrumbVisible, setIsBreadcrumbVisible] = useState(true);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     setActiveNav(activeNav);
@@ -34,6 +36,21 @@ export default function AdminTemplate({ children, activeNav, className, style })
     });
   });
 
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      if (container.scrollTop > 16) {
+        setIsBreadcrumbVisible(false);
+      } else {
+        setIsBreadcrumbVisible(true);
+      }
+    };
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="h-screen w-screen flex overflow-hidden bg-white-500">
       {/* Sidebar */}
@@ -45,21 +62,31 @@ export default function AdminTemplate({ children, activeNav, className, style })
 
       {/* Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <div className={`flex-1 overflow-y-auto ${className}`} style={style}>
-          <div className="sticky top-0 px-4 md:px-0 md:pr-4">
-            <div className="relative " style={{ minHeight: '56px' }}>
-              <div className="w-full bg-white-500 h-8 absolute top-0 left-0 z-0"></div>
-              <div className="absolute top-4 left-0 w-full z-10">
-                <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
-              </div>
-            </div>
+        {/* Topbar tetap selalu di atas dan sticky */}
+        <div className="sticky top-4 z-30 bg-white px-4 md:px-0 md:pr-4 border-b border-gray-200">
+          <div style={{ minHeight: '56px' }}>
+            <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
           </div>
+        </div>
 
-          {/* Breadcrumb dan konten */}
-          <div className="relative z-0 px-4 pb-4 lg:pl-0 pt-12">
-            <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
-            {children}
-          </div>
+        {/* Scrollable content dimulai di bawah topbar */}
+        <div
+          className={`flex-1 overflow-y-auto custom-scrollbar px-4 pb-4 lg:pl-0 ${className}`}
+          ref={scrollContainerRef}
+          style={{
+            paddingTop: '1.5rem',
+            ...style,
+          }}
+        >
+          {/* Breadcrumb */}
+          {isBreadcrumbVisible && (
+            <div className="mb-4">
+              <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
+            </div>
+          )}
+
+          {/* Konten halaman */}
+          {children}
         </div>
       </div>
 
