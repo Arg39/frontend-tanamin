@@ -44,17 +44,17 @@ export default function CourseAdmin() {
   ]);
 
   const handleSortChange = (column, order) => {
+    useCourseStore.setState({ sortBy: column, sortOrder: order });
     fetchInstructorCourses({
       sortBy: column,
       sortOrder: order,
-      page: instructorPagination.currentPage,
+      page: 1, // Reset to first page when sorting
       perPage: instructorPagination.perPage,
       search: filterValues.search,
       dateStart: filterValues.date.start,
       dateEnd: filterValues.date.end,
     });
   };
-
   const handlePageChange = (page) => {
     fetchInstructorCourses({
       sortBy,
@@ -146,16 +146,6 @@ export default function CourseAdmin() {
       <div className="w-full bg-white-100 rounded-md flex flex-col p-6 shadow-md">
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
           <p className="text-xl md:text-3xl font-bold mb-2 md:mb-0">Kursus</p>
-          {/* <div className="w-full flex sm:flex-row md:justify-end gap-4">
-            <div className="flex flex-col justify-center items-start gap-1 bg-primary-300 rounded-md px-4 py-2 w-full sm:w-1/2 md:w-32">
-              <p className="text-lg md:text-2xl font-bold text-primary-700">94</p>
-              <p className="text-sm md:text-base text-primary-700">Done</p>
-            </div>
-            <div className="flex flex-col justify-center items-start gap-1 bg-yellow-50 rounded-md px-4 py-2 w-full sm:w-1/2 md:w-32">
-              <p className="text-lg md:text-2xl font-bold text-yellow-700">94</p>
-              <p className="text-sm md:text-base text-yellow-700">In Progress</p>
-            </div>
-          </div> */}
         </div>
 
         <TableFilter

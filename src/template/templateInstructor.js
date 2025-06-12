@@ -36,15 +36,25 @@ export default function InstructorTemplate({ children, activeNav, className, sty
     const container = scrollContainerRef.current;
     if (!container) return;
 
+    let ticking = false;
+
     const handleScroll = () => {
-      if (container.scrollTop > 16) {
-        setIsBreadcrumbVisible(false);
-      } else {
-        setIsBreadcrumbVisible(true);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          // Gunakan scrollY window, bukan scrollTop container
+          if (window.scrollY > 16) {
+            setIsBreadcrumbVisible(false);
+          } else {
+            setIsBreadcrumbVisible(true);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (

@@ -9,7 +9,7 @@ import UlasanCourse from './tab/ulasan';
 
 const tabComponents = {
   informasiUtama: CourseRingkasan,
-  'persyaratan-deskripsi': CoursePersyaratanDeskripsi,
+  attribute: CoursePersyaratanDeskripsi,
   materi: CourseMateri,
   ulasan: UlasanCourse,
 };

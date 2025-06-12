@@ -55,7 +55,7 @@ const useCourseStore = create((set, get) => ({
       if (dateEnd) params.append('dateEnd', dateEnd);
 
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?${params.toString()}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/courses?${params.toString()}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -93,13 +93,16 @@ const useCourseStore = create((set, get) => ({
         id_category,
         id_instructor,
       }).toString();
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/courses?${params}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-      });
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/courses?${params}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah kursus');
       set({ loading: false, error: null });
@@ -153,6 +156,8 @@ const useCourseStore = create((set, get) => ({
           total: json.data.pagination.total,
           perPage,
         },
+        sortBy,
+        sortOrder,
         error: null,
         loading: false,
       });

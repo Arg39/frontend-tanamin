@@ -67,7 +67,7 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
     <>
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
-        <p className="text-xl sm:text-2xl font-bold text-primary-800">Persyaratan dan Deskripsi</p>
+        <p className="text-xl sm:text-2xl font-bold text-primary-800">Atribut Kursus</p>
         {editable && (
           <button
             onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}

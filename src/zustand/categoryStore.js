@@ -37,7 +37,7 @@ const useCategoryStore = create((set) => ({
       if (dateRange.end) params.append('endDate', dateRange.end);
 
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories?${params.toString()}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories?${params.toString()}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories`,
         categoryData,
         {
           headers: {
@@ -104,7 +104,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -133,7 +133,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories/${id}`,
         categoryData,
         {
           headers: {
@@ -167,7 +167,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -194,7 +194,7 @@ const useCategoryStore = create((set) => ({
     }
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/categories-select`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories-select`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

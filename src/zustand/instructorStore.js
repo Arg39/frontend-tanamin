@@ -27,7 +27,7 @@ const useInstructorStore = create((set) => ({
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructors`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/instructors`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ const useInstructorStore = create((set) => ({
     }
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor-select`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/instructor-select`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -109,7 +109,7 @@ const useInstructorStore = create((set) => ({
       delete params.confirmPassword;
 
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/register`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/register-instructor`,
         params,
         {
           headers: {
