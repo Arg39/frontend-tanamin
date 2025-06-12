@@ -93,7 +93,8 @@ function displayLevel(level) {
 }
 
 export default function CourseRingkasan({ editable }) {
-  const { id, tab } = useParams();
+  const { id } = useParams();
+  const tab = 'overview';
   const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
     useCourseStore();
 

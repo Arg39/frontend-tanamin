@@ -197,7 +197,7 @@ const useCourseStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/ringkasan/${id}/update`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/courses/overview/${id}/update`,
         {
           method: 'POST', // or 'PUT' if needed
           headers: {
