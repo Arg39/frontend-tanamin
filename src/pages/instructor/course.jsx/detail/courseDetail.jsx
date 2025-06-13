@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
 import CourseRingkasan from './tab/ringkasan';
-import CoursePersyaratanDeskripsi from './tab/persyaratanDeskripsi';
+import CourseAttribute from './tab/atribut';
 import CourseMateri from './tab/materi';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import useAuthStore from '../../../../zustand/authStore';
@@ -9,7 +9,7 @@ import UlasanCourse from './tab/ulasan';
 
 const tabComponents = {
   informasiUtama: CourseRingkasan,
-  attribute: CoursePersyaratanDeskripsi,
+  atribut: CourseAttribute,
   materi: CourseMateri,
   ulasan: UlasanCourse,
 };

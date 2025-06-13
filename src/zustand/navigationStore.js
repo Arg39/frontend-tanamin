@@ -63,7 +63,7 @@ const useNavigationStore = create((set) => ({
 
   courseDetailTabs: [
     { key: 'ringkasan', label: 'Ringkasan' },
-    { key: 'attribute', label: 'Atribut' },
+    { key: 'atribut', label: 'Atribut' },
     { key: 'materi', label: 'Materi' },
     { key: 'ulasan', label: 'Ulasan' },
   ],

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
-import useCourseStore from '../../../../../zustand/courseStore';
+import useCourseAttributeStore from '../../../../../zustand/courseAttributeStore';
 import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
 
@@ -32,15 +32,15 @@ function DeskripsiItem({ number, text, onEdit, onDelete, editable }) {
   );
 }
 
-export default function CoursePersyaratanDeskripsi({ editable }) {
+export default function CourseAttribute({ editable }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { courseInfo, courseInfoLoading, courseInfoError, fetchCourseInfo, deleteCourseInfo } =
-    useCourseStore();
+  const { attribute, attributeLoading, attributeError, fetchAttribute, deleteAttribute } =
+    useCourseAttributeStore();
 
   useEffect(() => {
-    if (id) fetchCourseInfo({ id });
-  }, [id, fetchCourseInfo]);
+    if (id) fetchAttribute({ id });
+  }, [id, fetchAttribute]);
 
   const { openModal, closeModal } = useConfirmationModalStore();
 
@@ -51,9 +51,9 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
       message: 'Yakin ingin menghapus item ini?',
       variant: 'danger',
       onConfirm: async () => {
-        const res = await deleteCourseInfo({ id, id_info, type });
+        const res = await deleteAttribute({ courseId: id, attributeId: id_info, type });
         if (res.status === 'success') {
-          fetchCourseInfo({ id });
+          fetchAttribute({ id });
           toast.success('Berhasil menghapus data');
         } else {
           toast.error(res.message || 'Gagal menghapus data');
@@ -63,6 +63,7 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
       onCancel: closeModal,
     });
   };
+
   return (
     <>
       {/* Header */}
@@ -82,10 +83,10 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
       {/* Persyaratan */}
       <div className="bg-white-50 rounded-xl shadow p-4 mb-6">
         <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Persyaratan:</p>
-        {courseInfoLoading && <p className="text-base text-gray-500">Loading...</p>}
-        {courseInfoError && <p className="text-base text-red-600">{courseInfoError}</p>}
-        {courseInfo && courseInfo.prerequisites && courseInfo.prerequisites.length > 0
-          ? courseInfo.prerequisites.map((item, idx) => (
+        {attributeLoading && <p className="text-base text-gray-500">Loading...</p>}
+        {attributeError && <p className="text-base text-red-600">{attributeError}</p>}
+        {attribute && attribute.prerequisite && attribute.prerequisite.length > 0
+          ? attribute.prerequisite.map((item, idx) => (
               <DeskripsiItem
                 key={item.id}
                 number={idx + 1}
@@ -97,15 +98,15 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
                 onDelete={() => handleDelete(item.id, 'prerequisite')}
               />
             ))
-          : !courseInfoLoading && <p className="text-base text-gray-500">Belum ada persyaratan.</p>}
+          : !attributeLoading && <p className="text-base text-gray-500">Belum ada persyaratan.</p>}
       </div>
 
       {/* Deskripsi */}
       <div className="bg-white-50 rounded-xl shadow p-4">
         <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Deskripsi:</p>
         <div className="flex flex-col gap-2">
-          {courseInfo && courseInfo.descriptions && courseInfo.descriptions.length > 0
-            ? courseInfo.descriptions.map((item, idx) => (
+          {attribute && attribute.description && attribute.description.length > 0
+            ? attribute.description.map((item, idx) => (
                 <DeskripsiItem
                   key={item.id}
                   number={idx + 1}
@@ -117,7 +118,7 @@ export default function CoursePersyaratanDeskripsi({ editable }) {
                   onDelete={() => handleDelete(item.id, 'description')}
                 />
               ))
-            : !courseInfoLoading && <p className="text-base text-gray-500">Belum ada deskripsi.</p>}
+            : !attributeLoading && <p className="text-base text-gray-500">Belum ada deskripsi.</p>}
         </div>
       </div>
     </>

@@ -4,37 +4,36 @@ import Icon from '../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 import TextInput from '../../../../components/form/textInput';
 import SelectOption from '../../../../components/form/selectOption';
-import useCourseStore from '../../../../zustand/courseStore';
+import useCourseAttributeStore from '../../../../zustand/courseAttributeStore';
 import { toast } from 'react-toastify';
 
-export default function PersyaratanDeskripsiEdit() {
+export default function CourseAttributeEdit() {
   const navigate = useNavigate();
-  const { id, id2 } = useParams();
-  const { courseInfo, fetchCourseInfo, updateCourseInfo, courseInfoLoading } = useCourseStore();
+  const { courseId, attributeId } = useParams();
+  const { attribute, attributeLoading, attributeError, fetchSingleAttribute, updateAttribute } =
+    useCourseAttributeStore();
   const [form, setForm] = useState({
     content: '',
     type: '',
   });
   const [loading, setLoading] = useState(false);
 
-  // Find info by id2
+  // Fetch attribute detail on mount
   useEffect(() => {
-    if (id) fetchCourseInfo({ id });
-  }, [id, fetchCourseInfo]);
-
-  useEffect(() => {
-    if (courseInfo && id2) {
-      let found = null;
-      if (courseInfo.prerequisites) {
-        found = courseInfo.prerequisites.find((item) => String(item.id) === String(id2));
-        if (found) setForm({ content: found.content, type: 'prerequisite' });
-      }
-      if (!found && courseInfo.descriptions) {
-        found = courseInfo.descriptions.find((item) => String(item.id) === String(id2));
-        if (found) setForm({ content: found.content, type: 'description' });
-      }
+    if (courseId && attributeId) {
+      fetchSingleAttribute({ courseId, attributeId });
     }
-  }, [courseInfo, id2]);
+  }, [courseId, attributeId, fetchSingleAttribute]);
+
+  // Set form state when attribute loaded
+  useEffect(() => {
+    if (attribute) {
+      setForm({
+        content: attribute.content || '',
+        type: attribute.type || '',
+      });
+    }
+  }, [attribute]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,17 +46,17 @@ export default function PersyaratanDeskripsiEdit() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const res = await updateCourseInfo({
-        id,
-        id_info: id2,
+      const res = await updateAttribute({
+        courseId,
+        attributeId,
         content: form.content,
         type: form.type,
       });
       if (res.status === 'success') {
-        toast.success(res.message || 'Berhasil mengupdate informasi');
+        toast.success(res.message || 'Berhasil mengupdate atribut');
         navigate(-1);
       } else {
-        toast.error(res.message || 'Gagal mengupdate informasi');
+        toast.error(res.message || 'Gagal mengupdate atribut');
       }
     } catch (e) {
       toast.error(e.message || 'Terjadi kesalahan');
@@ -75,21 +74,23 @@ export default function PersyaratanDeskripsiEdit() {
           <Icon type="arrow-left" className="size-[1rem] text-white-100" />
           Kembali
         </button>
-        <div className="text-2xl font-bold">Edit Persyaratan/Deskripsi {id2}</div>
-        {courseInfoLoading ? (
+        <div className="text-2xl font-bold">Edit Persyaratan/Deskripsi {attributeId}</div>
+        {attributeLoading ? (
           <div>Loading...</div>
+        ) : attributeError ? (
+          <div className="text-red-500">{attributeError}</div>
         ) : (
           <>
             <TextInput
               type="text"
-              label="Informasi"
+              label="Atribut"
               name="content"
               value={form.content}
               onChange={handleChange}
-              placeholder="Masukkan informasi kursus"
+              placeholder="Masukkan atribut kursus"
             />
             <SelectOption
-              label="Tipe informasi"
+              label="Tipe atribut"
               name="type"
               value={form.type}
               onChange={handleChange}
@@ -98,7 +99,6 @@ export default function PersyaratanDeskripsiEdit() {
                 { value: 'description', label: 'Deskripsi' },
               ]}
               placeholder="Pilih tipe persyaratan"
-              disabled
             />
             <div className="flex justify-end gap-2">
               <button
