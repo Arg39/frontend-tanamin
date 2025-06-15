@@ -55,7 +55,7 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
   return (
     <li
       ref={setNodeRef}
-      className={`p-2 my-1 bg-white-100 border rounded shadow-sm flex items-center gap-2 justify-between ${
+      className={`p-2 sm:p-2 my-1 bg-white-100 border rounded shadow-sm flex items-center gap-2 justify-between ${
         isDragging || activeId === lesson.id ? 'bg-yellow-100' : ''
       }`}
       style={style}
@@ -68,11 +68,10 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
           className={`cursor-grab active:cursor-grabbing ${isMobile ? 'touch-manipulation' : ''}`}
           tabIndex={0}
           aria-label="Drag handle"
-          // Only prevent scroll on drag handle
           style={{
             touchAction: isMobile ? 'none' : 'auto',
-            fontSize: 24,
-            padding: isMobile ? 8 : 0, // Make handle easier to touch
+            fontSize: 28,
+            padding: isMobile ? 10 : 0,
             marginRight: 4,
             display: 'inline-flex',
             alignItems: 'center',
@@ -82,23 +81,23 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
           <Icon type="drag" className="text-gray-400" />
         </span>
         <button
-          className="text-left truncate flex-1 hover:underline"
+          className="text-left truncate flex-1 hover:underline text-xs sm:text-base"
           onClick={() => onNavigate(lesson.id)}
           style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
         >
-          {lesson.title}
+          <span className="truncate block max-w-[120px] sm:max-w-none">{lesson.title}</span>
         </button>
       </div>
       <div className="relative" ref={dropdownRef}>
         <button
-          className="p-1 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100"
+          className="p-1 sm:p-1.5 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100"
           onClick={() => setDropdownOpen((open) => !open)}
           title="Options"
         >
           <Icon type="more" className="size-4" />
         </button>
         {dropdownOpen && (
-          <ul className="absolute right-0 mt-2 w-32 bg-white-100 border rounded shadow-lg z-50">
+          <ul className="absolute right-0 mt-2 w-28 sm:w-32 bg-white-100 border rounded shadow-lg z-50 text-xs sm:text-sm">
             <li>
               <button
                 className="block w-full text-left px-4 py-2 hover:bg-gray-100"

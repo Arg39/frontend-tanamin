@@ -212,24 +212,26 @@ export default function ModuleList() {
 
   return (
     <>
-      <div className="flex justify-between items-start">
-        <h1 className="text-2xl font-bold mb-4">Daftar Materi Kursus</h1>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
+        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 break-words">
+          Daftar Materi Kursus
+        </h1>
         <button
-          className="px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2 text-white-100"
+          className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center justify-center gap-2 text-white-100"
           onClick={handleAddModule}
         >
           <Icon type="plus" /> Modul
         </button>
       </div>
-      <div className="p-4 bg-gray-100 rounded-md">
+      <div className="p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto">
         <DndContext
-          collisionDetection={rectIntersection} // Changed from closestCenter to rectIntersection
+          collisionDetection={rectIntersection}
           onDragStart={handleDragStart}
           onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4">
               {modules.map((module) => (
                 <SortableModule
                   key={module.id}
@@ -244,7 +246,9 @@ export default function ModuleList() {
                     strategy={verticalListSortingStrategy}
                   >
                     {module.lessons.length === 0 && (
-                      <li className="text-sm text-gray-400 italic">(Belum ada pembelajaran)</li>
+                      <li className="text-xs sm:text-sm text-gray-400 italic px-2 py-1">
+                        (Belum ada pembelajaran)
+                      </li>
                     )}
                     {module.lessons.map((lesson) => (
                       <SortableLesson
@@ -263,15 +267,17 @@ export default function ModuleList() {
           </SortableContext>
           <DragOverlay>
             {activeModule ? (
-              <div className="bg-white-100 p-4 rounded shadow border-2 border-primary-400 opacity-80 min-w-[200px]">
-                <h2 className="text-lg font-semibold">{activeModule.title}</h2>
+              <div className="bg-white-100 p-2 sm:p-4 rounded shadow border-2 border-primary-400 opacity-80 min-w-[150px] sm:min-w-[200px]">
+                <h2 className="text-base sm:text-lg font-semibold break-words">
+                  {activeModule.title}
+                </h2>
               </div>
             ) : activeLesson ? (
               <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
                 <span>
                   <Icon type="drag" className="text-gray-400" />
                 </span>
-                {activeLesson.title}
+                <span className="truncate">{activeLesson.title}</span>
               </li>
             ) : null}
           </DragOverlay>
