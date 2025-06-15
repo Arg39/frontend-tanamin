@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { DndContext, closestCenter, DragOverlay } from '@dnd-kit/core';
-import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { DndContext, DragOverlay, rectIntersection } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Icon from '../../../../../components/icons/icon';
 import { useNavigate } from 'react-router-dom';
+import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
+import { generateId } from '../../../../../components/dragAndDrop/utils';
+import SortableModule from '../../../../../components/dragAndDrop/sortableModule'; // NEW
 
 // Data awal
 const initialData = [
@@ -35,123 +36,7 @@ const initialData = [
   },
 ];
 
-function isTouchDevice() {
-  return (
-    typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)
-  );
-}
-
-// Draggable & Sortable Lesson Item
-function SortableLesson({ lesson, moduleId, activeId, onDelete, onNavigate }) {
-  const isMobile = isTouchDevice();
-
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    setActivatorNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id: lesson.id,
-    activationConstraint: isMobile
-      ? {
-          delay: 200,
-          tolerance: 5,
-        }
-      : undefined,
-  });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    userSelect: 'none',
-    cursor: isDragging ? 'grabbing' : isMobile ? 'grab' : 'default',
-    zIndex: isDragging ? 50 : 'auto',
-    touchAction: 'none',
-  };
-
-  return (
-    <li
-      ref={setNodeRef}
-      className={`p-2 my-1 bg-white-100 border rounded shadow-sm flex items-center gap-2 justify-between ${
-        isDragging || activeId === lesson.id ? 'bg-yellow-100' : ''
-      }`}
-      style={style}
-    >
-      <div className="flex items-center gap-2 flex-1 min-w-0">
-        <span
-          ref={setActivatorNodeRef}
-          {...attributes}
-          {...listeners}
-          className={`cursor-grab active:cursor-grabbing ${isMobile ? 'touch-manipulation' : ''}`}
-          tabIndex={0}
-          aria-label="Drag handle"
-          style={isMobile ? { touchAction: 'none', fontSize: 24 } : {}}
-        >
-          <Icon type="drag" className="text-gray-400" />
-        </span>
-        <button
-          className="text-left truncate flex-1 hover:underline"
-          onClick={() => onNavigate(lesson.id)}
-          style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
-        >
-          {lesson.title}
-        </button>
-      </div>
-      <button
-        className="ml-2 text-red-500 hover:text-red-700"
-        title="Hapus Lesson"
-        onClick={() => onDelete(moduleId, lesson.id)}
-        tabIndex={0}
-        style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
-      >
-        <Icon type="trash" />
-      </button>
-    </li>
-  );
-}
-
-// Droppable Module
-function DroppableModule({ module, children, isOver, onAddLesson, onDeleteModule }) {
-  return (
-    <div
-      className={`bg-white-100 p-4 rounded shadow border-2 transition-colors relative ${
-        isOver ? 'border-blue-400 bg-blue-50' : 'border-transparent'
-      }`}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-semibold">{module.title}</h2>
-        <div className="flex gap-2 w-fit">
-          <button
-            className="border border-primary-700 rounded-md p-2 text-green-600 hover:text-green-800 text-sm flex items-center gap-1"
-            onClick={() => onAddLesson(module.id)}
-            title="Tambah Lesson"
-          >
-            <Icon type="plus" />
-            <span className="hidden md:inline">Lesson</span>
-          </button>
-          <button
-            className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
-            onClick={() => onDeleteModule(module.id)}
-            title="Hapus Modul"
-          >
-            <Icon type="trash" />
-          </button>
-        </div>
-      </div>
-      <ul className="min-h-[50px] border p-2 rounded bg-gray-50">{children}</ul>
-    </div>
-  );
-}
-
-function generateId(prefix = 'id') {
-  return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
-}
-
-export default function ModuleLessonList() {
+export default function ModuleList() {
   const [modules, setModules] = useState(initialData);
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
@@ -183,6 +68,20 @@ export default function ModuleLessonList() {
 
     if (!over) return;
 
+    // MODULE DRAG
+    if (active.id.startsWith('module-') && over.id.startsWith('module-')) {
+      if (active.id === over.id) return;
+      const oldIndex = modules.findIndex((m) => m.id === active.id);
+      const newIndex = modules.findIndex((m) => m.id === over.id);
+      if (oldIndex === -1 || newIndex === -1) return;
+      const newModules = [...modules];
+      const [removed] = newModules.splice(oldIndex, 1);
+      newModules.splice(newIndex, 0, removed);
+      setModules(newModules);
+      return;
+    }
+
+    // LESSON DRAG
     const from = findLessonLocation(active.id);
 
     // Find which module is being hovered
@@ -241,12 +140,17 @@ export default function ModuleLessonList() {
 
   // For DragOverlay
   const activeLesson = (() => {
-    if (!activeId) return null;
+    if (!activeId || !activeId.startsWith('lesson-')) return null;
     for (const module of modules) {
       const lesson = module.lessons.find((l) => l.id === activeId);
       if (lesson) return lesson;
     }
     return null;
+  })();
+
+  const activeModule = (() => {
+    if (!activeId || !activeId.startsWith('module-')) return null;
+    return modules.find((m) => m.id === activeId);
   })();
 
   // Handler: Tambah Modul
@@ -315,43 +219,50 @@ export default function ModuleLessonList() {
         </button>
       </div>
       <DndContext
-        collisionDetection={closestCenter}
+        collisionDetection={rectIntersection} // Changed from closestCenter to rectIntersection
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-          {modules.map((module) => (
-            <DroppableModule
-              key={module.id}
-              module={module}
-              isOver={overId === module.id}
-              onAddLesson={handleAddLesson}
-              onDeleteModule={handleDeleteModule}
-            >
-              <SortableContext
-                items={module.lessons.map((l) => l.id)}
-                strategy={verticalListSortingStrategy}
+        <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+          <div className="flex flex-col gap-4">
+            {modules.map((module) => (
+              <SortableModule
+                key={module.id}
+                id={module.id}
+                module={module}
+                isOver={overId === module.id}
+                onAddLesson={handleAddLesson}
+                onDeleteModule={handleDeleteModule}
               >
-                {module.lessons.length === 0 && (
-                  <li className="text-sm text-gray-400 italic">(Belum ada lesson)</li>
-                )}
-                {module.lessons.map((lesson) => (
-                  <SortableLesson
-                    key={lesson.id}
-                    lesson={lesson}
-                    moduleId={module.id}
-                    activeId={activeId}
-                    onDelete={handleDeleteLesson}
-                    onNavigate={handleNavigateLesson}
-                  />
-                ))}
-              </SortableContext>
-            </DroppableModule>
-          ))}
-        </div>
+                <SortableContext
+                  items={module.lessons.map((l) => l.id)}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {module.lessons.length === 0 && (
+                    <li className="text-sm text-gray-400 italic">(Belum ada pembelajaran)</li>
+                  )}
+                  {module.lessons.map((lesson) => (
+                    <SortableLesson
+                      key={lesson.id}
+                      lesson={lesson}
+                      moduleId={module.id}
+                      activeId={activeId}
+                      onDelete={handleDeleteLesson}
+                      onNavigate={handleNavigateLesson}
+                    />
+                  ))}
+                </SortableContext>
+              </SortableModule>
+            ))}
+          </div>
+        </SortableContext>
         <DragOverlay>
-          {activeLesson ? (
+          {activeModule ? (
+            <div className="bg-white-100 p-4 rounded shadow border-2 border-blue-400 opacity-80 min-w-[200px]">
+              <h2 className="text-lg font-semibold">{activeModule.title}</h2>
+            </div>
+          ) : activeLesson ? (
             <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
               <span>
                 <Icon type="drag" className="text-gray-400" />

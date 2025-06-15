@@ -592,6 +592,40 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           />
         </svg>
       );
+    case 'trash':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={24}
+          height={24}
+          viewBox="0 0 24 24"
+          fill={color}
+          className={`size-6 ${className}`}
+        >
+          <path
+            fill="currentColor"
+            fillRule="evenodd"
+            d="M8.106 2.553A1 1 0 0 1 9 2h6a1 1 0 0 1 .894.553L17.618 6H20a1 1 0 1 1 0 2h-1v11a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V8H4a1 1 0 0 1 0-2h2.382zM14.382 4l1 2H8.618l1-2zM11 11a1 1 0 1 0-2 0v6a1 1 0 1 0 2 0zm4 0a1 1 0 1 0-2 0v6a1 1 0 1 0 2 0z"
+            clipRule="evenodd"
+          />
+        </svg>
+      );
+    case 'more':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={24}
+          height={24}
+          viewBox="0 0 24 24"
+          fill={color}
+          className={`size-6 ${className}`}
+        >
+          <path
+            fill="currentColor"
+            d="M5 10c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m14 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2m-7 0c-1.1 0-2 .9-2 2s.9 2 2 2s2-.9 2-2s-.9-2-2-2"
+          />
+        </svg>
+      );
     // Add more cases for different icons here
     default:
       return null;
