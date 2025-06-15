@@ -11,6 +11,7 @@ import SortableModule from '../../../../../components/dragAndDrop/sortableModule
 const initialData = [
   {
     id: 'module-1',
+    type: 'material',
     title:
       'Module 1: Introduction to Freelance Design Career Introduction to Freelance Design Career',
     lessons: [
@@ -23,6 +24,7 @@ const initialData = [
   },
   {
     id: 'module-2',
+    type: 'quiz',
     title: 'Komponen di React',
     lessons: [
       { id: 'lesson-3', title: 'Membuat Komponen' },
@@ -31,6 +33,7 @@ const initialData = [
   },
   {
     id: 'module-3',
+    type: 'material',
     title: 'State Management',
     lessons: [],
   },
@@ -208,70 +211,72 @@ export default function ModuleList() {
   };
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
-      <div className="flex justify-between">
+    <>
+      <div className="flex justify-between items-start">
         <h1 className="text-2xl font-bold mb-4">Daftar Materi Kursus</h1>
         <button
-          className="mb-4 px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2 text-white-100"
+          className="px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2 text-white-100"
           onClick={handleAddModule}
         >
           <Icon type="plus" /> Modul
         </button>
       </div>
-      <DndContext
-        collisionDetection={rectIntersection} // Changed from closestCenter to rectIntersection
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-          <div className="flex flex-col gap-4">
-            {modules.map((module) => (
-              <SortableModule
-                key={module.id}
-                id={module.id}
-                module={module}
-                isOver={overId === module.id}
-                onAddLesson={handleAddLesson}
-                onDeleteModule={handleDeleteModule}
-              >
-                <SortableContext
-                  items={module.lessons.map((l) => l.id)}
-                  strategy={verticalListSortingStrategy}
+      <div className="p-4 bg-gray-100 rounded-md">
+        <DndContext
+          collisionDetection={rectIntersection} // Changed from closestCenter to rectIntersection
+          onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+            <div className="flex flex-col gap-4">
+              {modules.map((module) => (
+                <SortableModule
+                  key={module.id}
+                  id={module.id}
+                  module={module}
+                  isOver={overId === module.id}
+                  onAddLesson={handleAddLesson}
+                  onDeleteModule={handleDeleteModule}
                 >
-                  {module.lessons.length === 0 && (
-                    <li className="text-sm text-gray-400 italic">(Belum ada pembelajaran)</li>
-                  )}
-                  {module.lessons.map((lesson) => (
-                    <SortableLesson
-                      key={lesson.id}
-                      lesson={lesson}
-                      moduleId={module.id}
-                      activeId={activeId}
-                      onDelete={handleDeleteLesson}
-                      onNavigate={handleNavigateLesson}
-                    />
-                  ))}
-                </SortableContext>
-              </SortableModule>
-            ))}
-          </div>
-        </SortableContext>
-        <DragOverlay>
-          {activeModule ? (
-            <div className="bg-white-100 p-4 rounded shadow border-2 border-blue-400 opacity-80 min-w-[200px]">
-              <h2 className="text-lg font-semibold">{activeModule.title}</h2>
+                  <SortableContext
+                    items={module.lessons.map((l) => l.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {module.lessons.length === 0 && (
+                      <li className="text-sm text-gray-400 italic">(Belum ada pembelajaran)</li>
+                    )}
+                    {module.lessons.map((lesson) => (
+                      <SortableLesson
+                        key={lesson.id}
+                        lesson={lesson}
+                        moduleId={module.id}
+                        activeId={activeId}
+                        onDelete={handleDeleteLesson}
+                        onNavigate={handleNavigateLesson}
+                      />
+                    ))}
+                  </SortableContext>
+                </SortableModule>
+              ))}
             </div>
-          ) : activeLesson ? (
-            <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
-              <span>
-                <Icon type="drag" className="text-gray-400" />
-              </span>
-              {activeLesson.title}
-            </li>
-          ) : null}
-        </DragOverlay>
-      </DndContext>
-    </div>
+          </SortableContext>
+          <DragOverlay>
+            {activeModule ? (
+              <div className="bg-white-100 p-4 rounded shadow border-2 border-primary-400 opacity-80 min-w-[200px]">
+                <h2 className="text-lg font-semibold">{activeModule.title}</h2>
+              </div>
+            ) : activeLesson ? (
+              <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
+                <span>
+                  <Icon type="drag" className="text-gray-400" />
+                </span>
+                {activeLesson.title}
+              </li>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+      </div>
+    </>
   );
 }

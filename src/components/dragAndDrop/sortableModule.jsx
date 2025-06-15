@@ -53,13 +53,13 @@ export default function SortableModule({
       ref={setNodeRef}
       style={style}
       className={`bg-white-100 p-4 rounded shadow border-2 transition-colors relative ${
-        isOver ? 'border-blue-400 bg-blue-50' : 'border-transparent'
+        isOver ? 'border-primary-400 bg-primary-50' : 'border-transparent'
       }`}
       tabIndex={0}
       aria-label="Drag module"
     >
       <div className="flex items-start justify-between mb-2">
-        <div className="flex items-center gap-2">
+        <div className="flex items-start gap-2">
           <span
             ref={setActivatorNodeRef}
             {...attributes}
@@ -71,6 +71,14 @@ export default function SortableModule({
           >
             <Icon type="drag" className="text-gray-400" />
           </span>
+          {module.type === 'material' && (
+            <p className="p-1 border border-blue-700 text-blue-700 rounded-md">Materi</p>
+          )}
+          {module.type === 'quiz' && (
+            <p className="p-1 border border-yellow-500 text-yellow-700 rounded-md bg-yellow-50">
+              Quiz
+            </p>
+          )}
           <h2 className="text-lg font-semibold">{module.title}</h2>
         </div>
         <div className="flex gap-2 w-fit items-center">
