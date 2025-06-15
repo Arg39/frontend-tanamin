@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Icon from '../icons/icon';
+import { isTouchDevice } from './utils'; // ADD THIS LINE
 
 export default function SortableModule({
   id,
@@ -12,6 +13,8 @@ export default function SortableModule({
   onDeleteModule,
   onEditModule,
 }) {
+  const isMobile = isTouchDevice(); // ADD THIS LINE
+
   const {
     setNodeRef,
     setActivatorNodeRef,
@@ -22,7 +25,13 @@ export default function SortableModule({
     isDragging,
   } = useSortable({
     id,
-  });
+    activationConstraint: isMobile
+      ? {
+          delay: 200,
+          tolerance: 5,
+        }
+      : undefined,
+  }); // MODIFIED
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -43,9 +52,10 @@ export default function SortableModule({
     transition,
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 50 : 'auto',
-    // cursor: isDragging ? 'grabbing' : 'grab', // Remove this line
     userSelect: 'none',
     marginBottom: '1rem',
+    // FIX: Allow scroll on mobile except drag handle
+    touchAction: isMobile ? 'auto' : 'none',
   };
 
   return (
@@ -67,7 +77,11 @@ export default function SortableModule({
             tabIndex={0}
             aria-label="Drag handle"
             className={`${isDragging ? 'cursor-grabbing' : 'cursor-grab'} active:cursor-grabbing`}
-            style={{ fontSize: 24 }}
+            style={{
+              fontSize: 24,
+              // FIX: Only drag handle disables scroll on mobile
+              touchAction: isMobile ? 'none' : undefined,
+            }}
           >
             <Icon type="drag" className="text-gray-400" />
           </span>

@@ -30,9 +30,10 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
     transition,
     opacity: isDragging ? 0.5 : 1,
     userSelect: 'none',
-    cursor: isDragging ? 'grabbing' : isMobile ? 'grab' : 'default',
+    cursor: isDragging ? 'grabbing' : isMobile ? 'default' : 'default',
     zIndex: isDragging ? 50 : 'auto',
-    touchAction: 'none',
+    // FIX: Allow scroll on mobile except drag handle
+    touchAction: isMobile ? 'auto' : 'none',
   };
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -67,7 +68,16 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
           className={`cursor-grab active:cursor-grabbing ${isMobile ? 'touch-manipulation' : ''}`}
           tabIndex={0}
           aria-label="Drag handle"
-          style={isMobile ? { touchAction: 'none', fontSize: 24 } : {}}
+          // Only prevent scroll on drag handle
+          style={{
+            touchAction: isMobile ? 'none' : 'auto',
+            fontSize: 24,
+            padding: isMobile ? 8 : 0, // Make handle easier to touch
+            marginRight: 4,
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
         >
           <Icon type="drag" className="text-gray-400" />
         </span>
