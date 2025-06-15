@@ -9,29 +9,29 @@ import { useNavigate } from 'react-router-dom';
 // Data awal
 const initialData = [
   {
-    id: 'outline-1',
+    id: 'module-1',
     title:
       'Module 1: Introduction to Freelance Design Career Introduction to Freelance Design Career',
-    materials: [
+    lessons: [
       {
-        id: 'materi-1',
+        id: 'lesson-1',
         title: 'Apa itu Freelance UI/UX & Illustrator Apa itu Freelance UI/UX & Illustrator',
       },
-      { id: 'materi-2', title: 'Skillset yang Dibutuhkan' },
+      { id: 'lesson-2', title: 'Skillset yang Dibutuhkan' },
     ],
   },
   {
-    id: 'outline-2',
+    id: 'module-2',
     title: 'Komponen di React',
-    materials: [
-      { id: 'materi-3', title: 'Membuat Komponen' },
-      { id: 'materi-4', title: 'Props dan State' },
+    lessons: [
+      { id: 'lesson-3', title: 'Membuat Komponen' },
+      { id: 'lesson-4', title: 'Props dan State' },
     ],
   },
   {
-    id: 'outline-3',
+    id: 'module-3',
     title: 'State Management',
-    materials: [],
+    lessons: [],
   },
 ];
 
@@ -41,8 +41,8 @@ function isTouchDevice() {
   );
 }
 
-// Draggable & Sortable Material Item
-function SortableMaterial({ materi, outlineId, activeId, onDelete, onNavigate }) {
+// Draggable & Sortable Lesson Item
+function SortableLesson({ lesson, moduleId, activeId, onDelete, onNavigate }) {
   const isMobile = isTouchDevice();
 
   const {
@@ -54,7 +54,7 @@ function SortableMaterial({ materi, outlineId, activeId, onDelete, onNavigate })
     transition,
     isDragging,
   } = useSortable({
-    id: materi.id,
+    id: lesson.id,
     activationConstraint: isMobile
       ? {
           delay: 200,
@@ -77,7 +77,7 @@ function SortableMaterial({ materi, outlineId, activeId, onDelete, onNavigate })
     <li
       ref={setNodeRef}
       className={`p-2 my-1 bg-white-100 border rounded shadow-sm flex items-center gap-2 justify-between ${
-        isDragging || activeId === materi.id ? 'bg-yellow-100' : ''
+        isDragging || activeId === lesson.id ? 'bg-yellow-100' : ''
       }`}
       style={style}
     >
@@ -95,16 +95,16 @@ function SortableMaterial({ materi, outlineId, activeId, onDelete, onNavigate })
         </span>
         <button
           className="text-left truncate flex-1 hover:underline"
-          onClick={() => onNavigate(materi.id)}
+          onClick={() => onNavigate(lesson.id)}
           style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
         >
-          {materi.title}
+          {lesson.title}
         </button>
       </div>
       <button
         className="ml-2 text-red-500 hover:text-red-700"
-        title="Hapus Materi"
-        onClick={() => onDelete(outlineId, materi.id)}
+        title="Hapus Lesson"
+        onClick={() => onDelete(moduleId, lesson.id)}
         tabIndex={0}
         style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
       >
@@ -114,8 +114,8 @@ function SortableMaterial({ materi, outlineId, activeId, onDelete, onNavigate })
   );
 }
 
-// Droppable Outline
-function DroppableOutline({ outline, children, isOver, onAddMateri, onDeleteOutline }) {
+// Droppable Module
+function DroppableModule({ module, children, isOver, onAddLesson, onDeleteModule }) {
   return (
     <div
       className={`bg-white-100 p-4 rounded shadow border-2 transition-colors relative ${
@@ -123,20 +123,20 @@ function DroppableOutline({ outline, children, isOver, onAddMateri, onDeleteOutl
       }`}
     >
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-lg font-semibold">{outline.title}</h2>
+        <h2 className="text-lg font-semibold">{module.title}</h2>
         <div className="flex gap-2 w-fit">
           <button
             className="border border-primary-700 rounded-md p-2 text-green-600 hover:text-green-800 text-sm flex items-center gap-1"
-            onClick={() => onAddMateri(outline.id)}
-            title="Tambah Materi"
+            onClick={() => onAddLesson(module.id)}
+            title="Tambah Lesson"
           >
             <Icon type="plus" />
-            <span className="hidden md:inline">Materi</span>
+            <span className="hidden md:inline">Lesson</span>
           </button>
           <button
             className="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
-            onClick={() => onDeleteOutline(outline.id)}
-            title="Hapus Outline"
+            onClick={() => onDeleteModule(module.id)}
+            title="Hapus Modul"
           >
             <Icon type="trash" />
           </button>
@@ -151,18 +151,18 @@ function generateId(prefix = 'id') {
   return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export default function OutlineMateriList() {
-  const [outlines, setOutlines] = useState(initialData);
+export default function ModuleLessonList() {
+  const [modules, setModules] = useState(initialData);
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
   const navigate = useNavigate();
 
-  // Find outline and material by materialId
-  const findMaterialLocation = (materialId) => {
-    for (let outlineIdx = 0; outlineIdx < outlines.length; outlineIdx++) {
-      const matIdx = outlines[outlineIdx].materials.findIndex((m) => m.id === materialId);
-      if (matIdx !== -1) {
-        return { outlineIdx, matIdx };
+  // Find module and lesson by lessonId
+  const findLessonLocation = (lessonId) => {
+    for (let moduleIdx = 0; moduleIdx < modules.length; moduleIdx++) {
+      const lesIdx = modules[moduleIdx].lessons.findIndex((l) => l.id === lessonId);
+      if (lesIdx !== -1) {
+        return { moduleIdx, lesIdx };
       }
     }
     return null;
@@ -183,135 +183,137 @@ export default function OutlineMateriList() {
 
     if (!over) return;
 
-    const from = findMaterialLocation(active.id);
+    const from = findLessonLocation(active.id);
 
-    // Find which outline is being hovered
-    let toOutlineIdx = outlines.findIndex((o) => o.id === over.id);
-    let toMatIdx = -1;
+    // Find which module is being hovered
+    let toModuleIdx = modules.findIndex((m) => m.id === over.id);
+    let toLesIdx = -1;
 
-    // If hovering over a material, get its outline and index
-    if (toOutlineIdx === -1) {
-      for (let i = 0; i < outlines.length; i++) {
-        const idx = outlines[i].materials.findIndex((m) => m.id === over.id);
+    // If hovering over a lesson, get its module and index
+    if (toModuleIdx === -1) {
+      for (let i = 0; i < modules.length; i++) {
+        const idx = modules[i].lessons.findIndex((l) => l.id === over.id);
         if (idx !== -1) {
-          toOutlineIdx = i;
-          toMatIdx = idx;
+          toModuleIdx = i;
+          toLesIdx = idx;
           break;
         }
       }
     }
 
-    if (!from || toOutlineIdx === -1) return;
+    if (!from || toModuleIdx === -1) return;
 
-    // If dropped in the same outline and same position, do nothing
-    if (from.outlineIdx === toOutlineIdx && (toMatIdx === -1 || from.matIdx === toMatIdx)) {
+    // If dropped in the same module and same position, do nothing
+    if (from.moduleIdx === toModuleIdx && (toLesIdx === -1 || from.lesIdx === toLesIdx)) {
       return;
     }
 
-    // Remove from old outline
-    const material = outlines[from.outlineIdx].materials[from.matIdx];
-    let newOutlines = outlines.map((outline, idx) => {
-      if (idx === from.outlineIdx) {
+    // Remove from old module
+    const lesson = modules[from.moduleIdx].lessons[from.lesIdx];
+    let newModules = modules.map((module, idx) => {
+      if (idx === from.moduleIdx) {
         return {
-          ...outline,
-          materials: outline.materials.filter((m) => m.id !== active.id),
+          ...module,
+          lessons: module.lessons.filter((l) => l.id !== active.id),
         };
       }
-      return outline;
+      return module;
     });
 
-    // Insert into new outline at correct position
-    let newMaterials;
-    if (toMatIdx === -1) {
-      // Dropped on outline itself, add to end
-      newMaterials = [...newOutlines[toOutlineIdx].materials, material];
+    // Insert into new module at correct position
+    let newLessons;
+    if (toLesIdx === -1) {
+      // Dropped on module itself, add to end
+      newLessons = [...newModules[toModuleIdx].lessons, lesson];
     } else {
-      // Dropped on a material, insert before it
-      newMaterials = [...newOutlines[toOutlineIdx].materials];
-      newMaterials.splice(toMatIdx, 0, material);
+      // Dropped on a lesson, insert before it
+      newLessons = [...newModules[toModuleIdx].lessons];
+      newLessons.splice(toLesIdx, 0, lesson);
     }
 
-    newOutlines[toOutlineIdx] = {
-      ...newOutlines[toOutlineIdx],
-      materials: newMaterials,
+    newModules[toModuleIdx] = {
+      ...newModules[toModuleIdx],
+      lessons: newLessons,
     };
 
-    setOutlines(newOutlines);
+    setModules(newModules);
   };
 
   // For DragOverlay
-  const activeMaterial = (() => {
+  const activeLesson = (() => {
     if (!activeId) return null;
-    for (const outline of outlines) {
-      const materi = outline.materials.find((m) => m.id === activeId);
-      if (materi) return materi;
+    for (const module of modules) {
+      const lesson = module.lessons.find((l) => l.id === activeId);
+      if (lesson) return lesson;
     }
     return null;
   })();
 
-  // Handler: Tambah Outline
-  const handleAddOutline = () => {
-    const newOutline = {
-      id: generateId('outline'),
-      title: 'Outline Baru',
-      materials: [],
+  // Handler: Tambah Modul
+  const handleAddModule = () => {
+    const newModule = {
+      id: generateId('module'),
+      title: 'Modul Baru',
+      lessons: [],
     };
-    setOutlines([...outlines, newOutline]);
+    setModules([...modules, newModule]);
   };
 
-  // Handler: Hapus Outline
-  const handleDeleteOutline = (outlineId) => {
-    setOutlines(outlines.filter((o) => o.id !== outlineId));
+  // Handler: Hapus Modul
+  const handleDeleteModule = (moduleId) => {
+    setModules(modules.filter((m) => m.id !== moduleId));
   };
 
-  // Handler: Tambah Materi
-  const handleAddMateri = (outlineId) => {
-    setOutlines((prev) =>
-      prev.map((outline) =>
-        outline.id === outlineId
+  // Handler: Tambah Lesson
+  const handleAddLesson = (moduleId) => {
+    setModules((prev) =>
+      prev.map((module) =>
+        module.id === moduleId
           ? {
-              ...outline,
-              materials: [
-                ...outline.materials,
+              ...module,
+              lessons: [
+                ...module.lessons,
                 {
-                  id: generateId('materi'),
-                  title: 'Materi Baru',
+                  id: generateId('lesson'),
+                  title: 'Lesson Baru',
                 },
               ],
             }
-          : outline
+          : module
       )
     );
   };
 
-  // Handler: Hapus Materi
-  const handleDeleteMateri = (outlineId, materiId) => {
-    setOutlines((prev) =>
-      prev.map((outline) =>
-        outline.id === outlineId
+  // Handler: Hapus Lesson
+  const handleDeleteLesson = (moduleId, lessonId) => {
+    setModules((prev) =>
+      prev.map((module) =>
+        module.id === moduleId
           ? {
-              ...outline,
-              materials: outline.materials.filter((m) => m.id !== materiId),
+              ...module,
+              lessons: module.lessons.filter((l) => l.id !== lessonId),
             }
-          : outline
+          : module
       )
     );
   };
 
-  // Handler: Navigasi ke detail materi
-  const handleNavigateMateri = (materiId) => {
-    navigate(`/instructor/course/materi/${materiId}`);
+  // Handler: Navigasi ke detail lesson
+  const handleNavigateLesson = (lessonId) => {
+    navigate(`/instructor/course/lesson/${lessonId}`);
   };
 
   return (
     <div className="p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Daftar Outline & Materi</h1>
-      <button
-        className="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center gap-2"
-        onClick={handleAddOutline}
-      >
-        <Icon type="plus" /> Tambah Outline
-      </button>
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-4">Daftar Materi Kursus</h1>
+        <button
+          className="mb-4 px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2 text-white-100"
+          onClick={handleAddModule}
+        >
+          <Icon type="plus" /> Modul
+        </button>
+      </div>
       <DndContext
         collisionDetection={closestCenter}
         onDragStart={handleDragStart}
@@ -319,42 +321,42 @@ export default function OutlineMateriList() {
         onDragEnd={handleDragEnd}
       >
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
-          {outlines.map((outline) => (
-            <DroppableOutline
-              key={outline.id}
-              outline={outline}
-              isOver={overId === outline.id}
-              onAddMateri={handleAddMateri}
-              onDeleteOutline={handleDeleteOutline}
+          {modules.map((module) => (
+            <DroppableModule
+              key={module.id}
+              module={module}
+              isOver={overId === module.id}
+              onAddLesson={handleAddLesson}
+              onDeleteModule={handleDeleteModule}
             >
               <SortableContext
-                items={outline.materials.map((m) => m.id)}
+                items={module.lessons.map((l) => l.id)}
                 strategy={verticalListSortingStrategy}
               >
-                {outline.materials.length === 0 && (
-                  <li className="text-sm text-gray-400 italic">(Belum ada materi)</li>
+                {module.lessons.length === 0 && (
+                  <li className="text-sm text-gray-400 italic">(Belum ada lesson)</li>
                 )}
-                {outline.materials.map((materi) => (
-                  <SortableMaterial
-                    key={materi.id}
-                    materi={materi}
-                    outlineId={outline.id}
+                {module.lessons.map((lesson) => (
+                  <SortableLesson
+                    key={lesson.id}
+                    lesson={lesson}
+                    moduleId={module.id}
                     activeId={activeId}
-                    onDelete={handleDeleteMateri}
-                    onNavigate={handleNavigateMateri}
+                    onDelete={handleDeleteLesson}
+                    onNavigate={handleNavigateLesson}
                   />
                 ))}
               </SortableContext>
-            </DroppableOutline>
+            </DroppableModule>
           ))}
         </div>
         <DragOverlay>
-          {activeMaterial ? (
+          {activeLesson ? (
             <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
               <span>
                 <Icon type="drag" className="text-gray-400" />
               </span>
-              {activeMaterial.title}
+              {activeLesson.title}
             </li>
           ) : null}
         </DragOverlay>
