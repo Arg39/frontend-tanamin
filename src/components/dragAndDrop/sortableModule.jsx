@@ -63,7 +63,7 @@ export default function SortableModule({
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-white-100 p-2 sm:p-4 rounded shadow border-2 transition-colors relative ${
+      className={`bg-white-100 p-2 sm:p-4 rounded shado w border-2 transition-colors relative ${
         isOver ? 'border-primary-400 bg-primary-50' : 'border-transparent'
       }`}
       tabIndex={0}
