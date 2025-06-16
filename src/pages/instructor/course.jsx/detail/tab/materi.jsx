@@ -25,7 +25,8 @@ const initialData = [
   {
     id: 'module-2',
     type: 'quiz',
-    title: 'Komponen di React',
+    title:
+      'Komponen di ReactKomponen di ReactKomponen di ReactKomponen di ReactKomponen di ReactKomponen di React',
     lessons: [
       { id: 'lesson-3', title: 'Membuat Komponen' },
       { id: 'lesson-4', title: 'Props dan State' },
@@ -210,20 +211,28 @@ export default function ModuleList() {
     navigate(`/instructor/course/lesson/${lessonId}`);
   };
 
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0">
-        <h1 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4 break-words">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-2 sm:md-0">
+        <h1
+          className={`text-xl sm:text-2xl font-bold mb-2 sm:mb-4 break-words ${
+            isMobile ? 'text-base' : ''
+          }`}
+        >
           Daftar Materi Kursus
         </h1>
         <button
-          className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center justify-center gap-2 text-white-100"
+          className={`w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center justify-center gap-2 text-white-100 ${
+            isMobile ? 'py-2 text-base' : ''
+          }`}
           onClick={handleAddModule}
         >
           <Icon type="plus" /> Modul
         </button>
       </div>
-      <div className="p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto">
+      <div className={`p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto ${isMobile ? 'p-2' : ''}`}>
         <DndContext
           collisionDetection={rectIntersection}
           onDragStart={handleDragStart}
@@ -231,7 +240,7 @@ export default function ModuleList() {
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-            <div className="flex flex-col gap-3 sm:gap-4">
+            <div className={`flex flex-col gap-3 sm:gap-4 ${isMobile ? 'gap-2' : ''}`}>
               {modules.map((module) => (
                 <SortableModule
                   key={module.id}
@@ -277,7 +286,7 @@ export default function ModuleList() {
                 <span>
                   <Icon type="drag" className="text-gray-400" />
                 </span>
-                <span className="truncate">{activeLesson.title}</span>
+                <span className="break-words">{activeLesson.title}</span>
               </li>
             ) : null}
           </DragOverlay>

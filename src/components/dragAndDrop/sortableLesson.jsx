@@ -57,7 +57,7 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
       ref={setNodeRef}
       className={`p-2 sm:p-2 my-1 bg-white-100 border rounded shadow-sm flex items-center gap-2 justify-between ${
         isDragging || activeId === lesson.id ? 'bg-yellow-100' : ''
-      }`}
+      } ${isMobile ? 'min-h-[56px]' : ''}`}
       style={style}
     >
       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -65,42 +65,52 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
           ref={setActivatorNodeRef}
           {...attributes}
           {...listeners}
-          className={`cursor-grab active:cursor-grabbing ${isMobile ? 'touch-manipulation' : ''}`}
+          className={`cursor-grab active:cursor-grabbing p-1 bg-gray-100 rounded-md ${
+            isMobile ? 'touch-manipulation' : ''
+          }`}
           tabIndex={0}
           aria-label="Drag handle"
           style={{
             touchAction: isMobile ? 'none' : 'auto',
-            fontSize: 28,
-            padding: isMobile ? 10 : 0,
-            marginRight: 4,
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
           }}
         >
           <Icon type="drag" className="text-gray-400" />
         </span>
         <button
-          className="text-left truncate flex-1 hover:underline text-xs sm:text-base"
+          className={`text-left flex-1 hover:underline text-xs sm:text-base ${
+            isMobile ? 'text-sm' : ''
+          }`}
           onClick={() => onNavigate(lesson.id)}
-          style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
         >
-          <span className="truncate block max-w-[120px] sm:max-w-none">{lesson.title}</span>
+          <span
+            className={`block`}
+            style={{
+              whiteSpace: 'normal',
+              wordBreak: 'break-word',
+            }}
+          >
+            {lesson.title}
+          </span>
         </button>
       </div>
       <div className="relative" ref={dropdownRef}>
         <button
-          className="p-1 sm:p-1.5 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100"
+          className={`p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100 flex items-center justify-center`}
           onClick={() => setDropdownOpen((open) => !open)}
           title="Options"
         >
-          <Icon type="more" className="size-4" />
+          <Icon type="more" className={`size-4 ${isMobile ? 'w-4 h-4' : ''}`} />
         </button>
         {dropdownOpen && (
-          <ul className="absolute right-0 mt-2 w-28 sm:w-32 bg-white-100 border rounded shadow-lg z-50 text-xs sm:text-sm">
+          <ul
+            className={`absolute right-0 mt-2 w-32 bg-white-100 border rounded shadow-lg z-50 text-xs sm:text-sm ${
+              isMobile ? 'w-40' : ''
+            }`}
+          >
             <li>
               <button
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                className="block w-full text-left px-4 py-3 hover:bg-gray-100"
+                style={{ fontSize: isMobile ? 16 : undefined }}
                 onClick={() => {
                   setDropdownOpen(false);
                   // onEdit(moduleId, lesson.id);
@@ -111,7 +121,8 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
             </li>
             <li>
               <button
-                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-500"
+                className="block w-full text-left px-4 py-3 hover:bg-gray-100 text-red-500"
+                style={{ fontSize: isMobile ? 16 : undefined }}
                 onClick={() => {
                   setDropdownOpen(false);
                   onDelete(moduleId, lesson.id);
