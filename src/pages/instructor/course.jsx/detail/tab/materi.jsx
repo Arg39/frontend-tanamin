@@ -5,7 +5,8 @@ import Icon from '../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
 import { generateId } from '../../../../../components/dragAndDrop/utils';
-import SortableModule from '../../../../../components/dragAndDrop/sortableModule'; // NEW
+import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
+import { toast } from 'react-toastify';
 
 // Data awal
 const initialData = [
@@ -26,7 +27,7 @@ const initialData = [
     id: 'module-2',
     type: 'quiz',
     title:
-      'Komponen di ReactKomponen di ReactKomponen di ReactKomponen di ReactKomponen di ReactKomponen di React',
+      'Uji Pemahaman dasar Freelance UI/UX & Illustrator Uji Pemahaman dasar Freelance UI/UX & Illustrator',
     lessons: [
       { id: 'lesson-3', title: 'Membuat Komponen' },
       { id: 'lesson-4', title: 'Props dan State' },
@@ -111,6 +112,19 @@ export default function ModuleList() {
     }
 
     if (!from || toModuleIdx === -1) return;
+
+    // TYPE CHECK: Only allow drop if source and target module type are the same
+    const fromModuleType = modules[from.moduleIdx].type;
+    const toModuleType = modules[toModuleIdx].type;
+    if (fromModuleType !== toModuleType) {
+      // Tampilkan toast dengan pesan yang jelas
+      toast.info(
+        `Tidak bisa memindahkan materi dari modul bertipe "${
+          fromModuleType === 'quiz' ? 'Quiz' : 'Materi'
+        }" ke modul bertipe "${toModuleType === 'quiz' ? 'Quiz' : 'Materi'}".`
+      );
+      return;
+    }
 
     // If dropped in the same module and same position, do nothing
     if (from.moduleIdx === toModuleIdx && (toLesIdx === -1 || from.lesIdx === toLesIdx)) {
