@@ -167,11 +167,6 @@ export default function ModuleList() {
     setModules([...modules, newModule]);
   };
 
-  // Handler: Hapus Modul
-  const handleDeleteModule = (moduleId) => {
-    setModules(modules.filter((m) => m.id !== moduleId));
-  };
-
   // Handler: Tambah Lesson
   const handleAddLesson = (moduleId) => {
     setModules((prev) =>
@@ -192,8 +187,27 @@ export default function ModuleList() {
     );
   };
 
+  // Handler: Edit Modul
+  const handleEditModule = (moduleId) => {
+    console.log(`edit module dengan id : ${moduleId}`);
+    // Implement edit logic/modal here
+  };
+
+  // Handler: Hapus Modul
+  const handleDeleteModule = (moduleId) => {
+    console.log(`delete module dengan id : ${moduleId}`);
+    setModules(modules.filter((m) => m.id !== moduleId));
+  };
+
+  // Handler: Edit Lesson
+  const handleEditLesson = (moduleId, lessonId) => {
+    console.log(`edit lesson dengan id : ${lessonId}`);
+    // Implement edit logic/modal here
+  };
+
   // Handler: Hapus Lesson
   const handleDeleteLesson = (moduleId, lessonId) => {
+    console.log(`delete lesson dengan id : ${lessonId}`);
     setModules((prev) =>
       prev.map((module) =>
         module.id === moduleId
@@ -249,6 +263,7 @@ export default function ModuleList() {
                   isOver={overId === module.id}
                   onAddLesson={handleAddLesson}
                   onDeleteModule={handleDeleteModule}
+                  onEditModule={handleEditModule}
                 >
                   <SortableContext
                     items={module.lessons.map((l) => l.id)}
@@ -265,7 +280,8 @@ export default function ModuleList() {
                         lesson={lesson}
                         moduleId={module.id}
                         activeId={activeId}
-                        onDelete={handleDeleteLesson}
+                        onDelete={(modId, lesId) => handleDeleteLesson(modId, lesId)}
+                        onEdit={(modId, lesId) => handleEditLesson(modId, lesId)}
                         onNavigate={handleNavigateLesson}
                       />
                     ))}

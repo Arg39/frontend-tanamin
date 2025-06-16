@@ -5,7 +5,14 @@ import Icon from '../icons/icon';
 import { isTouchDevice } from './utils';
 import { createPortal } from 'react-dom';
 
-export default function SortableLesson({ lesson, moduleId, activeId, onDelete, onNavigate }) {
+export default function SortableLesson({
+  lesson,
+  moduleId,
+  activeId,
+  onDelete,
+  onEdit,
+  onNavigate,
+}) {
   const isMobile = isTouchDevice();
 
   const {
@@ -137,43 +144,43 @@ export default function SortableLesson({ lesson, moduleId, activeId, onDelete, o
         >
           <Icon type="more" className={`size-4 ${isMobile ? 'w-4 h-4' : ''}`} />
         </button>
-        {dropdownOpen &&
-          createPortal(
-            <ul
-              ref={dropdownMenuRef}
-              className="fixed z-[9999] w-40 bg-white-100 border rounded shadow-lg text-xs sm:text-sm"
-              style={{
-                top: dropdownCoords.top,
-                left: dropdownCoords.left,
-              }}
-            >
-              <li>
-                <button
-                  className="block w-full text-left px-4 py-3 hover:bg-gray-100"
-                  style={{ fontSize: isMobile ? 16 : undefined }}
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    // onEdit(moduleId, lesson.id);
-                  }}
-                >
-                  Edit
-                </button>
-              </li>
-              <li>
-                <button
-                  className="block w-full text-left px-4 py-3 hover:bg-gray-100 text-red-500"
-                  style={{ fontSize: isMobile ? 16 : undefined }}
-                  onClick={() => {
-                    setDropdownOpen(false);
-                    onDelete(moduleId, lesson.id);
-                  }}
-                >
-                  Hapus
-                </button>
-              </li>
-            </ul>,
-            document.body
-          )}
+        {dropdownOpen && (
+          <ul
+            ref={dropdownMenuRef}
+            className="fixed z-[9999] w-40 bg-white-100 border rounded shadow-lg text-xs sm:text-sm"
+            style={{
+              top: dropdownCoords.top,
+              left: dropdownCoords.left,
+            }}
+          >
+            <li>
+              <button
+                className="block w-full text-left px-4 py-3 hover:bg-gray-100"
+                style={{ fontSize: isMobile ? 16 : undefined }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDropdownOpen(false);
+                  onEdit(moduleId, lesson.id);
+                }}
+              >
+                Edit
+              </button>
+            </li>
+            <li>
+              <button
+                className="block w-full text-left px-4 py-3 hover:bg-gray-100 text-red-500"
+                style={{ fontSize: isMobile ? 16 : undefined }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setDropdownOpen(false);
+                  onDelete(moduleId, lesson.id);
+                }}
+              >
+                Hapus
+              </button>
+            </li>
+          </ul>
+        )}
       </div>
     </li>
   );
