@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DndContext, DragOverlay, rectIntersection } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import Icon from '../../../../../components/icons/icon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
 import { generateId } from '../../../../../components/dragAndDrop/utils';
 import SortableModule from '../../../../../components/dragAndDrop/sortableModule'; // NEW
@@ -41,6 +41,7 @@ const initialData = [
 ];
 
 export default function ModuleList() {
+  const { id } = useParams();
   const [modules, setModules] = useState(initialData);
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
@@ -82,6 +83,11 @@ export default function ModuleList() {
       const [removed] = newModules.splice(oldIndex, 1);
       newModules.splice(newIndex, 0, removed);
       setModules(newModules);
+
+      // LOG MODULE ORDER
+      const moduleOrder = newModules.map((m) => `"${m.id}"`).join(', ');
+      console.log(`module: {${moduleOrder}}`);
+
       return;
     }
 
@@ -125,13 +131,16 @@ export default function ModuleList() {
 
     // Insert into new module at correct position
     let newLessons;
+    let lessonNewIndex;
     if (toLesIdx === -1) {
       // Dropped on module itself, add to end
       newLessons = [...newModules[toModuleIdx].lessons, lesson];
+      lessonNewIndex = newLessons.length - 1;
     } else {
       // Dropped on a lesson, insert before it
       newLessons = [...newModules[toModuleIdx].lessons];
       newLessons.splice(toLesIdx, 0, lesson);
+      lessonNewIndex = toLesIdx;
     }
 
     newModules[toModuleIdx] = {
@@ -140,6 +149,11 @@ export default function ModuleList() {
     };
 
     setModules(newModules);
+
+    // LOG LESSON MOVE
+    console.log(`move lesson: "${active.id}"`);
+    console.log(`module_id: "${newModules[toModuleIdx].id}"`);
+    console.log(`index: ${lessonNewIndex}`);
   };
 
   // For DragOverlay
@@ -159,12 +173,7 @@ export default function ModuleList() {
 
   // Handler: Tambah Modul
   const handleAddModule = () => {
-    const newModule = {
-      id: generateId('module'),
-      title: 'Modul Baru',
-      lessons: [],
-    };
-    setModules([...modules, newModule]);
+    navigate(`/instruktur/kursus/${id}/modul/tambah`);
   };
 
   // Handler: Tambah Lesson
@@ -189,8 +198,7 @@ export default function ModuleList() {
 
   // Handler: Edit Modul
   const handleEditModule = (moduleId) => {
-    console.log(`edit module dengan id : ${moduleId}`);
-    // Implement edit logic/modal here
+    navigate(`/instruktur/kursus/${id}/modul/${moduleId}/edit`);
   };
 
   // Handler: Hapus Modul
@@ -201,7 +209,7 @@ export default function ModuleList() {
 
   // Handler: Edit Lesson
   const handleEditLesson = (moduleId, lessonId) => {
-    console.log(`edit lesson dengan id : ${lessonId}`);
+    navigate(`/instruktur/kursus/${id}/modul/${moduleId}/materi/${lessonId}/edit`);
     // Implement edit logic/modal here
   };
 
@@ -231,7 +239,7 @@ export default function ModuleList() {
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-2 sm:md-0">
         <h1
-          className={`text-xl sm:text-2xl font-bold mb-2 sm:mb-4 break-words ${
+          className={`text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-primary-800 ${
             isMobile ? 'text-base' : ''
           }`}
         >

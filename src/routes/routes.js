@@ -21,6 +21,7 @@ import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
 import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
 import CourseAttributeAdd from '../pages/instructor/course.jsx/tambah/atributAdd';
 import CourseAttributeEdit from '../pages/instructor/course.jsx/edit/atributEdit';
+import ModulAdd from '../pages/instructor/course.jsx/tambah/materi/modulAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -106,6 +107,7 @@ const instructorRoutes = [
     path: 'kursus/:courseId/edit/persyaratan-deskripsi/:attributeId?',
     element: <CourseAttributeEdit />,
   },
+  { path: 'kursus/:id/modul/tambah', element: <ModulAdd /> },
 ];
 
 const publicRoutes = [
