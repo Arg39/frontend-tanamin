@@ -1,105 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { DndContext, DragOverlay, rectIntersection } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import Icon from '../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
-import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
-import { generateId } from '../../../../../components/dragAndDrop/utils';
-import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
 import { toast } from 'react-toastify';
 
-// Data awal
+import Icon from '../../../../../components/icons/icon';
+import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
+import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
+
 const initialData = [
   {
     id: 'module-1',
-    type: 'material',
-    title:
-      'Module 1: Introduction to Freelance Design Career Introduction to Freelance Design Career',
+    title: 'Pengenalan Freelance UI/UX & Illustrator',
     lessons: [
-      {
-        id: 'lesson-1',
-        title: 'Apa itu Freelance UI/UX & Illustrator Apa itu Freelance UI/UX & Illustrator',
-      },
-      { id: 'lesson-2', title: 'Skillset yang Dibutuhkan' },
+      { id: 'lesson-1', type: 'material', title: 'Apa itu Freelance' },
+      { id: 'lesson-2', type: 'material', title: 'Skillset yang Dibutuhkan' },
     ],
   },
   {
     id: 'module-2',
-    type: 'quiz',
-    title:
-      'Uji Pemahaman dasar Freelance UI/UX & Illustrator Uji Pemahaman dasar Freelance UI/UX & Illustrator',
+    title: 'Uji Pemahaman Dasar',
     lessons: [
-      { id: 'lesson-3', title: 'Membuat Komponen' },
-      { id: 'lesson-4', title: 'Props dan State' },
+      { id: 'lesson-3', type: 'material', title: 'Membuat Komponen' },
+      { id: 'lesson-4', type: 'quiz', title: 'Props dan State' },
     ],
   },
   {
     id: 'module-3',
-    type: 'material',
     title: 'State Management',
     lessons: [],
   },
 ];
 
 export default function ModuleList() {
-  const { id } = useParams();
+  const { id: courseId } = useParams();
+  const navigate = useNavigate();
+
   const [modules, setModules] = useState(initialData);
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
-  const navigate = useNavigate();
 
-  // Find module and lesson by lessonId
-  const findLessonLocation = (lessonId) => {
-    for (let moduleIdx = 0; moduleIdx < modules.length; moduleIdx++) {
-      const lesIdx = modules[moduleIdx].lessons.findIndex((l) => l.id === lessonId);
-      if (lesIdx !== -1) {
-        return { moduleIdx, lesIdx };
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
+  const findLessonLocation = useCallback(
+    (lessonId) => {
+      for (let moduleIdx = 0; moduleIdx < modules.length; moduleIdx++) {
+        const lesIdx = modules[moduleIdx].lessons.findIndex((l) => l.id === lessonId);
+        if (lesIdx !== -1) return { moduleIdx, lesIdx };
       }
-    }
-    return null;
+      return null;
+    },
+    [modules]
+  );
+
+  const reorderModules = (active, over) => {
+    const oldIdx = modules.findIndex((m) => m.id === active.id);
+    const newIdx = modules.findIndex((m) => m.id === over.id);
+    if (oldIdx === -1 || newIdx === -1 || oldIdx === newIdx) return;
+
+    const updated = [...modules];
+    const [moved] = updated.splice(oldIdx, 1);
+    updated.splice(newIdx, 0, moved);
+
+    setModules(updated);
+    console.log(`module: {${updated.map((m) => `"${m.id}"`).join(', ')}}`);
   };
 
-  const handleDragStart = (event) => {
-    setActiveId(event.active.id);
-  };
-
-  const handleDragOver = (event) => {
-    setOverId(event.over?.id || null);
-  };
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    setActiveId(null);
-    setOverId(null);
-
-    if (!over) return;
-
-    // MODULE DRAG
-    if (active.id.startsWith('module-') && over.id.startsWith('module-')) {
-      if (active.id === over.id) return;
-      const oldIndex = modules.findIndex((m) => m.id === active.id);
-      const newIndex = modules.findIndex((m) => m.id === over.id);
-      if (oldIndex === -1 || newIndex === -1) return;
-      const newModules = [...modules];
-      const [removed] = newModules.splice(oldIndex, 1);
-      newModules.splice(newIndex, 0, removed);
-      setModules(newModules);
-
-      // LOG MODULE ORDER
-      const moduleOrder = newModules.map((m) => `"${m.id}"`).join(', ');
-      console.log(`module: {${moduleOrder}}`);
-
-      return;
-    }
-
-    // LESSON DRAG
+  const moveLesson = (active, over) => {
     const from = findLessonLocation(active.id);
+    if (!from) return;
 
-    // Find which module is being hovered
     let toModuleIdx = modules.findIndex((m) => m.id === over.id);
     let toLesIdx = -1;
 
-    // If hovering over a lesson, get its module and index
     if (toModuleIdx === -1) {
       for (let i = 0; i < modules.length; i++) {
         const idx = modules[i].lessons.findIndex((l) => l.id === over.id);
@@ -111,164 +84,94 @@ export default function ModuleList() {
       }
     }
 
-    if (!from || toModuleIdx === -1) return;
+    if (toModuleIdx === -1) return;
 
-    // TYPE CHECK: Only allow drop if source and target module type are the same
-    const fromModuleType = modules[from.moduleIdx].type;
-    const toModuleType = modules[toModuleIdx].type;
-    if (fromModuleType !== toModuleType) {
-      // Tampilkan toast dengan pesan yang jelas
-      toast.info(
-        `Tidak bisa memindahkan materi dari modul bertipe "${
-          fromModuleType === 'quiz' ? 'Quiz' : 'Materi'
-        }" ke modul bertipe "${toModuleType === 'quiz' ? 'Quiz' : 'Materi'}".`
-      );
-      return;
-    }
-
-    // If dropped in the same module and same position, do nothing
     if (from.moduleIdx === toModuleIdx && (toLesIdx === -1 || from.lesIdx === toLesIdx)) {
       return;
     }
 
-    // Remove from old module
     const lesson = modules[from.moduleIdx].lessons[from.lesIdx];
-    let newModules = modules.map((module, idx) => {
-      if (idx === from.moduleIdx) {
-        return {
-          ...module,
-          lessons: module.lessons.filter((l) => l.id !== active.id),
-        };
-      }
-      return module;
-    });
+    const newModules = modules.map((m, idx) =>
+      idx === from.moduleIdx ? { ...m, lessons: m.lessons.filter((l) => l.id !== active.id) } : m
+    );
 
-    // Insert into new module at correct position
-    let newLessons;
-    let lessonNewIndex;
+    const targetLessons = [...newModules[toModuleIdx].lessons];
     if (toLesIdx === -1) {
-      // Dropped on module itself, add to end
-      newLessons = [...newModules[toModuleIdx].lessons, lesson];
-      lessonNewIndex = newLessons.length - 1;
+      targetLessons.push(lesson);
     } else {
-      // Dropped on a lesson, insert before it
-      newLessons = [...newModules[toModuleIdx].lessons];
-      newLessons.splice(toLesIdx, 0, lesson);
-      lessonNewIndex = toLesIdx;
+      targetLessons.splice(toLesIdx, 0, lesson);
     }
 
-    newModules[toModuleIdx] = {
-      ...newModules[toModuleIdx],
-      lessons: newLessons,
-    };
+    newModules[toModuleIdx] = { ...newModules[toModuleIdx], lessons: targetLessons };
 
     setModules(newModules);
-
-    // LOG LESSON MOVE
-    console.log(`move lesson: "${active.id}"`);
-    console.log(`module_id: "${newModules[toModuleIdx].id}"`);
-    console.log(`index: ${lessonNewIndex}`);
+    console.log(
+      `move lesson: "${active.id}" -> module_id: "${newModules[toModuleIdx].id}", index: ${toLesIdx}`
+    );
   };
 
-  // For DragOverlay
-  const activeLesson = (() => {
-    if (!activeId || !activeId.startsWith('lesson-')) return null;
-    for (const module of modules) {
-      const lesson = module.lessons.find((l) => l.id === activeId);
-      if (lesson) return lesson;
+  const handleDragStart = (event) => setActiveId(event.active.id);
+  const handleDragOver = (event) => setOverId(event.over?.id ?? null);
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setActiveId(null);
+    setOverId(null);
+    if (!over) return;
+
+    if (active.id.startsWith('module-') && over.id.startsWith('module-')) {
+      reorderModules(active, over);
+    } else {
+      moveLesson(active, over);
+    }
+  };
+
+  const navigateTo = (path) => navigate(`/instruktur/kursus/${courseId}${path}`);
+
+  const handleAddModule = () => navigateTo('/modul/tambah');
+  const handleEditModule = (moduleId) => navigateTo(`/modul/${moduleId}/edit`);
+  const handleAddLesson = (moduleId) => navigateTo(`/modul/${moduleId}/materi/tambah`);
+  const handleEditLesson = (modId, lesId) => navigateTo(`/modul/${modId}/materi/${lesId}/edit`);
+  const handleNavigateLesson = (lessonId) => navigate(`/instructor/course/lesson/${lessonId}`);
+
+  const handleDeleteModule = (moduleId) =>
+    setModules((prev) => prev.filter((m) => m.id !== moduleId));
+
+  const handleDeleteLesson = (modId, lesId) =>
+    setModules((prev) =>
+      prev.map((m) =>
+        m.id === modId ? { ...m, lessons: m.lessons.filter((l) => l.id !== lesId) } : m
+      )
+    );
+
+  const activeLesson = useMemo(() => {
+    if (!activeId?.startsWith('lesson-')) return null;
+    for (const m of modules) {
+      const l = m.lessons.find((l) => l.id === activeId);
+      if (l) return l;
     }
     return null;
-  })();
+  }, [activeId, modules]);
 
-  const activeModule = (() => {
-    if (!activeId || !activeId.startsWith('module-')) return null;
-    return modules.find((m) => m.id === activeId);
-  })();
-
-  // Handler: Tambah Modul
-  const handleAddModule = () => {
-    navigate(`/instruktur/kursus/${id}/modul/tambah`);
-  };
-
-  // Handler: Tambah Lesson
-  const handleAddLesson = (moduleId) => {
-    setModules((prev) =>
-      prev.map((module) =>
-        module.id === moduleId
-          ? {
-              ...module,
-              lessons: [
-                ...module.lessons,
-                {
-                  id: generateId('lesson'),
-                  title: 'Lesson Baru',
-                },
-              ],
-            }
-          : module
-      )
-    );
-  };
-
-  // Handler: Edit Modul
-  const handleEditModule = (moduleId) => {
-    navigate(`/instruktur/kursus/${id}/modul/${moduleId}/edit`);
-  };
-
-  // Handler: Hapus Modul
-  const handleDeleteModule = (moduleId) => {
-    console.log(`delete module dengan id : ${moduleId}`);
-    setModules(modules.filter((m) => m.id !== moduleId));
-  };
-
-  // Handler: Edit Lesson
-  const handleEditLesson = (moduleId, lessonId) => {
-    navigate(`/instruktur/kursus/${id}/modul/${moduleId}/materi/${lessonId}/edit`);
-    // Implement edit logic/modal here
-  };
-
-  // Handler: Hapus Lesson
-  const handleDeleteLesson = (moduleId, lessonId) => {
-    console.log(`delete lesson dengan id : ${lessonId}`);
-    setModules((prev) =>
-      prev.map((module) =>
-        module.id === moduleId
-          ? {
-              ...module,
-              lessons: module.lessons.filter((l) => l.id !== lessonId),
-            }
-          : module
-      )
-    );
-  };
-
-  // Handler: Navigasi ke detail lesson
-  const handleNavigateLesson = (lessonId) => {
-    navigate(`/instructor/course/lesson/${lessonId}`);
-  };
-
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  const activeModule = useMemo(
+    () => activeId?.startsWith('module-') && modules.find((m) => m.id === activeId),
+    [activeId, modules]
+  );
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-2 sm:md-0">
-        <h1
-          className={`text-xl sm:text-2xl font-bold mb-2 sm:mb-4 text-primary-800 ${
-            isMobile ? 'text-base' : ''
-          }`}
-        >
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+        <h1 className="text-xl sm:text-2xl font-bold text-primary-800 mb-2 sm:mb-0">
           Daftar Materi Kursus
         </h1>
         <button
-          className={`w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center justify-center gap-2 text-white-100 ${
-            isMobile ? 'py-2 text-base' : ''
-          }`}
           onClick={handleAddModule}
+          className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2"
         >
           <Icon type="plus" /> Modul
         </button>
       </div>
-      <div className={`p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto ${isMobile ? 'p-2' : ''}`}>
+
+      <div className="p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto">
         <DndContext
           collisionDetection={rectIntersection}
           onDragStart={handleDragStart}
@@ -276,7 +179,7 @@ export default function ModuleList() {
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-            <div className={`flex flex-col gap-3 sm:gap-4 ${isMobile ? 'gap-2' : ''}`}>
+            <div className="flex flex-col gap-3 sm:gap-4">
               {modules.map((module) => (
                 <SortableModule
                   key={module.id}
@@ -302,8 +205,8 @@ export default function ModuleList() {
                         lesson={lesson}
                         moduleId={module.id}
                         activeId={activeId}
-                        onDelete={(modId, lesId) => handleDeleteLesson(modId, lesId)}
-                        onEdit={(modId, lesId) => handleEditLesson(modId, lesId)}
+                        onDelete={handleDeleteLesson}
+                        onEdit={handleEditLesson}
                         onNavigate={handleNavigateLesson}
                       />
                     ))}
@@ -312,6 +215,7 @@ export default function ModuleList() {
               ))}
             </div>
           </SortableContext>
+
           <DragOverlay>
             {activeModule ? (
               <div className="bg-white-100 p-2 sm:p-4 rounded shadow border-2 border-primary-400 opacity-80 min-w-[150px] sm:min-w-[200px]">
@@ -321,9 +225,7 @@ export default function ModuleList() {
               </div>
             ) : activeLesson ? (
               <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
-                <span>
-                  <Icon type="drag" className="text-gray-400" />
-                </span>
+                <Icon type="drag" className="text-gray-400" />
                 <span className="break-words">{activeLesson.title}</span>
               </li>
             ) : null}

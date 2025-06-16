@@ -2,14 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../icons/icon';
 
-export default function TextInput({ label, name, value, onChange, placeholder, type = 'text' }) {
+export default function TextInput({
+  label,
+  name,
+  value,
+  onChange,
+  placeholder,
+  type = 'text',
+  disabled,
+}) {
   const handleClear = () => {
-    onChange({ target: { name, value: '' } });
+    if (!disabled) {
+      onChange({ target: { name, value: '' } });
+    }
   };
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700">
+      <label
+        htmlFor={name}
+        className={`mb-2 text-sm font-medium ${disabled ? 'text-gray-400' : 'text-gray-700'}`}
+      >
         {label}
       </label>
       <div className="relative flex">
@@ -20,9 +33,12 @@ export default function TextInput({ label, name, value, onChange, placeholder, t
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 w-full pr-10"
+          disabled={disabled}
+          className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 w-full pr-10 ${
+            disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'focus:ring-primary-500'
+          }`}
         />
-        {value && (
+        {value && !disabled && (
           <button
             type="button"
             onClick={handleClear}
@@ -44,4 +60,12 @@ TextInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
+  type: PropTypes.string,
+  disabled: PropTypes.bool,
+};
+
+TextInput.defaultProps = {
+  placeholder: '',
+  type: 'text',
+  disabled: false,
 };

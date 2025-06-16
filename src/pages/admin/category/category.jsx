@@ -20,6 +20,7 @@ export default function Category() {
     deleteCategory,
   } = useCategoryStore();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [filterValues, setFilterValues] = useState({
     search: '',
     dateRange: { start: '', end: '' },
@@ -30,8 +31,13 @@ export default function Category() {
     setSearchInput(filterValues.search || '');
   }, [filterValues.search]);
 
+  const fetchData = (params) => {
+    setIsLoading(true); // Set loading ke true sebelum fetching
+    fetchCategories(params).finally(() => setIsLoading(false)); // Set loading ke false setelah selesai
+  };
+
   useEffect(() => {
-    fetchCategories({
+    fetchData({
       sortBy,
       sortOrder,
       perPage,
@@ -42,7 +48,7 @@ export default function Category() {
   }, [sortBy, sortOrder, perPage, pagination.currentPage, filterValues]);
 
   const handleSortChange = (column, order) => {
-    fetchCategories({
+    fetchData({
       sortBy: column,
       sortOrder: order,
       perPage,
@@ -53,7 +59,7 @@ export default function Category() {
   };
 
   const handlePageChange = (page) => {
-    fetchCategories({
+    fetchData({
       sortBy,
       sortOrder,
       perPage,
@@ -64,7 +70,7 @@ export default function Category() {
   };
 
   const handlePageSizeChange = (size) => {
-    fetchCategories({
+    fetchData({
       sortBy,
       sortOrder,
       perPage: size,
@@ -198,6 +204,7 @@ export default function Category() {
             onPageSizeChange={handlePageSizeChange}
             sortBy={sortBy}
             sortOrder={sortOrder}
+            loading={isLoading}
           />
         </div>
       </AdminTemplate>

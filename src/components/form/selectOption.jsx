@@ -2,29 +2,43 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../icons/icon';
 
-export default function SelectOption({ label, name, value, onChange, options, placeholder }) {
+export default function SelectOption({
+  label,
+  name,
+  value,
+  onChange,
+  options,
+  placeholder,
+  disabled,
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleSelect = (optionValue) => {
-    onChange({ target: { name, value: optionValue } });
-    setIsOpen(false);
+    if (!disabled) {
+      onChange({ target: { name, value: optionValue } });
+      setIsOpen(false);
+    }
   };
 
   const handleClear = () => {
-    onChange({ target: { name, value: '' } });
+    if (!disabled) {
+      onChange({ target: { name, value: '' } });
+    }
   };
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700">
+      <label htmlFor={name} className={`mb-2 text-sm font-medium text-gray-700`}>
         {label}
       </label>
       <div className="relative">
         <div
-          className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 w-full bg-white-100 cursor-pointer ${
-            value ? 'text-black-900' : 'text-gray-400'
-          }`}
-          onClick={() => setIsOpen(!isOpen)}
+          className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 ${
+            disabled
+              ? 'bg-gray-100 text-black-900 cursor-not-allowed'
+              : 'focus:ring-primary-500 bg-white-100 cursor-pointer'
+          } w-full ${value ? 'text-black-900' : 'text-gray-400'}`}
+          onClick={() => !disabled && setIsOpen(!isOpen)}
         >
           {value ? (
             options.find((option) => option.value === value)?.label
@@ -32,7 +46,7 @@ export default function SelectOption({ label, name, value, onChange, options, pl
             <span className="text-gray-400">{placeholder}</span>
           )}
         </div>
-        {value && (
+        {value && !disabled && (
           <button
             type="button"
             onClick={handleClear}
@@ -43,7 +57,7 @@ export default function SelectOption({ label, name, value, onChange, options, pl
             <Icon type="x-mark" className="size-5" />
           </button>
         )}
-        {isOpen && (
+        {isOpen && !disabled && (
           <ul className="absolute z-10 bg-white-100 border border-gray-300 rounded-md mt-1 w-full max-h-48 overflow-y-auto select-dropdown">
             {options.map((option) => (
               <li
@@ -73,9 +87,11 @@ SelectOption.propTypes = {
     })
   ).isRequired,
   placeholder: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 SelectOption.defaultProps = {
   value: '',
   placeholder: 'Select an option',
+  disabled: false,
 };

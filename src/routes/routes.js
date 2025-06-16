@@ -22,6 +22,7 @@ import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
 import CourseAttributeAdd from '../pages/instructor/course.jsx/tambah/atributAdd';
 import CourseAttributeEdit from '../pages/instructor/course.jsx/edit/atributEdit';
 import ModulAdd from '../pages/instructor/course.jsx/tambah/materi/modulAdd';
+import LessonAdd from '../pages/instructor/course.jsx/tambah/materi/lessonAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -107,7 +108,8 @@ const instructorRoutes = [
     path: 'kursus/:courseId/edit/persyaratan-deskripsi/:attributeId?',
     element: <CourseAttributeEdit />,
   },
-  { path: 'kursus/:id/modul/tambah', element: <ModulAdd /> },
+  { path: 'kursus/:courseId/modul/tambah', element: <ModulAdd /> },
+  { path: 'kursus/:courseId/modul/:moduleId/materi/tambah', element: <LessonAdd /> },
 ];
 
 const publicRoutes = [

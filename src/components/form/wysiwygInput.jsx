@@ -138,7 +138,7 @@ const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, 
           }
         `}
       </style>
-      {label && <label className="block mb-2">{label}</label>}
+      {label && <label className="block mb-2 text-sm font-medium text-gray-700">{label}</label>}
       <ReactQuill
         ref={quillRef}
         theme="snow"

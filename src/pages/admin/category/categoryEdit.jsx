@@ -94,6 +94,8 @@ export default function CategoryEdit() {
             name="image"
             onChange={handleFileChange}
             preview={formData.existingImage}
+            crop={true}
+            cropAspect={16 / 9}
           />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">

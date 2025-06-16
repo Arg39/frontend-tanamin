@@ -91,7 +91,7 @@ const useCourseStore = create((set, get) => ({
         id_instructor,
       }).toString();
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/courses?${params}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/course?${params}`,
         {
           method: 'POST',
           headers: {

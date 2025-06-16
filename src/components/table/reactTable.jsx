@@ -12,6 +12,7 @@ export default function ReactTable({
   onPageSizeChange,
   sortBy,
   sortOrder,
+  loading,
 }) {
   const { getTableProps, getTableBodyProps, headerGroups } = useTable(
     {
@@ -85,27 +86,41 @@ export default function ReactTable({
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {data.map((row, i) => (
-            <tr key={row.id || i} className="hover:bg-gray-100">
-              {numbering && (
-                <td className="border border-gray-300 px-4 py-2 text-sm w-12 text-center">
-                  {(pagination.currentPage - 1) * pagination.perPage + i + 1}
-                </td>
-              )}
-              {columns.map((col, ci) => {
-                const value =
-                  typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
-
-                const widthStyle = col.width ? { width: col.width } : {};
-
-                return (
-                  <td key={ci} style={widthStyle} className="border border-gray-300 px-4 py-2">
-                    {col.Cell ? col.Cell({ value }) : value}
-                  </td>
-                );
-              })}
+          {loading ? (
+            <tr>
+              <td colSpan={columns.length + (numbering ? 1 : 0)} className="text-center py-4">
+                Loading...
+              </td>
             </tr>
-          ))}
+          ) : data.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length + (numbering ? 1 : 0)} className="text-center py-4">
+                Tidak ada data yang tersedia
+              </td>
+            </tr>
+          ) : (
+            data.map((row, i) => (
+              <tr key={row.id || i} className="hover:bg-gray-100">
+                {numbering && (
+                  <td className="border border-gray-300 px-4 py-2 text-sm w-12 text-center">
+                    {(pagination.currentPage - 1) * pagination.perPage + i + 1}
+                  </td>
+                )}
+                {columns.map((col, ci) => {
+                  const value =
+                    typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
+
+                  const widthStyle = col.width ? { width: col.width } : {};
+
+                  return (
+                    <td key={ci} style={widthStyle} className="border border-gray-300 px-4 py-2">
+                      {col.Cell ? col.Cell({ value }) : value}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
 

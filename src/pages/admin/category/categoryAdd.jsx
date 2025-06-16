@@ -34,15 +34,16 @@ export default function CategoryAdd() {
       title: 'Konfirmasi Simpan',
       message: 'Apakah Anda yakin ingin menyimpan kategori ini?',
       variant: 'primary',
-      onConfirm: () => {
+      onConfirm: async () => {
         closeModal();
         const formDataToSend = new FormData();
         formDataToSend.append('name', formData.name);
         formDataToSend.append('image', formData.image);
 
-        addCategory(formDataToSend).then(() => {
+        const result = await addCategory(formDataToSend);
+        if (result.success) {
           navigate('/admin/kategori');
-        });
+        }
       },
       onCancel: () => {
         closeModal();
@@ -71,7 +72,13 @@ export default function CategoryAdd() {
             onChange={handleInputChange}
             placeholder="Masukkan nama kategori"
           />
-          <ImagePicker label="Gambar Kategori" name="image" onChange={handleFileChange} />
+          <ImagePicker
+            label="Gambar Kategori"
+            name="image"
+            onChange={handleFileChange}
+            crop={true}
+            cropAspect={16 / 9}
+          />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">
               Simpan

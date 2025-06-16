@@ -73,7 +73,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/category`,
         categoryData,
         {
           headers: {
@@ -88,10 +88,15 @@ const useCategoryStore = create((set) => ({
         set((state) => ({
           categories: [...state.categories, response.data.data],
         }));
+        return { success: true };
+      } else {
+        toast.error('Gagal menambahkan kategori');
+        return { success: false };
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Gagal menambahkan kategori';
       toast.error(errorMessage);
+      return { success: false };
     }
   },
 
@@ -104,7 +109,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/category/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -133,7 +138,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/category/${id}`,
         categoryData,
         {
           headers: {
@@ -167,7 +172,7 @@ const useCategoryStore = create((set) => ({
 
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/categories/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/admin/category/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

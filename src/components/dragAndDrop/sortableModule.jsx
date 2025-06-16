@@ -4,6 +4,61 @@ import { CSS } from '@dnd-kit/utilities';
 import Icon from '../icons/icon';
 import { isTouchDevice } from './utils';
 
+function DropdownMenu({ isMobile, onEdit, onDelete }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        className="p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100"
+        onClick={() => setOpen((o) => !o)}
+        title="Options"
+      >
+        <Icon type="more" className={isMobile ? 'w-4 h-4' : 'w-6 h-6'} />
+      </button>
+      {open && (
+        <ul className="absolute right-0 mt-2 w-36 sm:w-32 bg-white-100 border rounded shadow-lg z-50 text-xs sm:text-sm">
+          <li>
+            <button
+              className="block w-full text-left px-4 py-3 hover:bg-gray-100"
+              style={{ fontSize: isMobile ? 16 : undefined }}
+              onClick={() => {
+                setOpen(false);
+                onEdit?.();
+              }}
+            >
+              Edit
+            </button>
+          </li>
+          <li>
+            <button
+              className="block w-full text-left px-4 py-3 hover:bg-gray-100 text-red-500"
+              style={{ fontSize: isMobile ? 16 : undefined }}
+              onClick={() => {
+                setOpen(false);
+                onDelete?.();
+              }}
+            >
+              Hapus
+            </button>
+          </li>
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function SortableModule({
   id,
   module,
@@ -25,27 +80,8 @@ export default function SortableModule({
     isDragging,
   } = useSortable({
     id,
-    activationConstraint: isMobile
-      ? {
-          delay: 200,
-          tolerance: 5,
-        }
-      : undefined,
-  }); // MODIFIED
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    if (!dropdownOpen) return;
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [dropdownOpen]);
+    activationConstraint: isMobile ? { delay: 200, tolerance: 5 } : undefined,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -54,25 +90,30 @@ export default function SortableModule({
     zIndex: isDragging ? 50 : 'auto',
     userSelect: 'none',
     marginBottom: isMobile ? '0.75rem' : '1rem',
-    // FIX: Allow scroll on mobile except drag handle
     touchAction: isMobile ? 'auto' : 'none',
     padding: isMobile ? '10px 6px' : undefined,
   };
+
+  const titleBlock = (
+    <h2 className="text-base sm:text-lg font-semibold break-words w-full mb-2" title={module.title}>
+      {module.title}
+    </h2>
+  );
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-white-100 p-2 sm:p-4 rounded shado w border-2 transition-colors relative ${
+      className={`bg-white-100 p-2 sm:p-4 rounded shadow border-2 transition-colors relative ${
         isOver ? 'border-primary-400 bg-primary-50' : 'border-transparent'
       }`}
       tabIndex={0}
       aria-label="Drag module"
     >
-      {/* Header Section */}
-      <div className="flex items-start justify-between sm:gap-4 mb-2 ">
-        {/* Left: Drag + Label */}
-        <div className="flex  w-full items-center gap-2 sm:gap-3 flex-wrap">
+      {/* Header */}
+      <div className="w-full flex items-start justify-between sm:gap-4 mb-2">
+        {/* Left: Drag + Title */}
+        <div className="flex w-full items-start gap-2 sm:gap-3">
           <span
             ref={setActivatorNodeRef}
             {...attributes}
@@ -82,88 +123,37 @@ export default function SortableModule({
             className={`${
               isDragging ? 'cursor-grabbing' : 'cursor-grab'
             } active:cursor-grabbing flex-shrink-0 p-1 bg-gray-100 rounded-md`}
-            style={{
-              touchAction: isMobile ? 'none' : undefined,
-            }}
+            style={{ touchAction: isMobile ? 'none' : undefined }}
           >
             <Icon type="drag" className="text-gray-400" />
           </span>
-          {module.type === 'material' && (
-            <span className="px-2 py-1 border border-blue-700 text-blue-700 rounded-md text-xs sm:text-sm bg-blue-50">
-              Materi
-            </span>
-          )}
-          {module.type === 'quiz' && (
-            <span className="px-2 py-1 border border-yellow-500 text-yellow-700 rounded-md bg-yellow-50 text-xs sm:text-sm">
-              Quiz
-            </span>
-          )}
+          {!isMobile && titleBlock}
         </div>
 
-        {/* Right: Buttons */}
-        <div className="flex gap-2 items-center w-full sm:w-fit justify-end">
+        {/* Right: Actions */}
+        <div className="flex gap-2 items-center justify-end">
           <button
-            className={`bg-tertiary-500 rounded-md p-2 sm:p-2 text-white-100 hover:bg-tertiary-700 text-xs sm:text-sm flex items-center gap-1 ${
+            className={`bg-tertiary-500 rounded-md p-2 text-white-100 hover:bg-tertiary-700 text-xs sm:text-sm flex items-center gap-1 ${
               isMobile ? 'text-base' : ''
             }`}
             onClick={() => onAddLesson(module.id)}
             title="Tambah Lesson"
           >
-            <Icon type="plus" className={`${isMobile ? 'w-4 h-4' : 'w-6 h-6'}`} />
+            <Icon type="plus" className={isMobile ? 'w-4 h-4' : 'w-6 h-6'} />
             <span className="hidden md:inline">Materi</span>
           </button>
-          <div className="relative" ref={dropdownRef}>
-            <button
-              className={`p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100 flex items-center justify-center`}
-              onClick={() => setDropdownOpen((open) => !open)}
-              title="Options"
-            >
-              <Icon type="more" className={`${isMobile ? 'w-4 h-4' : 'w-6 h-6'}`} />
-            </button>
-            {dropdownOpen && (
-              <ul className="absolute right-0 mt-2 w-36 sm:w-32 bg-white-100 border rounded shadow-lg z-50 text-xs sm:text-sm">
-                <li>
-                  <button
-                    className="block w-full text-left px-4 py-3 hover:bg-gray-100"
-                    style={{ fontSize: isMobile ? 16 : undefined }}
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      if (onEditModule) onEditModule(module.id);
-                    }}
-                  >
-                    Edit
-                  </button>
-                </li>
-                <li>
-                  <button
-                    className="block w-full text-left px-4 py-3 hover:bg-gray-100 text-red-500"
-                    style={{ fontSize: isMobile ? 16 : undefined }}
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      onDeleteModule(module.id);
-                    }}
-                  >
-                    Hapus
-                  </button>
-                </li>
-              </ul>
-            )}
-          </div>
+          <DropdownMenu
+            isMobile={isMobile}
+            onEdit={() => onEditModule?.(module.id)}
+            onDelete={() => onDeleteModule?.(module.id)}
+          />
         </div>
       </div>
 
-      {/* Title */}
-      <h2
-        className="text-base sm:text-lg font-semibold break-words w-full mb-2"
-        style={{
-          wordBreak: 'break-word',
-        }}
-        title={module.title}
-      >
-        {module.title}
-      </h2>
+      {/* Mobile Title */}
+      {isMobile && titleBlock}
 
-      {/* Lessons List */}
+      {/* Lessons */}
       <ul
         className={`min-h-[40px] sm:min-h-[50px] border p-2 rounded bg-gray-50 overflow-x-auto ${
           isMobile ? 'p-2' : ''
