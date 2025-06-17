@@ -2,9 +2,31 @@ import { create } from 'zustand';
 import useAuthStore from '../authStore';
 
 const useModuleStore = create((set) => ({
+  modules: [],
   loading: false,
   error: null,
   createdModule: null,
+
+  async fetchModules(courseId) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/modules`,
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch modules');
+      set({ modules: json.data, loading: false, error: null });
+    } catch (e) {
+      set({ loading: false, error: e.message });
+      throw e;
+    }
+  },
 
   async addModule({ courseId, title }) {
     set({ loading: true, error: null, createdModule: null });

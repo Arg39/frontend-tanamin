@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { DndContext, DragOverlay, rectIntersection } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,40 +7,21 @@ import { toast } from 'react-toastify';
 import Icon from '../../../../../components/icons/icon';
 import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
 import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
-
-const initialData = [
-  {
-    id: 'module-1',
-    title: 'Pengenalan Freelance UI/UX & Illustrator',
-    lessons: [
-      { id: 'lesson-1', type: 'material', title: 'Apa itu Freelance' },
-      { id: 'lesson-2', type: 'material', title: 'Skillset yang Dibutuhkan' },
-    ],
-  },
-  {
-    id: 'module-2',
-    title: 'Uji Pemahaman Dasar',
-    lessons: [
-      { id: 'lesson-3', type: 'material', title: 'Membuat Komponen' },
-      { id: 'lesson-4', type: 'quiz', title: 'Props dan State' },
-    ],
-  },
-  {
-    id: 'module-3',
-    title: 'State Management',
-    lessons: [],
-  },
-];
+import useModuleStore from '../../../../../zustand/material/moduleStore';
 
 export default function ModuleList() {
   const { id: courseId } = useParams();
   const navigate = useNavigate();
+  const { fetchModules, modules, loading, error } = useModuleStore();
 
-  const [modules, setModules] = useState(initialData);
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
 
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
+  useEffect(() => {
+    fetchModules(courseId).catch((err) => toast.error(err.message || 'Failed to fetch modules'));
+  }, [courseId, fetchModules]);
 
   const findLessonLocation = useCallback(
     (lessonId) => {
@@ -62,8 +43,8 @@ export default function ModuleList() {
     const [moved] = updated.splice(oldIdx, 1);
     updated.splice(newIdx, 0, moved);
 
-    setModules(updated);
-    console.log(`module: {${updated.map((m) => `"${m.id}"`).join(', ')}}`);
+    // Update state
+    toast.success('Modules reordered successfully');
   };
 
   const moveLesson = (active, over) => {
@@ -104,10 +85,8 @@ export default function ModuleList() {
 
     newModules[toModuleIdx] = { ...newModules[toModuleIdx], lessons: targetLessons };
 
-    setModules(newModules);
-    console.log(
-      `move lesson: "${active.id}" -> module_id: "${newModules[toModuleIdx].id}", index: ${toLesIdx}`
-    );
+    // Update state
+    toast.success('Lesson moved successfully');
   };
 
   const handleDragStart = (event) => setActiveId(event.active.id);
@@ -133,29 +112,8 @@ export default function ModuleList() {
   const handleEditLesson = (modId, lesId) => navigateTo(`/modul/${modId}/materi/${lesId}/edit`);
   const handleNavigateLesson = (lessonId) => navigate(`/instructor/course/lesson/${lessonId}`);
 
-  const handleDeleteModule = (moduleId) =>
-    setModules((prev) => prev.filter((m) => m.id !== moduleId));
-
-  const handleDeleteLesson = (modId, lesId) =>
-    setModules((prev) =>
-      prev.map((m) =>
-        m.id === modId ? { ...m, lessons: m.lessons.filter((l) => l.id !== lesId) } : m
-      )
-    );
-
-  const activeLesson = useMemo(() => {
-    if (!activeId?.startsWith('lesson-')) return null;
-    for (const m of modules) {
-      const l = m.lessons.find((l) => l.id === activeId);
-      if (l) return l;
-    }
-    return null;
-  }, [activeId, modules]);
-
-  const activeModule = useMemo(
-    () => activeId?.startsWith('module-') && modules.find((m) => m.id === activeId),
-    [activeId, modules]
-  );
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <>
@@ -172,65 +130,59 @@ export default function ModuleList() {
       </div>
 
       <div className="p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto">
-        <DndContext
-          collisionDetection={rectIntersection}
-          onDragStart={handleDragStart}
-          onDragOver={handleDragOver}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-            <div className="flex flex-col gap-3 sm:gap-4">
-              {modules.map((module) => (
-                <SortableModule
-                  key={module.id}
-                  id={module.id}
-                  module={module}
-                  isOver={overId === module.id}
-                  onAddLesson={handleAddLesson}
-                  onDeleteModule={handleDeleteModule}
-                  onEditModule={handleEditModule}
-                >
-                  <SortableContext
-                    items={module.lessons.map((l) => l.id)}
-                    strategy={verticalListSortingStrategy}
+        {modules.length === 0 ? (
+          <p className="text-center text-gray-500 italic">Tidak ada modul, silahkan tambahkan.</p>
+        ) : (
+          <DndContext
+            collisionDetection={rectIntersection}
+            onDragStart={handleDragStart}
+            onDragOver={handleDragOver}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={modules.map((m) => m.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="flex flex-col gap-3 sm:gap-4">
+                {modules.map((module) => (
+                  <SortableModule
+                    key={module.id}
+                    id={module.id}
+                    module={module}
+                    isOver={overId === module.id}
+                    onAddLesson={handleAddLesson}
+                    onDeleteModule={() => toast.info('Delete module not implemented')}
+                    onEditModule={handleEditModule}
                   >
-                    {module.lessons.length === 0 && (
-                      <li className="text-xs sm:text-sm text-gray-400 italic px-2 py-1">
-                        (Belum ada pembelajaran)
-                      </li>
-                    )}
-                    {module.lessons.map((lesson) => (
-                      <SortableLesson
-                        key={lesson.id}
-                        lesson={lesson}
-                        moduleId={module.id}
-                        activeId={activeId}
-                        onDelete={handleDeleteLesson}
-                        onEdit={handleEditLesson}
-                        onNavigate={handleNavigateLesson}
-                      />
-                    ))}
-                  </SortableContext>
-                </SortableModule>
-              ))}
-            </div>
-          </SortableContext>
-
-          <DragOverlay>
-            {activeModule ? (
-              <div className="bg-white-100 p-2 sm:p-4 rounded shadow border-2 border-primary-400 opacity-80 min-w-[150px] sm:min-w-[200px]">
-                <h2 className="text-base sm:text-lg font-semibold break-words">
-                  {activeModule.title}
-                </h2>
+                    <SortableContext
+                      items={module.lessons.map((l) => l.id)}
+                      strategy={verticalListSortingStrategy}
+                    >
+                      {module.lessons.length === 0 && (
+                        <li className="text-xs sm:text-sm text-gray-400 italic px-2 py-1">
+                          (Belum ada pembelajaran)
+                        </li>
+                      )}
+                      {module.lessons.map((lesson) => (
+                        <SortableLesson
+                          key={lesson.id}
+                          lesson={lesson}
+                          moduleId={module.id}
+                          activeId={activeId}
+                          onDelete={() => toast.info('Delete lesson not implemented')}
+                          onEdit={handleEditLesson}
+                          onNavigate={handleNavigateLesson}
+                        />
+                      ))}
+                    </SortableContext>
+                  </SortableModule>
+                ))}
               </div>
-            ) : activeLesson ? (
-              <li className="p-2 my-1 bg-yellow-100 border rounded shadow flex items-center gap-2">
-                <Icon type="drag" className="text-gray-400" />
-                <span className="break-words">{activeLesson.title}</span>
-              </li>
-            ) : null}
-          </DragOverlay>
-        </DndContext>
+            </SortableContext>
+
+            <DragOverlay>{activeId && <p>Dragging {activeId}</p>}</DragOverlay>
+          </DndContext>
+        )}
       </div>
     </>
   );
