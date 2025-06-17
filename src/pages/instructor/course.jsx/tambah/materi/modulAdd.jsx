@@ -4,15 +4,17 @@ import InstructorTemplate from '../../../../../template/templateInstructor';
 import TextInput from '../../../../../components/form/textInput';
 import SelectOption from '../../../../../components/form/selectOption';
 import Icon from '../../../../../components/icons/icon';
+import useModuleStore from '../../../../../zustand/material/moduleStore';
 
 export default function ModulAdd() {
-  const { id } = useParams();
+  const { courseId } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: '',
-    jenisPembelajaran: '',
   });
+
+  const { addModule, loading, error } = useModuleStore();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,12 +24,14 @@ export default function ModulAdd() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simpan data modul (formData) ke server atau state management
-    console.log('Data modul:', formData);
-    // Navigasi kembali setelah berhasil menyimpan
-    navigate(-1);
+    try {
+      await addModule({ courseId: courseId, title: formData.title });
+      navigate(-1);
+    } catch (err) {
+      // Error sudah di-handle oleh store, bisa tampilkan pesan jika mau
+    }
   };
 
   return (
@@ -52,24 +56,16 @@ export default function ModulAdd() {
             value={formData.title}
             onChange={handleChange}
             placeholder="Masukkan judul modul"
+            disabled={loading}
           />
-          <SelectOption
-            label="Jenis Pembelajaran"
-            name="jenisPembelajaran"
-            value={formData.jenisPembelajaran}
-            onChange={handleChange}
-            options={[
-              { value: 'material', label: 'Materi' },
-              { value: 'quiz', label: 'Quiz' },
-            ]}
-            placeholder="Pilih jenis pembelajaran"
-          />
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           <div className="flex justify-end">
             <button
               type="submit"
               className="w-fit bg-primary-700 text-white-100 px-4 py-2 rounded-md hover:bg-primary-600"
+              disabled={loading}
             >
-              Simpan Modul
+              {loading ? 'Menyimpan...' : 'Simpan Modul'}
             </button>
           </div>
         </form>

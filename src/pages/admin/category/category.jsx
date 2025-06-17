@@ -121,7 +121,7 @@ export default function Category() {
       accessor: 'used',
       width: '5%',
       disableSort: true,
-      Cell: ({ value }) => <p className="flex md:justify-center">{value} course</p>,
+      Cell: ({ value }) => <p className="flex md:justify-center">{value} Kursus</p>,
     },
     {
       Header: 'Tanggal',
