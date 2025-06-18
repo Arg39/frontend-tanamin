@@ -63,19 +63,20 @@ export default function SortableLesson({
         >
           <Icon type="drag" className="text-gray-400" />
         </span>
+        <div className="flex flex-col md:flex-row gap-1">
+          <span className={`w-fit px-2 py-1 border rounded-md text-xs sm:text-sm ${badgeStyle}`}>
+            {lesson.type === 'material' ? 'Materi' : 'Quiz'}
+          </span>
 
-        <span className={`px-2 py-1 border rounded-md text-xs sm:text-sm ${badgeStyle}`}>
-          {lesson.type === 'material' ? 'Materi' : 'Quiz'}
-        </span>
-
-        <button
-          className={`text-left flex-1 hover:underline text-xs sm:text-base ${
-            isMobile ? 'text-sm' : ''
-          }`}
-          onClick={() => onNavigate(lesson.id)}
-        >
-          <span className="block break-words">{lesson.title}</span>
-        </button>
+          <button
+            className={`text-left flex-1 hover:underline text-xs sm:text-base ${
+              isMobile ? 'text-sm' : ''
+            }`}
+            onClick={() => onNavigate(lesson.id)}
+          >
+            <span className="block break-words">{lesson.title}</span>
+          </button>
+        </div>
       </div>
 
       {/* Right: dropdown */}

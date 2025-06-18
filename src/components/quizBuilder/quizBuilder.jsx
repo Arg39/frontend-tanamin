@@ -1,25 +1,28 @@
 import React from 'react';
 import QuizQuestion from './quizQuestion';
 
-export default function QuizBuilder({ questions, setQuestions }) {
+export default function QuizBuilder({ quizContent, setQuizContent }) {
   const addQuestion = () => {
-    setQuestions([...questions, { question: '', options: ['', '', '', ''], correctAnswer: '' }]);
+    setQuizContent([
+      ...quizContent,
+      { question: '', options: ['', '', '', ''], correctAnswer: null },
+    ]);
   };
 
   const updateQuestion = (index, updated) => {
-    const newQuestions = [...questions];
-    newQuestions[index] = updated;
-    setQuestions(newQuestions);
+    const newQuizContent = [...quizContent];
+    newQuizContent[index] = updated;
+    setQuizContent(newQuizContent);
   };
 
   const deleteQuestion = (index) => {
-    const newQuestions = questions.filter((_, idx) => idx !== index);
-    setQuestions(newQuestions);
+    const newQuizContent = quizContent.filter((_, idx) => idx !== index);
+    setQuizContent(newQuizContent);
   };
 
   return (
     <div className="flex flex-col gap-4">
-      {questions.map((q, index) => (
+      {quizContent.map((q, index) => (
         <QuizQuestion
           key={index}
           index={index}

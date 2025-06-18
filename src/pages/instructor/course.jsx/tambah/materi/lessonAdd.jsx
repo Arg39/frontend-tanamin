@@ -6,16 +6,18 @@ import TextInput from '../../../../../components/form/textInput';
 import SelectOption from '../../../../../components/form/selectOption';
 import WysiwygInput from '../../../../../components/form/wysiwygInput';
 import QuizBuilder from '../../../../../components/quizBuilder/quizBuilder';
+import useLessonStore from '../../../../../zustand/material/lessonStore';
 
 export default function LessonAdd() {
   const { courseId, moduleId } = useParams();
   const navigate = useNavigate();
+  const { loading, error, addLesson } = useLessonStore();
 
   const [formData, setFormData] = useState({
     title: '',
-    content: '',
+    materialContent: '',
     type: '',
-    questions: [],
+    quizContent: [],
   });
 
   const handleInputChange = (e) => {
@@ -26,14 +28,35 @@ export default function LessonAdd() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let quizContent = formData.quizContent;
+    if (formData.type === 'quiz') {
+      quizContent = quizContent.map((q) => ({
+        ...q,
+        correctAnswer:
+          q.correctAnswer === null || q.correctAnswer === undefined || q.correctAnswer === ''
+            ? null
+            : Number(q.correctAnswer),
+      }));
+    }
+
     const result = {
       title: formData.title,
       type: formData.type,
-      ...(formData.type === 'material' && { content: formData.content }),
-      ...(formData.type === 'quiz' && { questions: formData.questions }),
+      ...(formData.type === 'material' && { materialContent: formData.materialContent }),
+      ...(formData.type === 'quiz' && { quizContent }),
     };
 
-    console.log('Submitted Data:', JSON.stringify(result, null, 2));
+    try {
+      const res = await addLesson({
+        courseId,
+        moduleId,
+        data: result,
+      });
+      alert('Materi berhasil ditambahkan!');
+      navigate(-1);
+    } catch (err) {
+      alert('Gagal menambah materi: ' + err.message);
+    }
   };
 
   return (
@@ -71,15 +94,17 @@ export default function LessonAdd() {
           {formData.type === 'material' && (
             <WysiwygInput
               label="Konten Materi"
-              name="content"
-              value={formData.content}
-              onChange={(e) => setFormData((prev) => ({ ...prev, content: e.target.value }))}
+              name="materialContent"
+              value={formData.materialContent}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, materialContent: e.target.value }))
+              }
             />
           )}
           {formData.type === 'quiz' && (
             <QuizBuilder
-              questions={formData.questions}
-              setQuestions={(q) => setFormData((prev) => ({ ...prev, questions: q }))}
+              quizContent={formData.quizContent}
+              setQuizContent={(q) => setFormData((prev) => ({ ...prev, quizContent: q }))}
             />
           )}
 

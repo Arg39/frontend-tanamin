@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import useWysiwygStore from '../../zustand/wysiwyg/wysiwygStore';
 
 const modules = {
   toolbar: [
@@ -15,13 +16,12 @@ const modules = {
 const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, ref) => {
   const quillRef = useRef(null);
   const [content, setContent] = useState(value || '');
+  const uploadLocalImagesStore = useWysiwygStore((state) => state.uploadLocalImages);
 
-  // Sinkronisasi value prop ke state content
   useEffect(() => {
     if (value !== content) {
       setContent(value || '');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const handleChange = (content) => {
@@ -50,67 +50,10 @@ const WysiwygInput = forwardRef(({ label, name, value, onChange, placeholder }, 
     const editor = quillRef.current?.getEditor();
     if (!editor) return content;
 
-    const imgs = editor.root.querySelectorAll('img');
-
     const baseUrlRaw = process.env.REACT_APP_BACKEND_BASE_URL || '';
     const baseUrl = baseUrlRaw.endsWith('/') ? baseUrlRaw.slice(0, -1) : baseUrlRaw;
 
-    for (const img of imgs) {
-      const src = img.getAttribute('src');
-      if (!src) continue;
-
-      if (!src.startsWith('http')) {
-        if (src.startsWith('/')) {
-          img.setAttribute('src', baseUrl + src);
-        } else {
-          try {
-            const blob = await (await fetch(src)).blob();
-            const formData = new FormData();
-            formData.append('image', blob, `image_${Date.now()}.png`);
-
-            const res = await fetch(`${baseUrl}/api/image`, {
-              method: 'POST',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                Accept: 'application/json',
-              },
-              body: formData,
-            });
-
-            if (!res.ok) throw new Error('Upload gambar gagal');
-
-            const data = await res.json();
-
-            console.log('Gambar berhasil diupload:', data.url);
-            let finalUrl = data.url;
-            if (finalUrl && !finalUrl.startsWith('http')) {
-              if (finalUrl.startsWith('/')) {
-                finalUrl = baseUrl + finalUrl;
-              } else {
-                finalUrl = baseUrl + '/' + finalUrl;
-              }
-            }
-            img.setAttribute('src', finalUrl);
-          } catch (e) {
-            console.error('Gagal upload gambar lokal:', e);
-          }
-        }
-      }
-    }
-
-    const imgsAfter = editor.root.querySelectorAll('img');
-    imgsAfter.forEach((img) => {
-      const src = img.getAttribute('src');
-      if (src && !src.startsWith('http')) {
-        if (src.startsWith('/')) {
-          img.setAttribute('src', baseUrl + src);
-        } else {
-          img.setAttribute('src', baseUrl + '/' + src);
-        }
-      }
-    });
-
-    const finalContent = editor.root.innerHTML;
+    const finalContent = await uploadLocalImagesStore({ editor, token, baseUrl });
     setContent(finalContent);
     onChange({ target: { name, value: finalContent } });
 

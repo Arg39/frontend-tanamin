@@ -46,10 +46,16 @@ export default function QuizQuestion({ index, data, onChange, onDelete }) {
       <SelectOption
         label="Jawaban Benar"
         name={`correctAnswer-${index}`}
-        value={data.correctAnswer}
-        onChange={(e) => updateField('correctAnswer', e.target.value)}
+        value={
+          data.correctAnswer === null || data.correctAnswer === undefined
+            ? ''
+            : String(data.correctAnswer)
+        }
+        onChange={(e) =>
+          updateField('correctAnswer', e.target.value === '' ? null : Number(e.target.value))
+        }
         options={data.options.map((opt, idx) => ({
-          value: opt,
+          value: String(idx),
           label: `Pilihan ${idx + 1}`,
         }))}
         placeholder="Pilih jawaban benar"
