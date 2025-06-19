@@ -80,47 +80,55 @@ export default function CourseAttribute({ editable }) {
         )}
       </div>
 
-      {/* Persyaratan */}
-      <div className="bg-white-50 rounded-xl shadow p-4 mb-6">
-        <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Persyaratan:</p>
-        {attributeLoading && <p className="text-base text-gray-500">Loading...</p>}
-        {attributeError && <p className="text-base text-red-600">{attributeError}</p>}
-        {attribute && attribute.prerequisite && attribute.prerequisite.length > 0
-          ? attribute.prerequisite.map((item, idx) => (
-              <DeskripsiItem
-                key={item.id}
-                number={idx + 1}
-                text={item.content}
-                editable={editable}
-                onEdit={() =>
-                  navigate(`/instruktur/kursus/${id}/edit/persyaratan-deskripsi/${item.id}`)
-                }
-                onDelete={() => handleDelete(item.id, 'prerequisite')}
-              />
-            ))
-          : !attributeLoading && <p className="text-base text-gray-500">Belum ada persyaratan.</p>}
-      </div>
+      {attributeLoading && <p className="text-base text-gray-500">Loading...</p>}
+      {attributeError && <p className="text-base text-red-600">{attributeError}</p>}
+      {!attributeLoading && !attributeError && (
+        <>
+          {/* Persyaratan */}
+          <div className="bg-white-50 rounded-xl shadow p-4 mb-6">
+            <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Persyaratan:</p>
+            {attribute && attribute.prerequisite && attribute.prerequisite.length > 0
+              ? attribute.prerequisite.map((item, idx) => (
+                  <DeskripsiItem
+                    key={item.id}
+                    number={idx + 1}
+                    text={item.content}
+                    editable={editable}
+                    onEdit={() =>
+                      navigate(`/instruktur/kursus/${id}/edit/persyaratan-deskripsi/${item.id}`)
+                    }
+                    onDelete={() => handleDelete(item.id, 'prerequisite')}
+                  />
+                ))
+              : !attributeLoading && (
+                  <p className="text-base text-gray-500">Belum ada persyaratan.</p>
+                )}
+          </div>
 
-      {/* Deskripsi */}
-      <div className="bg-white-50 rounded-xl shadow p-4">
-        <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Deskripsi:</p>
-        <div className="flex flex-col gap-2">
-          {attribute && attribute.description && attribute.description.length > 0
-            ? attribute.description.map((item, idx) => (
-                <DeskripsiItem
-                  key={item.id}
-                  number={idx + 1}
-                  text={item.content}
-                  editable={editable}
-                  onEdit={() =>
-                    navigate(`/instruktur/kursus/${id}/edit/persyaratan-deskripsi/${item.id}`)
-                  }
-                  onDelete={() => handleDelete(item.id, 'description')}
-                />
-              ))
-            : !attributeLoading && <p className="text-base text-gray-500">Belum ada deskripsi.</p>}
-        </div>
-      </div>
+          {/* Deskripsi */}
+          <div className="bg-white-50 rounded-xl shadow p-4">
+            <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Deskripsi:</p>
+            <div className="flex flex-col gap-2">
+              {attribute && attribute.description && attribute.description.length > 0
+                ? attribute.description.map((item, idx) => (
+                    <DeskripsiItem
+                      key={item.id}
+                      number={idx + 1}
+                      text={item.content}
+                      editable={editable}
+                      onEdit={() =>
+                        navigate(`/instruktur/kursus/${id}/edit/persyaratan-deskripsi/${item.id}`)
+                      }
+                      onDelete={() => handleDelete(item.id, 'description')}
+                    />
+                  ))
+                : !attributeLoading && (
+                    <p className="text-base text-gray-500">Belum ada deskripsi.</p>
+                  )}
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
 }

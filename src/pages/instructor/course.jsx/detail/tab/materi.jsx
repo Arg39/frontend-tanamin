@@ -110,7 +110,7 @@ export default function ModuleList() {
   const handleEditModule = (moduleId) => navigateTo(`/modul/${moduleId}/edit`);
   const handleAddLesson = (moduleId) => navigateTo(`/modul/${moduleId}/materi/tambah`);
   const handleEditLesson = (modId, lesId) => navigateTo(`/modul/${modId}/materi/${lesId}/edit`);
-  const handleNavigateLesson = (lessonId) => navigateTo(`/materi/${lessonId}/lihat`);
+  const handleNavigateLesson = (lessonId) => navigate(`/instruktur/materi/${lessonId}/lihat`);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
