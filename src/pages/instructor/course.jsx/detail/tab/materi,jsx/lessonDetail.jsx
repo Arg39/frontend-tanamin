@@ -3,7 +3,6 @@ import AdminTemplate from '../../../../../../template/templateAdmin';
 import Icon from '../../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 import WysiwygContent from '../../../../../../components/content/wysiwyg/WysiwygContent';
-import QuizQuestion from '../../../../../../components/quizBuilder/quizQuestion';
 import useLessonStore from '../../../../../../zustand/material/lessonStore';
 
 export default function LessonDetail() {
@@ -13,21 +12,11 @@ export default function LessonDetail() {
 
   useEffect(() => {
     if (lessonId) {
-      fetchLessonDetail(lessonId);
+      fetchLessonDetail(lessonId).catch((e) => {
+        console.error('Error in fetchLessonDetail:', e.message);
+      });
     }
   }, [lessonId, fetchLessonDetail]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  if (!lessonData) {
-    return <div>No data available</div>;
-  }
 
   return (
     <AdminTemplate activeNav="kursus">
@@ -40,28 +29,76 @@ export default function LessonDetail() {
           <Icon type="arrow-left" className="size-4" color="currentColor" />
           <span>Kembali</span>
         </button>
-        <h2 className="text-2xl font-bold">{lessonData.lesson_title}</h2>
-        <h3 className="text-lg text-gray-600 mb-4">{lessonData.module_title}</h3>
-
-        {/* Render content based on type */}
-        {lessonData.type === 'material' && <WysiwygContent html={lessonData.content.material} />}
-
-        {lessonData.type === 'quiz' && (
-          <div className="flex flex-col gap-4">
-            {lessonData.content.map((quiz, index) => (
-              <QuizQuestion
-                key={quiz.id}
-                index={index}
-                data={{
-                  question: quiz.question,
-                  options: quiz.options.map((opt) => opt.answer),
-                  correctAnswer: quiz.options.findIndex((opt) => opt.is_correct === 1),
-                }}
-                onChange={() => {}}
-                onDelete={() => {}}
-              />
-            ))}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold text-primary-700">
+            Detail{' '}
+            {lessonData.type === 'quiz' ? 'Quiz' : lessonData.type === 'material' ? 'Materi' : ''}
+          </h2>
+          <button className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white-100 gap-2">
+            <Icon type={'edit'} className={'w-3 h-3'} /> Edit
+          </button>
+        </div>
+        {error && (
+          <div className="text-red-500 mb-4">
+            <p>Error: {error}</p>
           </div>
+        )}
+        {!lessonData && (
+          <div>
+            <p>tidak ada data ditemukan</p>
+          </div>
+        )}
+        {loading && (
+          <div className="text-gray-500 mb-4">
+            <p>Loading lesson data...</p>
+          </div>
+        )}
+        {lessonData && (
+          <>
+            <div className="flex flex-col mb-4">
+              <p className="text-primary-800 text-sm font-semibold">Materi :</p>
+              <h3 className="text-lg font-bold text-secondary-8">{lessonData.lesson_title}</h3>
+            </div>
+            <div className="flex flex-col mb-4">
+              <p className="text-primary-800 text-sm font-semibold">Modul :</p>
+              <h3 className="text-lg font-bold text-secondary-8">{lessonData.module_title}</h3>
+            </div>
+
+            {/* Render content based on type */}
+            {lessonData.type === 'material' && (
+              <div className="p-4 border rounded-lg shadow-sm bg-gray-50">
+                <WysiwygContent html={lessonData.content.material} />
+              </div>
+            )}
+
+            {lessonData.type === 'quiz' && (
+              <div className="flex flex-col gap-6">
+                {lessonData.content.map((quiz, index) => (
+                  <div key={quiz.id} className="p-4 border rounded-lg shadow-sm bg-gray-50">
+                    <h4 className="flex font-semibold text-lg mb-2">Quiz {index + 1}</h4>
+                    <div className="w-full h-fit">
+                      <WysiwygContent html={quiz.question} />
+                    </div>
+                    <div className="mt-4">
+                      <p className="">Jawaban :</p>
+                      <ul className="list-disc pl-6">
+                        {quiz.options.map((opt, optIndex) => (
+                          <li
+                            key={optIndex}
+                            className={`${
+                              opt.is_correct === 1 ? 'font-bold text-green-600' : 'text-gray-800'
+                            }`}
+                          >
+                            {opt.answer}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
     </AdminTemplate>

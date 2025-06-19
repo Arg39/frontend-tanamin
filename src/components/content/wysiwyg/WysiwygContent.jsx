@@ -4,7 +4,7 @@ export default function WysiwygContent({ html }) {
   return (
     <>
       <div
-        className="text-md text-gray-700 leading-relaxed wysiwyg-content"
+        className="text-md text-black-900 leading-relaxed wysiwyg-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
       <style>
@@ -20,7 +20,7 @@ export default function WysiwygContent({ html }) {
             color: #334155;
           }
           .wysiwyg-content p {
-            margin-bottom: 1em;
+            margin-bottom: 0.5em;
           }
           .wysiwyg-content strong {
             font-weight: bold;
@@ -96,6 +96,9 @@ export default function WysiwygContent({ html }) {
             text-align: right;
           }
 
+          .wysiwyg-content img {
+            max-height: 400px;
+          }
           .wysiwyg-content img.ql-align-center {
             margin: 0 auto;
           }

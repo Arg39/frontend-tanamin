@@ -47,13 +47,14 @@ const useLessonStore = create((set) => ({
       console.log('Response status:', res.status);
       const json = await res.json();
       console.log('Response JSON:', json);
-      if (json.status !== 'success')
+      if (json.status !== 'success') {
         throw new Error(json.message || 'Failed to fetch lesson details');
+      }
       set({ lessonData: json.data, loading: false, error: null });
     } catch (e) {
       console.error('Error fetching lesson detail:', e.message);
-      set({ error: e.message, loading: false });
-      throw e;
+      set({ error: e.message || 'An unknown error occurred', loading: false });
+      throw e; // Tetap lempar error agar bisa ditangani di komponen
     }
   },
 }));
