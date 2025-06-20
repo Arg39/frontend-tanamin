@@ -8,11 +8,14 @@ import Icon from '../../../../../components/icons/icon';
 import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
 import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
 import useModuleStore from '../../../../../zustand/material/moduleStore';
+import useLessonStore from '../../../../../zustand/material/lessonStore';
 
 export default function ModuleList() {
   const { id: courseId } = useParams();
   const navigate = useNavigate();
-  const { fetchModules, modules, loading, error } = useModuleStore();
+  const { fetchModules, modules, loading, error, updateModuleOrder, deleteModule } =
+    useModuleStore();
+  const { updateLessonOrder } = useLessonStore();
 
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
@@ -34,7 +37,7 @@ export default function ModuleList() {
     [modules]
   );
 
-  const reorderModules = (active, over) => {
+  const reorderModules = async (active, over) => {
     const oldIdx = modules.findIndex((m) => m.id === active.id);
     const newIdx = modules.findIndex((m) => m.id === over.id);
     if (oldIdx === -1 || newIdx === -1 || oldIdx === newIdx) return;
@@ -43,20 +46,36 @@ export default function ModuleList() {
     const [moved] = updated.splice(oldIdx, 1);
     updated.splice(newIdx, 0, moved);
 
-    // ✅ Tambahkan console log perubahan
-    console.log('data dipindahkan :', {
-      id: active.id,
-      move: newIdx,
-    });
+    const newOrder = updated.map((m, idx) => ({
+      id: m.id,
+      order: idx,
+    }));
 
-    // ✅ Update ke dalam store
-    useModuleStore.setState({ modules: updated });
+    const toastId = toast.loading('Mengubah urutan modul...');
 
-    // ✅ Feedback visual
-    toast.success('Modules reordered successfully');
+    try {
+      const movedModule = newOrder.find((m) => m.id === active.id);
+      await updateModuleOrder({ id: movedModule.id, order: movedModule.order });
+
+      useModuleStore.setState({ modules: updated });
+
+      toast.update(toastId, {
+        render: 'Urutan modul berhasil diubah',
+        type: 'success',
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (err) {
+      toast.update(toastId, {
+        render: err.message || 'Gagal mengubah urutan modul',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
   };
 
-  const moveLesson = (active, over) => {
+  const moveLesson = async (active, over) => {
     const from = findLessonLocation(active.id);
     if (!from) return;
 
@@ -86,6 +105,7 @@ export default function ModuleList() {
     );
 
     const targetLessons = [...newModules[toModuleIdx].lessons];
+    const newOrder = toLesIdx === -1 ? targetLessons.length : toLesIdx;
     if (toLesIdx === -1) {
       targetLessons.push(lesson);
     } else {
@@ -94,23 +114,33 @@ export default function ModuleList() {
 
     newModules[toModuleIdx] = { ...newModules[toModuleIdx], lessons: targetLessons };
 
-    // ✅ Tambahkan console log perubahan
-    console.log('data dipindahkan :', {
-      id: active.id,
-      from: {
-        module: modules[from.moduleIdx].id,
-        order: from.lesIdx,
-      },
-      to: {
-        module: modules[toModuleIdx].id,
-        order: toLesIdx === -1 ? targetLessons.length - 1 : toLesIdx,
-      },
-    });
+    // Loading toast
+    const toastId = toast.loading('Mengubah urutan materi...');
 
-    // ✅ Update state
-    useModuleStore.setState({ modules: newModules });
+    try {
+      await updateLessonOrder({
+        id: active.id,
+        moveToModule: modules[toModuleIdx].id,
+        order: newOrder,
+      });
 
-    toast.success('Lesson moved successfully');
+      // Update state
+      useModuleStore.setState({ modules: newModules });
+
+      toast.update(toastId, {
+        render: 'Urutan materi berhasil diubah',
+        type: 'success',
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (err) {
+      toast.update(toastId, {
+        render: err.message || 'Gagal mengubah urutan materi',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleDragStart = (event) => setActiveId(event.active.id);
@@ -139,6 +169,34 @@ export default function ModuleList() {
   const handleAddLesson = (moduleId) => navigateTo(`/modul/${moduleId}/materi/tambah`);
   const handleEditLesson = (modId, lesId) => navigateTo(`/modul/${modId}/materi/${lesId}/edit`);
   const handleNavigateLesson = (lessonId) => navigate(`/instruktur/materi/${lessonId}/lihat`);
+  const handleDeleteModule = async (moduleId) => {
+    const module = modules.find((m) => m.id === moduleId);
+    if (!module) return;
+    if (module.lessons && module.lessons.length > 0) {
+      toast.info('Modul belum bisa dihapus karena ada materi pembelajaran didalamnya');
+      return;
+    }
+    const toastId = toast.loading('Menghapus modul...');
+    try {
+      await deleteModule({ courseId, moduleId });
+      toast.update(toastId, {
+        render: 'Modul berhasil dihapus',
+        type: 'success',
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (err) {
+      toast.update(toastId, {
+        render: err.message || 'Gagal menghapus modul',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  };
+  const handleDeleteLesson = (moduleId, lessonId) => {
+    console.log(`akan menghapus lesson dengan id: ${lessonId} pada modul: ${moduleId}`);
+  };
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -179,7 +237,7 @@ export default function ModuleList() {
                     module={module}
                     isOver={overId === module.id}
                     onAddLesson={handleAddLesson}
-                    onDeleteModule={() => toast.info('Delete module not implemented')}
+                    onDeleteModule={handleDeleteModule}
                     onEditModule={handleEditModule}
                   >
                     <SortableContext
@@ -197,7 +255,7 @@ export default function ModuleList() {
                           lesson={lesson}
                           moduleId={module.id}
                           activeId={activeId}
-                          onDelete={() => toast.info('Delete lesson not implemented')}
+                          onDelete={handleDeleteLesson}
                           onEdit={handleEditLesson}
                           onNavigate={handleNavigateLesson}
                         />
@@ -208,7 +266,7 @@ export default function ModuleList() {
               </div>
             </SortableContext>
 
-            <DragOverlay>{activeId && <p>Dragging {activeId}</p>}</DragOverlay>
+            {/* <DragOverlay>{activeId && <p>Dragging</p>}</DragOverlay> */}
           </DndContext>
         )}
       </div>

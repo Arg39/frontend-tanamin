@@ -32,7 +32,6 @@ const useLessonStore = create((set) => ({
   },
 
   async fetchLessonDetail(lessonId) {
-    console.log('try fetching lesson detail for ID:', lessonId);
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
@@ -44,17 +43,37 @@ const useLessonStore = create((set) => ({
           },
         }
       );
-      console.log('Response status:', res.status);
       const json = await res.json();
-      console.log('Response JSON:', json);
       if (json.status !== 'success') {
         throw new Error(json.message || 'Failed to fetch lesson details');
       }
       set({ lessonData: json.data, loading: false, error: null });
     } catch (e) {
-      console.error('Error fetching lesson detail:', e.message);
       set({ error: e.message || 'An unknown error occurred', loading: false });
-      throw e; // Tetap lempar error agar bisa ditangani di komponen
+      throw e;
+    }
+  },
+
+  async updateLessonOrder({ id, moveToModule, order }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/lesson/updateOrder`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ id, moveToModule, order }),
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success')
+        throw new Error(json.message || 'Failed to update lesson order');
+      return json.data;
+    } catch (e) {
+      throw e;
     }
   },
 }));

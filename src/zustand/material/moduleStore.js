@@ -55,6 +55,52 @@ const useModuleStore = create((set) => ({
       throw e;
     }
   },
+
+  async updateModuleOrder({ id, order }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/module/updateOrder`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ id, order }),
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Failed to update order');
+      return json.data;
+    } catch (e) {
+      throw e;
+    }
+  },
+
+  async deleteModule({ courseId, moduleId }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus modul');
+      // Remove module from state
+      set((state) => ({
+        modules: state.modules.filter((m) => m.id !== moduleId),
+      }));
+      return json;
+    } catch (e) {
+      throw e;
+    }
+  },
 }));
 
 export default useModuleStore;

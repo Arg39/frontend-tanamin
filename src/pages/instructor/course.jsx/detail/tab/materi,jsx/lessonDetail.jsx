@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import AdminTemplate from '../../../../../../template/templateAdmin';
 import Icon from '../../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 import WysiwygContent from '../../../../../../components/content/wysiwyg/WysiwygContent';
 import useLessonStore from '../../../../../../zustand/material/lessonStore';
+import InstructorTemplate from '../../../../../../template/templateInstructor';
 
 export default function LessonDetail() {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export default function LessonDetail() {
   }, [lessonId, fetchLessonDetail]);
 
   return (
-    <AdminTemplate activeNav="kursus">
+    <InstructorTemplate activeNav="kursus">
       <div className="wf-full bg-white-100 p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
@@ -100,6 +100,6 @@ export default function LessonDetail() {
           </>
         )}
       </div>
-    </AdminTemplate>
+    </InstructorTemplate>
   );
 }

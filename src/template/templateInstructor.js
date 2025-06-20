@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect } from 'react';
 import useMenuStore from '../zustand/menuStore';
 import TopbarAdmin from '../components/navigation/admin/topbar/topbarAdmin';
 import Breadcrumb from '../components/breadcrumb/breadcrumb';
@@ -11,12 +11,10 @@ import SidebarInstructor from '../components/navigation/admin/sidebar/sidebarIns
 export default function InstructorTemplate({ children, activeNav, className, style }) {
   const location = useLocation();
   const { navigationInstructor } = useNavigationStore();
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
   const { isOpen, title, message, onConfirm, onCancel, closeModal, variant } =
     useConfirmationModalStore();
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
-  const [isBreadcrumbVisible, setIsBreadcrumbVisible] = useState(true);
-  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     setActiveNav(activeNav);
@@ -31,31 +29,6 @@ export default function InstructorTemplate({ children, activeNav, className, sty
       }
     });
   });
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          // Gunakan scrollY window, bukan scrollTop container
-          if (window.scrollY > 16) {
-            setIsBreadcrumbVisible(false);
-          } else {
-            setIsBreadcrumbVisible(true);
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <div className="h-screen w-screen flex overflow-hidden bg-white-500">
@@ -75,21 +48,18 @@ export default function InstructorTemplate({ children, activeNav, className, sty
           </div>
         </div>
 
-        {/* Scrollable content dimulai di bawah topbar */}
         <div
           className={`flex-1 overflow-y-auto custom-scrollbar px-4 pb-4 lg:pl-0 ${className}`}
-          ref={scrollContainerRef}
+          // ref={scrollContainerRef}
           style={{
             paddingTop: '1.5rem',
             ...style,
           }}
         >
-          {/* Breadcrumb */}
-          {isBreadcrumbVisible && (
-            <div className="mb-4">
-              <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
-            </div>
-          )}
+          {/* Breadcrumb selalu tampil */}
+          <div className="mb-4">
+            <Breadcrumb label={breadcrumb.label} text={breadcrumb.text} />
+          </div>
 
           {/* Konten halaman */}
           {children}
