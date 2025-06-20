@@ -47,7 +47,6 @@ export default function CategoryAdd() {
       },
       onCancel: () => {
         closeModal();
-        console.log('Aksi dibatalkan');
       },
     });
   };

@@ -43,7 +43,16 @@ export default function ModuleList() {
     const [moved] = updated.splice(oldIdx, 1);
     updated.splice(newIdx, 0, moved);
 
-    // Update state
+    // ✅ Tambahkan console log perubahan
+    console.log('data dipindahkan :', {
+      id: active.id,
+      move: newIdx,
+    });
+
+    // ✅ Update ke dalam store
+    useModuleStore.setState({ modules: updated });
+
+    // ✅ Feedback visual
     toast.success('Modules reordered successfully');
   };
 
@@ -85,7 +94,22 @@ export default function ModuleList() {
 
     newModules[toModuleIdx] = { ...newModules[toModuleIdx], lessons: targetLessons };
 
-    // Update state
+    // ✅ Tambahkan console log perubahan
+    console.log('data dipindahkan :', {
+      id: active.id,
+      from: {
+        module: modules[from.moduleIdx].id,
+        order: from.lesIdx,
+      },
+      to: {
+        module: modules[toModuleIdx].id,
+        order: toLesIdx === -1 ? targetLessons.length - 1 : toLesIdx,
+      },
+    });
+
+    // ✅ Update state
+    useModuleStore.setState({ modules: newModules });
+
     toast.success('Lesson moved successfully');
   };
 
@@ -97,7 +121,11 @@ export default function ModuleList() {
     setOverId(null);
     if (!over) return;
 
-    if (active.id.startsWith('module-') && over.id.startsWith('module-')) {
+    const moduleIds = modules.map((m) => m.id);
+
+    const isModule = moduleIds.includes(active.id) && moduleIds.includes(over.id);
+
+    if (isModule) {
       reorderModules(active, over);
     } else {
       moveLesson(active, over);

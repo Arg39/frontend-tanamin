@@ -11,7 +11,6 @@ const useModuleStore = create((set) => ({
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
-      console.log('token', token);
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/modules`,
         {

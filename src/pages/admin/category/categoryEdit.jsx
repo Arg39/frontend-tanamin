@@ -64,7 +64,6 @@ export default function CategoryEdit() {
       },
       onCancel: () => {
         closeModal();
-        console.log('Aksi dibatalkan');
       },
     });
   };
