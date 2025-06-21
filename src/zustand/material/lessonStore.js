@@ -6,12 +6,12 @@ const useLessonStore = create((set) => ({
   error: null,
   lessonData: null,
 
-  async addLesson({ courseId, moduleId, data }) {
+  async addLesson({ moduleId, data }) {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}/material`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/module/${moduleId}/lesson`,
         {
           method: 'POST',
           headers: {
@@ -22,7 +22,7 @@ const useLessonStore = create((set) => ({
         }
       );
       const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah materi');
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah pembelajaran');
       set({ loading: false, error: null });
       return json;
     } catch (e) {
@@ -36,7 +36,7 @@ const useLessonStore = create((set) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/material/${lessonId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/lesson/${lessonId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

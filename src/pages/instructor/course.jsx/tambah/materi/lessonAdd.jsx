@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import InstructorTemplate from '../../../../../template/templateInstructor';
 import Icon from '../../../../../components/icons/icon';
@@ -7,11 +7,15 @@ import SelectOption from '../../../../../components/form/selectOption';
 import WysiwygInput from '../../../../../components/form/wysiwygInput';
 import QuizBuilder from '../../../../../components/quizBuilder/quizBuilder';
 import useLessonStore from '../../../../../zustand/material/lessonStore';
+import ConfirmationModal from '../../../../../components/modal/confirmationModal';
+import { toast } from 'react-toastify';
+import useAuthStore from '../../../../../zustand/authStore';
 
 export default function LessonAdd() {
   const { courseId, moduleId } = useParams();
   const navigate = useNavigate();
   const { loading, error, addLesson } = useLessonStore();
+  const token = useAuthStore((state) => state.token);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -20,43 +24,111 @@ export default function LessonAdd() {
     quizContent: [],
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [pendingSubmit, setPendingSubmit] = useState(null);
+  const wysiwygRef = useRef(null);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    setPendingSubmit({ ...formData });
+    setIsModalOpen(true);
+  };
 
-    let quizContent = formData.quizContent;
-    if (formData.type === 'quiz') {
-      quizContent = quizContent.map((q) => ({
-        ...q,
-        correctAnswer:
-          q.correctAnswer === null || q.correctAnswer === undefined || q.correctAnswer === ''
-            ? null
-            : Number(q.correctAnswer),
-      }));
-    }
-
-    const result = {
-      title: formData.title,
-      type: formData.type,
-      ...(formData.type === 'material' && { materialContent: formData.materialContent }),
-      ...(formData.type === 'quiz' && { quizContent }),
-    };
+  const handleConfirmSubmit = async () => {
+    setIsModalOpen(false);
 
     try {
-      const res = await addLesson({
-        courseId,
-        moduleId,
-        data: result,
-      });
-      alert('Materi berhasil ditambahkan!');
+      const token = useAuthStore.getState().token;
+      let finalMaterialContent = pendingSubmit.materialContent;
+      let quizContent = pendingSubmit.quizContent;
+
+      if (pendingSubmit.type === 'material' && wysiwygRef.current) {
+        finalMaterialContent = await wysiwygRef.current.uploadLocalImages(token);
+      }
+
+      if (pendingSubmit.type === 'quiz') {
+        const baseUrlRaw = process.env.REACT_APP_BACKEND_BASE_URL || '';
+        const baseUrl = baseUrlRaw.endsWith('/') ? baseUrlRaw.slice(0, -1) : baseUrlRaw;
+
+        quizContent = await Promise.all(
+          pendingSubmit.quizContent.map(async (q) => {
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = q.question;
+
+            const imgElements = Array.from(wrapper.querySelectorAll('img'));
+
+            await Promise.all(
+              imgElements.map(async (img) => {
+                const src = img.getAttribute('src');
+                if (!src || src.startsWith('http')) return;
+
+                try {
+                  const blob = await (await fetch(src)).blob();
+                  const formData = new FormData();
+                  formData.append('image', blob, `quizimg_${Date.now()}_${Math.random()}.png`);
+
+                  const res = await fetch(`${baseUrl}/api/image`, {
+                    method: 'POST',
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                      Accept: 'application/json',
+                    },
+                    body: formData,
+                  });
+
+                  if (!res.ok) throw new Error('Upload gambar gagal');
+
+                  const data = await res.json();
+                  let finalUrl = data.url;
+                  if (finalUrl && !finalUrl.startsWith('http')) {
+                    finalUrl = finalUrl.startsWith('/')
+                      ? baseUrl + finalUrl
+                      : baseUrl + '/' + finalUrl;
+                  }
+                  img.setAttribute('src', finalUrl);
+                } catch (e) {
+                  console.warn('Upload gagal untuk gambar di quiz:', e);
+                }
+              })
+            );
+
+            return {
+              ...q,
+              question: wrapper.innerHTML,
+              correctAnswer:
+                q.correctAnswer === null || q.correctAnswer === undefined || q.correctAnswer === ''
+                  ? null
+                  : Number(q.correctAnswer),
+            };
+          })
+        );
+      }
+
+      const result = {
+        title: pendingSubmit.title,
+        type: pendingSubmit.type,
+        ...(pendingSubmit.type === 'material' && { materialContent: finalMaterialContent }),
+        ...(pendingSubmit.type === 'quiz' && { quizContent }),
+      };
+
+      await addLesson({ moduleId, data: result });
+
+      toast.success('Materi berhasil ditambahkan');
       navigate(-1);
     } catch (err) {
-      alert('Gagal menambah materi: ' + err.message);
+      console.error('Gagal submit materi:', err);
+      toast.error('Gagal menambah materi: ' + err.message);
     }
+  };
+
+  const handleCancelSubmit = () => {
+    setIsModalOpen(false);
+    setPendingSubmit(null);
   };
 
   return (
@@ -93,6 +165,7 @@ export default function LessonAdd() {
           />
           {formData.type === 'material' && (
             <WysiwygInput
+              ref={wysiwygRef}
               label="Konten Materi"
               name="materialContent"
               value={formData.materialContent}
@@ -118,6 +191,15 @@ export default function LessonAdd() {
           </div>
         </form>
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        title="Konfirmasi Simpan Materi"
+        message="Apakah Anda yakin ingin menyimpan materi ini?"
+        onConfirm={handleConfirmSubmit}
+        onCancel={handleCancelSubmit}
+        closeModal={handleCancelSubmit}
+        variant="primary"
+      />
     </InstructorTemplate>
   );
 }

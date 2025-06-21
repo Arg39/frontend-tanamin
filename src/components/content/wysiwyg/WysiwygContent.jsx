@@ -110,6 +110,14 @@ export default function WysiwygContent({ html }) {
             margin: 0;
             float: right;
           }
+
+          /* Fix emoji vertical alignment */
+          .wysiwyg-content .ap,
+          .wysiwyg-content .ql-emojiblot {
+            vertical-align: middle !important;
+            line-height: 1 !important;
+            display: inline !important;
+          }
         `}
       </style>
     </>
