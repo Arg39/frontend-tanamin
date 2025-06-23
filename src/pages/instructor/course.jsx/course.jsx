@@ -48,7 +48,7 @@ export default function CourseAdmin() {
     fetchInstructorCourses({
       sortBy: column,
       sortOrder: order,
-      page: 1, // Reset to first page when sorting
+      page: 1,
       perPage: instructorPagination.perPage,
       search: filterValues.search,
       dateStart: filterValues.date.start,
@@ -126,13 +126,13 @@ export default function CourseAdmin() {
         <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
           <Link
             to={`/instruktur/kursus/${value}/lihat/ringkasan`}
-            className="p-2 px-4 rounded-md bg-secondary-500 hover:bg-secondary-700"
+            className="p-2 px-4 rounded-md bg-primary-600 hover:bg-primary-700"
           >
             Lihat Kursus
           </Link>
           <Link
             to={`/instruktur/kursus/peserta/${value}`}
-            className="p-2 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
+            className="p-2 px-4 rounded-md bg-tertiary-500 hover:bg-tertiary-600"
           >
             Lihat Peserta
           </Link>

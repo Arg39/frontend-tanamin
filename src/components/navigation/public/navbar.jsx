@@ -121,7 +121,7 @@ export default function Navbar() {
           <>
             {/* Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-start"
+              className="fixed inset-0 bg-black-900 bg-opacity-50 z-40 flex justify-center items-start"
               onClick={closeMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -186,7 +186,7 @@ export default function Navbar() {
           <>
             {/* Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40"
+              className="fixed inset-0 bg-black-900 bg-opacity-50 z-40"
               onClick={closeAccountMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

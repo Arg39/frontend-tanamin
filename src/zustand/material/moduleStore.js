@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import useAuthStore from '../authStore';
 
-const useModuleStore = create((set) => ({
+const useModuleStore = create((set, get) => ({
   modules: [],
   loading: false,
   error: null,
@@ -21,7 +21,53 @@ const useModuleStore = create((set) => ({
       );
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch modules');
-      set({ modules: json.data, loading: false, error: null });
+
+      const modules = Array.isArray(json.data)
+        ? json.data.map((m) => ({
+            ...m,
+            lessons: Array.isArray(m.lessons) ? m.lessons : [],
+          }))
+        : [];
+
+      set({ modules, loading: false, error: null });
+    } catch (e) {
+      set({ modules: [], loading: false, error: e.message });
+      throw e;
+    }
+  },
+
+  async getModuleById(moduleId, courseId) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}`,
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal mengambil modul');
+
+      const newModule = {
+        ...json.data,
+        lessons: Array.isArray(json.data.lessons) ? json.data.lessons : [],
+      };
+
+      set((prev) => ({
+        modules: Array.isArray(prev.modules)
+          ? [
+              ...prev.modules.filter((m) => String(m.id) !== String(moduleId)),
+              newModule,
+            ]
+          : [newModule],
+        loading: false,
+        error: null,
+      }));
+
+      return newModule;
     } catch (e) {
       set({ loading: false, error: e.message });
       throw e;
@@ -52,6 +98,50 @@ const useModuleStore = create((set) => ({
       return json;
     } catch (e) {
       set({ loading: false, error: e.message, createdModule: null });
+      throw e;
+    }
+  },
+
+  async updateModule({ moduleId, courseId, title, order }) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const body = {
+        title: (title || '').trim(),
+      };
+      if (order !== undefined && order !== null && order !== '') {
+        body.order = order;
+      }
+
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(body),
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') {
+        let errorMsg = json.message;
+        if (json.data && json.data.error) {
+          errorMsg += ': ' + json.data.error;
+        }
+        throw new Error(errorMsg || 'Gagal update modul');
+      }
+      set((state) => ({
+        modules: state.modules.map((m) =>
+          String(m.id) === String(moduleId) ? { ...m, ...json.data } : m
+        ),
+        loading: false,
+        error: null,
+      }));
+      return json.data;
+    } catch (e) {
+      set({ loading: false, error: e.message });
       throw e;
     }
   },
@@ -94,7 +184,7 @@ const useModuleStore = create((set) => ({
       if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus modul');
       // Remove module from state
       set((state) => ({
-        modules: state.modules.filter((m) => m.id !== moduleId),
+        modules: state.modules.filter((m) => String(m.id) !== String(moduleId)),
       }));
       return json;
     } catch (e) {

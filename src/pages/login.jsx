@@ -72,7 +72,7 @@ export default function Login() {
                 <input
                   type="text"
                   name="username"
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                   placeholder="Username atau Email"
                   onChange={handleChange}
                   disabled={loading}
@@ -82,7 +82,7 @@ export default function Login() {
                 <input
                   type="password"
                   name="password"
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                   placeholder="Password"
                   onChange={handleChange}
                   disabled={loading}

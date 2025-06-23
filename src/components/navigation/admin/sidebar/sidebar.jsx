@@ -8,7 +8,7 @@ export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
   const SidebarContent = () => (
     <div className="h-screen xl:w-80 p-4 box-border overflow-y-auto">
       <div className="h-full w-full rounded-lg z-0 bg-white-100 shadow-md">
-        <div className="h-full w-full text-white flex flex-col">
+        <div className="h-full w-full text-primary-800 flex flex-col">
           {/* Header */}
           <div className="flex justify-between md:justify-center items-center py-6 px-4">
             <img src="/assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-16" />
@@ -33,7 +33,7 @@ export default function Sidebar({ navigations, activeNav, isOpen, onClose }) {
                         <Link
                           key={linkIndex}
                           to={link.href}
-                          className={` hover:bg-primary-800 text-white py-2 px-4 rounded flex items-center ${
+                          className={` hover:bg-primary-800 text-black-900 py-2 px-4 rounded flex items-center ${
                             activeNav === link.text
                               ? 'bg-primary-800 border-l-4 border-primary-700'
                               : 'border border-primary-800'

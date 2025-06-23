@@ -13,10 +13,11 @@ import useLessonStore from '../../../../../zustand/material/lessonStore';
 export default function ModuleList() {
   const { id: courseId } = useParams();
   const navigate = useNavigate();
-  const { fetchModules, modules, loading, error, updateModuleOrder, deleteModule } =
+  const { fetchModules, modules: rawModules, loading, error, updateModuleOrder, deleteModule } =
     useModuleStore();
   const { updateLessonOrder } = useLessonStore();
 
+  const modules = Array.isArray(rawModules) ? rawModules : [];
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
 
@@ -209,7 +210,7 @@ export default function ModuleList() {
         </h1>
         <button
           onClick={handleAddModule}
-          className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2"
+          className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white-100 rounded hover:bg-primary-800 flex items-center gap-2"
         >
           <Icon type="plus" /> Modul
         </button>

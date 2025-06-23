@@ -73,7 +73,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Nama Lengkap"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                 />
               </div>
               {/** Username **/}
@@ -85,7 +85,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Username"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                 />
               </div>
               {/** Email **/}
@@ -97,7 +97,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Email"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                 />
               </div>
               {/** Password **/}
@@ -109,7 +109,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Password"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                 />
               </div>
               {/** Confirm Password **/}
@@ -121,7 +121,7 @@ export default function Register() {
                   onChange={handleChange}
                   placeholder="Ulangi Password"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black-900 outline-none py-2"
                 />
               </div>
               {/** Link to login **/}

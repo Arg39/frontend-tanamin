@@ -24,6 +24,7 @@ import CourseAttributeEdit from '../pages/instructor/course.jsx/edit/atributEdit
 import ModulAdd from '../pages/instructor/course.jsx/tambah/materi/modulAdd';
 import LessonAdd from '../pages/instructor/course.jsx/tambah/materi/lessonAdd';
 import LessonDetail from '../pages/instructor/course.jsx/detail/tab/materi,jsx/lessonDetail';
+import ModulEdit from '../pages/instructor/course.jsx/edit/materi/modulEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -112,6 +113,7 @@ const instructorRoutes = [
   { path: 'kursus/:courseId/modul/tambah', element: <ModulAdd /> },
   { path: 'kursus/:courseId/modul/:moduleId/materi/tambah', element: <LessonAdd /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
+  { path: 'kursus/:courseId/modul/:moduleId/edit', element: <ModulEdit /> }
 ];
 
 const publicRoutes = [
