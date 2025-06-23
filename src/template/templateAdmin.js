@@ -36,21 +36,6 @@ export default function AdminTemplate({ children, activeNav, className, style })
     });
   });
 
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const handleScroll = () => {
-      if (container.scrollTop > 16) {
-        setIsBreadcrumbVisible(false);
-      } else {
-        setIsBreadcrumbVisible(true);
-      }
-    };
-    container.addEventListener('scroll', handleScroll);
-    return () => container.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <div className="h-screen w-screen flex overflow-hidden bg-white-500">
       {/* Sidebar */}
@@ -69,7 +54,6 @@ export default function AdminTemplate({ children, activeNav, className, style })
           </div>
         </div>
 
-        {/* Scrollable content dimulai di bawah topbar */}
         <div
           className={`flex-1 overflow-y-auto custom-scrollbar px-4 pb-4 lg:pl-0 ${className}`}
           ref={scrollContainerRef}

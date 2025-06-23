@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import useMenuStore from '../zustand/menuStore';
 import TopbarAdmin from '../components/navigation/admin/topbar/topbarAdmin';
 import Breadcrumb from '../components/breadcrumb/breadcrumb';
@@ -11,9 +11,11 @@ import SidebarInstructor from '../components/navigation/admin/sidebar/sidebarIns
 export default function InstructorTemplate({ children, activeNav, className, style }) {
   const location = useLocation();
   const { navigationInstructor } = useNavigationStore();
-  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
   const { isOpen, title, message, onConfirm, onCancel, closeModal, variant } =
     useConfirmationModalStore();
+
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
   useEffect(() => {
