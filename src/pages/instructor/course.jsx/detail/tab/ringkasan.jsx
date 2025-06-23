@@ -81,14 +81,14 @@ function InfoItem({ icon, label, value }) {
 }
 
 function displayLevel(level) {
-  if (!level) return null;
+  if (!level) return <BelumDiatur />;
   const mapping = {
     beginner: { label: 'Pemula', bg: 'bg-primary-100 text-primary-700' },
     intermediate: { label: 'Menengah', bg: 'bg-yellow-100 text-yellow-700' },
     advance: { label: 'Mahir', bg: 'bg-blue-100 text-blue-700' },
   };
   const info = mapping[level.toLowerCase()];
-  if (!info) return { label: level, bg: 'bg-gray-100 text-gray-700' };
+  if (!info) return <BelumDiatur />;
   return info;
 }
 
