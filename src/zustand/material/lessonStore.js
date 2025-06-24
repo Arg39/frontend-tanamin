@@ -76,6 +76,31 @@ const useLessonStore = create((set) => ({
       throw e;
     }
   },
+
+  async updateLesson({ lessonId, data }) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/lesson/${lessonId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify(data),
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal update materi');
+      set({ loading: false, error: null });
+      return json;
+    } catch (e) {
+      set({ error: e.message, loading: false });
+      throw e;
+    }
+  },
 }));
 
 export default useLessonStore;

@@ -66,24 +66,24 @@ export default function CourseAttribute({ editable }) {
 
   return (
     <>
-      {/* Header */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
-        <p className="text-xl sm:text-2xl font-bold text-primary-800">Atribut Kursus</p>
-        {editable && (
-          <button
-            onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}
-            className="w-full sm:w-auto bg-primary-700 text-white-100 px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center justify-center mt-2 md:mt-0"
-          >
-            <Icon type="plus" className="mr-2" />
-            Tambah
-          </button>
-        )}
-      </div>
-
-      {attributeLoading && <p className="text-base text-gray-500">Loading...</p>}
+      {attributeLoading && <p className="text-base text-black-900">Loading...</p>}
       {attributeError && <p className="text-base text-red-600">{attributeError}</p>}
       {!attributeLoading && !attributeError && (
         <>
+          {/* Header */}
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
+            <p className="text-xl sm:text-2xl font-bold text-primary-800">Atribut Kursus</p>
+            {editable && (
+              <button
+                onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}
+                className="w-full sm:w-auto bg-primary-700 text-white-100 px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center justify-center mt-2 md:mt-0"
+              >
+                <Icon type="plus" className="mr-2" />
+                Tambah
+              </button>
+            )}
+          </div>
+
           {/* Persyaratan */}
           <div className="bg-white-50 rounded-xl shadow p-4 mb-6">
             <p className="text-lg sm:text-xl text-tertiary-600 font-bold mb-3">Persyaratan:</p>

@@ -13,8 +13,14 @@ import useLessonStore from '../../../../../zustand/material/lessonStore';
 export default function ModuleList() {
   const { id: courseId } = useParams();
   const navigate = useNavigate();
-  const { fetchModules, modules: rawModules, loading, error, updateModuleOrder, deleteModule } =
-    useModuleStore();
+  const {
+    fetchModules,
+    modules: rawModules,
+    loading,
+    error,
+    updateModuleOrder,
+    deleteModule,
+  } = useModuleStore();
   const { updateLessonOrder } = useLessonStore();
 
   const modules = Array.isArray(rawModules) ? rawModules : [];
@@ -168,7 +174,7 @@ export default function ModuleList() {
   const handleAddModule = () => navigateTo('/modul/tambah');
   const handleEditModule = (moduleId) => navigateTo(`/modul/${moduleId}/edit`);
   const handleAddLesson = (moduleId) => navigateTo(`/modul/${moduleId}/materi/tambah`);
-  const handleEditLesson = (modId, lesId) => navigateTo(`/modul/${modId}/materi/${lesId}/edit`);
+  const handleEditLesson = (moduleId, lessonId) => navigate(`/instruktur/materi/${lessonId}/edit`);
   const handleNavigateLesson = (lessonId) => navigate(`/instruktur/materi/${lessonId}/lihat`);
   const handleDeleteModule = async (moduleId) => {
     const module = modules.find((m) => m.id === moduleId);
@@ -199,8 +205,8 @@ export default function ModuleList() {
     console.log(`akan menghapus lesson dengan id: ${lessonId} pada modul: ${moduleId}`);
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p className="text-base text-black-900">Loading...</p>;
+  if (error) return <p className="text-base text-red-600">{error}</p>;
 
   return (
     <>
