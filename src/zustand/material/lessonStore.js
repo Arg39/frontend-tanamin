@@ -101,6 +101,26 @@ const useLessonStore = create((set) => ({
       throw e;
     }
   },
+
+  async deleteLesson({ lessonId }) {
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/lesson/${lessonId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus materi');
+      return json;
+    } catch (e) {
+      throw e;
+    }
+  },
 }));
 
 export default useLessonStore;

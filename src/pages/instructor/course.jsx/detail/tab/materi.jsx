@@ -21,7 +21,7 @@ export default function ModuleList({ editable }) {
     updateModuleOrder,
     deleteModule,
   } = useModuleStore();
-  const { updateLessonOrder } = useLessonStore();
+  const { updateLessonOrder, deleteLesson } = useLessonStore();
 
   const modules = Array.isArray(rawModules) ? rawModules : [];
   const [activeId, setActiveId] = useState(null);
@@ -201,8 +201,39 @@ export default function ModuleList({ editable }) {
       });
     }
   };
-  const handleDeleteLesson = (moduleId, lessonId) => {
-    console.log(`akan menghapus lesson dengan id: ${lessonId} pada modul: ${moduleId}`);
+  const handleDeleteLesson = async (moduleId, lessonId) => {
+    const module = modules.find((m) => m.id === moduleId);
+    if (!module) return;
+
+    const lesson = module.lessons.find((l) => l.id === lessonId);
+    if (!lesson) return;
+
+    if (!window.confirm(`Yakin ingin menghapus materi "${lesson.title}"?`)) return;
+
+    const toastId = toast.loading('Menghapus materi...');
+    try {
+      await deleteLesson({ lessonId });
+
+      // Remove lesson from state
+      const newModules = modules.map((m) =>
+        m.id === moduleId ? { ...m, lessons: m.lessons.filter((l) => l.id !== lessonId) } : m
+      );
+      useModuleStore.setState({ modules: newModules });
+
+      toast.update(toastId, {
+        render: 'Materi berhasil dihapus',
+        type: 'success',
+        isLoading: false,
+        autoClose: 2000,
+      });
+    } catch (err) {
+      toast.update(toastId, {
+        render: err.message || 'Gagal menghapus materi',
+        type: 'error',
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
   };
 
   if (loading) return <p className="text-base text-black-900">Loading...</p>;
