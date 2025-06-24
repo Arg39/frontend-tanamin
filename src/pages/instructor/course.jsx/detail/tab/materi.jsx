@@ -10,7 +10,7 @@ import SortableModule from '../../../../../components/dragAndDrop/sortableModule
 import useModuleStore from '../../../../../zustand/material/moduleStore';
 import useLessonStore from '../../../../../zustand/material/lessonStore';
 
-export default function ModuleList() {
+export default function ModuleList({ editable }) {
   const { id: courseId } = useParams();
   const navigate = useNavigate();
   const {
@@ -214,18 +214,20 @@ export default function ModuleList() {
         <h1 className="text-xl sm:text-2xl font-bold text-primary-800 mb-2 sm:mb-0">
           Daftar Materi Kursus
         </h1>
-        <button
-          onClick={handleAddModule}
-          className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white-100 rounded hover:bg-primary-800 flex items-center gap-2"
-        >
-          <Icon type="plus" /> Modul
-        </button>
+        {editable && (
+          <button
+            onClick={handleAddModule}
+            className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white-100 rounded hover:bg-primary-800 flex items-center gap-2"
+          >
+            <Icon type="plus" /> Modul
+          </button>
+        )}
       </div>
 
       <div className="p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto">
         {modules.length === 0 ? (
           <p className="text-center text-gray-500 italic">Tidak ada modul, silahkan tambahkan.</p>
-        ) : (
+        ) : editable ? (
           <DndContext
             collisionDetection={rectIntersection}
             onDragStart={handleDragStart}
@@ -243,9 +245,10 @@ export default function ModuleList() {
                     id={module.id}
                     module={module}
                     isOver={overId === module.id}
-                    onAddLesson={handleAddLesson}
-                    onDeleteModule={handleDeleteModule}
-                    onEditModule={handleEditModule}
+                    onAddLesson={editable ? handleAddLesson : undefined}
+                    onDeleteModule={editable ? handleDeleteModule : undefined}
+                    onEditModule={editable ? handleEditModule : undefined}
+                    editable={editable}
                   >
                     <SortableContext
                       items={module.lessons.map((l) => l.id)}
@@ -262,9 +265,10 @@ export default function ModuleList() {
                           lesson={lesson}
                           moduleId={module.id}
                           activeId={activeId}
-                          onDelete={handleDeleteLesson}
-                          onEdit={handleEditLesson}
+                          onDelete={editable ? handleDeleteLesson : undefined}
+                          onEdit={editable ? handleEditLesson : undefined}
                           onNavigate={handleNavigateLesson}
+                          editable={editable}
                         />
                       ))}
                     </SortableContext>
@@ -272,9 +276,29 @@ export default function ModuleList() {
                 ))}
               </div>
             </SortableContext>
-
             {/* <DragOverlay>{activeId && <p>Dragging</p>}</DragOverlay> */}
           </DndContext>
+        ) : (
+          <div className="flex flex-col gap-3 sm:gap-4">
+            {modules.map((module) => (
+              <SortableModule key={module.id} id={module.id} module={module} editable={editable}>
+                {module.lessons.length === 0 && (
+                  <li className="text-xs sm:text-sm text-gray-400 italic px-2 py-1">
+                    (Belum ada pembelajaran)
+                  </li>
+                )}
+                {module.lessons.map((lesson) => (
+                  <SortableLesson
+                    key={lesson.id}
+                    lesson={lesson}
+                    moduleId={module.id}
+                    onNavigate={handleNavigateLesson}
+                    editable={editable}
+                  />
+                ))}
+              </SortableModule>
+            ))}
+          </div>
         )}
       </div>
     </>

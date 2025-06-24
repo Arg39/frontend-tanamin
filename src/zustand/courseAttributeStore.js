@@ -12,7 +12,7 @@ const useCourseAttributeStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${id}/attribute`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}/attribute`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ const useCourseAttributeStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${id}/attribute`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}/attribute`,
         {
           method: 'POST',
           headers: {
@@ -68,7 +68,7 @@ const useCourseAttributeStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/attribute/${attributeId}/view`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/attribute/${attributeId}/view`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -100,7 +100,7 @@ const useCourseAttributeStore = create((set, get) => ({
       const token = useAuthStore.getState().token;
       const params = new URLSearchParams({ content, type }).toString();
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/attribute/${attributeId}/update?${params}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/attribute/${attributeId}/update?${params}`,
         {
           method: 'PUT',
           headers: {
@@ -124,7 +124,7 @@ const useCourseAttributeStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/attribute/${attributeId}/delete`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/attribute/${attributeId}/delete`,
         {
           method: 'DELETE',
           headers: {

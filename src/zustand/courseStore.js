@@ -168,7 +168,7 @@ const useCourseStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${id}/${tab}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}/${tab}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ const useCourseStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${id}/overview/update`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}/overview/update`,
         {
           method: 'POST', // or 'PUT' if needed
           headers: {

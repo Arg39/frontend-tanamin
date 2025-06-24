@@ -4,7 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import Icon from '../icons/icon';
 import { isTouchDevice } from './utils';
 
-function DropdownMenu({ isMobile, onEdit, onDelete }) {
+function DropdownMenu({ isMobile, onEdit, onDelete, editable }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
 
@@ -67,6 +67,7 @@ export default function SortableModule({
   onAddLesson,
   onDeleteModule,
   onEditModule,
+  editable = true,
 }) {
   const isMobile = isTouchDevice();
 
@@ -114,40 +115,44 @@ export default function SortableModule({
       <div className="w-full flex items-start justify-between sm:gap-4 mb-2">
         {/* Left: Drag + Title */}
         <div className="flex w-full items-start gap-2 sm:gap-3">
-          <span
-            ref={setActivatorNodeRef}
-            {...attributes}
-            {...listeners}
-            tabIndex={0}
-            aria-label="Drag handle"
-            className={`${
-              isDragging ? 'cursor-grabbing' : 'cursor-grab'
-            } active:cursor-grabbing flex-shrink-0 p-1 bg-gray-100 rounded-md`}
-            style={{ touchAction: isMobile ? 'none' : undefined }}
-          >
-            <Icon type="drag" className="text-gray-400" />
-          </span>
+          {editable && (
+            <span
+              ref={setActivatorNodeRef}
+              {...attributes}
+              {...listeners}
+              tabIndex={0}
+              aria-label="Drag handle"
+              className={`${
+                isDragging ? 'cursor-grabbing' : 'cursor-grab'
+              } active:cursor-grabbing flex-shrink-0 p-1 bg-gray-100 rounded-md`}
+              style={{ touchAction: isMobile ? 'none' : undefined }}
+            >
+              <Icon type="drag" className="text-gray-400" />
+            </span>
+          )}
           {!isMobile && titleBlock}
         </div>
 
         {/* Right: Actions */}
-        <div className="flex gap-2 items-center justify-end">
-          <button
-            className={`bg-tertiary-500 rounded-md p-2 text-white-100 hover:bg-tertiary-700 text-xs sm:text-sm flex items-center gap-1 ${
-              isMobile ? 'text-base' : ''
-            }`}
-            onClick={() => onAddLesson(module.id)}
-            title="Tambah Lesson"
-          >
-            <Icon type="plus" className={isMobile ? 'w-4 h-4' : 'w-6 h-6'} />
-            <span className="hidden md:inline">Materi</span>
-          </button>
-          <DropdownMenu
-            isMobile={isMobile}
-            onEdit={() => onEditModule?.(module.id)}
-            onDelete={() => onDeleteModule?.(module.id)}
-          />
-        </div>
+        {editable && (
+          <div className="flex gap-2 items-center justify-end">
+            <button
+              className={`bg-tertiary-500 rounded-md p-2 text-white-100 hover:bg-tertiary-700 text-xs sm:text-sm flex items-center gap-1 ${
+                isMobile ? 'text-base' : ''
+              }`}
+              onClick={() => onAddLesson(module.id)}
+              title="Tambah Lesson"
+            >
+              <Icon type="plus" className={isMobile ? 'w-4 h-4' : 'w-6 h-6'} />
+              <span className="hidden md:inline">Materi</span>
+            </button>
+            <DropdownMenu
+              isMobile={isMobile}
+              onEdit={() => onEditModule?.(module.id)}
+              onDelete={() => onDeleteModule?.(module.id)}
+            />
+          </div>
+        )}
       </div>
 
       {/* Mobile Title */}

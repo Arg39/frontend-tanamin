@@ -7,23 +7,16 @@ import SelectOption from '../../../../components/form/selectOption';
 import useCourseAttributeStore from '../../../../zustand/courseAttributeStore';
 import { toast } from 'react-toastify';
 
-export default function CourseAttributeEdit() {
+export default function CourseAttributeAdd() {
   const navigate = useNavigate();
-  const { courseId, attributeId } = useParams();
-  const { attribute, attributeLoading, attributeError, fetchSingleAttribute, updateAttribute } =
-    useCourseAttributeStore();
+  const { courseId } = useParams();
+  console.log('courseId', courseId);
+  const { attribute, attributeLoading, attributeError, addAttribute } = useCourseAttributeStore();
   const [form, setForm] = useState({
     content: '',
     type: '',
   });
   const [loading, setLoading] = useState(false);
-
-  // Fetch attribute detail on mount
-  useEffect(() => {
-    if (courseId && attributeId) {
-      fetchSingleAttribute({ courseId, attributeId });
-    }
-  }, [courseId, attributeId, fetchSingleAttribute]);
 
   // Set form state when attribute loaded
   useEffect(() => {
@@ -46,17 +39,16 @@ export default function CourseAttributeEdit() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      const res = await updateAttribute({
-        courseId,
-        attributeId,
-        content: form.content,
+      const res = await addAttribute({
+        id: courseId,
         type: form.type,
+        content: form.content,
       });
       if (res.status === 'success') {
-        toast.success(res.message || 'Berhasil mengupdate atribut');
+        toast.success(res.message || 'Berhasil menambahkan atribut');
         navigate(-1);
       } else {
-        toast.error(res.message || 'Gagal mengupdate atribut');
+        toast.error(res.message || 'Gagal menambahkan atribut');
       }
     } catch (e) {
       toast.error(e.message || 'Terjadi kesalahan');
@@ -74,7 +66,7 @@ export default function CourseAttributeEdit() {
           <Icon type="arrow-left" className="size-[1rem] text-white-100" />
           Kembali
         </button>
-        <div className="text-2xl font-bold">Edit Persyaratan/Deskripsi {attributeId}</div>
+        <div className="text-2xl font-bold">Tambah Atribut</div>
         {attributeLoading ? (
           <div>Loading...</div>
         ) : attributeError ? (

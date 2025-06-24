@@ -12,6 +12,7 @@ export default function SortableLesson({
   onDelete,
   onEdit,
   onNavigate,
+  editable = true,
 }) {
   const isMobile = isTouchDevice();
 
@@ -53,16 +54,18 @@ export default function SortableLesson({
     >
       {/* Left: drag + info */}
       <div className="flex items-center gap-2 flex-1 min-w-0">
-        <span
-          ref={setActivatorNodeRef}
-          {...attributes}
-          {...listeners}
-          className="cursor-grab active:cursor-grabbing p-1 bg-gray-100 rounded-md"
-          style={{ touchAction: isMobile ? 'none' : 'auto' }}
-          aria-label="Drag handle"
-        >
-          <Icon type="drag" className="text-gray-400" />
-        </span>
+        {editable && (
+          <span
+            ref={setActivatorNodeRef}
+            {...attributes}
+            {...listeners}
+            className="cursor-grab active:cursor-grabbing p-1 bg-gray-100 rounded-md"
+            style={{ touchAction: isMobile ? 'none' : 'auto' }}
+            aria-label="Drag handle"
+          >
+            <Icon type="drag" className="text-gray-400" />
+          </span>
+        )}
         <div className="flex flex-col md:flex-row gap-1">
           <span className={`w-fit px-2 py-1 border rounded-md text-xs sm:text-sm ${badgeStyle}`}>
             {lesson.type === 'material' ? 'Materi' : 'Quiz'}
@@ -80,11 +83,13 @@ export default function SortableLesson({
       </div>
 
       {/* Right: dropdown */}
-      <LessonDropdown
-        isMobile={isMobile}
-        onEdit={() => onEdit(moduleId, lesson.id)}
-        onDelete={() => onDelete(moduleId, lesson.id)}
-      />
+      {editable && (
+        <LessonDropdown
+          isMobile={isMobile}
+          onEdit={() => onEdit(moduleId, lesson.id)}
+          onDelete={() => onDelete(moduleId, lesson.id)}
+        />
+      )}
     </li>
   );
 }

@@ -19,13 +19,13 @@ import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
 import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
 import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
-import CourseAttributeAdd from '../pages/instructor/course.jsx/tambah/atributAdd';
 import CourseAttributeEdit from '../pages/instructor/course.jsx/edit/atributEdit';
 import ModulAdd from '../pages/instructor/course.jsx/tambah/materi/modulAdd';
 import LessonAdd from '../pages/instructor/course.jsx/tambah/materi/lessonAdd';
 import LessonDetail from '../pages/instructor/course.jsx/detail/tab/materi,jsx/lessonDetail';
 import ModulEdit from '../pages/instructor/course.jsx/edit/materi/modulEdit';
 import LessonEdit from '../pages/instructor/course.jsx/edit/materi/lessonEdit';
+import CourseAttributeAdd from '../pages/instructor/course.jsx/tambah/atributAdd';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -106,7 +106,7 @@ const instructorRoutes = [
   { path: 'kursus', element: <CourseAdmin /> },
   { path: 'kursus/:id/lihat/:tab', element: <ValidatedCourseDetailInstructor /> },
   { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEdit /> },
-  { path: 'kursus/:id/tambah/persyaratan-deskripsi', element: <CourseAttributeAdd /> },
+  { path: 'kursus/:courseId/tambah/persyaratan-deskripsi', element: <CourseAttributeAdd /> },
   {
     path: 'kursus/:courseId/edit/persyaratan-deskripsi/:attributeId?',
     element: <CourseAttributeEdit />,

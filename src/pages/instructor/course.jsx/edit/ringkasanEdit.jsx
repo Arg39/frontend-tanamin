@@ -207,12 +207,12 @@ export default function RingkasanEdit() {
           <div>
             <label className="mb-2 text-sm font-medium text-gray-700 block">Harga</label>
             <TextInput
-              type="number"
               name="price"
-              value={form.price}
+              value={String(form.price ?? '')} // pastikan string
               onChange={handleChange}
               placeholder="Masukkan harga"
               min={0}
+              isPrice
               required
             />
           </div>

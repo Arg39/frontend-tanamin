@@ -11,7 +11,7 @@ const useLessonStore = create((set) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/module/${moduleId}/lesson`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/module/${moduleId}/lesson`,
         {
           method: 'POST',
           headers: {
@@ -36,7 +36,7 @@ const useLessonStore = create((set) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/lesson/${lessonId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/lesson/${lessonId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ const useLessonStore = create((set) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/lesson/updateOrder`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/lesson/updateOrder`,
         {
           method: 'PATCH',
           headers: {
@@ -82,7 +82,7 @@ const useLessonStore = create((set) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/lesson/${lessonId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/lesson/${lessonId}`,
         {
           method: 'PUT',
           headers: {

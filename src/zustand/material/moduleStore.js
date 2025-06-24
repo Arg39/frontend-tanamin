@@ -12,7 +12,7 @@ const useModuleStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/modules`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/modules`,
         {
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -41,7 +41,7 @@ const useModuleStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/module/${moduleId}`,
         {
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -82,7 +82,7 @@ const useModuleStore = create((set, get) => ({
       formData.append('title', title);
 
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/module`,
         {
           method: 'POST',
           headers: {
@@ -114,7 +114,7 @@ const useModuleStore = create((set, get) => ({
       }
 
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/module/${moduleId}`,
         {
           method: 'PATCH',
           headers: {
@@ -150,7 +150,7 @@ const useModuleStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/module/updateOrder`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/module/updateOrder`,
         {
           method: 'PATCH',
           headers: {
@@ -172,7 +172,7 @@ const useModuleStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor/course/${courseId}/module/${moduleId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${courseId}/module/${moduleId}`,
         {
           method: 'DELETE',
           headers: {
