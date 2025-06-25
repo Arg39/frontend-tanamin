@@ -46,9 +46,9 @@ export default function AdminTemplate({ children, activeNav, className, style })
       />
 
       {/* Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 pt-4 flex flex-col overflow-hidden">
         {/* Topbar tetap selalu di atas dan sticky */}
-        <div className="sticky top-4 z-30 bg-white px-4 md:px-0 md:pr-4 border-b border-gray-200">
+        <div className="sticky z-30 bg-white px-4 md:px-0 md:pr-4 border-b border-gray-200">
           <div style={{ minHeight: '56px' }}>
             <TopbarAdmin onMenuClick={() => setSidebarOpen(!isSidebarOpen)} />
           </div>
@@ -57,10 +57,7 @@ export default function AdminTemplate({ children, activeNav, className, style })
         <div
           className={`flex-1 overflow-y-auto custom-scrollbar px-4 pb-4 lg:pl-0 ${className}`}
           ref={scrollContainerRef}
-          style={{
-            paddingTop: '1.5rem',
-            ...style,
-          }}
+          style={{ style }}
         >
           {/* Breadcrumb */}
           {isBreadcrumbVisible && (

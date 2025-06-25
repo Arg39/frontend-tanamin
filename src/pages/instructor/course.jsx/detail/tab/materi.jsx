@@ -9,8 +9,10 @@ import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson
 import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
 import useModuleStore from '../../../../../zustand/material/moduleStore';
 import useLessonStore from '../../../../../zustand/material/lessonStore';
+import useAuthStore from '../../../../../zustand/authStore';
 
 export default function ModuleList({ editable }) {
+  const role = useAuthStore((state) => state.user?.role);
   const { id: courseId } = useParams();
   const navigate = useNavigate();
   const {
@@ -175,7 +177,8 @@ export default function ModuleList({ editable }) {
   const handleEditModule = (moduleId) => navigateTo(`/modul/${moduleId}/edit`);
   const handleAddLesson = (moduleId) => navigateTo(`/modul/${moduleId}/materi/tambah`);
   const handleEditLesson = (moduleId, lessonId) => navigate(`/instruktur/materi/${lessonId}/edit`);
-  const handleNavigateLesson = (lessonId) => navigate(`/instruktur/materi/${lessonId}/lihat`);
+  const handleNavigateLesson = (lessonId) =>
+    navigate(`${role === 'instructor' ? '/instruktur' : '/admin'}/materi/${lessonId}/lihat`);
   const handleDeleteModule = async (moduleId) => {
     const module = modules.find((m) => m.id === moduleId);
     if (!module) return;

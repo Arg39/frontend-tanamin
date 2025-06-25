@@ -99,6 +99,7 @@ const adminRoutes = [
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
   { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
+  { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
 ];
 
 const instructorRoutes = [
