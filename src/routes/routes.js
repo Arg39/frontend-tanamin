@@ -26,6 +26,7 @@ import LessonDetail from '../pages/instructor/course.jsx/detail/tab/materi,jsx/l
 import ModulEdit from '../pages/instructor/course.jsx/edit/materi/modulEdit';
 import LessonEdit from '../pages/instructor/course.jsx/edit/materi/lessonEdit';
 import CourseAttributeAdd from '../pages/instructor/course.jsx/tambah/atributAdd';
+import TentangKami from '../pages/tentangKami';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -125,6 +126,7 @@ const publicRoutes = [
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
   { path: '/coba-fungsi', element: <Payment /> },
+  { path: '/tentang-kami', element: <TentangKami /> },
 ];
 
 const PublicRoute = ({ children }) => {

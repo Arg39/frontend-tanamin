@@ -16,7 +16,7 @@ export default function Beranda2() {
       className="h-screen w-screen bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white-100 to-100%"
       locationKey={location.key}
     >
-      <div className="xl:p-20 lg:p-10 md:p-14 sm:p-8 p-8 w-full">
+      <div className="xl:px-20 lg:px-10 md:px-14 sm:px-8 px-8 pt-8 w-full">
         <div className="mt-16 gap-8 w-full flex flex-col lg:flex-row">
           <div className="flex flex-col w-full lg:w-1/2">
             <h3 className="p-2 px-4 rounded-full bg-primary-400 text-primary-900 font-medium items-center max-w-fit text-lg lg:text-xl">

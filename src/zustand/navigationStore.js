@@ -1,6 +1,25 @@
 import { create } from 'zustand';
 
 const useNavigationStore = create((set) => ({
+  navigationPublic: [
+    {
+      label: 'beranda',
+      links: [{ text: 'Beranda', href: '/beranda' }],
+    },
+    {
+      label: 'tentang-kami',
+      links: [{ text: 'Tentang Kami', href: '/tentang-kami' }],
+    },
+    {
+      label: 'faq',
+      links: [{ text: 'FAQ', href: '/faq' }],
+    },
+    {
+      label: 'kontak-kami',
+      links: [{ text: 'Kontak Kami', href: '/kontak-kami' }],
+    },
+  ],
+
   navigationAdmin: [
     {
       label: 'gambaran umum',
