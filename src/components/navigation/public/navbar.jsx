@@ -38,18 +38,6 @@ export default function Navbar() {
           </Link>
         ))
       )}
-      {/* Special case for Kategori */}
-      <Link
-        to="/#category"
-        className={`${className} ${
-          activeNav === 'kategori'
-            ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
-            : ''
-        }`}
-        onClick={onClick}
-      >
-        Kategori
-      </Link>
     </>
   );
 

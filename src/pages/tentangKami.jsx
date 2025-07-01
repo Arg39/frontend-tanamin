@@ -154,7 +154,7 @@ export default function TentangKami() {
         <Breadcrumb items={breadcrumbItems} />
         <section className="flex flex-col-reverse lg:flex-row items-center lg:items-start justify-between gap-8 py-8">
           <div className="flex-1 w-full">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary-700 mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-700 mb-4">
               PT Tanamin Bumi Nusantara
             </h1>
             <blockquote className="text-base sm:text-lg md:text-xl text-secondary-950 mt-4 border-l-4 border-primary-500 pl-4 italic">

@@ -127,7 +127,7 @@ export default function Register() {
               {/** Link to login **/}
               <div className="text-start mb-6 lg:mb-10">
                 <span>Sudah Memiliki Akun? </span>
-                <Link to="/login" className="text-primary-800 font-semibold hover:underline">
+                <Link to="/masuk" className="text-primary-800 font-semibold hover:underline">
                   Login ke Akun Saya
                 </Link>
               </div>
