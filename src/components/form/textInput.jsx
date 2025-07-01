@@ -58,7 +58,13 @@ export default function TextInput({
         </label>
       )}
       <div className="relative flex">
+        {isPrice && (
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 select-none z-10">
+            Rp
+          </span>
+        )}
         <input
+          type={isPrice ? 'text' : type}
           type={isPrice ? 'text' : type}
           id={name}
           name={name}
@@ -71,6 +77,8 @@ export default function TextInput({
           inputMode={isPrice ? 'numeric' : undefined}
           autoComplete="off"
           className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 w-full pr-10 ${
+            isPrice ? 'pl-10' : ''
+          } ${
             disabled ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'focus:ring-primary-500'
           }`}
         />

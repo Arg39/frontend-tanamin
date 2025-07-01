@@ -2,12 +2,10 @@ import React from 'react';
 import Template from '../template/template';
 import GradientText from '../blocks/TextAnimations/FuzzyText/gradientColors';
 import useCourseStore from '../zustand/courseStore';
-import StackedCards from '../components/card/stackedCards';
 import Button from '../components/button/button';
 import { useLocation } from 'react-router-dom';
 
 export default function Beranda2() {
-  const course = useCourseStore((state) => state.course);
   const location = useLocation();
 
   return (
@@ -44,8 +42,13 @@ export default function Beranda2() {
               Jelajahi Course
             </Button>
           </div>
-          <div className="flex w-full h-[25rem] sm:h-0 lg:w-1/2 mt-8 lg:mt-[-2.5rem] justify-center items-start">
-            <StackedCards course={course} count={3} />
+          <div className="w-full lg:w-1/2 flex justify-center items-center min-h-[20rem]">
+            {/* Stacked cards with bottom-right corners joined */}
+            <div className="relative w-56 h-80 flex justify-start items-center">
+              <div className="absolute w-40 h-64 bg-green-600 shadow-lg rounded-lg transform translate-y-[10px] z-20"></div>
+              <div className="absolute w-40 h-64 bg-red-600 shadow-lg rounded-lg transform rotate-[4deg] translate-x-[8px] translate-y-[5px] z-10"></div>
+              <div className="absolute w-40 h-64 bg-yellow-600 shadow-lg rounded-lg transform rotate-[8deg] translate-x-[16px] translate-y-[1px] z-0"></div>
+            </div>
           </div>
         </div>
       </div>

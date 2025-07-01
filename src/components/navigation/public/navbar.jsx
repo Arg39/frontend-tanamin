@@ -5,6 +5,7 @@ import useMenuStore from '../../../zustand/menuStore';
 import useNavigationStore from '../../../zustand/navigationStore';
 import Icon from '../../icons/icon';
 import { Link } from 'react-router-dom';
+import ProfileNav from './profileNav';
 
 export default function Navbar() {
   const {
@@ -53,7 +54,7 @@ export default function Navbar() {
   }, [isMenuOpen, isAccountMenuOpen]);
 
   return (
-    <div className="lg:px-8 lg:p-0 md px-2 py-2 bg-white-100 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
+    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 lg:p-0 md px-2 py-2 bg-white-100 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
       {/* Logo */}
       <div>
         <img src="assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
@@ -171,14 +172,7 @@ export default function Navbar() {
       </AnimatePresence>
 
       {/* Buttons */}
-      <div className="hidden lg:flex space-x-4">
-        <Button variant="primary" to={'masuk'} className="text-md">
-          Masuk
-        </Button>
-        <Button variant="primary" to={'daftar'} className="text-md">
-          Daftar
-        </Button>
-      </div>
+      <ProfileNav />
     </div>
   );
 }

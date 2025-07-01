@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Template from '../template/template';
 import Breadcrumb from '../components/breadcrumb/breadcrumb2';
 import { useLocation } from 'react-router-dom';
+import { motion, useAnimationFrame } from 'framer-motion';
 
 function ImageCarousel({ images, interval = 4000 }) {
   const [current, setCurrent] = useState(0);
@@ -125,6 +126,86 @@ function ImageCarousel({ images, interval = 4000 }) {
   );
 }
 
+function MitraSlider({ items, interval = 2500 }) {
+  // Responsif: 2 di mobile, 3 di tablet, 4 di desktop
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  const getVisible = () => {
+    if (windowWidth < 640) return 2;
+    if (windowWidth < 1024) return 3;
+    return 4;
+  };
+  const visible = getVisible();
+
+  // Infinite loop state
+  const [index, setIndex] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const sliderRef = useRef();
+
+  // Duplicate items for infinite effect
+  const extendedItems = [...items, ...items, ...items];
+
+  useEffect(() => {
+    if (items.length <= visible) return;
+    const timer = setInterval(() => {
+      setIsAnimating(true);
+      setIndex((prev) => prev + 1);
+    }, interval);
+    return () => clearInterval(timer);
+  }, [items.length, visible, interval]);
+
+  // Reset animation when reach the end of the middle set
+  useEffect(() => {
+    if (index === items.length * 2) {
+      // Disable animation, jump to middle set
+      setTimeout(() => {
+        setIsAnimating(false);
+        setIndex(items.length);
+      }, 300); // match transition duration
+    }
+  }, [index, items.length]);
+
+  // Initial index at the middle set
+  useEffect(() => {
+    setIndex(items.length);
+  }, [items.length]);
+
+  // Calculate translateX
+  const slideWidth = 144; // w-32 + gap (128px + 16px), adjust if needed
+  const translateX = -(index * slideWidth);
+
+  return (
+    <div className="w-full overflow-hidden flex justify-center">
+      <div
+        ref={sliderRef}
+        className="flex gap-4"
+        style={{
+          transform: `translateX(${translateX}px)`,
+          transition: isAnimating ? 'transform 0.3s cubic-bezier(0.4,0,0.2,1)' : 'none',
+          width: `${extendedItems.length * slideWidth}px`,
+        }}
+      >
+        {extendedItems.map((mitra, idx) => (
+          <div
+            key={idx}
+            className="flex-shrink-0 w-32 h-20 md:w-40 md:h-24 flex items-center justify-center bg-white rounded-lg shadow hover:shadow-md transition"
+          >
+            <img
+              src={mitra.logo}
+              alt={mitra.name}
+              className="max-h-full max-w-full object-contain"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function TentangKami() {
   const location = useLocation();
 
@@ -146,6 +227,18 @@ export default function TentangKami() {
       src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
       alt: 'Ilustrasi Visi Tanamin 3',
     },
+  ];
+
+  const mitraList = [
+    {
+      name: 'Mitra A',
+      logo: 'https://logowik.com/content/uploads/images/pertamina2579.jpg',
+    },
+    {
+      name: 'Mitra B',
+      logo: 'https://cyberkatulistiwa.com/wp-content/uploads/2019/07/IMG-20190708-WA0089.jpg',
+    },
+    // tambahkan mitra lain di sini
   ];
 
   return (
@@ -216,6 +309,13 @@ export default function TentangKami() {
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="w-full mb-16">
+          <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
+            Kerja Sama Kami
+          </h2>
+          <MitraSlider items={mitraList} interval={2500} />
         </section>
       </main>
     </Template>

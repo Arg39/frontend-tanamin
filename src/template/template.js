@@ -25,7 +25,7 @@ export default function Template({ children, activeNav, className, style, locati
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
-            className="pt-16 h-full"
+            className="pt-[58px] h-full"
           >
             {children}
           </motion.div>

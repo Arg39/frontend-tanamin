@@ -214,6 +214,7 @@ export default function RingkasanEdit() {
               min={0}
               isPrice
               required
+              isPrice
             />
           </div>
           {/* Gambar */}
