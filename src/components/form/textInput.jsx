@@ -10,7 +10,7 @@ function formatRupiah(value) {
   if (!numberString) return '';
   // Format with dot
   const formatted = numberString.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  return `Rp. ${formatted}`;
+  return `${formatted}`;
 }
 
 export default function TextInput({

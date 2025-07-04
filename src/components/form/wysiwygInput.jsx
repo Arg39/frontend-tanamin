@@ -25,15 +25,22 @@ const WysiwygInput = forwardRef(
     const uploadLocalImagesStore = useWysiwygStore((state) => state.uploadLocalImages);
 
     useEffect(() => {
-      if (value !== content) {
-        setContent(value || '');
+      // Jika value null, tampilkan kosong di editor
+      if ((value ?? '') !== content) {
+        setContent(value ?? '');
       }
     }, [value]);
 
-    const handleChange = (content) => {
-      setContent(content);
+    const isEmptyContent = (html) => {
+      if (!html) return true;
+      const cleaned = html.replace(/\s/g, '');
+      return cleaned === '<p><br></p>';
+    };
+
+    const handleChange = (html) => {
+      setContent(html);
       onChange({
-        target: { name, value: content },
+        target: { name, value: isEmptyContent(html) ? null : html },
       });
     };
 
@@ -73,7 +80,7 @@ const WysiwygInput = forwardRef(
 
       const finalContent = await uploadLocalImagesStore({ editor, token, baseUrl });
       setContent(finalContent);
-      onChange({ target: { name, value: finalContent } });
+      onChange({ target: { name, value: isEmptyContent(finalContent) ? null : finalContent } });
 
       return finalContent;
     };

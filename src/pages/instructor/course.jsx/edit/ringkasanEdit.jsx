@@ -33,7 +33,6 @@ export default function RingkasanEdit() {
   const [form, setForm] = useState({
     title: '',
     level: '',
-    price: '',
     requirement: '',
     description: '',
     detail: '',
@@ -58,7 +57,6 @@ export default function RingkasanEdit() {
       setForm({
         title: courseDetailByTab.title || '',
         level: courseDetailByTab.level || '',
-        price: courseDetailByTab.price || '',
         requirement: courseDetailByTab.requirement || '',
         description: courseDetailByTab.description || '',
         detail: courseDetailByTab.detail || '',
@@ -98,7 +96,6 @@ export default function RingkasanEdit() {
       const formData = new FormData();
       formData.append('title', form.title);
       formData.append('level', form.level);
-      formData.append('price', form.price);
       formData.append('requirement', form.requirement);
       formData.append('description', form.description);
       formData.append('detail', finalDetail);
@@ -203,20 +200,6 @@ export default function RingkasanEdit() {
             options={LEVEL_OPTIONS}
             placeholder="Pilih Level"
           />
-          {/* Harga */}
-          <div>
-            <label className="mb-2 text-sm font-medium text-gray-700 block">Harga</label>
-            <TextInput
-              name="price"
-              value={String(form.price ?? '')} // pastikan string
-              onChange={handleChange}
-              placeholder="Masukkan harga"
-              min={0}
-              isPrice
-              required
-              isPrice
-            />
-          </div>
           {/* Gambar */}
           <ImagePicker
             label="Gambar"

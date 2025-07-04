@@ -1,12 +1,48 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Template from '../template/template';
 import GradientText from '../blocks/TextAnimations/FuzzyText/gradientColors';
 import useCourseStore from '../zustand/courseStore';
 import Button from '../components/button/button';
 import { useLocation } from 'react-router-dom';
+import useCategoryStore from '../zustand/categoryStore';
+import CategoryCard from '../components/card/categoryCard';
+
+// Custom hook to detect if device is mobile
+function useIsMobile() {
+  // 640px is Tailwind's 'sm' breakpoint
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);
+
+  React.useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 640);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return isMobile;
+}
 
 export default function Beranda2() {
   const location = useLocation();
+  const { categories, fetchCategories } = useCategoryStore();
+  const isMobile = useIsMobile();
+
+  useEffect(() => {
+    fetchCategories({ perPage: 8 });
+  }, [fetchCategories]);
+
+  // Helper to get full image URL
+  const getImageUrl = (image) => {
+    if (!image) return '';
+    if (image.startsWith('http')) return image;
+    return `${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${image}`;
+  };
+
+  const handleCategoryClick = (category) => {
+    // TODO: Implementasi pencarian berdasarkan kategori
+    console.log('Cari kategori:', category);
+  };
 
   return (
     <Template
@@ -23,7 +59,7 @@ export default function Beranda2() {
             <h1 className="text-3xl lg:text-4xl font-semibold mt-16 lg:mt-32">
               Platform{' '}
               <GradientText
-                className="bg-gradient-to-r from-primary-700 via-secondary-500 to-secondary-800"
+                className="bg-gradient-to-r from-primary-600 to-tertiary-500"
                 duration={6}
                 fontSize="2rem lg:2.5rem"
               >
@@ -52,9 +88,30 @@ export default function Beranda2() {
           </div>
         </div>
       </div>
-      <div className="mt-16 lg:mt-32 w-screen bg-white-100">
+      <div className="mt-16 lg:mt-32 w-full bg-white-100">
         <div className="xl:p-20 lg:p-10 md:p-8 sm:p-6 p-4">
-          <h2 className="text-2xl lg:text-4xl font-semibold">Kategori Populer</h2>
+          <div className="mb-16">
+            <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Kategori Populer</h2>
+            <div className="mt-8 mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 w-full place-items-center">
+                {(isMobile ? categories.slice(0, 4) : categories.slice(0, 8)).map((cat) => (
+                  <CategoryCard
+                    key={cat.id}
+                    category={{
+                      ...cat,
+                      imageUrl: getImageUrl(cat.image),
+                    }}
+                    onClick={() => handleCategoryClick(cat)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="mb-4">
+            <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
+              Teratas Minggu Ini
+            </h2>
+          </div>
         </div>
       </div>
     </Template>

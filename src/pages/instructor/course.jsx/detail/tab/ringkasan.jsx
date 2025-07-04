@@ -3,6 +3,7 @@ import Icon from '../../../../../components/icons/icon';
 import useCourseStore from '../../../../../zustand/courseStore';
 import { Link, useParams } from 'react-router-dom';
 import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
+import useAuthStore from '../../../../../zustand/authStore';
 
 // Komponen pesan default
 function BelumDiatur() {
@@ -98,6 +99,8 @@ export default function CourseRingkasan({ editable }) {
   const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
     useCourseStore();
 
+  const role = useAuthStore((state) => state.user.role);
+
   useEffect(() => {
     if (id && tab) {
       fetchCourseDetailByTab({ tab, id });
@@ -142,7 +145,11 @@ export default function CourseRingkasan({ editable }) {
           />
           <InfoItem icon="book" label="Kategori" value={displayValue(data.category?.name)} />
           <InfoItem icon="star-circle-outline" label="Level" value={displayLevel(data.level)} />
-          <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
+          {role === 'admin' ? (
+            <p>ganti harga</p>
+          ) : (
+            <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
+          )}
           <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.created_at)} />
         </div>
         {/* Right Column (Image) */}

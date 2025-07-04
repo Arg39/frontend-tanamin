@@ -12,12 +12,9 @@ export default function Template({ children, activeNav, className, style, locati
 
   return (
     <div className="min-h-screen w-screen flex flex-col">
-      {/* Navbar */}
       <Navbar />
 
-      {/* Content */}
       <div className={`w-screen flex-1 z-0 relative ${className}`} style={style}>
-        {/* Background Gradient */}
         <AnimatePresence mode="wait">
           <motion.div
             key={locationKey}
