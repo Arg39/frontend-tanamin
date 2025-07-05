@@ -144,7 +144,7 @@ export default function SortableModule({
               title="Tambah Lesson"
             >
               <Icon type="plus" className={isMobile ? 'w-4 h-4' : 'w-6 h-6'} />
-              <span className="hidden md:inline">Materi</span>
+              <span className="hidden md:inline">Pembelajaran</span>
             </button>
             <DropdownMenu
               isMobile={isMobile}

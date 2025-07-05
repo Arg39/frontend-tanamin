@@ -10,6 +10,7 @@ export default function ImagePicker({
   preview,
   crop = false,
   cropAspect = 1,
+  disabled = false,
 }) {
   const [localPreview, setLocalPreview] = useState(null);
   const [showCrop, setShowCrop] = useState(false);
@@ -17,7 +18,7 @@ export default function ImagePicker({
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [rawFile, setRawFile] = useState(null);
-  const [inputKey, setInputKey] = useState(Date.now()); // for resetting input
+  const [inputKey, setInputKey] = useState(Date.now());
 
   useEffect(() => {
     if (!preview) {
@@ -43,9 +44,10 @@ export default function ImagePicker({
   }, [preview]);
 
   const handleFileChange = (e) => {
+    if (disabled) return;
     const file = e.target.files[0];
     if (file) {
-      setInputKey(Date.now()); // reset input so user can pick same file again
+      setInputKey(Date.now());
       if (crop) {
         setRawFile(file);
         setLocalPreview(URL.createObjectURL(file));
@@ -81,14 +83,24 @@ export default function ImagePicker({
 
   return (
     <div className="flex flex-col">
-      <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700">
+      <label
+        htmlFor={name}
+        className={`mb-2 text-sm font-medium ${disabled ? 'text-gray-400' : 'text-gray-700'}`}
+      >
         {label}
       </label>
-      <div className="border border-gray-300 rounded-md px-3 py-6 focus:outline-none focus:ring-2 focus:ring-primary-500 flex items-center justify-center relative h-48">
+      <div
+        className={`border rounded-md px-3 py-6 focus:outline-none flex items-center justify-center relative h-48
+          ${
+            disabled
+              ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
+              : 'border-gray-300 focus:ring-2 focus:ring-primary-500'
+          }`}
+      >
         {localPreview ? (
           <img src={localPreview} alt="Preview" className="max-h-full object-contain" />
         ) : (
-          <span className="text-gray-500 text-center">
+          <span className={`text-center ${disabled ? 'text-gray-300' : 'text-gray-500'}`}>
             Drag and drop an image here or click to select
           </span>
         )}
@@ -100,9 +112,11 @@ export default function ImagePicker({
           accept="image/*"
           onChange={handleFileChange}
           className="absolute inset-0 opacity-0 cursor-pointer"
+          disabled={disabled}
+          tabIndex={disabled ? -1 : 0}
         />
       </div>
-      {crop && showCrop && (
+      {crop && showCrop && !disabled && (
         <div className="fixed inset-0 bg-black-900 bg-opacity-60 flex items-center justify-center z-100 crop-overlay">
           <div className="bg-white-100 p-4 rounded shadow-lg relative w-[90vw] max-w-lg h-[60vw] max-h-[80vh] flex flex-col">
             <div className="relative flex-1">
@@ -150,4 +164,5 @@ ImagePicker.propTypes = {
   ]),
   crop: PropTypes.bool,
   cropAspect: PropTypes.number,
+  disabled: PropTypes.bool,
 };

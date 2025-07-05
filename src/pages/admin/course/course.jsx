@@ -126,7 +126,7 @@ export default function Course() {
   // Table columns
   const columns = [
     {
-      Header: 'Judul Kursus',
+      Header: 'Kursus',
       accessor: 'title',
       width: '35%',
     },
@@ -146,18 +146,35 @@ export default function Course() {
     },
     {
       Header: 'Status',
-      accessor: 'is_published',
+      accessor: 'status',
       width: '10%',
       disableSort: true,
-      Cell: ({ value }) => (
-        <span
-          className={`px-2 py-1 rounded ${
-            value ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'
-          }`}
-        >
-          {value ? 'Published' : 'Draft'}
-        </span>
-      ),
+      Cell: ({ value }) => {
+        let label = '';
+        let colorClass = '';
+        switch (value) {
+          case 'new':
+            label = 'Baru';
+            colorClass = 'bg-gray-200 text-gray-800';
+            break;
+          case 'edited':
+            label = 'Diedit';
+            colorClass = 'bg-yellow-200 text-yellow-800';
+            break;
+          case 'awaiting_approval':
+            label = 'Menunggu Persetujuan';
+            colorClass = 'bg-blue-200 text-blue-800';
+            break;
+          case 'published':
+            label = 'Dipublikasikan';
+            colorClass = 'bg-green-200 text-green-800';
+            break;
+          default:
+            label = 'Tidak Diketahui';
+            colorClass = 'bg-gray-100 text-gray-500';
+        }
+        return <div className={`inline-block px-2 py-1 rounded ${colorClass}`}>{label}</div>;
+      },
     },
     {
       Header: 'Tanggal',
@@ -176,12 +193,16 @@ export default function Course() {
       Cell: ({ value }) => (
         <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
           <button
-            className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
+            className="p-1 px-4 rounded-md bg-primary-700 text-white-100 hover:bg-primary-800"
             onClick={() => {
               navigate(`/admin/kursus/${value}/lihat/ringkasan`);
             }}
           >
             Lihat
+          </button>
+          {/* button to publish */}
+          <button className="p-1 px-4 rounded-md bg-blue-500 hover:bg-blue-700 text-white-100">
+            Publish
           </button>
           <button
             className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"

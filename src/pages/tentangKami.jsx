@@ -243,7 +243,7 @@ export default function TentangKami() {
 
   return (
     <Template activeNav="tentang-kami" locationKey={location.key}>
-      <main className="min-h-screen bg-white-100 xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full">
+      <main className=" bg-white-100 xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8">
         <Breadcrumb items={breadcrumbItems} />
         <section className="flex flex-col-reverse lg:flex-row items-center lg:items-start justify-between gap-8 py-8">
           <div className="flex-1 w-full">

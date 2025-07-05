@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import useCourseStore from '../../../../../zustand/courseStore';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
 import useAuthStore from '../../../../../zustand/authStore';
+import { toast } from 'react-toastify';
 
 // Komponen pesan default
 function BelumDiatur() {
@@ -96,8 +97,14 @@ function displayLevel(level) {
 export default function CourseRingkasan({ editable }) {
   const { id } = useParams();
   const tab = 'overview';
-  const { fetchCourseDetailByTab, courseDetailByTab, courseDetailLoading, courseDetailError } =
-    useCourseStore();
+  const navigate = useNavigate();
+  const {
+    fetchCourseDetailByTab,
+    courseDetailByTab,
+    courseDetailLoading,
+    courseDetailError,
+    updateCourseDetail,
+  } = useCourseStore();
 
   const role = useAuthStore((state) => state.user.role);
 
@@ -118,19 +125,54 @@ export default function CourseRingkasan({ editable }) {
   const isImageSet = !!data.image && data.image !== '';
   const imageUrl = isImageSet ? data.image : null;
 
+  const handlePublish = async () => {
+    // Hapus parameter 'e' karena tidak digunakan
+    try {
+      // Prepare FormData for file upload
+      const formData = new FormData();
+      formData.append('status', 'awaiting_approval');
+
+      const res = await updateCourseDetail({
+        id,
+        data: formData,
+      });
+
+      if (res.status === 'success') {
+        toast.success(res.message || 'Berhasil memperbarui ringkasan!');
+        navigate(-1);
+      } else {
+        toast.error(res.message || 'Gagal memperbarui ringkasan');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || 'Gagal menyimpan data');
+    } finally {
+      // Reset form atau state jika perlu
+    }
+  };
+
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
         <p className="text-2xl font-bold text-primary-900">Ringaksan</p>
-        {editable && (
+        <div className="flex flex-col md:flex-row gap-2">
+          {role === 'instructor' && (data.status === 'new' || data.status === 'edited') && (
+            <button
+              className="p-2 bg-tertiary-600 rounded-md text-white-100 flex gap-1 items-center"
+              onClick={handlePublish}
+            >
+              <Icon type="send" className="h-5 w-5" />
+              Ajukan Publikasi
+            </button>
+          )}
           <Link
-            to={`/instruktur/kursus/${id}/edit/ringkasan`}
+            to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
             className="flex items-center gap-2 bg-secondary-500 text-white-100 px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
           >
-            <Icon type="edit" className="h-5 w-5" />
+            <Icon type="edit" className="h-4 w-4" />
             Edit
           </Link>
-        )}
+        </div>
       </div>
 
       {/* Main Content */}
@@ -145,12 +187,8 @@ export default function CourseRingkasan({ editable }) {
           />
           <InfoItem icon="book" label="Kategori" value={displayValue(data.category?.name)} />
           <InfoItem icon="star-circle-outline" label="Level" value={displayLevel(data.level)} />
-          {role === 'admin' ? (
-            <p>ganti harga</p>
-          ) : (
-            <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
-          )}
-          <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.created_at)} />
+          <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
+          <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.updated_at)} />
         </div>
         {/* Right Column (Image) */}
         <div className="flex flex-col items-start col-span-1">

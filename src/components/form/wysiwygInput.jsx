@@ -19,7 +19,7 @@ const modules = {
 };
 
 const WysiwygInput = forwardRef(
-  ({ label, name, value, onChange, placeholder, maxImageWidth = 600 }, ref) => {
+  ({ label, name, value, onChange, placeholder, maxImageWidth = 600, disabled = false }, ref) => {
     const quillRef = useRef(null);
     const [content, setContent] = useState(value || '');
     const uploadLocalImagesStore = useWysiwygStore((state) => state.uploadLocalImages);
@@ -57,6 +57,16 @@ const WysiwygInput = forwardRef(
         editor.style.paddingBottom = '1px';
         editor.style.transition = 'height 0.2s';
         editor.style.height = editor.scrollHeight + 'px';
+        // Disable editor if needed
+        if (disabled) {
+          editor.setAttribute('contenteditable', 'false');
+          editor.style.background = '#f3f4f6';
+          editor.style.cursor = 'not-allowed';
+        } else {
+          editor.setAttribute('contenteditable', 'true');
+          editor.style.background = '';
+          editor.style.cursor = '';
+        }
       }
 
       // Set max width for images
@@ -69,7 +79,7 @@ const WysiwygInput = forwardRef(
           img.style.margin = '0 auto';
         });
       }
-    }, [content, maxImageWidth]);
+    }, [content, maxImageWidth, disabled]);
 
     const uploadLocalImages = async (token) => {
       const editor = quillRef.current?.getEditor();
@@ -104,6 +114,10 @@ const WysiwygInput = forwardRef(
             .crop-overlay {
               z-index: 9999 !important; /* Ensure crop overlay is on top */
             }
+            .ql-toolbar[aria-disabled="true"] {
+              pointer-events: none;
+              opacity: 0.5;
+            }
           `}
         </style>
         {label && <label className="block mb-2 text-sm font-medium text-gray-700">{label}</label>}
@@ -115,7 +129,17 @@ const WysiwygInput = forwardRef(
           placeholder={placeholder}
           className="bg-white-100"
           modules={modules}
+          readOnly={disabled}
         />
+        <script>
+          {`
+            // Disable toolbar if needed
+            const toolbar = document.querySelector('.ql-toolbar');
+            if (toolbar) {
+              toolbar.setAttribute('aria-disabled', '${disabled}');
+            }
+          `}
+        </script>
       </div>
     );
   }

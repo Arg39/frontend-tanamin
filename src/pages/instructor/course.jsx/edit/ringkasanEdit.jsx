@@ -18,6 +18,7 @@ const LEVEL_OPTIONS = [
 ];
 
 export default function RingkasanEdit() {
+  const role = useAuthStore((state) => state.user.role);
   const { id } = useParams();
   const tab = 'overview';
   const navigate = useNavigate();
@@ -57,6 +58,7 @@ export default function RingkasanEdit() {
       setForm({
         title: courseDetailByTab.title || '',
         level: courseDetailByTab.level || '',
+        price: courseDetailByTab.price || '',
         requirement: courseDetailByTab.requirement || '',
         description: courseDetailByTab.description || '',
         detail: courseDetailByTab.detail || '',
@@ -96,12 +98,14 @@ export default function RingkasanEdit() {
       const formData = new FormData();
       formData.append('title', form.title);
       formData.append('level', form.level);
+      formData.append('price', form.price);
       formData.append('requirement', form.requirement);
       formData.append('description', form.description);
       formData.append('detail', finalDetail);
       if (form.image instanceof File) {
         formData.append('image', form.image);
       }
+      formData.append('status', 'edited');
 
       // Call updateCourseSummary from store
       const res = await updateCourseDetail({
@@ -150,7 +154,7 @@ export default function RingkasanEdit() {
   }
 
   return (
-    <InstructorTemplate activeNav="kursus">
+    <div>
       <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
         <button
           className="w-fit flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
@@ -199,7 +203,22 @@ export default function RingkasanEdit() {
             onChange={handleChange}
             options={LEVEL_OPTIONS}
             placeholder="Pilih Level"
+            disabled={role === 'admin'}
           />
+          {/* Harga */}
+          <div>
+            <label className="mb-2 text-sm font-medium text-gray-700 block">Harga</label>
+            <TextInput
+              name="price"
+              value={String(form.price ?? '')}
+              onChange={handleChange}
+              placeholder="Masukkan harga"
+              min={0}
+              isPrice
+              required
+              disabled={role === 'instructor'}
+            />
+          </div>
           {/* Gambar */}
           <ImagePicker
             label="Gambar"
@@ -208,6 +227,7 @@ export default function RingkasanEdit() {
             preview={form.image instanceof File ? imagePreview : form.image}
             crop={true}
             cropAspect={16 / 9}
+            disabled={role === 'admin'}
           />
           {/* Detail yang akan dipelajari */}
           <div>
@@ -220,6 +240,7 @@ export default function RingkasanEdit() {
               value={form.detail}
               onChange={(e) => setForm((prev) => ({ ...prev, detail: e.target.value }))}
               placeholder="Masukkan detail yang akan dipelajari"
+              disabled={role === 'admin'}
             />
           </div>
           {/* Submit */}
@@ -238,6 +259,6 @@ export default function RingkasanEdit() {
           </div>
         </form>
       </div>
-    </InstructorTemplate>
+    </div>
   );
 }

@@ -8,7 +8,11 @@ const useNavigationStore = create((set) => ({
     },
     {
       label: 'kursus',
-      links: [{ text: 'Kursus', href: '/kursus' }],
+      links: [
+        { text: 'Kursus', href: '/kursus' },
+        { text: 'Kategori', href: '/category' },
+        { text: 'Instruktur', href: '/instruktur' },
+      ],
     },
     {
       label: 'tentang-kami',

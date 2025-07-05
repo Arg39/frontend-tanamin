@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../button/button';
 import useMenuStore from '../../../zustand/menuStore';
@@ -19,25 +19,66 @@ export default function Navbar() {
   } = useMenuStore();
 
   const { navigationPublic } = useNavigationStore();
+  const [openDropdown, setOpenDropdown] = useState(null);
 
   // Helper to render navigation links, with special case for Kategori
-  const renderNavLinks = (className, onClick) => (
+  const renderNavLinks = (className, onClick, isMobile = false) => (
     <>
-      {navigationPublic.map((nav) =>
-        nav.links.map((link) => (
-          <Link
-            key={link.href}
-            to={link.href}
-            className={`${className} ${
-              activeNav === nav.label
-                ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
-                : ''
-            }`}
-            onClick={onClick}
+      {navigationPublic.map((nav, idx) =>
+        nav.links.length > 1 ? (
+          <div
+            key={nav.label}
+            className={`relative group ${isMobile ? '' : 'cursor-pointer'}`}
+            onMouseEnter={() => !isMobile && setOpenDropdown(idx)}
+            onMouseLeave={() => !isMobile && setOpenDropdown(null)}
           >
-            {link.text}
-          </Link>
-        ))
+            <span
+              className={`${className} flex items-center`}
+              onClick={() => isMobile && setOpenDropdown(openDropdown === idx ? null : idx)}
+            >
+              {nav.label.charAt(0).toUpperCase() + nav.label.slice(1)}
+              <Icon type="dropdown" className="ml-1 w-4 h-4" />
+            </span>
+            {/* Dropdown */}
+            {openDropdown === idx && (
+              <div
+                className={`absolute ${
+                  isMobile ? 'static' : 'left-0 top-[88%] '
+                } bg-white-100 shadow-lg rounded-md mt-2 z-50 min-w-[160px]`}
+                style={isMobile ? { position: 'static', marginTop: 0 } : {}}
+              >
+                {nav.links.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className="block px-4 py-2 text-gray-800 hover:bg-primary-100"
+                    onClick={() => {
+                      if (onClick) onClick();
+                      setOpenDropdown(null);
+                    }}
+                  >
+                    {link.text}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          nav.links.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={`${className} ${
+                activeNav === nav.label
+                  ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+                  : ''
+              }`}
+              onClick={onClick}
+            >
+              {link.text}
+            </Link>
+          ))
+        )
       )}
     </>
   );
@@ -146,7 +187,7 @@ export default function Navbar() {
               animate={{ height: 'auto' }}
               exit={{ height: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden fixed top-16 left-0 w-full bg-white shadow-md lg:hidden z-50"
+              className="overflow-hidden fixed top-16 left-0 w-full bg-white-100 shadow-md lg:hidden z-50"
             >
               <div className="flex flex-col space-y-4 bg-white-100 p-6 relative">
                 <Button

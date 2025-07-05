@@ -103,12 +103,44 @@ export default function CourseAdmin() {
     {
       Header: 'Kategori',
       accessor: 'category',
-      width: '25%',
+      width: '15%',
       disableSort: true,
     },
     {
-      Header: 'Tanggal Dibuat',
-      accessor: 'created_at',
+      Header: 'Status',
+      accessor: 'status',
+      width: '10%',
+      disableSort: true,
+      Cell: ({ value }) => {
+        let label = '';
+        let colorClass = '';
+        switch (value) {
+          case 'new':
+            label = 'Baru';
+            colorClass = 'bg-gray-200 text-gray-800';
+            break;
+          case 'edited':
+            label = 'Diedit';
+            colorClass = 'bg-yellow-200 text-yellow-800';
+            break;
+          case 'awaiting_approval':
+            label = 'Menunggu Persetujuan';
+            colorClass = 'bg-blue-200 text-blue-800';
+            break;
+          case 'published':
+            label = 'Dipublikasikan';
+            colorClass = 'bg-green-200 text-green-800';
+            break;
+          default:
+            label = 'Tidak Diketahui';
+            colorClass = 'bg-gray-100 text-gray-500';
+        }
+        return <div className={`inline-block px-2 py-1 rounded ${colorClass}`}>{label}</div>;
+      },
+    },
+    {
+      Header: 'Tanggal',
+      accessor: 'updated_at',
       width: '20%',
       Cell: ({ value }) =>
         new Date(value).toLocaleDateString('id-ID', {

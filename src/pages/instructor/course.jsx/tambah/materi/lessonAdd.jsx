@@ -142,15 +142,15 @@ export default function LessonAdd() {
           <span>Kembali</span>
         </button>
 
-        <h2 className="text-xl font-bold text-primary-700 mb-4">Tambah Materi Kursus</h2>
+        <h2 className="text-xl font-bold text-primary-700 mb-4">Tambah Pembelajaran Kursus</h2>
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <TextInput
-            label="Judul materi"
+            label="Judul Pembelajaran"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            placeholder="Masukkan judul materi"
+            placeholder="Masukkan judul Pembelajaran"
           />
           <SelectOption
             label="Jenis Pembelajaran"

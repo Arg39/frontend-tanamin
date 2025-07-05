@@ -18,7 +18,6 @@ import CourseAdd from '../pages/admin/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
 import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
-import RingkasanEdit from '../pages/instructor/course.jsx/edit/ringkasanEdit';
 import CourseAttributeEdit from '../pages/instructor/course.jsx/edit/atributEdit';
 import ModulAdd from '../pages/instructor/course.jsx/tambah/materi/modulAdd';
 import LessonAdd from '../pages/instructor/course.jsx/tambah/materi/lessonAdd';
@@ -29,6 +28,8 @@ import CourseAttributeAdd from '../pages/instructor/course.jsx/tambah/atributAdd
 import TentangKami from '../pages/tentangKami';
 import Faq from '../pages/faq';
 import KontakKami from '../pages/kontakKami';
+import RingkasanEditInstructor from '../pages/instructor/course.jsx/edit/ringkasanEditInstructor';
+import RingkasanEditAdmin from '../pages/admin/course/detail/ringkasanEditAdmin';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -102,6 +103,7 @@ const adminRoutes = [
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
   { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
+  { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEditAdmin /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
 ];
 
@@ -109,7 +111,7 @@ const instructorRoutes = [
   { path: 'dashboard', element: <DashboardInstructor /> },
   { path: 'kursus', element: <CourseAdmin /> },
   { path: 'kursus/:id/lihat/:tab', element: <ValidatedCourseDetailInstructor /> },
-  { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEdit /> },
+  { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEditInstructor /> },
   { path: 'kursus/:courseId/tambah/persyaratan-deskripsi', element: <CourseAttributeAdd /> },
   {
     path: 'kursus/:courseId/edit/persyaratan-deskripsi/:attributeId?',
