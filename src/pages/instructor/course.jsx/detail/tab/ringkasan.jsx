@@ -126,9 +126,7 @@ export default function CourseRingkasan({ editable }) {
   const imageUrl = isImageSet ? data.image : null;
 
   const handlePublish = async () => {
-    // Hapus parameter 'e' karena tidak digunakan
     try {
-      // Prepare FormData for file upload
       const formData = new FormData();
       formData.append('status', 'awaiting_approval');
 

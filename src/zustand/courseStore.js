@@ -160,6 +160,27 @@ const useCourseStore = create((set, get) => ({
     }
   },
 
+  async deleteCourse(id) {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus kursus');
+      set({ loading: false, error: null });
+      return json;
+    } catch (e) {
+      set({ error: e.message, loading: false });
+      throw e;
+    }
+  },
+
   async fetchCourseDetailByTab({ tab, id }) {
     set({ courseDetailLoading: true, courseDetailError: null });
     try {

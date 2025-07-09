@@ -99,56 +99,62 @@ export default function ReactTable({
               </td>
             </tr>
           ) : (
-            data.map((row, i) => (
-              <tr key={row.id || i} className="hover:bg-gray-100">
-                {numbering && (
-                  <td className="border border-gray-300 px-4 py-2 text-sm w-12 text-center">
-                    {(pagination.currentPage - 1) * pagination.perPage + i + 1}
-                  </td>
-                )}
-                {columns.map((col, ci) => {
-                  const value =
-                    typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
-
-                  const widthStyle = col.width ? { width: col.width } : {};
-
-                  return (
-                    <td key={ci} style={widthStyle} className="border border-gray-300 px-4 py-2">
-                      {col.Cell ? col.Cell({ value }) : value}
+            data.map((row, i) => {
+              const rowObject = { original: row }; // 🔥 fix di sini
+              return (
+                <tr key={row.id || i} className="hover:bg-gray-100">
+                  {numbering && (
+                    <td className="border border-gray-300 px-4 py-2 text-sm w-12 text-center">
+                      {(pagination.currentPage - 1) * pagination.perPage + i + 1}
                     </td>
-                  );
-                })}
-              </tr>
-            ))
+                  )}
+                  {columns.map((col, ci) => {
+                    const value =
+                      typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
+                    const widthStyle = col.width ? { width: col.width } : {};
+                    return (
+                      <td key={ci} style={widthStyle} className="border border-gray-300 px-4 py-2">
+                        {col.Cell ? col.Cell({ value, row: rowObject }) : value}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>
 
       {/* Responsive table for smaller screens */}
       <div className="block sm:hidden">
-        {data.map((row, i) => (
-          <div
-            key={row.id || i}
-            className="border border-gray-300 rounded-lg mb-4 p-4 bg-white shadow"
-          >
-            {numbering && (
-              <div className="mb-2">
-                <strong>No:</strong> {(pagination.currentPage - 1) * pagination.perPage + i + 1}
-              </div>
-            )}
-            {columns.map((col, ci) => {
-              const value =
-                typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
-              return (
-                <div key={ci} className="mb-2">
-                  <strong>{col.Header}:</strong> {col.Cell ? col.Cell({ value }) : value}
+        {data.map((row, i) => {
+          const rowObject = { original: row }; // 🔥 fix juga di sini
+          return (
+            <div
+              key={row.id || i}
+              className="border border-gray-300 rounded-lg mb-4 p-4 bg-white shadow"
+            >
+              {numbering && (
+                <div className="mb-2">
+                  <strong>No:</strong> {(pagination.currentPage - 1) * pagination.perPage + i + 1}
                 </div>
-              );
-            })}
-          </div>
-        ))}
+              )}
+              {columns.map((col, ci) => {
+                const value =
+                  typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
+                return (
+                  <div key={ci} className="mb-2">
+                    <strong>{col.Header}:</strong>{' '}
+                    {col.Cell ? col.Cell({ value, row: rowObject }) : value}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
 
+      {/* Pagination controls */}
       <div className="pagination mt-4 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
         <div className="flex space-x-4">
           <button

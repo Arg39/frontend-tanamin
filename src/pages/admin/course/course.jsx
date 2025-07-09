@@ -9,11 +9,23 @@ import useCategoryStore from '../../../zustand/categoryStore';
 import useInstructorStore from '../../../zustand/instructorStore';
 import TableFilter from '../../../components/table/tableFilter';
 import { useNavigate } from 'react-router-dom';
+import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
+import { toast } from 'react-toastify';
 
 export default function Course() {
   const navigate = useNavigate();
-  const { courses, fetchCourses, pagination, sortBy, sortOrder, perPage, error, loading } =
-    useCourseStore();
+  const {
+    courses,
+    fetchCourses,
+    pagination,
+    sortBy,
+    sortOrder,
+    perPage,
+    error,
+    loading,
+    deleteCourse,
+    updateCourseDetail,
+  } = useCourseStore();
   const { token } = useAuthStore();
   const { categories, fetchCategoryOptions } = useCategoryStore();
   const { instructorSelectOptions, fetchInstructoryOptions } = useInstructorStore();
@@ -25,6 +37,8 @@ export default function Course() {
     date: { start: '', end: '' },
   });
   const [searchInput, setSearchInput] = useState('');
+
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   useEffect(() => {
     fetchCategoryOptions();
@@ -91,6 +105,29 @@ export default function Course() {
       dateStart: filterValues.date.start,
       dateEnd: filterValues.date.end,
     });
+  };
+
+  const handlePublish = async (id) => {
+    try {
+      const formData = new FormData();
+      formData.append('status', 'published');
+
+      const res = await updateCourseDetail({
+        id,
+        data: formData,
+      });
+
+      if (res.status === 'success') {
+        toast.success(res.message || 'Berhasil memperbarui ringkasan!');
+        navigate(-1);
+      } else {
+        toast.error(res.message || 'Gagal memperbarui ringkasan');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || 'Gagal menyimpan data');
+    } finally {
+    }
   };
 
   // Filtering table
@@ -190,30 +227,80 @@ export default function Course() {
       accessor: 'id',
       width: '10%',
       disableSort: true,
-      Cell: ({ value }) => (
-        <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
-          <button
-            className="p-1 px-4 rounded-md bg-primary-700 text-white-100 hover:bg-primary-800"
-            onClick={() => {
-              navigate(`/admin/kursus/${value}/lihat/ringkasan`);
-            }}
-          >
-            Lihat
-          </button>
-          {/* button to publish */}
-          <button className="p-1 px-4 rounded-md bg-blue-500 hover:bg-blue-700 text-white-100">
-            Publish
-          </button>
-          <button
-            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
-            onClick={() => {
-              console.log('Delete course with ID:', value);
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      ),
+      Cell: ({ row }) => {
+        const course = row.original;
+
+        return (
+          <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
+            <button
+              className="p-1 px-4 rounded-md bg-primary-700 text-white-100 hover:bg-primary-800"
+              onClick={() => {
+                navigate(`/admin/kursus/${course.id}/lihat/ringkasan`);
+              }}
+            >
+              Lihat
+            </button>
+
+            {course.status !== 'published' && (
+              <button
+                className="p-1 px-4 rounded-md bg-blue-500 hover:bg-blue-700 text-white-100"
+                onClick={() =>
+                  openModal({
+                    title: 'Konfirmasi Publish',
+                    message:
+                      'Apakah Anda yakin ingin mem-publish kursus ini? Jika iya maka kursus ini akan tersedia untuk umum.',
+                    onConfirm: async () => {
+                      closeModal();
+                      await handlePublish(course.id);
+                    },
+                    onCancel: () => {
+                      closeModal();
+                    },
+                  })
+                }
+              >
+                Publish
+              </button>
+            )}
+
+            <button
+              className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
+              onClick={() => {
+                openModal({
+                  title: 'Konfirmasi Hapus',
+                  message:
+                    'Apakah Anda yakin ingin menghapus kusus ini?, jika iya, semua data terkait kursus ini akan dihapus.',
+                  onConfirm: async () => {
+                    closeModal();
+                    try {
+                      await deleteCourse(course.id);
+                      toast.success('Kursus berhasil dihapus!');
+                      fetchCourses({
+                        sortBy,
+                        sortOrder,
+                        perPage,
+                        page: pagination.currentPage,
+                        search: filterValues.search,
+                        category: filterValues.category,
+                        instructor: filterValues.instructor,
+                        dateStart: filterValues.date.start,
+                        dateEnd: filterValues.date.end,
+                      });
+                    } catch (e) {
+                      toast.error(`Gagal menghapus kursus: ${e.message}`);
+                    }
+                  },
+                  onCancel: () => {
+                    closeModal();
+                  },
+                });
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        );
+      },
     },
   ];
 
