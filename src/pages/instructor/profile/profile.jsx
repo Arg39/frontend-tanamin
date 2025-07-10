@@ -10,7 +10,7 @@ const dummyProfile = {
   last_name: 'Pratama',
   username: 'banupra',
   email: 'banu.pratama@email.com',
-  telephone: '+628123456789',
+  // telephone: '+628123456789',
   expertise: 'Web Development, React, Node.js',
   about: 'Instruktur berpengalaman di bidang pengembangan web dan teknologi modern.',
   social_media: [
@@ -57,11 +57,17 @@ export default function InstructorProfile() {
           <div className="flex flex-col md:flex-row gap-8">
             {/* Photo & Social */}
             <div className="flex-shrink-0 w-full md:w-64 flex flex-col items-center bg-white rounded-lg p-6 shadow border border-gray-100 mx-auto">
-              <img
-                src={profile.photo}
-                alt="Profile"
-                className="w-36 h-36 rounded-full object-cover border-4 mb-4 shadow"
-              />
+              {profile.photo ? (
+                <img
+                  src={profile.photo}
+                  alt="Profile"
+                  className="w-36 h-36 rounded-full object-cover border-4 mb-4 shadow"
+                />
+              ) : (
+                <div className="w-36 h-36 flex items-center justify-center rounded-full bg-gray-100 border-4 mb-4 shadow">
+                  <Icon type="user" className="w-20 h-20 text-gray-600" />
+                </div>
+              )}
               <div className="text-xl text-primary-700 font-semibold break-all text-center">
                 @{profile.username}
               </div>
@@ -94,8 +100,14 @@ export default function InstructorProfile() {
                     <span className="block text-tertiary-500 text-xs font-semibold mb-1">
                       {label}
                     </span>
-                    <div className="text-base text-primary-700 font-semibold break-all whitespace-pre-wrap">
-                      {value}
+                    <div className="text-base text-primary-700 font-semibold break-all whitespace-pre-wrap mt-2">
+                      {value && value.trim() !== '' ? (
+                        value
+                      ) : (
+                        <span className="text-red-500 font-normal text-sm p-2 bg-error-100 rounded-md">
+                          Belum diatur, silahkan edit untuk mengaturnya!
+                        </span>
+                      )}
                     </div>
                   </div>
                 ))}
@@ -105,8 +117,14 @@ export default function InstructorProfile() {
                 <span className="block text-tertiary-500 text-xs font-semibold mb-1">
                   Tentang Instruktur
                 </span>
-                <div className="text-base text-primary-700 font-semibold whitespace-pre-wrap break-words">
-                  {profile.about}
+                <div className="text-base text-primary-700 font-semibold whitespace-pre-wrap break-words mt-1">
+                  {profile.about && profile.about.trim() !== '' ? (
+                    profile.about
+                  ) : (
+                    <span className="text-red-500 font-normal text-sm p-2 bg-error-100 rounded-md">
+                      Belum diatur, silahkan edit untuk mengaturnya!
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

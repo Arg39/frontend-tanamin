@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 // Komponen pesan default
 function BelumDiatur() {
   return (
-    <span className="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-md">
+    <span className="w-fit inline-block text-red-500 font-normal text-sm p-2 bg-error-100 px-3 py-1 rounded-md">
       Belum diatur, silahkan edit untuk mengaturnya!
     </span>
   );
