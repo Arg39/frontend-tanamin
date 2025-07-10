@@ -4,7 +4,7 @@ export default function WysiwygContent({ html }) {
   return (
     <>
       <div
-        className="text-md text-black-900 leading-relaxed wysiwyg-content"
+        className="text-md text-black leading-relaxed wysiwyg-content"
         dangerouslySetInnerHTML={{ __html: html }}
       />
       <style>
@@ -83,6 +83,7 @@ export default function WysiwygContent({ html }) {
             object-fit: contain;
             background: #f8fafc;
             padding: 8px;
+            box-sizing: border-box;
           }
 
           /* Alignment styles */
@@ -117,6 +118,33 @@ export default function WysiwygContent({ html }) {
             vertical-align: middle !important;
             line-height: 1 !important;
             display: inline !important;
+          }
+
+          /* --- MOBILE RESPONSIVE --- */
+          @media (max-width: 640px) {
+            .wysiwyg-content {
+              font-size: 0.98rem;
+            }
+            .wysiwyg-content img {
+              max-width: 100vw;
+              width: 100%;
+              height: auto;
+              margin: 1em 0;
+              padding: 4px;
+              box-sizing: border-box;
+              border-radius: 6px;
+              box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            }
+            .wysiwyg-content img.ql-align-left,
+            .wysiwyg-content img.ql-align-right {
+              float: none;
+              display: block;
+              margin: 1em auto;
+            }
+            .wysiwyg-content pre.ql-syntax {
+              font-size: 0.92em;
+              padding: 8px;
+            }
           }
         `}
       </style>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import AdminTemplate from '../../../template/templateAdmin';
 import Icon from '../../../components/icons/icon';
 import TextInput from '../../../components/form/textInput';
@@ -9,6 +9,12 @@ import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import useCategoryStore from '../../../zustand/categoryStore';
 
 export default function CategoryEdit() {
+  const location = useLocation();
+  const breadcrumbItems = [
+    { label: 'Kategori', path: '/admin/kategori' },
+    { label: 'Edit Kategori', path: location.pathname },
+  ];
+
   const { id } = useParams();
   const navigate = useNavigate();
   const { openModal, closeModal } = useConfirmationModalStore();
@@ -69,14 +75,14 @@ export default function CategoryEdit() {
   };
 
   return (
-    <AdminTemplate activeNav="kategori">
-      <div className="wf-full bg-white-100 p-6 rounded-lg shadow-md">
+    <AdminTemplate activeNav="kategori" breadcrumbItems={breadcrumbItems}>
+      <div className="wf-full bg-white p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
-          className="flex items-center gap-2 bg-secondary-900 text-white-100 px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
+          className="flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
           onClick={() => navigate(-1)}
         >
-          <Icon type="arrow-left" className="size-4" color="currentColor" />
+          <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
           <span>Kembali</span>
         </button>
         <h2 className="text-2xl font-bold">Edit Kategori</h2>

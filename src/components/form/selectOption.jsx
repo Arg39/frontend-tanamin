@@ -35,9 +35,9 @@ export default function SelectOption({
         <div
           className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 ${
             disabled
-              ? 'bg-gray-100 text-black-900 cursor-not-allowed'
-              : 'focus:ring-primary-500 bg-white-100 cursor-pointer'
-          } w-full ${value ? 'text-black-900' : 'text-gray-400'}`}
+              ? 'bg-gray-100 text-black cursor-not-allowed'
+              : 'focus:ring-primary-500 bg-white cursor-pointer'
+          } w-full ${value ? 'text-black' : 'text-gray-400'}`}
           onClick={() => !disabled && setIsOpen(!isOpen)}
         >
           {value ? (
@@ -58,11 +58,11 @@ export default function SelectOption({
           </button>
         )}
         {isOpen && !disabled && (
-          <ul className="absolute z-10 bg-white-100 border border-gray-300 rounded-md mt-1 w-full max-h-48 overflow-y-auto select-dropdown">
+          <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-48 overflow-y-auto select-dropdown">
             {options.map((option) => (
               <li
                 key={option.value}
-                className="px-3 py-2 hover:bg-primary-500 hover:text-white-100 cursor-pointer"
+                className="px-3 py-2 hover:bg-primary-500 hover:text-white cursor-pointer"
                 onClick={() => handleSelect(option.value)}
               >
                 {option.label}

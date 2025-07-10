@@ -6,6 +6,7 @@ import Button from '../components/button/button';
 import { useLocation } from 'react-router-dom';
 import useCategoryStore from '../zustand/categoryStore';
 import CategoryCard from '../components/card/categoryCard';
+import InstructorCarousel from '../components/carousel/InstructorCarousel';
 
 // Custom hook to detect if device is mobile
 function useIsMobile() {
@@ -44,16 +45,76 @@ export default function Beranda2() {
     console.log('Cari kategori:', category);
   };
 
+  const instructors = [
+    {
+      id: 1,
+      image: 'https://randomuser.me/api/portraits/men/32.jpg',
+      name: 'Budi Santoso',
+      expertise: 'Data Science',
+      courseCount: 5,
+    },
+    {
+      id: 2,
+      image: 'https://randomuser.me/api/portraits/women/44.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 3,
+    },
+    {
+      id: 3,
+      image: 'https://randomuser.me/api/portraits/women/1.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 3,
+    },
+    {
+      id: 4,
+      image: 'https://randomuser.me/api/portraits/women/2.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 2,
+    },
+    {
+      id: 5,
+      image: 'https://randomuser.me/api/portraits/women/3.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 2,
+    },
+    {
+      id: 6,
+      image: 'https://randomuser.me/api/portraits/women/4.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 2,
+    },
+    {
+      id: 8,
+      image: 'https://randomuser.me/api/portraits/women/5.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 2,
+    },
+    {
+      id: 10,
+      image: 'https://randomuser.me/api/portraits/women/6.jpg',
+      name: 'Siti Aminah',
+      expertise: 'UI/UX Design',
+      courseCount: 2,
+    },
+    // ...tambahkan instruktur lain
+  ];
+
   return (
     <Template
       activeNav="beranda"
-      className="h-screen w-screen bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white-100 to-100%"
+      className="h-screen w-screen bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white to-100%"
       locationKey={location.key}
     >
       <div className="xl:px-20 lg:px-10 md:px-14 sm:px-8 px-8 pt-8 w-full">
         <div className="mt-16 gap-8 w-full flex flex-col lg:flex-row">
           <div className="flex flex-col w-full lg:w-1/2">
-            <h3 className="p-2 px-4 rounded-full bg-primary-400 text-primary-900 font-medium items-center max-w-fit text-lg lg:text-xl">
+            <h3 className="p-2 px-4 rounded-full bg-primary-200 text-primary-900 font-medium items-center max-w-fit text-lg lg:text-xl">
               Welcome to Course Tanamin
             </h3>
             <h1 className="text-3xl lg:text-4xl font-semibold mt-16 lg:mt-32">
@@ -72,7 +133,7 @@ export default function Beranda2() {
             </p>
             <Button
               variant="primary"
-              className="text-base lg:text-lg mt-8 lg:mt-16 w-fit px-6 lg:px-8"
+              className="font-medium bg-primary-700 text-white text-base lg:text-lg mt-8 lg:mt-16 w-fit px-6 lg:px-8"
               to="/course"
             >
               Jelajahi Course
@@ -88,7 +149,7 @@ export default function Beranda2() {
           </div>
         </div>
       </div>
-      <div className="mt-16 lg:mt-32 w-full bg-white-100">
+      <div className="mt-16 lg:mt-32 w-full bg-white">
         <div className="xl:p-20 lg:p-10 md:p-8 sm:p-6 p-4">
           <div className="mb-16">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Kategori Populer</h2>
@@ -107,10 +168,17 @@ export default function Beranda2() {
               </div>
             </div>
           </div>
+
           <div className="mb-4">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
               Teratas Minggu Ini
             </h2>
+            <div className="mb-20"></div>
+          </div>
+
+          <div className="mb-4">
+            <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Instruktur Kami</h2>
+            <InstructorCarousel instructors={instructors} />
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ const formatNumber = (num) => {
 
 const StatCard = ({ icon, label, value }) => {
   return (
-    <div className="flex flex-row lg:flex-col gap-6 lg:gap-4 items-center justify-center p-4 bg-white-100 rounded-lg shadow-md">
+    <div className="flex flex-row lg:flex-col gap-6 lg:gap-4 items-center justify-center p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-center items-center mb-2 bg-primary-800 rounded-full w-16 h-16 md:w-20 md:h-20">
         <Icon type={icon} className="size-8 md:size-10" color="white" />
       </div>

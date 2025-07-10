@@ -3,9 +3,12 @@ import InstructorTemplate from '../../../template/templateInstructor';
 import ReactTable from '../../../components/table/reactTable';
 import TableFilter from '../../../components/table/tableFilter';
 import useCourseStore from '../../../zustand/courseStore';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function CourseAdmin() {
+  const location = useLocation();
+  const breadcrumbItems = [{ label: 'Kursus', path: location.pathname }];
+
   const {
     instructorCourses,
     instructorPagination,
@@ -174,10 +177,10 @@ export default function CourseAdmin() {
   ];
 
   return (
-    <InstructorTemplate activeNav="kursus">
-      <div className="w-full bg-white-100 rounded-md flex flex-col p-6 shadow-md">
+    <InstructorTemplate activeNav="kursus" breadcrumbItems={breadcrumbItems}>
+      <div className="w-full bg-white rounded-md flex flex-col p-6 shadow-md">
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
-          <p className="text-xl md:text-3xl font-bold mb-2 md:mb-0">Kursus</p>
+          <h2 className="text-2xl font-bold mb-4">Daftar Kursus</h2>
         </div>
 
         <TableFilter

@@ -32,10 +32,10 @@ export default function CuourseDetail({ editable }) {
   const ActiveComponent = tabComponents[activeTab] || CourseRingkasan;
 
   return (
-    <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
+    <div className="w-full bg-white p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
       <div>
         <button
-          className="flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
+          className="flex items-center gap-2 bg-secondary-900 text-white px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
           onClick={() => {
             if (role === 'admin') {
               navigate('/admin/kursus');
@@ -44,8 +44,8 @@ export default function CuourseDetail({ editable }) {
             }
           }}
         >
-          <Icon type="arrow-left" className="size-[1rem] text-white-100" />
-          <span className="text-white-100">Kembali</span>
+          <Icon type="arrow-left" className="size-[1rem] text-white" />
+          <span className="text-white">Kembali</span>
         </button>
         <h4 className="text-lg sm:text-2xl font-bold">Detail Kursus</h4>
       </div>
@@ -55,7 +55,7 @@ export default function CuourseDetail({ editable }) {
             key={tabItem.key}
             className={`flex-shrink-0 p-2 px-4 rounded-full border transition-colors duration-150 text-sm sm:text-base ${
               activeTab === tabItem.key
-                ? 'bg-primary-800 text-white-100'
+                ? 'bg-primary-800 text-white'
                 : 'border-primary-800 text-primary-800'
             }`}
             onClick={() => handleTabChange(tabItem.key)}
@@ -64,7 +64,7 @@ export default function CuourseDetail({ editable }) {
           </button>
         ))}
       </div>
-      <div className="border border-gray-200 p-2 sm:p-4 rounded-md bg-white-100 ">
+      <div className="border border-gray-200 p-2 sm:p-4 rounded-md bg-white ">
         <ActiveComponent editable={editable} />
       </div>
     </div>

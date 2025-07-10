@@ -21,14 +21,14 @@ function DropdownMenu({ isMobile, onEdit, onDelete, editable }) {
   return (
     <div className="relative" ref={ref}>
       <button
-        className="p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100"
+        className="p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white"
         onClick={() => setOpen((o) => !o)}
         title="Options"
       >
         <Icon type="more" className={isMobile ? 'w-4 h-4' : 'w-6 h-6'} />
       </button>
       {open && (
-        <ul className="absolute right-0 mt-2 w-36 sm:w-32 bg-white-100 border rounded shadow-lg z-50 text-xs sm:text-sm">
+        <ul className="absolute right-0 mt-2 w-36 sm:w-32 bg-white border rounded shadow-lg z-50 text-xs sm:text-sm">
           <li>
             <button
               className="block w-full text-left px-4 py-3 hover:bg-gray-100"
@@ -105,7 +105,7 @@ export default function SortableModule({
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-white-100 p-2 sm:p-4 rounded shadow border-2 transition-colors relative ${
+      className={`bg-white p-2 sm:p-4 rounded shadow border-2 transition-colors relative ${
         isOver ? 'border-primary-400 bg-primary-50' : 'border-transparent'
       }`}
       tabIndex={0}
@@ -137,7 +137,7 @@ export default function SortableModule({
         {editable && (
           <div className="flex gap-2 items-center justify-end">
             <button
-              className={`bg-tertiary-500 rounded-md p-2 text-white-100 hover:bg-tertiary-700 text-xs sm:text-sm flex items-center gap-1 ${
+              className={`bg-tertiary-500 rounded-md p-2 text-white hover:bg-tertiary-700 text-xs sm:text-sm flex items-center gap-1 ${
                 isMobile ? 'text-base' : ''
               }`}
               onClick={() => onAddLesson(module.id)}

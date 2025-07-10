@@ -155,13 +155,13 @@ export default function RingkasanEdit() {
 
   return (
     <div>
-      <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
+      <div className="w-full bg-white p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
         <button
-          className="w-fit flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
+          className="w-fit flex items-center gap-2 bg-secondary-900 text-white px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
           onClick={() => navigate(-1)}
           type="button"
         >
-          <Icon type="arrow-left" className="size-[1rem] text-white-100" />
+          <Icon type="arrow-left" className="size-[1rem] text-white" />
           Kembali
         </button>
         <h1 className="text-2xl font-bold mb-4 text-primary-900">Edit Ringkasan</h1>
@@ -247,7 +247,7 @@ export default function RingkasanEdit() {
           <div className="flex gap-4 items-center justify-end">
             <button
               type="submit"
-              className="bg-primary-700 text-white-100 px-6 py-2 rounded hover:bg-primary-800 font-semibold"
+              className="bg-primary-700 text-white px-6 py-2 rounded hover:bg-primary-800 font-semibold"
               disabled={submitting}
             >
               {submitting ? 'Menyimpan...' : 'Simpan Perubahan'}

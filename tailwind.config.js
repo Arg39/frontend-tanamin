@@ -82,30 +82,6 @@ module.exports = {
           900: '#7a2222',
           950: '#420d0d',
         },
-        black: {
-          100: '#e6e8e7', // blackLight
-          200: '#d9dcda', // blackLightHover
-          300: '#b1b7b3', // blackLightActive
-          400: '#04170b', // blackNormal
-          500: '#04150a', // blackNormalHover
-          600: '#031209', // blackNormalActive
-          700: '#031108', // blackDark
-          800: '#020e07', // blackDarkHover
-          850: '#020a05', // blackDarkActive
-          900: '#010804', // blackDarker
-        },
-        white: {
-          100: '#fefffe', // whiteLight
-          200: '#fefffe', // whiteLightHover
-          300: '#fcfefd', // whiteLightActive
-          400: '#f6fcf8', // whiteNormal
-          500: '#dde3df', // whiteNormalHover
-          600: '#c5cac6', // whiteNormalActive
-          700: '#b9bdba', // whiteDark
-          800: '#949795', // whiteDarkHover
-          850: '#6f7170', // whiteDarkActive
-          900: '#565857', // whiteDarker
-        },
       },
       fontFamily: {
         montserrat: ['Montserrat', 'sans-serif'],

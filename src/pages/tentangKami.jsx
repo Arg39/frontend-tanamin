@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Template from '../template/template';
-import Breadcrumb from '../components/breadcrumb/breadcrumb2';
+import Breadcrumb from '../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import { motion, useAnimationFrame } from 'framer-motion';
 
@@ -92,7 +92,7 @@ function ImageCarousel({ images, interval = 4000 }) {
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white-100 bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all duration-200 z-10"
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all duration-200 z-10"
             aria-label="Sebelumnya"
             type="button"
           >
@@ -100,7 +100,7 @@ function ImageCarousel({ images, interval = 4000 }) {
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white-100 bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all duration-200 z-10"
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full p-2 shadow-lg transition-all duration-200 z-10"
             aria-label="Selanjutnya"
             type="button"
           >
@@ -243,7 +243,7 @@ export default function TentangKami() {
 
   return (
     <Template activeNav="tentang-kami" locationKey={location.key}>
-      <main className=" bg-white-100 xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8">
+      <main className=" bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8">
         <Breadcrumb items={breadcrumbItems} />
         <section className="flex flex-col-reverse lg:flex-row items-center lg:items-start justify-between gap-8 py-8">
           <div className="flex-1 w-full">

@@ -6,7 +6,7 @@ export default function SearchFields({ categories }) {
     console.log('Form submitted');
   };
   return (
-    <div className="w-full h-full bg-white-100">
+    <div className="w-full h-full bg-white">
       <form onSubmit={handleSubmit} className="relative w-full">
         <input
           type="text"

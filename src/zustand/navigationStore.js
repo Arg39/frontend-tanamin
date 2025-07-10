@@ -79,13 +79,6 @@ const useNavigationStore = create((set) => ({
         { text: 'kategori', href: '/instruktur/kategori', icon: 'swatch' },
       ],
     },
-    {
-      label: 'keuangan',
-      links: [
-        { text: 'pemasukan', href: '/instruktur/pemasukan', icon: 'money' },
-        { text: 'pembayaran kursus', href: '/instruktur/pembayaran-kursus', icon: 'payment-solid' },
-      ],
-    },
   ],
 
   courseDetailTabs: [

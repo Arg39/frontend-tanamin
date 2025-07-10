@@ -44,7 +44,7 @@ export default function Navbar() {
               <div
                 className={`absolute ${
                   isMobile ? 'static' : 'left-0 top-[88%] '
-                } bg-white-100 shadow-lg rounded-md mt-2 z-50 min-w-[160px]`}
+                } bg-white shadow-lg rounded-md mt-2 z-50 min-w-[160px]`}
                 style={isMobile ? { position: 'static', marginTop: 0 } : {}}
               >
                 {nav.links.map((link) => (
@@ -95,7 +95,7 @@ export default function Navbar() {
   }, [isMenuOpen, isAccountMenuOpen]);
 
   return (
-    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 lg:p-0 md px-2 py-2 bg-white-100 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
+    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 lg:p-0 md px-2 py-2 bg-white flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
       {/* Logo */}
       <div>
         <img src="assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
@@ -139,7 +139,7 @@ export default function Navbar() {
           <>
             {/* Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black-900 bg-opacity-50 z-40 flex justify-center items-start"
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-start"
               onClick={closeMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -156,7 +156,7 @@ export default function Navbar() {
               className="overflow-hidden mt-16 w-full bg-white shadow-md lg:hidden fixed left-0 top-0 z-50"
               style={{ marginTop: '64px' }}
             >
-              <div className="flex flex-col space-y-4 bg-white-100 p-6 relative">
+              <div className="flex flex-col space-y-4 bg-white p-6 relative">
                 {renderNavLinks(
                   'text-lg font-medium text-gray-800 hover:text-primary-700',
                   closeMenu
@@ -173,7 +173,7 @@ export default function Navbar() {
           <>
             {/* Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black-900 bg-opacity-50 z-40"
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
               onClick={closeAccountMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -187,9 +187,9 @@ export default function Navbar() {
               animate={{ height: 'auto' }}
               exit={{ height: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden fixed top-16 left-0 w-full bg-white-100 shadow-md lg:hidden z-50"
+              className="overflow-hidden fixed top-16 left-0 w-full bg-white shadow-md lg:hidden z-50"
             >
-              <div className="flex flex-col space-y-4 bg-white-100 p-6 relative">
+              <div className="flex flex-col space-y-4 bg-white p-6 relative">
                 <Button
                   variant="login"
                   to={'masuk'}

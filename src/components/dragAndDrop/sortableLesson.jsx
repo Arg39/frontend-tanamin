@@ -47,7 +47,7 @@ export default function SortableLesson({
   return (
     <li
       ref={setNodeRef}
-      className={`p-2 sm:p-2 my-1 bg-white-100 border rounded shadow-sm flex items-center gap-2 justify-between ${
+      className={`p-2 sm:p-2 my-1 bg-white border rounded shadow-sm flex items-center gap-2 justify-between ${
         isDragging || activeId === lesson.id ? 'bg-yellow-100' : ''
       } ${isMobile ? 'min-h-[56px]' : ''}`}
       style={style}

@@ -62,7 +62,7 @@ export default function PasswordInputGenerator({
             <button
               type="button"
               onClick={handleGenerate}
-              className="absolute right-14 top-1/2 -translate-y-1/2 bg-primary-500 text-white-100 px-2 py-1 rounded text-xs hover:bg-primary-600"
+              className="absolute right-14 top-1/2 -translate-y-1/2 bg-primary-500 text-white px-2 py-1 rounded text-xs hover:bg-primary-600"
               tabIndex={-1}
             >
               Generate

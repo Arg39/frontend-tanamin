@@ -117,8 +117,8 @@ export default function ImagePicker({
         />
       </div>
       {crop && showCrop && !disabled && (
-        <div className="fixed inset-0 bg-black-900 bg-opacity-60 flex items-center justify-center z-100 crop-overlay">
-          <div className="bg-white-100 p-4 rounded shadow-lg relative w-[90vw] max-w-lg h-[60vw] max-h-[80vh] flex flex-col">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-100 crop-overlay">
+          <div className="bg-white p-4 rounded shadow-lg relative w-[90vw] max-w-lg h-[60vw] max-h-[80vh] flex flex-col">
             <div className="relative flex-1">
               <Cropper
                 image={localPreview}
@@ -140,7 +140,7 @@ export default function ImagePicker({
               </button>
               <button
                 type="button"
-                className="px-4 py-2 bg-primary-500 text-white-100 rounded"
+                className="px-4 py-2 bg-primary-500 text-white rounded"
                 onClick={handleCropSave}
               >
                 Crop & Save

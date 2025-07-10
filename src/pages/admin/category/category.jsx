@@ -6,9 +6,12 @@ import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import TableFilter from '../../../components/table/tableFilter';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Category() {
+  const location = useLocation();
+  const breadcrumbItems = [{ label: 'Kategori', path: location.pathname }];
+
   const {
     categories,
     fetchCategories,
@@ -143,17 +146,17 @@ export default function Category() {
       Cell: ({ value }) => (
         <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
           <Link
-            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white-100"
+            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white"
             to={`/admin/kategori/edit/${value}`}
           >
             Edit
           </Link>
           <button
-            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
+            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white"
             onClick={() => {
               openModal({
                 title: 'Konfirmasi hapus',
-                message: 'Apakah Anda yakin menghapus?',
+                message: 'Apakah Anda yakin menghapus kategori ini?',
                 onConfirm: () => {
                   deleteCategory(value);
                 },
@@ -170,8 +173,8 @@ export default function Category() {
 
   return (
     <div>
-      <AdminTemplate activeNav="kategori">
-        <div className="bg-white-100 p-6 rounded-lg shadow-md">
+      <AdminTemplate activeNav="kategori" breadcrumbItems={breadcrumbItems}>
+        <div className="bg-white p-6 rounded-lg shadow-md">
           <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
             <h2 className="text-2xl font-bold">Daftar Kategori</h2>
             <Button

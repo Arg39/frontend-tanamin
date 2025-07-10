@@ -166,7 +166,7 @@ const useCategoryStore = create((set) => ({
 
     const category = useCategoryStore.getState().categories.find((cat) => cat.id === id);
     if (category && category.used > 0) {
-      toast.info('Kategori tidak bisa dihapus karena sedang digunakan.');
+      toast.info('Kategori tidak bisa dihapus karena masih digunakan. pada beberapa kursus');
       return;
     }
 

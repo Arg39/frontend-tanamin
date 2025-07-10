@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import AdminTemplate from '../../../template/templateAdmin';
 import Icon from '../../../components/icons/icon';
 import TextInput from '../../../components/form/textInput';
@@ -11,6 +11,12 @@ import useInstructorStore from '../../../zustand/instructorStore';
 import useCourseStore from '../../../zustand/courseStore';
 
 export default function CourseAdd() {
+  const location = useLocation();
+  const breadcrumbItems = [
+    { label: 'Kursus', path: '/admin/kursus' },
+    { label: 'Tambah Kursus', path: location.pathname },
+  ];
+
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
@@ -73,14 +79,14 @@ export default function CourseAdd() {
   };
 
   return (
-    <AdminTemplate activeNav="kursus">
-      <div className="wf-full bg-white-100 p-6 rounded-lg shadow-md">
+    <AdminTemplate activeNav="kursus" breadcrumbItems={breadcrumbItems}>
+      <div className="wf-full bg-white p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
-          className="flex items-center gap-2 bg-secondary-900 text-white-100 px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
+          className="flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
           onClick={() => navigate(-1)}
         >
-          <Icon type="arrow-left" className="size-4" color="currentColor" />
+          <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
           <span>Kembali</span>
         </button>
         <h2 className="text-2xl font-bold">Tambah Kursus</h2>

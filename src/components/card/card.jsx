@@ -3,7 +3,7 @@ import Icon from '../icons/icon';
 
 export default function Card({ course, content = 'true' }) {
   return (
-    <div className="w-[300px] lg:w-[400px] h-[480px] lg:h-[560px] bg-white-100 rounded-xl shadow-2xl">
+    <div className="w-[300px] lg:w-[400px] h-[480px] lg:h-[560px] bg-white rounded-xl shadow-2xl">
       {content && (
         <>
           <div className="flex justify-center items-center">

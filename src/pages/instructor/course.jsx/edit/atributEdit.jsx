@@ -66,12 +66,12 @@ export default function CourseAttributeEdit() {
 
   return (
     <InstructorTemplate activeNav="kursus">
-      <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
+      <div className="w-full bg-white p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
         <button
-          className="flex w-fit items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
+          className="flex w-fit items-center gap-2 bg-secondary-900 text-white px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
           onClick={() => navigate(-1)}
         >
-          <Icon type="arrow-left" className="size-[1rem] text-white-100" />
+          <Icon type="arrow-left" className="w-4 h-4" />
           Kembali
         </button>
         <div className="text-2xl font-bold">Edit Atribut Kursus</div>
@@ -102,7 +102,7 @@ export default function CourseAttributeEdit() {
             <div className="flex justify-end gap-2">
               <button
                 onClick={handleSave}
-                className="bg-primary-700 text-white-100 px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center"
+                className="bg-primary-700 text-white px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center"
                 disabled={loading}
               >
                 Simpan

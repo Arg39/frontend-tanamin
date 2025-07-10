@@ -8,11 +8,14 @@ import useAuthStore from '../../../zustand/authStore';
 import useCategoryStore from '../../../zustand/categoryStore';
 import useInstructorStore from '../../../zustand/instructorStore';
 import TableFilter from '../../../components/table/tableFilter';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
 
 export default function Course() {
+  const location = useLocation();
+  const breadcrumbItems = [{ label: 'Kursus', path: location.pathname }];
+
   const navigate = useNavigate();
   const {
     courses,
@@ -233,7 +236,7 @@ export default function Course() {
         return (
           <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
             <button
-              className="p-1 px-4 rounded-md bg-primary-700 text-white-100 hover:bg-primary-800"
+              className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
               onClick={() => {
                 navigate(`/admin/kursus/${course.id}/lihat/ringkasan`);
               }}
@@ -243,7 +246,7 @@ export default function Course() {
 
             {course.status !== 'published' && (
               <button
-                className="p-1 px-4 rounded-md bg-blue-500 hover:bg-blue-700 text-white-100"
+                className="p-1 px-4 rounded-md bg-blue-500 hover:bg-blue-700 text-white"
                 onClick={() =>
                   openModal({
                     title: 'Konfirmasi Publish',
@@ -264,7 +267,7 @@ export default function Course() {
             )}
 
             <button
-              className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
+              className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white"
               onClick={() => {
                 openModal({
                   title: 'Konfirmasi Hapus',
@@ -305,8 +308,8 @@ export default function Course() {
   ];
 
   return (
-    <AdminTemplate activeNav="kursus">
-      <div className="bg-white-100 p-6 rounded-lg shadow-md">
+    <AdminTemplate activeNav="kursus" breadcrumbItems={breadcrumbItems}>
+      <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
           <h2 className="text-2xl font-bold mb-4">Daftar Kursus</h2>
           <Button

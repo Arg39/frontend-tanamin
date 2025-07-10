@@ -20,13 +20,13 @@ export default function LessonDetail() {
 
   return (
     <InstructorTemplate activeNav="kursus">
-      <div className="wf-full bg-white-100 p-6 rounded-lg shadow-md">
+      <div className="wf-full bg-white p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
-          className="flex items-center gap-2 bg-secondary-900 text-white-100 px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
+          className="flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
           onClick={() => navigate(-1)}
         >
-          <Icon type="arrow-left" className="size-4" color="currentColor" />
+          <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
           <span>Kembali</span>
         </button>
         <div className="flex items-center justify-between mb-4">
@@ -34,7 +34,7 @@ export default function LessonDetail() {
             Detail{' '}
             {lessonData?.type === 'quiz' ? 'Quiz' : lessonData?.type === 'material' ? 'Materi' : ''}
           </h2>
-          <button className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white-100 gap-2">
+          <button className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white gap-2">
             <Icon type={'edit'} className={'w-3 h-3'} /> Edit
           </button>
         </div>

@@ -33,7 +33,7 @@ export default function QuizBuilder({ quizContent, setQuizContent }) {
       ))}
       <button
         type="button"
-        className="w-fit bg-secondary-700 text-white-100 px-4 py-2 rounded hover:bg-secondary-600"
+        className="w-fit bg-secondary-700 text-white px-4 py-2 rounded hover:bg-secondary-600"
         onClick={addQuestion}
       >
         Tambah Pertanyaan

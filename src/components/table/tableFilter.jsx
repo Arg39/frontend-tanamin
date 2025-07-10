@@ -143,7 +143,7 @@ export default function TableFilter({
               <div>
                 <button
                   type="button"
-                  className="border px-2 py-1 rounded w-full text-left bg-white-100"
+                  className="border px-2 py-1 rounded w-full text-left bg-white"
                   onClick={() => setShowDateRange((prev) => !prev)}
                 >
                   {displayValue || filter.placeholder || 'Pilih rentang tanggal'}
@@ -151,7 +151,7 @@ export default function TableFilter({
                 {showDateRange && (
                   <div
                     ref={dateRangeRef}
-                    className="absolute z-20 bg-white-100 border rounded shadow-md p-4 mt-2 w-[260px] left-0"
+                    className="absolute z-20 bg-white border rounded shadow-md p-4 mt-2 w-[260px] left-0"
                   >
                     <div className="flex flex-col gap-2">
                       <div>
@@ -195,7 +195,7 @@ export default function TableFilter({
                         </button>
                         <button
                           type="button"
-                          className="px-3 py-1 rounded bg-primary-600 hover:bg-primary-700 text-white-100 text-sm"
+                          className="px-3 py-1 rounded bg-primary-600 hover:bg-primary-700 text-white text-sm"
                           onClick={() => setShowDateRange(false)}
                         >
                           OK
@@ -216,7 +216,7 @@ export default function TableFilter({
           type="button"
           onClick={handleReset}
           className="
-            px-4 py-2 rounded bg-red-700 text-white-100 hover:bg-red-800 text-sm font-medium
+            px-4 py-2 rounded bg-red-700 text-white hover:bg-red-800 text-sm font-medium
             w-full sm:w-auto
           "
         >

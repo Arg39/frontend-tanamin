@@ -156,7 +156,7 @@ export default function CourseRingkasan({ editable }) {
         <div className="flex flex-col md:flex-row gap-2">
           {role === 'instructor' && (data.status === 'new' || data.status === 'edited') && (
             <button
-              className="p-2 bg-tertiary-600 rounded-md text-white-100 flex gap-1 items-center"
+              className="p-2 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
               onClick={handlePublish}
             >
               <Icon type="send" className="h-5 w-5" />
@@ -165,7 +165,7 @@ export default function CourseRingkasan({ editable }) {
           )}
           <Link
             to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
-            className="flex items-center gap-2 bg-secondary-500 text-white-100 px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
+            className="flex items-center gap-2 bg-secondary-500 text-white px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
           >
             <Icon type="edit" className="h-4 w-4" />
             Edit

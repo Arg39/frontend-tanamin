@@ -43,7 +43,7 @@ export default function ProfileDropdown() {
     <div className="relative profile-dropdown-parent z-50">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center space-x-2 md:space-x-4 p-1 border border-black-200 rounded-md hover:bg-gray-300"
+        className="flex items-center space-x-2 md:space-x-4 p-1 border border-gray-400 rounded-md hover:bg-gray-100"
         type="button"
       >
         <div className="w-8 h-8 flex items-center justify-center bg-gray-300 rounded-full overflow-hidden">
@@ -61,16 +61,33 @@ export default function ProfileDropdown() {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white-100 border rounded-md shadow-lg z-50">
+        <div className="absolute right-0 mt-5 w-52 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-2">
+          {user?.role === 'instructor' && (
+            <>
+              <button
+                className="flex items-center gap-3 w-full px-4 py-1 text-left text-primary-900 hover:bg-primary-50 transition rounded-md"
+                onClick={() => {
+                  setIsOpen(false);
+                  navigate('/instruktur/profile');
+                }}
+                type="button"
+              >
+                <Icon type="user" />
+                <span className="font-base">Edit Profile</span>
+              </button>
+              <div className="my-1 border-t border-gray-200" />
+            </>
+          )}
           <button
             onClick={() => {
               setIsOpen(false);
               handleLogoutRequest();
             }}
-            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+            className="flex items-center gap-3 w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 transition rounded-md"
             type="button"
           >
-            Logout
+            <Icon type="logout" className="text-red-500" />
+            <span className="font-base">Logout</span>
           </button>
         </div>
       )}

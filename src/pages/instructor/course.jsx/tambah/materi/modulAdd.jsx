@@ -36,16 +36,16 @@ export default function ModulAdd() {
 
   return (
     <InstructorTemplate activeNav="kursus">
-      <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
+      <div className="w-full bg-white p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
         <div>
           <button
-            className="flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
+            className="flex items-center gap-2 bg-secondary-900 text-white px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
             onClick={() => {
               navigate(-1);
             }}
           >
-            <Icon type="arrow-left" className="size-[1rem] text-white-100" />
-            <span className="text-white-100">Kembali</span>
+            <Icon type="arrow-left" className="size-[1rem] text-white" />
+            <span className="text-white">Kembali</span>
           </button>
           <h4 className="text-primary-700 text-lg sm:text-2xl font-bold">Tambah modul kursus</h4>
         </div>
@@ -62,7 +62,7 @@ export default function ModulAdd() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="w-fit bg-primary-700 text-white-100 px-4 py-2 rounded-md hover:bg-primary-600"
+              className="w-fit bg-primary-700 text-white px-4 py-2 rounded-md hover:bg-primary-600"
               disabled={loading}
             >
               {loading ? 'Menyimpan...' : 'Simpan Modul'}

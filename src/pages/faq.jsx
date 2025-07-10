@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Template from '../template/template';
 import { useLocation } from 'react-router-dom';
-import Breadcrumb from '../components/breadcrumb/breadcrumb2';
+import Breadcrumb from '../components/breadcrumb/breadcrumb';
 
 const faqList = [
   {
@@ -39,7 +39,7 @@ export default function Faq() {
 
   return (
     <Template activeNav="faq" locationKey={location.key}>
-      <main className="min-h-screen bg-white-100 xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full">
+      <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full">
         <Breadcrumb items={breadcrumbItems} />
         <div className="flex-1 w-full mt-16">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-700 mb-4">

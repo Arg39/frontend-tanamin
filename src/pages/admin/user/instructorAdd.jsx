@@ -3,12 +3,18 @@ import AdminTemplate from '../../../template/templateAdmin';
 import TextInput from '../../../components/form/textInput';
 import ImagePicker from '../../../components/form/imagePicker';
 import Button from '../../../components/button/button';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '../../../components/icons/icon';
 import PasswordInputGenerator from '../../../components/form/passwordInputGenerator';
 import useInstructorStore from '../../../zustand/instructorStore';
 
 export default function InstructorAdd() {
+  const location = useLocation();
+  const breadcrumbItems = [
+    { label: 'Instruktur', path: '/admin/instruktur' },
+    { label: 'Tambah Instruktur', path: location.pathname },
+  ];
+
   const navigate = useNavigate();
   const addInstructor = useInstructorStore((state) => state.addInstructor);
   const [form, setForm] = useState({
@@ -42,14 +48,14 @@ export default function InstructorAdd() {
   };
 
   return (
-    <AdminTemplate activeNav="instruktur">
-      <div className="wf-full bg-white-100 p-6 rounded-lg shadow-md">
+    <AdminTemplate activeNav="instruktur" breadcrumbItems={breadcrumbItems}>
+      <div className="wf-full bg-white p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
-          className="flex items-center gap-2 bg-secondary-900 text-white-100 px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
+          className="flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
           onClick={() => navigate(-1)}
         >
-          <Icon type="arrow-left" className="size-4" color="currentColor" />
+          <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
           <span>Kembali</span>
         </button>
         <h2 className="text-2xl font-bold">Tambah Instruktur</h2>

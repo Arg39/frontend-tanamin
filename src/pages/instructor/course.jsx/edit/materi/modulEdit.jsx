@@ -38,58 +38,58 @@ export default function ModulEdit() {
     }));
   };
 
-    const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.title.trim()) {
-        // Prevent submit if title is empty
-        return;
+      // Prevent submit if title is empty
+      return;
     }
     try {
-        await updateModule({ moduleId, courseId, title: formData.title.trim() });
-        navigate(-1);
+      await updateModule({ moduleId, courseId, title: formData.title.trim() });
+      navigate(-1);
     } catch (err) {
-        // Error handled by store
+      // Error handled by store
     }
-    };
+  };
 
   return (
     <InstructorTemplate activeNav="kursus">
-      <div className="w-full bg-white-100 p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
+      <div className="w-full bg-white p-2 sm:p-4 rounded-lg shadow-md flex flex-col gap-3 sm:gap-4">
         <div>
           <button
-            className="flex items-center gap-2 bg-secondary-900 text-white-100 px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
+            className="flex items-center gap-2 bg-secondary-900 text-white px-3 py-2 sm:px-4 rounded-md mb-2 hover:bg-secondary-800 text-sm sm:text-base"
             onClick={() => {
               navigate(-1);
             }}
           >
-            <Icon type="arrow-left" className="size-[1rem] text-white-100" />
-            <span className="text-white-100">Kembali</span>
+            <Icon type="arrow-left" className="size-[1rem] text-white" />
+            <span className="text-white">Kembali</span>
           </button>
           <h4 className="text-primary-700 text-lg sm:text-2xl font-bold">Edit modul kursus</h4>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <TextInput
-                label="Judul Modul"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                placeholder="Masukkan judul modul"
-                disabled={loading}
-                required // <-- add required attribute
-            />
-            {!formData.title.trim() && (
-                <div className="text-red-500 text-sm">Judul modul wajib diisi.</div>
-            )}
-            {error && <div className="text-red-500 text-sm">{error}</div>}
-            <div className="flex justify-end">
-                <button
-                type="submit"
-                className="w-fit bg-primary-700 text-white-100 px-4 py-2 rounded-md hover:bg-primary-600"
-                disabled={loading || !formData.title.trim()}
-                >
-                {loading ? 'Menyimpan...' : 'Update Modul'}
-                </button>
-            </div>
+          <TextInput
+            label="Judul Modul"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Masukkan judul modul"
+            disabled={loading}
+            required // <-- add required attribute
+          />
+          {!formData.title.trim() && (
+            <div className="text-red-500 text-sm">Judul modul wajib diisi.</div>
+          )}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="w-fit bg-primary-700 text-white px-4 py-2 rounded-md hover:bg-primary-600"
+              disabled={loading || !formData.title.trim()}
+            >
+              {loading ? 'Menyimpan...' : 'Update Modul'}
+            </button>
+          </div>
         </form>
       </div>
     </InstructorTemplate>

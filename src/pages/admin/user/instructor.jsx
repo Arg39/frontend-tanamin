@@ -4,8 +4,12 @@ import useInstructorStore from '../../../zustand/instructorStore';
 import ReactTable from '../../../components/table/reactTable';
 import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
+import { useLocation } from 'react-router-dom';
 
 export default function Instructor() {
+  const location = useLocation();
+  const breadcrumbItems = [{ label: 'Instruktur', path: location.pathname }];
+
   const { instructors, fetchInstructors, pagination, sortBy, sortOrder, perPage, error } =
     useInstructorStore();
 
@@ -82,7 +86,7 @@ export default function Instructor() {
             view
           </button>
           <button
-            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white-100"
+            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white"
             onClick={() => {
               console.log('Edit instructor with ID:', value);
             }}
@@ -90,7 +94,7 @@ export default function Instructor() {
             Edit
           </button>
           <button
-            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white-100"
+            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white"
             onClick={() => {
               console.log('Delete instructor with ID:', value);
             }}
@@ -103,8 +107,8 @@ export default function Instructor() {
   ];
 
   return (
-    <AdminTemplate activeNav="instruktur">
-      <div className="bg-white-100 p-6 rounded-lg shadow-md">
+    <AdminTemplate activeNav="instruktur" breadcrumbItems={breadcrumbItems}>
+      <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
           <h2 className="text-2xl font-bold mb-4">Daftar Instruktur</h2>
           <Button

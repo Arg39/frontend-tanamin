@@ -161,9 +161,9 @@ export default function LessonEdit() {
 
   return (
     <InstructorTemplate activeNav="kursus">
-      <div className="p-4 bg-white-100 rounded-lg shadow">
+      <div className="p-4 bg-white rounded-lg shadow">
         <button
-          className="flex items-center gap-2 mb-4 bg-secondary-900 text-white-100 px-3 py-2 rounded hover:bg-secondary-800"
+          className="flex items-center gap-2 mb-4 bg-secondary-900 text-white px-3 py-2 rounded hover:bg-secondary-800"
           onClick={() => navigate(-1)}
         >
           <Icon type="arrow-left" className="size-[1rem]" />
@@ -217,7 +217,7 @@ export default function LessonEdit() {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="bg-primary-700 text-white-100 px-4 py-2 rounded hover:bg-primary-600"
+                className="bg-primary-700 text-white px-4 py-2 rounded hover:bg-primary-600"
               >
                 Simpan Perubahan
               </button>

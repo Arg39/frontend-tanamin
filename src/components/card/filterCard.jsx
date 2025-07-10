@@ -24,7 +24,7 @@ export default function FilterCard({ categories, course }) {
   };
 
   return (
-    <div className="w-full h-full bg-white-100 bg-white shadow-lg rounded-xl p-8 ">
+    <div className="w-full h-full bg-white bg-white shadow-lg rounded-xl p-8 ">
       <SearchFields categories={categories} />
       <div className="mt-8">
         <h1 className="text-2xl font-semibold">Kategori</h1>

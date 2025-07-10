@@ -71,9 +71,8 @@ export default function ProfileNav() {
                 <div
                   ref={dropdownRef}
                   style={dropdownStyle}
-                  className="absolute right-0 mt-2 w-44 bg-white-100 border border-gray-200 rounded shadow-lg z-50"
+                  className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded shadow-lg z-50"
                 >
-                  {/* Tambahkan tombol lain di sini */}
                   <button
                     className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     onClick={() => {

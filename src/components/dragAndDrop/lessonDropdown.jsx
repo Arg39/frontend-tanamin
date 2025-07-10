@@ -49,7 +49,7 @@ export default function LessonDropdown({ isMobile, onEdit, onDelete }) {
     <div className="relative">
       <button
         ref={buttonRef}
-        className="p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white-100 flex items-center justify-center"
+        className="p-2 bg-secondary-500 hover:bg-secondary-600 rounded-lg text-white flex items-center justify-center"
         onClick={() => setOpen(!open)}
         title="Options"
       >
@@ -58,7 +58,7 @@ export default function LessonDropdown({ isMobile, onEdit, onDelete }) {
       {open && (
         <ul
           ref={menuRef}
-          className="fixed z-[9999] w-40 bg-white-100 border rounded shadow-lg text-xs sm:text-sm"
+          className="fixed z-[9999] w-40 bg-white border rounded shadow-lg text-xs sm:text-sm"
           style={{ top: coords.top, left: coords.left }}
         >
           <li>

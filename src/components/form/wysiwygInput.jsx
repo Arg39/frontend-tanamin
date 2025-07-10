@@ -127,7 +127,7 @@ const WysiwygInput = forwardRef(
           value={content}
           onChange={handleChange}
           placeholder={placeholder}
-          className="bg-white-100"
+          className="bg-white"
           modules={modules}
           readOnly={disabled}
         />

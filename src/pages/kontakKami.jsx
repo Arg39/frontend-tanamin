@@ -1,6 +1,6 @@
 import React from 'react';
 import Template from '../template/template';
-import Breadcrumb from '../components/breadcrumb/breadcrumb2';
+import Breadcrumb from '../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import Icon from '../components/icons/icon';
 
@@ -13,7 +13,7 @@ export default function KontakKami() {
 
   return (
     <Template activeNav="kontak-kami" locationKey={location.key}>
-      <main className="min-h-screen bg-white-100 xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2 pt-8 w-full">
+      <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2 pt-8 w-full">
         <Breadcrumb items={breadcrumbItems} />
         <div className="flex-1 w-full mt-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-700 mb-4">
@@ -30,7 +30,7 @@ export default function KontakKami() {
             </div>
 
             {/* form */}
-            <div className="w-full md:w-1/2 h-auto md:h-full p-2 sm:p-4 bg-white-100 rounded-lg border border-primary-700 flex flex-col justify-center overflow-hidden">
+            <div className="w-full md:w-1/2 h-auto md:h-full p-2 sm:p-4 bg-white rounded-lg border border-primary-700 flex flex-col justify-center overflow-hidden">
               <p className="text-lg sm:text-xl text-primary-700 font-semibold mb-1">Menghubungi</p>
               <p className="text-primary-700 text-sm sm:text-base">
                 Anda dapat menghubungi kami kapan saja
@@ -58,7 +58,7 @@ export default function KontakKami() {
                 />
                 <button
                   type="submit"
-                  className="mt-2 bg-primary-700 text-white-100 font-semibold py-2 px-4 rounded hover:bg-primary-800 placeholder-opacity-80 transition flex items-center justify-center text-sm sm:text-base"
+                  className="mt-2 bg-primary-700 text-white font-semibold py-2 px-4 rounded hover:bg-primary-800 placeholder-opacity-80 transition flex items-center justify-center text-sm sm:text-base"
                 >
                   <Icon type={'send'} className="inline mr-2" />
                   Kirim Pesan
@@ -76,36 +76,36 @@ export default function KontakKami() {
             <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
               {/* Telepon */}
               <div className="bg-primary-700 p-4 rounded-lg shadow-md flex flex-col items-start w-full">
-                <p className="mt-4 text-white-100 text-base sm:text-lg flex items-center">
+                <p className="mt-4 text-white text-base sm:text-lg flex items-center">
                   <Icon type={'phone'} className="inline mr-2" />
                   Telepon
                 </p>
-                <p className="text-white-100 mt-2 text-sm sm:text-base">+62-821-3232-8945</p>
-                <p className="text-white-100 text-sm sm:text-base">+62-821-3232-8945</p>
+                <p className="text-white mt-2 text-sm sm:text-base">+62-821-3232-8945</p>
+                <p className="text-white text-sm sm:text-base">+62-821-3232-8945</p>
               </div>
               {/* Email */}
               <div className="bg-primary-700 p-4 rounded-lg shadow-md flex flex-col items-start w-full">
-                <p className="mt-4 text-white-100 text-base sm:text-lg flex items-center">
+                <p className="mt-4 text-white text-base sm:text-lg flex items-center">
                   <Icon type={'mail'} className="inline mr-2" />
                   Email
                 </p>
-                <p className="text-white-100 mt-2 text-sm sm:text-base">info@tanamin.com</p>
+                <p className="text-white mt-2 text-sm sm:text-base">info@tanamin.com</p>
               </div>
               {/* Instagram */}
               <div className="bg-primary-700 p-4 rounded-lg shadow-md flex flex-col items-start w-full">
-                <p className="mt-4 text-white-100 text-base sm:text-lg flex items-center">
+                <p className="mt-4 text-white text-base sm:text-lg flex items-center">
                   <Icon type={'instagram'} className="inline mr-2" />
                   Instagram
                 </p>
-                <p className="text-white-100 mt-2 text-sm sm:text-base">@tanamin.id</p>
+                <p className="text-white mt-2 text-sm sm:text-base">@tanamin.id</p>
               </div>
               {/* linkedin */}
               <div className="bg-primary-700 p-4 rounded-lg shadow-md flex flex-col items-start w-full">
-                <p className="mt-4 text-white-100 text-base sm:text-lg flex items-center">
+                <p className="mt-4 text-white text-base sm:text-lg flex items-center">
                   <Icon type={'linkedin'} className="inline mr-2" />
                   LinkedIn
                 </p>
-                <p className="text-white-100 mt-2 text-sm sm:text-base">@tanamin</p>
+                <p className="text-white mt-2 text-sm sm:text-base">@tanamin</p>
               </div>
             </div>
           </div>

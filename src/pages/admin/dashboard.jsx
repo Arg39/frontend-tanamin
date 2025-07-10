@@ -2,12 +2,15 @@ import React from 'react';
 import AdminTemplate from '../../template/templateAdmin';
 import StatCard from '../../components/card/statCard';
 import dashboardStore from '../../zustand/temporaryDummyData/dashboardStore';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Icon from '../../components/icons/icon';
 import LineChart from '../../components/chart/lineChart';
 import CourseTopicChart from '../../components/chart/courseTopicChart';
 
 export default function DashboardAdmin() {
+  const location = useLocation();
+  const breadcrumbItems = [{ label: 'Dashboard', path: location.pathname }];
+
   const { data } = dashboardStore();
 
   const stats = [
@@ -26,7 +29,7 @@ export default function DashboardAdmin() {
   }
 
   return (
-    <AdminTemplate activeNav="dashboard">
+    <AdminTemplate activeNav="dashboard" breadcrumbItems={breadcrumbItems}>
       <div className="grid grid-cols-1 gap-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Grid pertama dengan width 40% */}
@@ -45,7 +48,7 @@ export default function DashboardAdmin() {
             ))}
 
             {/* col 2, row 1- row 2 */}
-            <div className="flex flex-col gap-4 bg-white-100 rounded-md p-4 px-8 shadow-md">
+            <div className="flex flex-col gap-4 bg-white rounded-md p-4 px-8 shadow-md">
               <div className="flex justify-between items-center">
                 <h4 className="text-lg md:text-xl font-bold">Total Pendapatan</h4>
                 <Link to="/admin/pemasukan">
@@ -66,12 +69,12 @@ export default function DashboardAdmin() {
           </div>
 
           {/* Grid kedua dengan width 60% */}
-          <div className="col-span-12 lg:col-span-7 bg-white-100 rounded-md p-4 shadow-md">
+          <div className="col-span-12 lg:col-span-7 bg-white rounded-md p-4 shadow-md">
             <p className="text-xl font-semibold">Progress course</p>
             <CourseTopicChart />
           </div>
         </div>
-        <div className="bg-white-100 rounded-md p-4 shadow-md">
+        <div className="bg-white rounded-md p-4 shadow-md">
           <p className="text-xl font-semibold">Grafik Pendapatan Bulanan</p>
           <LineChart data={data.chartData} />
         </div>

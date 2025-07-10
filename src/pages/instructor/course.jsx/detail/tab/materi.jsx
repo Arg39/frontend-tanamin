@@ -239,7 +239,7 @@ export default function ModuleList({ editable }) {
     }
   };
 
-  if (loading) return <p className="text-base text-black-900">Loading...</p>;
+  if (loading) return <p className="text-base text-black">Loading...</p>;
   if (error) return <p className="text-base text-red-600">{error}</p>;
 
   return (
@@ -251,7 +251,7 @@ export default function ModuleList({ editable }) {
         {editable && (
           <button
             onClick={handleAddModule}
-            className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white-100 rounded hover:bg-primary-800 flex items-center gap-2"
+            className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2"
           >
             <Icon type="plus" /> Modul
           </button>
