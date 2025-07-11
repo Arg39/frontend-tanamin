@@ -1,33 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import InstructorTemplate from '../../../template/templateInstructor';
 import Icon from '../../../components/icons/icon';
-
-// Dummy data
-const dummyProfile = {
-  photo: 'https://randomuser.me/api/portraits/men/32.jpg',
-  first_name: 'Banu',
-  last_name: 'Pratama',
-  username: 'banupra',
-  email: 'banu.pratama@email.com',
-  // telephone: '+628123456789',
-  expertise: 'Web Development, React, Node.js',
-  about: 'Instruktur berpengalaman di bidang pengembangan web dan teknologi modern.',
-  social_media: [
-    { type: 'instagram', url: 'https://instagram.com/banupra' },
-    { type: 'linkedin', url: 'https://linkedin.com/in/banupra' },
-    { type: 'twitter-x', url: 'https://twitter.com/banupra' },
-  ],
-};
+import useProfileStore from '../../../zustand/profileStore';
 
 export default function InstructorProfile() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [profile, setProfile] = useState(null);
+  const { profile, loading, error, fetchProfile } = useProfileStore();
 
   useEffect(() => {
-    setProfile(dummyProfile);
-  }, []);
+    fetchProfile();
+  }, [fetchProfile]);
 
   const breadcrumbItems = [{ label: 'Profile', path: location.pathname }];
 
@@ -46,14 +30,21 @@ export default function InstructorProfile() {
         {/* Header */}
         <div className="w-full flex flex-col md:flex-row md:justify-between md:items-start gap-4 mb-4">
           <h2 className="text-2xl font-bold text-primary-700">Profile Instruktur</h2>
-          <button className="flex items-center gap-2 px-4 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-700 transition-colors">
+          <button
+            className="flex items-center gap-2 px-4 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-700 transition-colors"
+            onClick={() => navigate('/instruktur/profile/edit')}
+          >
             <Icon type="edit" />
             Edit Profile
           </button>
         </div>
 
+        {/* Loading & Error */}
+        {loading && <div className="text-center text-primary-700 py-8">Memuat profil...</div>}
+        {error && <div className="text-center text-red-500 py-8">{error}</div>}
+
         {/* Content */}
-        {profile && (
+        {profile && !loading && !error && (
           <div className="flex flex-col md:flex-row gap-8">
             {/* Photo & Social */}
             <div className="flex-shrink-0 w-full md:w-64 flex flex-col items-center bg-white rounded-lg p-6 shadow border border-gray-100 mx-auto">
@@ -72,17 +63,19 @@ export default function InstructorProfile() {
                 @{profile.username}
               </div>
               <div className="flex gap-3 mt-3 flex-wrap justify-center">
-                {profile.social_media.map((sm, idx) => (
-                  <a
-                    key={idx}
-                    href={sm.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-500 hover:text-primary-600 transition"
-                  >
-                    <Icon type={sm.type} className="w-7 h-7" />
-                  </a>
-                ))}
+                {profile.social_media &&
+                  profile.social_media.length > 0 &&
+                  profile.social_media.map((sm, idx) => (
+                    <a
+                      key={idx}
+                      href={sm.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-500 hover:text-primary-600 transition"
+                    >
+                      <Icon type={sm.type} className="w-7 h-7" />
+                    </a>
+                  ))}
               </div>
             </div>
 
@@ -101,7 +94,7 @@ export default function InstructorProfile() {
                       {label}
                     </span>
                     <div className="text-base text-primary-700 font-semibold break-all whitespace-pre-wrap mt-2">
-                      {value && value.trim() !== '' ? (
+                      {value && value.trim && value.trim() !== '' ? (
                         value
                       ) : (
                         <span className="text-red-500 font-normal text-sm p-2 bg-error-100 rounded-md">
@@ -118,7 +111,7 @@ export default function InstructorProfile() {
                   Tentang Instruktur
                 </span>
                 <div className="text-base text-primary-700 font-semibold whitespace-pre-wrap break-words mt-1">
-                  {profile.about && profile.about.trim() !== '' ? (
+                  {profile.about && profile.about.trim && profile.about.trim() !== '' ? (
                     profile.about
                   ) : (
                     <span className="text-red-500 font-normal text-sm p-2 bg-error-100 rounded-md">

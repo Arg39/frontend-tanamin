@@ -79,7 +79,7 @@ export default function InstructorCarousel({ instructors = [] }) {
       <div className="overflow-hidden w-full">
         <motion.div
           ref={carouselRef}
-          className="flex flex-nowrap justify-start py-4 cursor-grab"
+          className="flex flex-nowrap justify-start mx-4 py-4 cursor-grab"
           style={{ userSelect: 'none' }}
           drag="x"
           dragConstraints={{ left: minX, right: maxX }}

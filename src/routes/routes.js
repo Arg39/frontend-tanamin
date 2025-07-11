@@ -31,6 +31,7 @@ import KontakKami from '../pages/kontakKami';
 import RingkasanEditInstructor from '../pages/instructor/course.jsx/edit/ringkasanEditInstructor';
 import RingkasanEditAdmin from '../pages/admin/course/detail/ringkasanEditAdmin';
 import InstructorProfile from '../pages/instructor/profile/profile';
+import InstructorProfileEdit from '../pages/instructor/profile/profileEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -111,6 +112,7 @@ const adminRoutes = [
 const instructorRoutes = [
   { path: 'dashboard', element: <DashboardInstructor /> },
   { path: 'profile', element: <InstructorProfile /> },
+  { path: 'profile/edit', element: <InstructorProfileEdit /> },
   { path: 'kursus', element: <CourseAdmin /> },
   { path: 'kursus/:id/lihat/:tab', element: <ValidatedCourseDetailInstructor /> },
   { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEditInstructor /> },

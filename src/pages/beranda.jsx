@@ -168,17 +168,22 @@ export default function Beranda2() {
               </div>
             </div>
           </div>
-
-          <div className="mb-4">
+          {/* <div className="mb-16">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
               Teratas Minggu Ini
             </h2>
             <div className="mb-20"></div>
-          </div>
+          </div> */}
 
-          <div className="mb-4">
+          <div className="mb-16">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Instruktur Kami</h2>
             <InstructorCarousel instructors={instructors} />
+          </div>
+
+          <div className="mb-16">
+            <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
+              Temukan Course Sesuai Bidang Anda
+            </h2>
           </div>
         </div>
       </div>
