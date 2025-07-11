@@ -1,33 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InstructorTemplate from '../../../template/templateInstructor';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '../../../components/icons/icon';
 import TextInput from '../../../components/form/textInput';
 import ImagePicker from '../../../components/form/imagePicker';
+import useProfileStore from '../../../zustand/profileStore';
+import MultipleOption from '../../../components/form/multipleOption';
+import { toast } from 'react-toastify';
 
-// Dummy data (same as profile.jsx)
-const dummyProfile = {
-  photo: 'https://randomuser.me/api/portraits/men/32.jpg',
-  first_name: 'Banu',
-  last_name: 'Pratama',
-  username: 'banupra',
-  email: 'banu.pratama@email.com',
-  telephone: '+628123456789',
-  expertise: 'Web Development, React, Node.js',
-  about: 'Instruktur berpengalaman di bidang pengembangan web dan teknologi modern.',
-  social_media: [
-    { type: 'instagram', url: 'https://instagram.com/banupra' },
-    { type: 'linkedin', url: 'https://linkedin.com/in/banupra' },
-    { type: 'twitter-x', url: 'https://twitter.com/banupra' },
-  ],
-};
+const SOCIAL_TYPES = [
+  { type: 'instagram', label: 'Instagram' },
+  { type: 'linkedin', label: 'LinkedIn' },
+  { type: 'twitter-x', label: 'Twitter-X' },
+];
+
+function getInitialForm(profile) {
+  return {
+    photo: profile?.photo || '',
+    photo_cover: profile?.photo_cover || '',
+    first_name: profile?.first_name || '',
+    last_name: profile?.last_name || '',
+    username: profile?.username || '',
+    email: profile?.email || '',
+    telephone: profile?.telephone || '',
+    expertise: profile?.expertise || '',
+    about: profile?.about || '',
+    social_media: SOCIAL_TYPES.map((s) => {
+      const found = profile?.social_media?.find((sm) => sm.type === s.type);
+      return { type: s.type, url: found?.url || '' };
+    }),
+  };
+}
+
+const EXPERTISE_OPTIONS = [
+  { value: 'Teknologi & Pemrograman', label: 'Teknologi & Pemrograman' },
+  { value: 'Bisnis & Manajemen', label: 'Bisnis & Manajemen' },
+  { value: 'Desain & Kreatif', label: 'Desain & Kreatif' },
+  { value: 'Pengembangan Diri', label: 'Pengembangan Diri' },
+  { value: 'Bahasa', label: 'Bahasa' },
+  { value: 'Akademik & Sains', label: 'Akademik & Sains' },
+  { value: 'Lingkungan & Keberlanjutan', label: 'Lingkungan & Keberlanjutan' },
+  { value: 'Kesehatan & Gaya Hidup', label: 'Kesehatan & Gaya Hidup' },
+  { value: 'Seni & Musik', label: 'Seni & Musik' },
+  { value: 'Teknik & Industri', label: 'Teknik & Industri' },
+];
 
 export default function InstructorProfileEdit() {
   const location = useLocation();
   const navigate = useNavigate();
-  const breadcrumbItems = [{ label: 'Profile', path: location.pathname }];
+  const breadcrumbItems = [
+    { label: 'Profile', path: '/instruktur/profile' },
+    { label: 'Edit Profile', path: location.pathname },
+  ];
 
-  const [form, setForm] = useState(dummyProfile);
+  const { profile, loading, error, fetchProfile, updateProfile } = useProfileStore();
+  const [form, setForm] = useState(getInitialForm(profile));
+
+  useEffect(() => {
+    if (!profile && !loading) fetchProfile();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setForm(getInitialForm(profile));
+  }, [profile]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +81,14 @@ export default function InstructorProfileEdit() {
     }));
   };
 
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files?.[0];
+    setForm((prev) => ({
+      ...prev,
+      photo_cover: file || prev.photo_cover,
+    }));
+  };
+
   const handleSocialChange = (idx, value) => {
     setForm((prev) => {
       const updated = [...prev.social_media];
@@ -53,11 +97,47 @@ export default function InstructorProfileEdit() {
     });
   };
 
-  // Handle form submit
-  const handleSubmit = (e) => {
+  function getImagePreview(image) {
+    if (!image) return '';
+    if (image instanceof File) {
+      return URL.createObjectURL(image);
+    }
+    // Jika sudah berupa URL string
+    return image;
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert('Profile updated!\n' + JSON.stringify(form, null, 2));
-    navigate(-1);
+    const formData = new FormData();
+    formData.append('first_name', form.first_name);
+    formData.append('last_name', form.last_name);
+    formData.append('username', form.username);
+    formData.append('email', form.email);
+    formData.append('telephone', form.telephone);
+    formData.append('expertise', form.expertise);
+    formData.append('about', form.about);
+    if (form.photo instanceof File) {
+      formData.append('photo_profile', form.photo);
+    }
+    if (form.photo_cover instanceof File) {
+      formData.append('photo_cover', form.photo_cover);
+    }
+
+    // Kirim hanya social_media yang url-nya terisi, jika semua kosong kirim null
+    const filteredSocial = form.social_media.filter((sm) => sm.url && sm.url.trim() !== '');
+    if (filteredSocial.length === 0) {
+      formData.append('social_media', null);
+    } else {
+      formData.append('social_media', JSON.stringify(filteredSocial));
+    }
+
+    try {
+      await updateProfile(formData);
+      toast.success('Profile berhasil diperbarui!');
+      navigate(-1);
+    } catch (err) {
+      toast.error('Gagal memperbarui profile: ' + (err?.message || 'Terjadi kesalahan'));
+    }
   };
 
   return (
@@ -74,16 +154,25 @@ export default function InstructorProfileEdit() {
 
         <h2 className="text-2xl font-bold text-primary-700 mb-6">Edit Profile Instruktur</h2>
 
-        <form
-          className="flex flex-col md:flex-row gap-8 items-stretch" // add items-stretch
-          onSubmit={handleSubmit}
-        >
+        {/* Photo Cover at the Top */}
+        <div className="mb-8 bg-white rounded-lg p-6 shadow border border-gray-100">
+          <ImagePicker
+            label="Foto Cover"
+            name="photo_cover"
+            preview={getImagePreview(form.photo_cover)}
+            onChange={handleCoverImageChange}
+            crop
+            cropAspect={4}
+          />
+        </div>
+
+        <form className="flex flex-col md:flex-row gap-8 items-stretch" onSubmit={handleSubmit}>
           {/* Photo & Social */}
           <div className="flex-shrink-0 w-full md:w-64 flex flex-col items-center bg-white rounded-lg p-6 shadow border border-gray-100 h-full">
             <ImagePicker
               label="Foto Profil"
               name="photo"
-              preview={form.photo}
+              preview={getImagePreview(form.photo)}
               onChange={handleImageChange}
               crop
               cropAspect={1}
@@ -93,7 +182,7 @@ export default function InstructorProfileEdit() {
               {form.social_media.map((sm, idx) => (
                 <TextInput
                   key={sm.type}
-                  label={sm.type.charAt(0).toUpperCase() + sm.type.slice(1)}
+                  label={SOCIAL_TYPES.find((s) => s.type === sm.type)?.label || sm.type}
                   name={`social_${sm.type}`}
                   value={sm.url}
                   onChange={(e) => handleSocialChange(idx, e.target.value)}
@@ -105,8 +194,6 @@ export default function InstructorProfileEdit() {
 
           {/* Detail Info */}
           <div className="flex-1 grid grid-cols-1 gap-6 h-full">
-            {' '}
-            {/* add h-full */}
             <div className="bg-white rounded-lg p-6 shadow border space-y-4">
               <TextInput
                 label="First Name"
@@ -148,12 +235,13 @@ export default function InstructorProfileEdit() {
                 onChange={handleChange}
                 placeholder="Masukkan nomor telepon Anda..."
               />
-              <TextInput
+              <MultipleOption
                 label="Keahlian"
                 name="expertise"
                 value={form.expertise}
                 onChange={handleChange}
-                placeholder="Masukkan Keahlian khusus yang dimiliki..."
+                options={EXPERTISE_OPTIONS}
+                placeholder="Pilih keahlian khusus yang dimiliki..."
               />
               <TextInput
                 textarea
@@ -165,7 +253,6 @@ export default function InstructorProfileEdit() {
                 rows={4}
               />
             </div>
-            {/* ...existing code... */}
             <div className="flex justify-end">
               <button
                 type="submit"

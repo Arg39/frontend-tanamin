@@ -19,6 +19,7 @@ export default function ImagePicker({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [rawFile, setRawFile] = useState(null);
   const [inputKey, setInputKey] = useState(Date.now());
+  const [preCropPreview, setPreCropPreview] = useState(null);
 
   useEffect(() => {
     if (!preview) {
@@ -49,6 +50,7 @@ export default function ImagePicker({
     if (file) {
       setInputKey(Date.now());
       if (crop) {
+        setPreCropPreview(localPreview);
         setRawFile(file);
         setLocalPreview(URL.createObjectURL(file));
         setCropState({ x: 0, y: 0 });
@@ -79,6 +81,14 @@ export default function ImagePicker({
       },
     };
     onChange(event);
+  };
+
+  const handleCropCancel = () => {
+    setShowCrop(false);
+    setLocalPreview(preCropPreview);
+    setRawFile(null);
+    setPreCropPreview(null);
+    setInputKey(Date.now());
   };
 
   return (
@@ -134,7 +144,7 @@ export default function ImagePicker({
               <button
                 type="button"
                 className="px-4 py-2 bg-gray-300 rounded"
-                onClick={() => setShowCrop(false)}
+                onClick={handleCropCancel}
               >
                 Cancel
               </button>
