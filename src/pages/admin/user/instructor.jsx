@@ -1,21 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminTemplate from '../../../template/templateAdmin';
 import useInstructorStore from '../../../zustand/instructorStore';
 import ReactTable from '../../../components/table/reactTable';
 import Button from '../../../components/button/button';
 import Icon from '../../../components/icons/icon';
-import { useLocation } from 'react-router-dom';
+import TableFilter from '../../../components/table/tableFilter';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Instructor() {
   const location = useLocation();
+  const navigate = useNavigate();
   const breadcrumbItems = [{ label: 'Instruktur', path: location.pathname }];
 
   const { instructors, fetchInstructors, pagination, sortBy, sortOrder, perPage, error } =
     useInstructorStore();
 
+  // State untuk filter
+  const [filterValues, setFilterValues] = useState({
+    name: '',
+    created_at: { start: '', end: '' },
+  });
+  const [searchInput, setSearchInput] = useState('');
+
+  // Fetch data awal
   useEffect(() => {
-    fetchInstructors({ sortBy: 'first_name', sortOrder: 'asc' });
+    fetchInstructors({ sortBy: 'Nama', sortOrder: 'asc' });
   }, [fetchInstructors]);
+
+  // Fungsi handle filter
+  const handleFilterChange = (values) => {
+    setFilterValues(values);
+    fetchInstructors({
+      sortBy,
+      sortOrder,
+      perPage,
+      page: 1,
+      filters: values,
+    });
+  };
 
   const handleSortChange = (column, order) => {
     fetchInstructors({
@@ -23,16 +45,46 @@ export default function Instructor() {
       sortOrder: order,
       perPage,
       page: pagination.currentPage,
+      filters: filterValues,
     });
   };
 
   const handlePageChange = (page) => {
-    fetchInstructors({ sortBy, sortOrder, perPage, page });
+    fetchInstructors({
+      sortBy,
+      sortOrder,
+      perPage,
+      page,
+      filters: filterValues,
+    });
   };
 
   const handlePageSizeChange = (size) => {
-    fetchInstructors({ sortBy, sortOrder, perPage: size, page: 1 });
+    fetchInstructors({
+      sortBy,
+      sortOrder,
+      perPage: size,
+      page: 1,
+      filters: filterValues,
+    });
   };
+
+  // Konfigurasi filter
+  const filters = [
+    {
+      key: 'name',
+      label: 'Cari Nama',
+      type: 'search',
+      withButton: true,
+      placeholder: 'Nama instruktur',
+    },
+    {
+      key: 'created_at',
+      label: 'Tanggal Bergabung',
+      type: 'dateRange',
+      placeholder: 'Pilih rentang tanggal',
+    },
+  ];
 
   const columns = [
     {
@@ -78,28 +130,23 @@ export default function Instructor() {
       Cell: ({ value }) => (
         <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
           <button
-            className="p-1 px-4 rounded-md bg-primary-500 hover:bg-primary-700"
+            className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
             onClick={() => {
-              console.log('View instructor with ID:', value);
+              navigate(`/admin/instruktur/${value}`);
             }}
           >
-            view
+            Lihat
+          </button>
+          <button className="p-1 px-4 rounded-md bg-warning-500 text-white hover:bg-warning-600">
+            Nonaktifkan
           </button>
           <button
-            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white"
-            onClick={() => {
-              console.log('Edit instructor with ID:', value);
-            }}
-          >
-            Edit
-          </button>
-          <button
-            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white"
+            className="p-1 px-4 rounded-md bg-red-700 hover:bg-red-800 text-white"
             onClick={() => {
               console.log('Delete instructor with ID:', value);
             }}
           >
-            delete
+            Hapus
           </button>
         </div>
       ),
@@ -120,6 +167,14 @@ export default function Instructor() {
             <span className="text-lg font-normal">instruktur</span>
           </Button>
         </div>
+        {/* Filter */}
+        <TableFilter
+          filters={filters}
+          values={filterValues}
+          onFilterChange={handleFilterChange}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
+        />
         {error && <p className="text-red-500">{error}</p>}
         <ReactTable
           columns={columns}

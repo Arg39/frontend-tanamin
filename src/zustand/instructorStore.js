@@ -11,7 +11,7 @@ const useInstructorStore = create((set) => ({
     lastPage: 1,
     total: 0,
   },
-  // sortBy: 'first_name',
+  sortBy: 'nama',
   sortOrder: 'asc',
   perPage: 5,
   error: null,
@@ -23,7 +23,17 @@ const useInstructorStore = create((set) => ({
       return;
     }
 
-    const { sortBy, sortOrder, perPage, page } = params;
+    const { sortBy, sortOrder, perPage, page, filters } = params;
+
+    // Prepare filter params for API
+    let filterParams = {};
+    if (filters) {
+      if (filters.name) filterParams.name = filters.name;
+      if (filters.created_at && (filters.created_at.start || filters.created_at.end)) {
+        if (filters.created_at.start) filterParams.created_at_start = filters.created_at.start;
+        if (filters.created_at.end) filterParams.created_at_end = filters.created_at.end;
+      }
+    }
 
     try {
       const response = await axios.get(
@@ -37,18 +47,20 @@ const useInstructorStore = create((set) => ({
             sortOrder: sortOrder || 'asc',
             perPage: perPage || 5,
             page: page || 1,
+            ...filterParams,
           },
         }
       );
 
       if (response.status === 200) {
-        const { data, pagination } = response.data;
+        const items = response.data.data.items || [];
+        const pagination = response.data.data.pagination || {};
         set({
-          instructors: data,
+          instructors: items,
           pagination: {
-            currentPage: pagination?.current_page || 1,
-            lastPage: pagination?.last_page || 1,
-            total: pagination?.total || data.length,
+            currentPage: pagination.current_page || 1,
+            lastPage: pagination.last_page || 1,
+            total: pagination.total || items.length,
           },
           sortBy: sortBy || 'first_name',
           sortOrder: sortOrder || 'asc',

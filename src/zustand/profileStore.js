@@ -30,6 +30,9 @@ const useProfileStore = create((set, get) => ({
   profile: null,
   loading: false,
   error: null,
+  userProfile: null,
+  userProfileLoading: false,
+  userProfileError: null,
 
   fetchProfile: async () => {
     set({ loading: true, error: null });
@@ -78,6 +81,29 @@ const useProfileStore = create((set, get) => ({
       });
       toast.error(err.response?.data?.message || 'Failed to update profile');
       throw new Error(err.response?.data?.message || 'Failed to update profile');
+    }
+  },
+
+  fetchUserProfileById: async (id) => {
+    set({ userProfileLoading: true, userProfileError: null });
+    const { token } = useAuthStore.getState();
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/user-profile/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (res.data?.data) {
+        set({ userProfile: mapProfileData(res.data.data), userProfileLoading: false });
+      } else {
+        set({ userProfileError: 'No user profile data', userProfileLoading: false });
+      }
+    } catch (err) {
+      set({
+        userProfileError: err.response?.data?.message || 'Failed to fetch user profile',
+        userProfileLoading: false,
+      });
     }
   },
 }));

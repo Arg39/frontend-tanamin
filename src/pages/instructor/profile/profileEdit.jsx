@@ -157,12 +157,12 @@ export default function InstructorProfileEdit() {
         {/* Photo Cover at the Top */}
         <div className="mb-8 bg-white rounded-lg p-6 shadow border border-gray-100">
           <ImagePicker
-            label="Foto Cover"
+            label="Foto Cover Profile"
             name="photo_cover"
             preview={getImagePreview(form.photo_cover)}
             onChange={handleCoverImageChange}
             crop
-            cropAspect={4}
+            cropAspect={3}
           />
         </div>
 

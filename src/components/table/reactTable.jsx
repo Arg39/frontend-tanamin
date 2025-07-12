@@ -100,7 +100,7 @@ export default function ReactTable({
             </tr>
           ) : (
             data.map((row, i) => {
-              const rowObject = { original: row }; // 🔥 fix di sini
+              const rowObject = { original: row };
               return (
                 <tr key={row.id || i} className="hover:bg-gray-100">
                   {numbering && (
@@ -128,7 +128,7 @@ export default function ReactTable({
       {/* Responsive table for smaller screens */}
       <div className="block sm:hidden">
         {data.map((row, i) => {
-          const rowObject = { original: row }; // 🔥 fix juga di sini
+          const rowObject = { original: row };
           return (
             <div
               key={row.id || i}
