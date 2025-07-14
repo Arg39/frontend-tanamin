@@ -36,6 +36,7 @@ import InstructorAdd from '../pages/admin/user/instructor/instructorAdd';
 import Student from '../pages/admin/user/student/student';
 import StudentDetail from '../pages/admin/user/student/studentDetail';
 import FaqAdmin from '../pages/admin/content/faq/faq';
+import AdminAboutCompany from '../pages/admin/content/aboutCompany/aboutCompany';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -114,6 +115,7 @@ const adminRoutes = [
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
   { path: 'siswa', element: <Student /> },
   { path: 'siswa/:id', element: <StudentDetail /> },
+  { path: 'tentang-perusahaan', element: <AdminAboutCompany /> },
   { path: 'faq', element: <FaqAdmin /> },
 ];
 

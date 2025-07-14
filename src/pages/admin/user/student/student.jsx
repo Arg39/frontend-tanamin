@@ -189,14 +189,6 @@ export default function Student() {
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
           <h2 className="text-2xl font-bold mb-4">Daftar Siswa</h2>
-          <Button
-            variant="primary"
-            className="flex items-center px-2 gap-2"
-            to={'/admin/siswa/tambah'}
-          >
-            <Icon type="plus" className="size-6" color="black" />
-            <span className="text-lg font-normal">siswa</span>
-          </Button>
         </div>
         {/* Filter */}
         <TableFilter

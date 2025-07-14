@@ -50,7 +50,7 @@ const useNavigationStore = create((set) => ({
     {
       label: 'konten',
       links: [
-        { text: 'informasi perusahaan', href: '/admin/informasi', icon: 'info-rounded' },
+        { text: 'tentang perusahaan', href: '/admin/tentang-perusahaan', icon: 'info-rounded' },
         { text: 'faq', href: '/admin/faq', icon: 'faq' },
       ],
     },
