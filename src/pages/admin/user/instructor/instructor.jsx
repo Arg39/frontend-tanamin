@@ -183,7 +183,7 @@ export default function Instructor() {
         const status = row.original.status;
         const isActive = status === 'active';
         return (
-          <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
+          <div className="w-fit flex flex-row flex-wrap md:flex-col gap-2 justify-start items-start text-md mt-2 md:mt-0 max-w-full">
             <button
               className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
               onClick={() => {
