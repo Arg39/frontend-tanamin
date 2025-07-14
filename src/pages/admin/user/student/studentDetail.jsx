@@ -8,7 +8,7 @@ export default function StudentDetail() {
   const location = useLocation();
   const breadcrumbItems = [
     { label: 'Siswa', path: '/admin/siswa' },
-    { label: 'Detail Instruktur', path: location.pathname },
+    { label: 'Detail Siswa', path: location.pathname },
   ];
   const { id } = useParams();
   const navigate = useNavigate();

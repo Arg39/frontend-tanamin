@@ -35,6 +35,7 @@ import InstructorDetail from '../pages/admin/user/instructor/instructorDetail';
 import InstructorAdd from '../pages/admin/user/instructor/instructorAdd';
 import Student from '../pages/admin/user/student/student';
 import StudentDetail from '../pages/admin/user/student/studentDetail';
+import FaqAdmin from '../pages/admin/content/faq/faq';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -103,16 +104,17 @@ const adminRoutes = [
   { path: 'kategori', element: <Category /> },
   { path: 'kategori/tambah', element: <CategoryAdd /> },
   { path: 'kategori/edit/:id', element: <CategoryEdit /> },
-  { path: 'instruktur', element: <Instructor /> },
-  { path: 'instruktur/:id', element: <InstructorDetail /> },
-  { path: 'instruktur/tambah', element: <InstructorAdd /> },
-  { path: 'siswa', element: <Student /> },
-  { path: 'siswa/:id', element: <StudentDetail /> },
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
   { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
   { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEditAdmin /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
+  { path: 'instruktur', element: <Instructor /> },
+  { path: 'instruktur/:id', element: <InstructorDetail /> },
+  { path: 'instruktur/tambah', element: <InstructorAdd /> },
+  { path: 'siswa', element: <Student /> },
+  { path: 'siswa/:id', element: <StudentDetail /> },
+  { path: 'faq', element: <FaqAdmin /> },
 ];
 
 const instructorRoutes = [

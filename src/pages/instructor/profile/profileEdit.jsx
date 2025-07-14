@@ -234,6 +234,7 @@ export default function InstructorProfileEdit() {
                 value={form.telephone || ''}
                 onChange={handleChange}
                 placeholder="Masukkan nomor telepon Anda..."
+                type="number"
               />
               <MultipleOption
                 label="Keahlian"
@@ -245,11 +246,11 @@ export default function InstructorProfileEdit() {
               />
               <TextInput
                 textarea
-                label="Tentang Instruktur"
+                label="Tentang Saya"
                 name="about"
                 value={form.about}
                 onChange={handleChange}
-                placeholder="Ceritakan tentang dirimu sebagai instruktur..."
+                placeholder="Ceritakan tentang dirimu..."
                 rows={4}
               />
             </div>

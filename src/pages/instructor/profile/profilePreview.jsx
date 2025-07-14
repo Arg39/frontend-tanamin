@@ -117,7 +117,7 @@ export default function ProfilePreview({
                     <span className="block text-tertiary-500 text-xs sm:text-sm font-medium mb-1">
                       {label}
                     </span>
-                    <div className="text-base sm:text-lg text-primary-700 font-medium break-all whitespace-pre-wrap mt-1 sm:mt-2">
+                    <div className="text-sm sm:text-base text-primary-700 font-medium break-all whitespace-pre-wrap mt-1 sm:mt-2">
                       {value && value.trim && value.trim() !== '' ? (
                         value
                       ) : (
@@ -131,8 +131,8 @@ export default function ProfilePreview({
               </div>
 
               <div className="bg-white rounded-lg p-4 sm:p-6 shadow border flex flex-col mt-4 md:mt-0">
-                <span className="block text-tertiary-500 text-xs font-medium mb-1">
-                  Tentang Instruktur
+                <span className="block text-tertiary-500 text-sm sm:text-base font-medium mb-1">
+                  Tentang Saya
                 </span>
                 <div className="text-sm sm:text-base text-primary-700 font-medium whitespace-pre-wrap break-words mt-1">
                   {profile.about && profile.about.trim && profile.about.trim() !== '' ? (
