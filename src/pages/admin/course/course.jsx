@@ -32,7 +32,7 @@ export default function Course() {
   } = useCourseStore();
   const { token } = useAuthStore();
   const { categories, fetchCategoryOptions } = useCategoryStore();
-  const { instructorSelectOptions, fetchInstructoryOptions } = useInstructorStore();
+  const { instructorSelectOptions, fetchInstructorOptions } = useInstructorStore();
 
   const [filterValues, setFilterValues] = useState({
     search: '',
@@ -46,7 +46,7 @@ export default function Course() {
 
   useEffect(() => {
     fetchCategoryOptions();
-    fetchInstructoryOptions();
+    fetchInstructorOptions();
   }, []);
 
   useEffect(() => {

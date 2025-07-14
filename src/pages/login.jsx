@@ -32,19 +32,20 @@ export default function Login() {
         pending: 'Sedang memproses login...',
       });
 
-      const { token, user } = useAuthStore.getState();
+      const { token, user, error } = useAuthStore.getState();
       if (token) {
         if (user.role === 'admin') {
           toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/admin/dashboard');
-        }
-        if (user.role === 'instructor') {
+        } else if (user.role === 'instructor') {
           toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/instruktur/dashboard');
         } else if (user.role === 'student') {
           toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/');
         }
+      } else if (error === 'Account inactive') {
+        toast.error('Akun Anda tidak aktif. Silakan hubungi admin.');
       } else {
         toast.error('Login gagal. Silakan periksa kredensial Anda.');
       }

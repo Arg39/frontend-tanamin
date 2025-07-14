@@ -10,8 +10,6 @@ import Category from '../pages/admin/category/category';
 import CategoryAdd from '../pages/admin/category/categoryAdd';
 import CategoryEdit from '../pages/admin/category/categoryEdit';
 import Course from '../pages/admin/course/course';
-import Instructor from '../pages/admin/user/instructor';
-import InstructorAdd from '../pages/admin/user/instructorAdd';
 import DashboardInstructor from '../pages/instructor/dashboard';
 import Payment from '../pages/student/testPayment';
 import CourseAdd from '../pages/admin/course/courseAdd';
@@ -32,7 +30,11 @@ import RingkasanEditInstructor from '../pages/instructor/course.jsx/edit/ringkas
 import RingkasanEditAdmin from '../pages/admin/course/detail/ringkasanEditAdmin';
 import InstructorProfile from '../pages/instructor/profile/profile';
 import InstructorProfileEdit from '../pages/instructor/profile/profileEdit';
-import InstructorDetail from '../pages/admin/user/instructorDetail';
+import Instructor from '../pages/admin/user/instructor/instructor';
+import InstructorDetail from '../pages/admin/user/instructor/instructorDetail';
+import InstructorAdd from '../pages/admin/user/instructor/instructorAdd';
+import Student from '../pages/admin/user/student/student';
+import StudentDetail from '../pages/admin/user/student/studentDetail';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -104,6 +106,8 @@ const adminRoutes = [
   { path: 'instruktur', element: <Instructor /> },
   { path: 'instruktur/:id', element: <InstructorDetail /> },
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
+  { path: 'siswa', element: <Student /> },
+  { path: 'siswa/:id', element: <StudentDetail /> },
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
   { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },

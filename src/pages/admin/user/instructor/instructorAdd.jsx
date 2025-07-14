@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import AdminTemplate from '../../../template/templateAdmin';
-import TextInput from '../../../components/form/textInput';
-import ImagePicker from '../../../components/form/imagePicker';
-import Button from '../../../components/button/button';
+import AdminTemplate from '../../../../template/templateAdmin';
+import TextInput from '../../../../components/form/textInput';
+import ImagePicker from '../../../../components/form/imagePicker';
+import Button from '../../../../components/button/button';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Icon from '../../../components/icons/icon';
-import PasswordInputGenerator from '../../../components/form/passwordInputGenerator';
-import useInstructorStore from '../../../zustand/instructorStore';
+import Icon from '../../../../components/icons/icon';
+import PasswordInputGenerator from '../../../../components/form/passwordInputGenerator';
+import useInstructorStore from '../../../../zustand/instructorStore';
 
 export default function InstructorAdd() {
   const location = useLocation();

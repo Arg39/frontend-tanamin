@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import AdminTemplate from '../../../template/templateAdmin';
-import useInstructorStore from '../../../zustand/instructorStore';
-import ReactTable from '../../../components/table/reactTable';
-import Button from '../../../components/button/button';
-import Icon from '../../../components/icons/icon';
-import TableFilter from '../../../components/table/tableFilter';
+import AdminTemplate from '../../../../template/templateAdmin';
+import useInstructorStore from '../../../../zustand/instructorStore';
+import ReactTable from '../../../../components/table/reactTable';
+import Button from '../../../../components/button/button';
+import Icon from '../../../../components/icons/icon';
+import TableFilter from '../../../../components/table/tableFilter';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useProfileStore from '../../../../zustand/profileStore';
+import { toast } from 'react-toastify';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
 
 export default function Instructor() {
   const location = useLocation();
@@ -14,6 +17,8 @@ export default function Instructor() {
 
   const { instructors, fetchInstructors, pagination, sortBy, sortOrder, perPage, error } =
     useInstructorStore();
+  const { updateUserStatus, deleteUserProfile } = useProfileStore();
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   // State untuk filter
   const [filterValues, setFilterValues] = useState({
@@ -66,6 +71,53 @@ export default function Instructor() {
       perPage: size,
       page: 1,
       filters: filterValues,
+    });
+  };
+
+  const handleChangeStatus = async (value, isActive) => {
+    openModal({
+      title: 'Konfirmasi Perubahan Status',
+      message: 'Apakah Anda yakin ingin mengubah status instruktur ini?',
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          await updateUserStatus(value, isActive ? 'inactive' : 'active');
+          fetchInstructors({
+            sortBy,
+            sortOrder,
+            perPage,
+            page: pagination.currentPage,
+            filters: filterValues,
+          });
+        } catch (e) {
+          toast.error(`Gagal mengubah status: ${e.message}`);
+        }
+      },
+      onCancel: closeModal,
+    });
+  };
+
+  const handleDelete = async (value) => {
+    openModal({
+      title: 'Konfirmasi Penghapusan',
+      message: 'Apakah Anda yakin ingin menghapus instruktur ini?',
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          await deleteUserProfile(value);
+          fetchInstructors({
+            sortBy,
+            sortOrder,
+            perPage,
+            page: pagination.currentPage,
+            filters: filterValues,
+          });
+          toast.success('Instruktur berhasil dihapus');
+        } catch (e) {
+          toast.error(`Gagal menghapus instruktur: ${e.message}`);
+        }
+      },
+      onCancel: closeModal,
     });
   };
 
@@ -127,29 +179,40 @@ export default function Instructor() {
       accessor: 'id',
       width: '10%',
       disableSort: true,
-      Cell: ({ value }) => (
-        <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
-          <button
-            className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
-            onClick={() => {
-              navigate(`/admin/instruktur/${value}`);
-            }}
-          >
-            Lihat
-          </button>
-          <button className="p-1 px-4 rounded-md bg-warning-500 text-white hover:bg-warning-600">
-            Nonaktifkan
-          </button>
-          <button
-            className="p-1 px-4 rounded-md bg-red-700 hover:bg-red-800 text-white"
-            onClick={() => {
-              console.log('Delete instructor with ID:', value);
-            }}
-          >
-            Hapus
-          </button>
-        </div>
-      ),
+      Cell: ({ value, row }) => {
+        const status = row.original.status;
+        const isActive = status === 'active';
+        return (
+          <div className="w-fit flex flex-row md:flex-col gap-2 justify-center items-start text-md mt-2 md:mt-0">
+            <button
+              className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
+              onClick={() => {
+                navigate(`/admin/instruktur/${value}`);
+              }}
+            >
+              Lihat
+            </button>
+            <button
+              className={`p-1 px-4 rounded-md text-white ${
+                isActive ? 'bg-warning-500 hover:bg-warning-600' : 'bg-blue-600 hover:bg-blue-700'
+              }`}
+              onClick={async () => {
+                handleChangeStatus(value, isActive);
+              }}
+            >
+              {isActive ? 'Nonaktifkan' : 'Aktifkan'}
+            </button>
+            <button
+              className="p-1 px-4 rounded-md bg-red-700 hover:bg-red-800 text-white"
+              onClick={() => {
+                handleDelete(value);
+              }}
+            >
+              Hapus
+            </button>
+          </div>
+        );
+      },
     },
   ];
 

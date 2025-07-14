@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import AdminTemplate from '../../../template/templateAdmin';
-import ProfilePreview from '../../instructor/profile/profilePreview';
-import useProfileStore from '../../../zustand/profileStore';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import AdminTemplate from '../../../../template/templateAdmin';
+import ProfilePreview from '../../../instructor/profile/profilePreview';
+import useProfileStore from '../../../../zustand/profileStore';
 
 export default function InstructorDetail() {
+  const location = useLocation();
+  const breadcrumbItems = [
+    { label: 'Instruktur', path: '/admin/instruktur' },
+    { label: 'Detail Instruktur', path: location.pathname },
+  ];
   const { id } = useParams();
   const navigate = useNavigate();
   const { userProfile, userProfileLoading, userProfileError, fetchUserProfileById } =
@@ -12,11 +17,10 @@ export default function InstructorDetail() {
 
   useEffect(() => {
     if (id) fetchUserProfileById(id);
-    // eslint-disable-next-line
   }, [id]);
 
   return (
-    <AdminTemplate activeNav={'instruktur'}>
+    <AdminTemplate activeNav={'instruktur'} breadcrumbItems={breadcrumbItems}>
       <ProfilePreview
         profile={userProfile}
         loading={userProfileLoading}

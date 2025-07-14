@@ -1,6 +1,10 @@
 import React from 'react';
 import Icon from '../../../components/icons/icon';
 
+function getUnsetText(showEdit) {
+  return showEdit ? 'Belum diatur, silahkan edit untuk mengaturnya!' : 'Belum diatur';
+}
+
 export default function ProfilePreview({
   profile,
   loading,
@@ -25,7 +29,7 @@ export default function ProfilePreview({
 
       {/* Header */}
       <div className="w-full flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-4 mb-3 sm:mb-4">
-        <h2 className="text-lg sm:text-2xl font-bold text-primary-700">Profile Instruktur</h2>
+        <h2 className="text-lg sm:text-2xl font-bold text-primary-700">Detail Profile User</h2>
         {showEdit && (
           <button
             className="flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 bg-primary-700 text-white rounded-md hover:bg-primary-700 transition-colors text-sm sm:text-base"
@@ -118,7 +122,7 @@ export default function ProfilePreview({
                         value
                       ) : (
                         <span className="block text-red-500 font-normal text-xs sm:text-sm p-2 bg-error-100 rounded-md">
-                          Belum diatur, silahkan edit untuk mengaturnya!
+                          {getUnsetText(showEdit)}
                         </span>
                       )}
                     </div>
@@ -135,7 +139,7 @@ export default function ProfilePreview({
                     profile.about
                   ) : (
                     <span className="block text-red-500 font-normal text-xs sm:text-sm p-2 bg-error-100 rounded-md">
-                      Belum diatur, silahkan edit untuk mengaturnya!
+                      {getUnsetText(showEdit)}
                     </span>
                   )}
                 </div>

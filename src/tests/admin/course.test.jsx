@@ -66,7 +66,7 @@ describe('Course page', () => {
     });
     instructorStore.default.mockReturnValue({
       instructorSelectOptions: [],
-      fetchInstructoryOptions: jest.fn(),
+      fetchInstructorOptions: jest.fn(),
     });
     confirmationModalStore.default.mockReturnValue({
       openModal: jest.fn(),

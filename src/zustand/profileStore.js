@@ -88,12 +88,9 @@ const useProfileStore = create((set, get) => ({
     set({ userProfileLoading: true, userProfileError: null });
     const { token } = useAuthStore.getState();
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/user-profile/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/profile/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       if (res.data?.data) {
         set({ userProfile: mapProfileData(res.data.data), userProfileLoading: false });
       } else {
@@ -104,6 +101,48 @@ const useProfileStore = create((set, get) => ({
         userProfileError: err.response?.data?.message || 'Failed to fetch user profile',
         userProfileLoading: false,
       });
+    }
+  },
+
+  updateUserStatus: async (id, status) => {
+    set({ loading: true, error: null });
+    const { token } = useAuthStore.getState();
+    try {
+      const res = await axios.patch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/profile/${id}`,
+        { status },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      toast.success('Status berhasil diubah');
+      set({ loading: false });
+      return res.data;
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Gagal mengubah status',
+        loading: false,
+      });
+      toast.error(err.response?.data?.message || 'Gagal mengubah status');
+      throw err;
+    }
+  },
+
+  deleteUserProfile: async (id) => {
+    set({ loading: true, error: null });
+    const { token } = useAuthStore.getState();
+    try {
+      await axios.delete(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/profile/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      set({ userProfile: null, loading: false });
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Gagal menghapus profil',
+        loading: false,
+      });
+      toast.error(err.response?.data?.message || 'Gagal menghapus profil');
+      throw err;
     }
   },
 }));

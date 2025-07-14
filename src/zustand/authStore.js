@@ -33,7 +33,10 @@ const useAuthStore = create((set, get) => ({
 
       set({ token: tokenData, user: userData, error: null });
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Login failed';
+      const errorMessage =
+        error.response?.data?.message ||
+        (error.response?.data?.status === 'failed' && error.response?.data?.message) ||
+        'Login failed';
       set({ error: errorMessage });
     }
   },
