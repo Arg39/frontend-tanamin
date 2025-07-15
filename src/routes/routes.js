@@ -37,6 +37,7 @@ import Student from '../pages/admin/user/student/student';
 import StudentDetail from '../pages/admin/user/student/studentDetail';
 import FaqAdmin from '../pages/admin/content/faq/faq';
 import AdminAboutCompany from '../pages/admin/content/aboutCompany/aboutCompany';
+import AdminProfilPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/proflPerusahaan/profilPerusahaanEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -100,6 +101,21 @@ const ValidatedCourseDetailInstructor = () => {
   return <CuourseDetailInstructor />;
 };
 
+const ValidatedAboutCompany = () => {
+  const { tab } = useParams();
+  const validTabs = ['profil', 'kegiatan', 'kerja-sama'];
+
+  if (!tab) {
+    return <Navigate to="/admin/tentang-perusahaan/profil" replace />;
+  }
+
+  if (!validTabs.includes(tab)) {
+    return <NotFound />;
+  }
+
+  return <AdminAboutCompany />;
+};
+
 const adminRoutes = [
   { path: 'dashboard', element: <DashboardAdmin /> },
   { path: 'kategori', element: <Category /> },
@@ -115,7 +131,12 @@ const adminRoutes = [
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
   { path: 'siswa', element: <Student /> },
   { path: 'siswa/:id', element: <StudentDetail /> },
-  { path: 'tentang-perusahaan', element: <AdminAboutCompany /> },
+  {
+    path: 'tentang-perusahaan',
+    element: <Navigate to="/admin/tentang-perusahaan/profil" replace />,
+  },
+  { path: 'tentang-perusahaan/:tab', element: <ValidatedAboutCompany /> },
+  { path: 'tentang-perusahaan/profil/edit', element: <AdminProfilPerusahaanEdit /> },
   { path: 'faq', element: <FaqAdmin /> },
 ];
 

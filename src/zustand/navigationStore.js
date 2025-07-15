@@ -50,7 +50,11 @@ const useNavigationStore = create((set) => ({
     {
       label: 'konten',
       links: [
-        { text: 'tentang perusahaan', href: '/admin/tentang-perusahaan', icon: 'info-rounded' },
+        {
+          text: 'tentang perusahaan',
+          href: '/admin/tentang-perusahaan/profil',
+          icon: 'info-rounded',
+        },
         { text: 'faq', href: '/admin/faq', icon: 'faq' },
       ],
     },
@@ -86,6 +90,12 @@ const useNavigationStore = create((set) => ({
     { key: 'atribut', label: 'Atribut' },
     { key: 'materi', label: 'Materi' },
     { key: 'ulasan', label: 'Ulasan' },
+  ],
+
+  companyAboutTabs: [
+    { key: 'profil', label: 'Profil Perusahaan' },
+    { key: 'kegiatan', label: 'Kegiatan Perusahaan' },
+    { key: 'kerja-sama', label: 'Kerja Sama' },
   ],
 }));
 

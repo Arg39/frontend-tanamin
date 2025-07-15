@@ -59,15 +59,21 @@ export default function SelectOption({
         )}
         {isOpen && !disabled && (
           <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-48 overflow-y-auto select-dropdown">
-            {options.map((option) => (
-              <li
-                key={option.value}
-                className="px-3 py-2 hover:bg-primary-500 hover:text-white cursor-pointer"
-                onClick={() => handleSelect(option.value)}
-              >
-                {option.label}
+            {options.length === 0 ? (
+              <li className="px-3 py-2 text-error-400 cursor-not-allowed select-none">
+                Belum ada data
               </li>
-            ))}
+            ) : (
+              options.map((option) => (
+                <li
+                  key={option.value}
+                  className="px-3 py-2 hover:bg-primary-500 hover:text-white cursor-pointer"
+                  onClick={() => handleSelect(option.value)}
+                >
+                  {option.label}
+                </li>
+              ))
+            )}
           </ul>
         )}
       </div>

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Button from '../components/button/button';
 import useAuthStore from '../zustand/authStore';
 import Template from '../template/template';
+import Icon from '../components/icons/icon';
 
 export default function Login() {
   const location = useLocation();
@@ -14,6 +15,7 @@ export default function Login() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -79,15 +81,25 @@ export default function Login() {
                   disabled={loading}
                 />
               </div>
-              <div className="mb-4 lg:mb-6">
+              <div className="mb-4 lg:mb-6 relative">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2 pr-10"
                   placeholder="Password"
                   onChange={handleChange}
                   disabled={loading}
                 />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={loading}
+                  aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+                >
+                  <Icon type={showPassword ? 'eye-off' : 'eye'} />
+                </button>
               </div>
               <div className="flex flex-row justify-between items-center mb-6">
                 <label className="flex items-center mb-0 mr-4">
