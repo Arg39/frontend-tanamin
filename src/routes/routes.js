@@ -38,6 +38,8 @@ import StudentDetail from '../pages/admin/user/student/studentDetail';
 import FaqAdmin from '../pages/admin/content/faq/faq';
 import AdminAboutCompany from '../pages/admin/content/aboutCompany/aboutCompany';
 import AdminProfilPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/proflPerusahaan/profilPerusahaanEdit';
+import KegiatanPerusahaanAdd from '../pages/admin/content/aboutCompany/tabs/kegiatanPerusahan/kegiatanPerusahaanAdd';
+import KegiatanPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kegiatanPerusahan/kegiatanPerusahaanEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -137,6 +139,8 @@ const adminRoutes = [
   },
   { path: 'tentang-perusahaan/:tab', element: <ValidatedAboutCompany /> },
   { path: 'tentang-perusahaan/profil/edit', element: <AdminProfilPerusahaanEdit /> },
+  { path: 'tentang-perusahaan/kegiatan/tambah', element: <KegiatanPerusahaanAdd /> },
+  { path: 'tentang-perusahaan/kegiatan/edit/:id', element: <KegiatanPerusahaanEdit /> },
   { path: 'faq', element: <FaqAdmin /> },
 ];
 

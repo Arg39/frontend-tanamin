@@ -3,7 +3,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import AdminTemplate from '../../../../template/templateAdmin';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import ProfilPerusahaan from './tabs/proflPerusahaan/profilPerusahaan';
-import KegiatanPerusahaan from './tabs/kegiatanPerusahaan';
+import KegiatanPerusahaan from './tabs/kegiatanPerusahan/kegiatanPerusahaan';
 import KerjaSama from './tabs/kerjaSama';
 
 const tabComponents = {

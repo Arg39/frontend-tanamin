@@ -27,7 +27,7 @@ const useCompanyStore = create((set, get) => ({
     set({ loading: true, error: null, notFound: false });
     const { token } = useAuthStore.getState();
     try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/company-profile`, {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       // Jika status failed dan message "Company profile not found"
@@ -52,7 +52,7 @@ const useCompanyStore = create((set, get) => ({
     const { token } = useAuthStore.getState();
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company-profile`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/profile`,
         profileData,
         { headers: { Authorization: `Bearer ${token}` } }
       );

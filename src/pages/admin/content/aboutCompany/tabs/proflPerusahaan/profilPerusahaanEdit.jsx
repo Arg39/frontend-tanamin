@@ -3,7 +3,7 @@ import AdminTemplate from '../../../../../../template/templateAdmin';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '../../../../../../components/icons/icon';
 import TextInput from '../../../../../../components/form/textInput';
-import useCompanyStore from '../../../../../../zustand/companyStore';
+import useCompanyStore from '../../../../../../zustand/companyProfileStore';
 import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
 
@@ -89,6 +89,7 @@ export default function AdminProfilPerusahaanEdit() {
             mission: missions,
             statistics,
           });
+          toast.success('Profil perusahaan berhasil disimpan');
         } catch (error) {
           toast.error('Error saving company profile:', error);
         }
@@ -114,7 +115,7 @@ export default function AdminProfilPerusahaanEdit() {
           </button>
           <div className="flex justify-between items-start mb-4">
             <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
-              Profil Perusahaan
+              Edit Profil Perusahaan
             </h2>
             <button
               type="button"

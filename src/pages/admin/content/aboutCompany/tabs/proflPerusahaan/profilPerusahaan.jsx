@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Icon from '../../../../../../components/icons/icon';
 import { useNavigate } from 'react-router-dom';
-import useCompanyStore from '../../../../../../zustand/companyStore';
+import useCompanyStore from '../../../../../../zustand/companyProfileStore';
 
 const PLACEHOLDER = (
   <span className="italic text-error-500 p-2 bg-red-200 rounded-md">
@@ -35,7 +35,7 @@ export default function ProfilPerusahaan() {
 
   // Selalu render meski notFound, agar bisa edit
   return (
-    <div className="w-full bg-white rounded-md flex flex-col p-2 sm:p-6 shadow-md">
+    <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
         <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-2 sm:mb-4">
           Profil Perusahaan
@@ -111,6 +111,6 @@ export default function ProfilPerusahaan() {
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
