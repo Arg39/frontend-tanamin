@@ -7,7 +7,7 @@ const useFaqStore = create((set, get) => ({
     currentPage: 1,
     lastPage: 1,
     total: 0,
-    perPage: 10,
+    perPage: 5,
   },
   loading: false,
   error: null,

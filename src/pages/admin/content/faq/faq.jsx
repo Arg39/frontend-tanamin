@@ -27,7 +27,7 @@ export default function FaqAdmin() {
       : {
           currentPage: pagination.currentPage || 1,
           lastPage: pagination.lastPage || 1,
-          perPage: pagination.perPage || 10,
+          perPage: pagination.perPage || 5,
         };
 
   useEffect(() => {
