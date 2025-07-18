@@ -3,6 +3,10 @@ import Template from '../template/template';
 import Breadcrumb from '../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import { motion, useAnimationFrame } from 'framer-motion';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Controller } from 'swiper/modules';
+import 'swiper/css';
+import GallerySwiper from '../components/carousel/swiper';
 
 function ImageCarousel({ images, interval = 4000 }) {
   const [current, setCurrent] = useState(0);
@@ -214,7 +218,19 @@ export default function TentangKami() {
     { label: 'Tentang Kami', path: location.pathname },
   ];
 
-  const carouselImages = [
+  const images = [
+    {
+      src: 'https://images.unsplash.com/photo-1750173588085-895136c6e0a5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      alt: 'Ilustrasi Visi Tanamin 1',
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=800&q=80',
+      alt: 'Ilustrasi Visi Tanamin 2',
+    },
+    {
+      src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+      alt: 'Ilustrasi Visi Tanamin 3',
+    },
     {
       src: 'https://images.unsplash.com/photo-1750173588085-895136c6e0a5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       alt: 'Ilustrasi Visi Tanamin 1',
@@ -240,6 +256,10 @@ export default function TentangKami() {
     },
     // tambahkan mitra lain di sini
   ];
+
+  // Controller state for sync (optional)
+  const [swiperTop, setSwiperTop] = useState(null);
+  const [swiperBottom, setSwiperBottom] = useState(null);
 
   return (
     <Template activeNav="tentang-kami" locationKey={location.key}>
@@ -284,8 +304,6 @@ export default function TentangKami() {
 
         <section className="w-full mt-8 mb-8">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm">
-            {/* Carousel Start */}
-            <ImageCarousel images={carouselImages} interval={4000} />
             <div className="flex-1 flex flex-col gap-8 w-full">
               <div>
                 <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">Visi Kami</h2>
@@ -309,6 +327,15 @@ export default function TentangKami() {
               </div>
             </div>
           </div>
+        </section>
+
+        {/* Swiper Marquee Section */}
+        <section className="w-screen max-w-none mb-16 px-0 relative left-1/2 right-1/2 -mx-[50vw]">
+          <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
+            Galeri kegiatan Tanamin
+          </h2>
+          {/* Top Swiper: RTL */}
+          <GallerySwiper images={images} />
         </section>
 
         <section className="w-full mb-16">

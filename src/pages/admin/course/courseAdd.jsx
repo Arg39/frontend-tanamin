@@ -9,6 +9,8 @@ import useCategoryStore from '../../../zustand/categoryStore';
 import SelectOption from '../../../components/form/selectOption';
 import useInstructorStore from '../../../zustand/instructorStore';
 import useCourseStore from '../../../zustand/courseStore';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function CourseAdd() {
   const location = useLocation();
@@ -52,8 +54,25 @@ export default function CourseAdd() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validateForm = () => {
+    const errors = [];
+    if (!formData.title.trim()) errors.push('Judul kursus');
+    if (!formData.id_category) errors.push('Kategori terkait');
+    if (!formData.id_instructor) errors.push('Instruktur penanggung jawab');
+    return errors;
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const errors = validateForm();
+    if (errors.length > 0) {
+      toast.error(`Gagal menambah kursus: ${errors.join(', ')} masih kosong.`, {
+        position: 'top-right',
+        autoClose: 3000,
+      });
+      return;
+    }
 
     openModal({
       title: 'Konfirmasi Simpan',
@@ -69,7 +88,10 @@ export default function CourseAdd() {
           });
           navigate('/admin/kursus');
         } catch (err) {
-          alert('Gagal menambah kursus: ' + err.message);
+          toast.error('Gagal menambah kursus: ' + err.message, {
+            position: 'top-right',
+            autoClose: 3000,
+          });
         }
       },
       onCancel: () => {
@@ -80,6 +102,7 @@ export default function CourseAdd() {
 
   return (
     <AdminTemplate activeNav="kursus" breadcrumbItems={breadcrumbItems}>
+      <ToastContainer />
       <div className="wf-full bg-white p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
