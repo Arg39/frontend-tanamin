@@ -74,6 +74,7 @@ export default function FaqAdmin() {
       Header: 'Jawaban',
       accessor: 'answer',
       width: '60%',
+      disableSort: true,
       Cell: ({ value }) => <span className="block whitespace-pre-line">{value}</span>,
     },
     {
