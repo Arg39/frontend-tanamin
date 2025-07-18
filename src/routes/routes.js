@@ -42,6 +42,8 @@ import KegiatanPerusahaanAdd from '../pages/admin/content/aboutCompany/tabs/kegi
 import KegiatanPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kegiatanPerusahan/kegiatanPerusahaanEdit';
 import KerjaSamaAdd from '../pages/admin/content/aboutCompany/tabs/kerjaSama/kerjaSamaAdd';
 import KerjaSamaEdit from '../pages/admin/content/aboutCompany/tabs/kerjaSama/kerjaSamaEdit';
+import FaqAdd from '../pages/admin/content/faq/faqAdd';
+import FaqEdit from '../pages/admin/content/faq/faqEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -146,6 +148,8 @@ const adminRoutes = [
   { path: 'tentang-perusahaan/kerja-sama/tambah', element: <KerjaSamaAdd /> },
   { path: 'tentang-perusahaan/kerja-sama/edit/:id', element: <KerjaSamaEdit /> },
   { path: 'faq', element: <FaqAdmin /> },
+  { path: 'faq/tambah', element: <FaqAdd /> },
+  { path: 'faq/edit/:id', element: <FaqEdit /> },
 ];
 
 const instructorRoutes = [

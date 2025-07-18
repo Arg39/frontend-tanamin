@@ -1,96 +1,105 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AdminTemplate from '../../../../template/templateAdmin';
 import ReactTable from '../../../../components/table/reactTable';
 import Icon from '../../../../components/icons/icon';
-
-const dummyData = {
-  status: 'success',
-  message: 'FAQ retrieved successfully',
-  httpCode: 200,
-  data: {
-    items: [
-      {
-        id: '1',
-        question: 'Apa itu Tanamin?',
-        answer: 'Tanamin adalah platform digital untuk pertanian modern di Indonesia.',
-      },
-      {
-        id: '2',
-        question: 'Bagaimana cara mendaftar sebagai petani?',
-        answer: 'Klik tombol daftar di halaman utama dan isi data diri Anda.',
-      },
-      {
-        id: '3',
-        question: 'Apakah Tanamin gratis?',
-        answer: 'Ya, semua layanan dasar Tanamin dapat digunakan secara gratis.',
-      },
-    ],
-    pagination: {
-      current_page: 1,
-      last_page: 1,
-      total: 3,
-      per_page: 10,
-    },
-  },
-};
-
-const columns = [
-  {
-    Header: 'Pertanyaan',
-    accessor: 'question',
-    width: '30%',
-  },
-  {
-    Header: 'Jawaban',
-    accessor: 'answer',
-    width: '60%',
-    Cell: ({ value }) => <span className="block whitespace-pre-line">{value}</span>,
-  },
-  {
-    Header: 'Aksi',
-    accessor: 'id',
-    width: '10%',
-    Cell: ({ value, row }) => (
-      <div className="flex flex-col gap-2 items-start">
-        <button className="p-1 px-4 rounded-md bg-primary-700 hover:bg-primary-800 text-white">
-          Edit
-        </button>
-        <button className="p-1 px-4 rounded-md bg-error-600 hover:bg-error-700 text-white">
-          Hapus
-        </button>
-      </div>
-    ),
-  },
-];
+import useFaqStore from '../../../../zustand/faqStore';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import { toast } from 'react-toastify';
 
 export default function FaqAdmin() {
   const location = useLocation();
   const breadcrumbItems = [{ label: 'FAQ', path: location.pathname }];
   const navigate = useNavigate();
 
-  const [pagination, setPagination] = useState({
-    currentPage: dummyData.data.pagination.current_page,
-    lastPage: dummyData.data.pagination.last_page,
-    perPage: dummyData.data.pagination.per_page,
-  });
+  const { faqs, pagination, loading, fetchFaqs, setPagination, deleteFaq } = useFaqStore();
+  const { openModal, closeModal } = useConfirmationModalStore();
+
+  // Helper to extract items and pagination from API response
+  const faqItems = faqs?.items || faqs || [];
+  const currentPagination =
+    pagination?.current_page !== undefined
+      ? {
+          currentPage: pagination.current_page,
+          lastPage: pagination.last_page,
+          perPage: pagination.per_page || pagination.perPage || 10,
+        }
+      : {
+          currentPage: pagination.currentPage || 1,
+          lastPage: pagination.lastPage || 1,
+          perPage: pagination.perPage || 10,
+        };
+
+  useEffect(() => {
+    fetchFaqs();
+    // eslint-disable-next-line
+  }, []);
 
   const handlePageChange = (page) => {
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: page,
-    }));
-    // fetch data here if using API
+    setPagination({ ...pagination, current_page: page });
+    fetchFaqs({ page, perPage: currentPagination.perPage });
   };
 
   const handlePageSizeChange = (size) => {
-    setPagination((prev) => ({
-      ...prev,
-      perPage: size,
-      currentPage: 1,
-    }));
-    // fetch data here if using API
+    setPagination({ ...pagination, perPage: size, current_page: 1 });
+    fetchFaqs({ page: 1, perPage: size });
   };
+
+  const handleDelete = (id) => {
+    openModal({
+      title: 'Konfirmasi Hapus',
+      message: 'Apakah Anda yakin ingin menghapus FAQ ini?',
+      variant: 'danger',
+      onConfirm: async () => {
+        closeModal();
+        try {
+          await deleteFaq(id);
+          toast.success('FAQ berhasil dihapus');
+          fetchFaqs();
+        } catch (error) {
+          toast.error(error.message || 'Gagal menghapus FAQ');
+        }
+      },
+      onCancel: () => closeModal(),
+    });
+  };
+
+  const columns = [
+    {
+      Header: 'Pertanyaan',
+      accessor: 'question',
+      width: '30%',
+    },
+    {
+      Header: 'Jawaban',
+      accessor: 'answer',
+      width: '60%',
+      Cell: ({ value }) => <span className="block whitespace-pre-line">{value}</span>,
+    },
+    {
+      Header: 'Aksi',
+      accessor: 'id',
+      width: '10%',
+      Cell: ({ value }) => (
+        <div className="flex flex-col gap-2 items-start">
+          <button
+            className="p-1 px-4 rounded-md bg-primary-700 hover:bg-primary-800 text-white"
+            onClick={() => navigate(`/admin/faq/edit/${value}`)}
+            disabled={loading}
+          >
+            Edit
+          </button>
+          <button
+            className="p-1 px-4 rounded-md bg-error-600 hover:bg-error-700 text-white"
+            onClick={() => handleDelete(value)}
+            disabled={loading}
+          >
+            Hapus
+          </button>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <AdminTemplate activeNav={'faq'} breadcrumbItems={breadcrumbItems}>
@@ -99,23 +108,22 @@ export default function FaqAdmin() {
           <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-4">
             Daftar Frequently Asked Questions
           </h2>
-          <button className="flex gap-2 p-2 px-4 items-center text-white bg-primary-700 hover:bg-primary-800 rounded-md">
+          <button
+            className="flex gap-2 p-2 px-4 items-center text-white bg-primary-700 hover:bg-primary-800 rounded-md"
+            onClick={() => navigate('/admin/faq/tambah')}
+          >
             <Icon type={'plus'} className={'w-6 h-6'} />
             Tambah
           </button>
         </div>
         <ReactTable
           columns={columns}
-          data={dummyData.data.items}
+          data={faqItems}
           numbering={true}
-          pagination={{
-            currentPage: pagination.currentPage,
-            lastPage: pagination.lastPage,
-            perPage: pagination.perPage,
-          }}
+          pagination={currentPagination}
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
-          loading={false}
+          loading={loading}
         />
       </div>
     </AdminTemplate>
