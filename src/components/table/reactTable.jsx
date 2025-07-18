@@ -127,31 +127,41 @@ export default function ReactTable({
 
       {/* Responsive table for smaller screens */}
       <div className="block sm:hidden">
-        {data.map((row, i) => {
-          const rowObject = { original: row };
-          return (
-            <div
-              key={row.id || i}
-              className="border border-gray-300 rounded-lg mb-4 p-4 bg-white shadow"
-            >
-              {numbering && (
-                <div className="mb-2">
-                  <strong>No:</strong> {(pagination.currentPage - 1) * pagination.perPage + i + 1}
-                </div>
-              )}
-              {columns.map((col, ci) => {
-                const value =
-                  typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
-                return (
-                  <div key={ci} className="mb-2">
-                    <strong>{col.Header}:</strong>{' '}
-                    {col.Cell ? col.Cell({ value, row: rowObject }) : value}
+        {loading ? (
+          <div className="text-center py-4 border border-gray-300 rounded bg-white shadow mb-4">
+            Loading...
+          </div>
+        ) : data.length === 0 ? (
+          <div className="text-center py-4 border border-gray-300 rounded bg-white shadow mb-4">
+            Tidak ada data yang tersedia
+          </div>
+        ) : (
+          data.map((row, i) => {
+            const rowObject = { original: row };
+            return (
+              <div
+                key={row.id || i}
+                className="border border-gray-300 rounded-lg mb-4 p-4 bg-white shadow"
+              >
+                {numbering && (
+                  <div className="mb-2">
+                    <strong>No:</strong> {(pagination.currentPage - 1) * pagination.perPage + i + 1}
                   </div>
-                );
-              })}
-            </div>
-          );
-        })}
+                )}
+                {columns.map((col, ci) => {
+                  const value =
+                    typeof col.accessor === 'function' ? col.accessor(row) : row[col.accessor];
+                  return (
+                    <div key={ci} className="mb-2">
+                      <strong>{col.Header}:</strong>{' '}
+                      {col.Cell ? col.Cell({ value, row: rowObject }) : value}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })
+        )}
       </div>
 
       {/* Pagination controls */}
