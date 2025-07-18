@@ -97,7 +97,7 @@ export default function FaqAdmin() {
       <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
         <div className="flex justify-between items-start mb-2">
           <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-4">
-            Daftar Frequently Ask Question
+            Daftar Frequently Asked Questions
           </h2>
           <button className="flex gap-2 p-2 px-4 items-center text-white bg-primary-700 hover:bg-primary-800 rounded-md">
             <Icon type={'plus'} className={'w-6 h-6'} />

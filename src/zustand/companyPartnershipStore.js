@@ -1,44 +1,32 @@
 import { create } from 'zustand';
-import axios from 'axios';
 import useAuthStore from './authStore';
 
-const useCompanyActivityStore = create((set, get) => ({
-  activities: [],
+const useCompanyPartnershipStore = create((set, get) => ({
+  partnerships: [],
   pagination: {
     currentPage: 1,
     lastPage: 1,
     total: 0,
     perPage: 5,
   },
-  perPage: 5,
   loading: false,
   error: null,
 
   setPagination: (pagination) => set({ pagination }),
 
-  fetchActivities: async ({
-    sortBy = 'created_at',
-    sortOrder = 'desc',
-    perPage = get().perPage,
+  fetchPartnerships: async ({
     page = get().pagination.currentPage,
-    title = '',
-    dateRange = { start: '', end: '' },
+    perPage = get().pagination.perPage,
   } = {}) => {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
       const params = new URLSearchParams({
-        sortBy,
-        sortOrder,
-        perPage,
         page,
+        perPage,
       });
-      if (title) params.append('title', title);
-      if (dateRange.start) params.append('startDate', dateRange.start);
-      if (dateRange.end) params.append('endDate', dateRange.end);
-
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activities?${params.toString()}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnerships?${params.toString()}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -47,16 +35,16 @@ const useCompanyActivityStore = create((set, get) => ({
         }
       );
       const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch activities');
+      if (json.status !== 'success')
+        throw new Error(json.message || 'Failed to fetch partnerships');
       set({
-        activities: json.data.items,
+        partnerships: json.data.items,
         pagination: {
           currentPage: json.data.pagination.current_page,
           lastPage: json.data.pagination.last_page,
           total: json.data.pagination.total,
           perPage: json.data.pagination.per_page,
         },
-        perPage: json.data.pagination.per_page,
         loading: false,
         error: null,
       });
@@ -65,26 +53,28 @@ const useCompanyActivityStore = create((set, get) => ({
     }
   },
 
-  addActivity: async ({ image, title, description }) => {
+  addPartnership: async (data) => {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
       const formData = new FormData();
-      formData.append('image', image);
-      formData.append('title', title);
-      formData.append('description', description);
+      if (data.logo) formData.append('logo', data.logo);
+      formData.append('partner_name', data.partner_name);
+      formData.append('website_url', data.website_url || '');
 
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activity`, {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnership`, {
         method: 'POST',
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          // 'Content-Type' intentionally omitted for FormData
         },
         body: formData,
       });
       const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah aktivitas');
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah partnership');
       set({ loading: false, error: null });
-      // Optional: fetchActivities() to refresh list
+      // Optionally, refresh list
+      await get().fetchPartnerships();
       return json;
     } catch (e) {
       set({ error: e.message, loading: false });
@@ -92,44 +82,12 @@ const useCompanyActivityStore = create((set, get) => ({
     }
   },
 
-  updateActivity: async ({ id, image, title, description }) => {
-    set({ loading: true, error: null });
-    try {
-      const token = useAuthStore.getState().token;
-      const formData = new FormData();
-      // Only append image if it's a File (new upload)
-      if (image && typeof image !== 'string') {
-        formData.append('image', image);
-      }
-      formData.append('title', title);
-      formData.append('description', description);
-
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activity/${id}`,
-        {
-          method: 'POST',
-          headers: {
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: formData,
-        }
-      );
-      const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Gagal mengubah aktivitas');
-      set({ loading: false, error: null });
-      return json;
-    } catch (e) {
-      set({ error: e.message, loading: false });
-      throw e;
-    }
-  },
-
-  fetchActivityById: async (id) => {
+  fetchPartnershipById: async (id) => {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activity/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnership/${id}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -138,7 +96,8 @@ const useCompanyActivityStore = create((set, get) => ({
         }
       );
       const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch activity');
+      if (json.status !== 'success')
+        throw new Error(json.message || 'Failed to fetch partnership detail');
       set({ loading: false, error: null });
       return json.data;
     } catch (e) {
@@ -147,24 +106,57 @@ const useCompanyActivityStore = create((set, get) => ({
     }
   },
 
-  deleteActivity: async (id) => {
+  updatePartnership: async (id, data) => {
+    set({ loading: true, error: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const formData = new FormData();
+      if (data.logo) formData.append('logo', data.logo);
+      formData.append('partner_name', data.partner_name);
+      formData.append('website_url', data.website_url || '');
+
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnership/${id}`,
+        {
+          method: 'POST', // Laravel Route::match(['put', 'post'], ...)
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            // 'Content-Type' intentionally omitted for FormData
+          },
+          body: formData,
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal mengubah partnership');
+      set({ loading: false, error: null });
+      // Optionally, refresh list
+      await get().fetchPartnerships();
+      return json;
+    } catch (e) {
+      set({ error: e.message, loading: false });
+      throw e;
+    }
+  },
+
+  deletePartnership: async (id) => {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activity/${id}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnership/${id}`,
         {
           method: 'DELETE',
           headers: {
+            'Content-Type': 'application/json',
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
         }
       );
       const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus aktivitas');
-      // Optionally refetch activities to update the list
-      await get().fetchActivities();
+      if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus partnership');
       set({ loading: false, error: null });
+      // Refresh list setelah hapus
+      await get().fetchPartnerships();
       return json;
     } catch (e) {
       set({ error: e.message, loading: false });
@@ -173,4 +165,4 @@ const useCompanyActivityStore = create((set, get) => ({
   },
 }));
 
-export default useCompanyActivityStore;
+export default useCompanyPartnershipStore;

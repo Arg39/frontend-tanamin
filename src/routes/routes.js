@@ -40,6 +40,8 @@ import AdminAboutCompany from '../pages/admin/content/aboutCompany/aboutCompany'
 import AdminProfilPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/proflPerusahaan/profilPerusahaanEdit';
 import KegiatanPerusahaanAdd from '../pages/admin/content/aboutCompany/tabs/kegiatanPerusahan/kegiatanPerusahaanAdd';
 import KegiatanPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kegiatanPerusahan/kegiatanPerusahaanEdit';
+import KerjaSamaAdd from '../pages/admin/content/aboutCompany/tabs/kerjaSama/kerjaSamaAdd';
+import KerjaSamaEdit from '../pages/admin/content/aboutCompany/tabs/kerjaSama/kerjaSamaEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -141,6 +143,8 @@ const adminRoutes = [
   { path: 'tentang-perusahaan/profil/edit', element: <AdminProfilPerusahaanEdit /> },
   { path: 'tentang-perusahaan/kegiatan/tambah', element: <KegiatanPerusahaanAdd /> },
   { path: 'tentang-perusahaan/kegiatan/edit/:id', element: <KegiatanPerusahaanEdit /> },
+  { path: 'tentang-perusahaan/kerja-sama/tambah', element: <KerjaSamaAdd /> },
+  { path: 'tentang-perusahaan/kerja-sama/edit/:id', element: <KerjaSamaEdit /> },
   { path: 'faq', element: <FaqAdmin /> },
 ];
 

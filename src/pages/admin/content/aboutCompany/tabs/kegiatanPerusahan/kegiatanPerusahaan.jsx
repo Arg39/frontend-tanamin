@@ -3,18 +3,45 @@ import ReactTable from '../../../../../../components/table/reactTable';
 import Icon from '../../../../../../components/icons/icon';
 import useCompanyActivityStore from '../../../../../../zustand/companyActivityStore';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 
 export default function KegiatanPerusahaan() {
   const {
     activities,
     pagination,
     loading,
+    error,
     fetchActivities,
     perPage,
     setPagination,
-    deleteActivity, // assumed to exist in your store
+    deleteActivity,
   } = useCompanyActivityStore();
   const navigate = useNavigate();
+
+  const { openModal, closeModal } = useConfirmationModalStore();
+
+  // Handler untuk hapus activity dengan konfirmasi dan toast
+  const handleDelete = (id) => {
+    openModal({
+      title: 'Konfirmasi Hapus',
+      message: 'Apakah Anda yakin ingin menghapus kegiatan ini?',
+      variant: 'error',
+      onConfirm: async () => {
+        closeModal();
+        try {
+          await deleteActivity(id);
+          toast.success('Kegiatan berhasil dihapus');
+          // fetchActivities sudah dipanggil di store setelah delete
+        } catch (err) {
+          toast.error(err.message || 'Gagal menghapus kegiatan');
+        }
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
+  };
 
   const columns = [
     {
@@ -55,11 +82,7 @@ export default function KegiatanPerusahaan() {
           </button>
           <button
             className="p-1 px-4 rounded-md bg-error-600 hover:bg-error-700 text-white"
-            onClick={() => {
-              if (window.confirm('Yakin ingin menghapus kegiatan ini?')) {
-                deleteActivity(value);
-              }
-            }}
+            onClick={() => handleDelete(value)}
           >
             Hapus
           </button>
@@ -94,6 +117,7 @@ export default function KegiatanPerusahaan() {
           Tambah
         </button>
       </div>
+      {error && <div className="mb-2 text-error-600 bg-error-50 p-2 rounded">{error}</div>}
       <ReactTable
         columns={columns}
         data={activities}

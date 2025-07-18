@@ -4,7 +4,7 @@ import AdminTemplate from '../../../../template/templateAdmin';
 import useNavigationStore from '../../../../zustand/navigationStore';
 import ProfilPerusahaan from './tabs/proflPerusahaan/profilPerusahaan';
 import KegiatanPerusahaan from './tabs/kegiatanPerusahan/kegiatanPerusahaan';
-import KerjaSama from './tabs/kerjaSama';
+import KerjaSama from '../aboutCompany/tabs/kerjaSama/kerjaSama';
 
 const tabComponents = {
   profil: ProfilPerusahaan,

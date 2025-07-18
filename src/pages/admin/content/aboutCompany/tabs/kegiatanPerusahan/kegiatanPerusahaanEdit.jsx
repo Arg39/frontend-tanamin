@@ -16,9 +16,13 @@ export default function KegiatanPerusahaanEdit() {
     { label: 'Tentang Perusahaan', path: '/admin/tentang-perusahaan' },
     { label: 'Edit Kegiatan Perusahaan', path: location.pathname },
   ];
-  const { activities, loading, error, notFound, fetchActivities, updateActivity } =
-    useCompanyActivityStore();
+  const { loading, error, updateActivity, fetchActivityById } = useCompanyActivityStore();
   const { openModal, closeModal } = useConfirmationModalStore();
+
+  // State untuk data activity by id
+  const [activityLoading, setActivityLoading] = useState(true);
+  const [activityError, setActivityError] = useState(null);
+  const [notFound, setNotFound] = useState(false);
 
   const [form, setForm] = useState({
     image: null,
@@ -27,23 +31,38 @@ export default function KegiatanPerusahaanEdit() {
   });
 
   useEffect(() => {
-    // Fetch activities if not loaded
-    if (!activities || activities.length === 0) {
-      fetchActivities();
-    }
-  }, [activities, fetchActivities]);
+    let isMounted = true;
+    setActivityLoading(true);
+    setActivityError(null);
+    setNotFound(false);
 
-  useEffect(() => {
-    // Find activity by ID and set form
-    const activity = activities.find((a) => String(a.id) === String(id));
-    if (activity) {
-      setForm({
-        image: activity.image || null,
-        title: activity.title || '',
-        description: activity.description || '',
+    fetchActivityById(id)
+      .then((data) => {
+        if (!data) {
+          if (isMounted) setNotFound(true);
+          return;
+        }
+        if (isMounted) {
+          setForm({
+            image: data.image || null,
+            title: data.title || '',
+            description: data.description || '',
+          });
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setActivityError(err.message || 'Gagal mengambil data');
+        }
+      })
+      .finally(() => {
+        if (isMounted) setActivityLoading(false);
       });
-    }
-  }, [activities, id]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [id, fetchActivityById]);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -72,7 +91,7 @@ export default function KegiatanPerusahaanEdit() {
           });
           toast.success('Kegiatan perusahaan berhasil diubah');
         } catch (error) {
-          toast.error('Error updating company activity:', error.message || error);
+          toast.error('Error updating company activity: ' + (error.message || error));
         }
         navigate(-1);
       },
@@ -82,67 +101,69 @@ export default function KegiatanPerusahaanEdit() {
     });
   };
 
-  if (loading) return <div className="p-6">Loading...</div>;
-  if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
-  if (notFound) return <div className="p-6 text-red-600">Data tidak ditemukan</div>;
-
   return (
     <AdminTemplate activeNav={'tentang perusahaan'} breadcrumbItems={breadcrumbItems}>
-      <form onSubmit={handleSubmit}>
-        <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
-          <button
-            type="button"
-            className="w-fit flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
-            onClick={() => navigate(-1)}
-          >
-            <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
-            <span>Kembali</span>
-          </button>
-          <div className="flex justify-between items-start mb-4">
-            <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
-              Edit Kegiatan Perusahaan
-            </h2>
-          </div>
-
-          {/* content */}
-          <div className="flex flex-col gap-4">
-            <ImagePicker
-              label="Gambar"
-              name="image"
-              onChange={handleChange}
-              preview={form.image}
-              crop={true}
-              cropAspect={16 / 9}
-            />
-            <TextInput
-              label="Judul"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Masukkan judul kegiatan"
-              required
-            />
-            <TextInput
-              label="Deskripsi"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder="Masukkan deskripsi kegiatan"
-              textarea
-              rows={5}
-              required
-            />
-          </div>
-          <div className="wfull flex justify-end">
-            <button
-              type="submit"
-              className="w-fit mt-4 bg-primary-700 hover:bg-primary-800 text-white px-6 py-2 rounded-md font-semibold"
-            >
-              Simpan Perubahan
-            </button>
-          </div>
-        </div>
-      </form>
+      <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
+        {activityLoading && <div className="p-6">Loading...</div>}
+        {activityError && <div className="p-6 text-red-600">Error: {activityError}</div>}
+        {notFound && <div className="p-6 text-red-600">Data tidak ditemukan</div>}
+        {!activityLoading && !activityError && !notFound && (
+          <form onSubmit={handleSubmit}>
+            <>
+              <button
+                type="button"
+                className="w-fit flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
+                onClick={() => navigate(-1)}
+              >
+                <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
+                <span>Kembali</span>
+              </button>
+              <div className="flex justify-between items-start mb-4">
+                <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
+                  Edit Kegiatan Perusahaan
+                </h2>
+              </div>
+              {/* content */}
+              <div className="flex flex-col gap-4">
+                <ImagePicker
+                  label="Gambar"
+                  name="image"
+                  onChange={handleChange}
+                  preview={form.image}
+                  crop={true}
+                  cropAspect={16 / 9}
+                />
+                <TextInput
+                  label="Judul"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  placeholder="Masukkan judul kegiatan"
+                  required
+                />
+                <TextInput
+                  label="Deskripsi"
+                  name="description"
+                  value={form.description}
+                  onChange={handleChange}
+                  placeholder="Masukkan deskripsi kegiatan"
+                  textarea
+                  rows={5}
+                  required
+                />
+              </div>
+              <div className="wfull flex justify-end">
+                <button
+                  type="submit"
+                  className="w-fit mt-4 bg-primary-700 hover:bg-primary-800 text-white px-6 py-2 rounded-md font-semibold"
+                >
+                  Simpan Perubahan
+                </button>
+              </div>
+            </>
+          </form>
+        )}
+      </div>
     </AdminTemplate>
   );
 }
