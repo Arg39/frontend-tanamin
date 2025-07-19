@@ -10,11 +10,13 @@ import SortableModule from '../../../../../components/dragAndDrop/sortableModule
 import useModuleStore from '../../../../../zustand/material/moduleStore';
 import useLessonStore from '../../../../../zustand/material/lessonStore';
 import useAuthStore from '../../../../../zustand/authStore';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
 
 export default function ModuleList({ editable }) {
   const role = useAuthStore((state) => state.user?.role);
   const { id: courseId } = useParams();
   const navigate = useNavigate();
+  const { openModal, closeModal } = useConfirmationModalStore();
   const {
     fetchModules,
     modules: rawModules,
@@ -211,32 +213,41 @@ export default function ModuleList({ editable }) {
     const lesson = module.lessons.find((l) => l.id === lessonId);
     if (!lesson) return;
 
-    if (!window.confirm(`Yakin ingin menghapus materi "${lesson.title}"?`)) return;
+    openModal({
+      title: 'Konfirmasi Hapus Materi',
+      message: `Yakin ingin menghapus materi "${lesson.title}"?`,
+      variant: 'danger',
+      onConfirm: async () => {
+        closeModal();
+        const toastId = toast.loading('Menghapus materi...');
+        try {
+          await deleteLesson({ lessonId });
 
-    const toastId = toast.loading('Menghapus materi...');
-    try {
-      await deleteLesson({ lessonId });
+          // Remove lesson from state
+          const newModules = modules.map((m) =>
+            m.id === moduleId ? { ...m, lessons: m.lessons.filter((l) => l.id !== lessonId) } : m
+          );
+          useModuleStore.setState({ modules: newModules });
 
-      // Remove lesson from state
-      const newModules = modules.map((m) =>
-        m.id === moduleId ? { ...m, lessons: m.lessons.filter((l) => l.id !== lessonId) } : m
-      );
-      useModuleStore.setState({ modules: newModules });
-
-      toast.update(toastId, {
-        render: 'Materi berhasil dihapus',
-        type: 'success',
-        isLoading: false,
-        autoClose: 2000,
-      });
-    } catch (err) {
-      toast.update(toastId, {
-        render: err.message || 'Gagal menghapus materi',
-        type: 'error',
-        isLoading: false,
-        autoClose: 3000,
-      });
-    }
+          toast.update(toastId, {
+            render: 'Materi berhasil dihapus',
+            type: 'success',
+            isLoading: false,
+            autoClose: 2000,
+          });
+        } catch (err) {
+          toast.update(toastId, {
+            render: err.message || 'Gagal menghapus materi',
+            type: 'error',
+            isLoading: false,
+            autoClose: 3000,
+          });
+        }
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   if (loading) return <p className="text-base text-black">Loading...</p>;
