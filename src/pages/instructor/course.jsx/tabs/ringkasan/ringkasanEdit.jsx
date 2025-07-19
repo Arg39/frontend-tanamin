@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import InstructorTemplate from '../../../../template/templateInstructor';
-import Icon from '../../../../components/icons/icon';
-import useCourseStore from '../../../../zustand/courseStore';
-import ImagePicker from '../../../../components/form/imagePicker';
-import TextInput from '../../../../components/form/textInput';
-import SelectOption from '../../../../components/form/selectOption';
-import WysiwygInput from '../../../../components/form/wysiwygInput';
-import useAuthStore from '../../../../zustand/authStore';
+import InstructorTemplate from '../../../../../template/templateInstructor';
+import Icon from '../../../../../components/icons/icon';
+import useCourseStore from '../../../../../zustand/courseStore';
+import ImagePicker from '../../../../../components/form/imagePicker';
+import TextInput from '../../../../../components/form/textInput';
+import SelectOption from '../../../../../components/form/selectOption';
+import WysiwygInput from '../../../../../components/form/wysiwygInput';
+import useAuthStore from '../../../../../zustand/authStore';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -132,25 +132,13 @@ export default function RingkasanEdit() {
   };
 
   if (courseDetailLoading) {
-    return (
-      <InstructorTemplate activeNav="kursus">
-        <div className="p-8 text-center">Loading...</div>
-      </InstructorTemplate>
-    );
+    return <div className="p-8 text-center">Loading...</div>;
   }
   if (courseDetailError) {
-    return (
-      <InstructorTemplate activeNav="kursus">
-        <div className="p-8 text-red-500">{submitError}</div>
-      </InstructorTemplate>
-    );
+    return <div className="p-8 text-red-500">{submitError}</div>;
   }
   if (!courseDetailByTab) {
-    return (
-      <InstructorTemplate activeNav="kursus">
-        <div className="p-8 text-gray-500">Data tidak ditemukan</div>
-      </InstructorTemplate>
-    );
+    return <div className="p-8 text-gray-500">Data tidak ditemukan</div>;
   }
 
   return (

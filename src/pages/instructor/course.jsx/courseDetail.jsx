@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import Icon from '../../../../components/icons/icon';
-import CourseRingkasan from './tab/ringkasan';
-import CourseAttribute from './tab/atribut';
-import CourseMateri from './tab/materi';
-import useNavigationStore from '../../../../zustand/navigationStore';
-import useAuthStore from '../../../../zustand/authStore';
-import UlasanCourse from './tab/ulasan';
+import Icon from '../../../components/icons/icon';
+import CourseRingkasan from './tabs/ringkasan/ringkasan';
+import CourseAttribute from './tabs/atribut/atribut';
+import CourseMateri from './tabs/materi/materi';
+import useNavigationStore from '../../../zustand/navigationStore';
+import useAuthStore from '../../../zustand/authStore';
+import UlasanCourse from './tabs/ulasan/ulasan';
 
 const tabComponents = {
   informasiUtama: CourseRingkasan,
