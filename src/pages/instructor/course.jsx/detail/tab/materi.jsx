@@ -137,7 +137,7 @@ export default function ModuleList({ editable }) {
       useModuleStore.setState({ modules: newModules });
 
       toast.update(toastId, {
-        render: 'Urutan materi berhasil diubah',
+        render: 'Materi berhasil dipindahkan',
         type: 'success',
         isLoading: false,
         autoClose: 2000,

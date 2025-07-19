@@ -68,12 +68,17 @@ export default function ImagePicker({
   }, []);
 
   const handleCropSave = async () => {
-    const croppedImage = await getCroppedImg(localPreview, croppedAreaPixels);
+    // Determine output type based on original file type
+    let outputType = 'image/jpeg';
+    if (rawFile && rawFile.type === 'image/png') {
+      outputType = 'image/png';
+    }
+    const croppedImage = await getCroppedImg(localPreview, croppedAreaPixels, outputType);
     setLocalPreview(croppedImage.url);
     setShowCrop(false);
 
     // Convert blob to File and trigger onChange
-    const croppedFile = new File([croppedImage.blob], rawFile.name, { type: rawFile.type });
+    const croppedFile = new File([croppedImage.blob], rawFile.name, { type: outputType });
     const event = {
       target: {
         name,

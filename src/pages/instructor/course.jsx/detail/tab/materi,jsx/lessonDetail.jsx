@@ -34,7 +34,10 @@ export default function LessonDetail() {
             Detail{' '}
             {lessonData?.type === 'quiz' ? 'Quiz' : lessonData?.type === 'material' ? 'Materi' : ''}
           </h2>
-          <button className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white gap-2">
+          <button
+            className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white gap-2"
+            onClick={() => navigate(`/instruktur/materi/${lessonId}/edit`)}
+          >
             <Icon type={'edit'} className={'w-3 h-3'} /> Edit
           </button>
         </div>

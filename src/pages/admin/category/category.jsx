@@ -146,13 +146,13 @@ export default function Category() {
       Cell: ({ value }) => (
         <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
           <Link
-            className="p-1 px-4 rounded-md bg-secondary-800 hover:bg-secondary-700 text-white"
+            className="p-1 px-4 rounded-md bg-secondary-500 hover:bg-secondary-600 text-white"
             to={`/admin/kategori/edit/${value}`}
           >
             Edit
           </Link>
           <button
-            className="p-1 px-4 rounded-md bg-red-500 hover:bg-red-700 text-white"
+            className="p-1 px-4 rounded-md bg-error-600 hover:bg-error-700 text-white"
             onClick={() => {
               openModal({
                 title: 'Konfirmasi hapus',

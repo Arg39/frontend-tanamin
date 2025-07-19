@@ -1,4 +1,4 @@
-export default function getCroppedImg(imageSrc, pixelCrop) {
+export default function getCroppedImg(imageSrc, pixelCrop, outputType = 'image/jpeg') {
   return new Promise((resolve, reject) => {
     const image = new window.Image();
     image.src = imageSrc;
@@ -7,6 +7,13 @@ export default function getCroppedImg(imageSrc, pixelCrop) {
       canvas.width = pixelCrop.width;
       canvas.height = pixelCrop.height;
       const ctx = canvas.getContext('2d');
+
+      // If output is JPEG, fill background with white (JPEG doesn't support transparency)
+      if (outputType === 'image/jpeg') {
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      // For PNG, do nothing (keep transparency)
 
       ctx.drawImage(
         image,
@@ -26,7 +33,7 @@ export default function getCroppedImg(imageSrc, pixelCrop) {
           return;
         }
         resolve({ blob, url: URL.createObjectURL(blob) });
-      }, 'image/jpeg');
+      }, outputType);
     };
     image.onerror = reject;
   });

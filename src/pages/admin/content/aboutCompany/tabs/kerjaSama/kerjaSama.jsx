@@ -106,6 +106,14 @@ export default function KerjaSama() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.currentPage, pagination.perPage]);
 
+  // Pastikan data dan pagination dikonversi ke format yang benar
+  const tableData = Array.isArray(partnerships) ? partnerships : [];
+  const tablePagination = {
+    currentPage: pagination.currentPage || 1,
+    lastPage: pagination.lastPage || 1,
+    perPage: pagination.perPage || 10,
+  };
+
   const handlePageChange = (page) => {
     setPagination({
       ...pagination,
@@ -138,13 +146,9 @@ export default function KerjaSama() {
       {error && <div className="mb-2 text-error-600 bg-error-50 p-2 rounded">{error}</div>}
       <ReactTable
         columns={columns}
-        data={partnerships}
+        data={tableData}
         numbering={true}
-        pagination={{
-          currentPage: pagination.currentPage,
-          lastPage: pagination.lastPage,
-          perPage: pagination.perPage,
-        }}
+        pagination={tablePagination}
         onPageChange={handlePageChange}
         onPageSizeChange={handlePageSizeChange}
         loading={loading}
