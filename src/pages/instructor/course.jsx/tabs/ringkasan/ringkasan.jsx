@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
 import useAuthStore from '../../../../../zustand/authStore';
 import { toast } from 'react-toastify';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
 
 // Komponen pesan default
 function BelumDiatur() {
@@ -105,6 +106,7 @@ export default function CourseRingkasan({ editable }) {
     courseDetailError,
     updateCourseDetail,
   } = useCourseStore();
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   const role = useAuthStore((state) => state.user.role);
 
@@ -126,27 +128,36 @@ export default function CourseRingkasan({ editable }) {
   const imageUrl = isImageSet ? data.image : null;
 
   const handlePublish = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('status', 'awaiting_approval');
+    openModal({
+      title: 'Konfirmasi Publikasi',
+      message: 'Apakah Anda yakin ingin mengajukan publikasi kursus ini?',
+      variant: 'primary',
+      onConfirm: async () => {
+        closeModal();
+        try {
+          const formData = new FormData();
+          formData.append('status', 'awaiting_approval');
 
-      const res = await updateCourseDetail({
-        id,
-        data: formData,
-      });
+          const res = await updateCourseDetail({
+            id,
+            data: formData,
+          });
 
-      if (res.status === 'success') {
-        toast.success(res.message || 'Berhasil memperbarui ringkasan!');
-        navigate(-1);
-      } else {
-        toast.error(res.message || 'Gagal memperbarui ringkasan');
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error(err.message || 'Gagal menyimpan data');
-    } finally {
-      // Reset form atau state jika perlu
-    }
+          if (res.status === 'success') {
+            toast.success(res.message || 'Berhasil memperbarui ringkasan!');
+            navigate(-1);
+          } else {
+            toast.error(res.message || 'Gagal memperbarui ringkasan');
+          }
+        } catch (err) {
+          console.error(err);
+          toast.error(err.message || 'Gagal menyimpan data');
+        }
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   return (
