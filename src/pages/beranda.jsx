@@ -108,7 +108,7 @@ export default function Beranda2() {
   return (
     <Template
       activeNav="beranda"
-      className="h-screen w-screen bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white to-100%"
+      className="h-screen w-full bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white to-100%"
       locationKey={location.key}
     >
       <div className="xl:px-20 lg:px-10 md:px-14 sm:px-8 px-8 pt-8 w-full">

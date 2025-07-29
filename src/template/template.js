@@ -11,10 +11,10 @@ export default function Template({ children, activeNav, className, style, locati
   }, [activeNav, setActiveNav]);
 
   return (
-    <div className="min-h-screen w-screen flex flex-col">
+    <div className="min-h-screen w-full flex flex-col">
       <Navbar />
 
-      <div className={`w-screen flex-1 z-0 relative ${className}`} style={style}>
+      <div className={`w-full flex-1 z-0 relative ${className}`} style={style}>
         <AnimatePresence mode="wait">
           <motion.div
             key={locationKey}

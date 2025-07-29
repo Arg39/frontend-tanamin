@@ -7,7 +7,7 @@ export default function GallerySwiper({ images }) {
   // If less than 6 images, show static images in a flex container
   if (images.length < 6) {
     return (
-      <div className="w-screen flex flex-wrap gap-8 justify-center items-center">
+      <div className="w-full flex flex-wrap gap-8 justify-center items-center">
         {images.map((img, idx) => (
           <div
             key={`static-${idx}`}
@@ -51,7 +51,7 @@ export default function GallerySwiper({ images }) {
           }}
           speed={6000} // gerakan smooth
           dir="ltr"
-          className="w-screen"
+          className="w-full"
           style={{ width: '100vw' }}
         >
           {extendedImages.map((img, idx) => (
@@ -90,7 +90,7 @@ export default function GallerySwiper({ images }) {
           }}
           speed={6000} // gerakan smooth
           dir="rtl"
-          className="w-screen"
+          className="w-full"
           style={{ width: '100vw' }}
         >
           {extendedImages.map((img, idx) => (

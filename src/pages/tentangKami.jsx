@@ -250,7 +250,7 @@ export default function TentangKami() {
         </section>
 
         {/* Swiper Marquee Section */}
-        <section className="w-screen max-w-none mb-16 px-0 relative left-1/2 right-1/2 -mx-[50vw]">
+        <section className="w-full max-w-none mb-16 px-0 relative left-1/2 right-1/2 -mx-[50vw]">
           <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
             Galeri kegiatan Tanamin
           </h2>
