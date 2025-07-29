@@ -7,10 +7,10 @@ import { useLocation } from 'react-router-dom';
 import useCategoryStore from '../zustand/categoryStore';
 import CategoryCard from '../components/card/categoryCard';
 import InstructorCarousel from '../components/carousel/InstructorCarousel';
+import useBerandaStore from '../zustand/public/beranda/berandaStore'; // import zustand store
+import Card from '../components/card/card';
 
-// Custom hook to detect if device is mobile
 function useIsMobile() {
-  // 640px is Tailwind's 'sm' breakpoint
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);
 
   React.useEffect(() => {
@@ -29,9 +29,29 @@ export default function Beranda2() {
   const { categories, fetchCategories } = useCategoryStore();
   const isMobile = useIsMobile();
 
+  // Get instructors and courses from zustand store
+  const {
+    instructors,
+    loading,
+    error,
+    fetchInstructors,
+    courses,
+    coursesLoading,
+    coursesError,
+    fetchCourses,
+  } = useBerandaStore();
+
   useEffect(() => {
     fetchCategories({ perPage: 8 });
   }, [fetchCategories]);
+
+  useEffect(() => {
+    fetchInstructors();
+  }, [fetchInstructors]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   // Helper to get full image URL
   const getImageUrl = (image) => {
@@ -45,65 +65,16 @@ export default function Beranda2() {
     console.log('Cari kategori:', category);
   };
 
-  const instructors = [
-    {
-      id: 1,
-      image: 'https://randomuser.me/api/portraits/men/32.jpg',
-      name: 'Budi Santoso',
-      expertise: 'Data Science',
-      courseCount: 5,
-    },
-    {
-      id: 2,
-      image: 'https://randomuser.me/api/portraits/women/44.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 3,
-    },
-    {
-      id: 3,
-      image: 'https://randomuser.me/api/portraits/women/1.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 3,
-    },
-    {
-      id: 4,
-      image: 'https://randomuser.me/api/portraits/women/2.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 2,
-    },
-    {
-      id: 5,
-      image: 'https://randomuser.me/api/portraits/women/3.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 2,
-    },
-    {
-      id: 6,
-      image: 'https://randomuser.me/api/portraits/women/4.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 2,
-    },
-    {
-      id: 8,
-      image: 'https://randomuser.me/api/portraits/women/5.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 2,
-    },
-    {
-      id: 10,
-      image: 'https://randomuser.me/api/portraits/women/6.jpg',
-      name: 'Siti Aminah',
-      expertise: 'UI/UX Design',
-      courseCount: 2,
-    },
-    // ...tambahkan instruktur lain
-  ];
+  // Map backend instructor data to carousel format
+  const mappedInstructors = Array.isArray(instructors)
+    ? instructors.map((inst) => ({
+        id: inst.id,
+        image: getImageUrl(inst.photo_profile),
+        name: inst.name,
+        expertise: inst.expertise,
+        courseCount: inst.course_held,
+      }))
+    : [];
 
   return (
     <Template
@@ -121,7 +92,7 @@ export default function Beranda2() {
               Platform{' '}
               <GradientText
                 className="bg-gradient-to-r from-primary-600 to-tertiary-500"
-                duration={6}
+                total_quiz={6}
                 fontSize="2rem lg:2.5rem"
               >
                 Online Course
@@ -177,13 +148,34 @@ export default function Beranda2() {
 
           <div className="mb-16">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Instruktur Kami</h2>
-            <InstructorCarousel instructors={instructors} />
+            {loading ? (
+              <div className="text-center py-8 text-primary-600">Loading...</div>
+            ) : error ? (
+              <div className="text-center py-8 text-red-600">{error}</div>
+            ) : (
+              <InstructorCarousel instructors={mappedInstructors} />
+            )}
           </div>
 
           <div className="mb-16">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
               Temukan Course Sesuai Bidang Anda
             </h2>
+            <div className="mt-4 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+              {coursesLoading ? (
+                <div className="col-span-4 text-center py-8 text-primary-600">
+                  Loading courses...
+                </div>
+              ) : coursesError ? (
+                <div className="col-span-4 text-center py-8 text-red-600">{coursesError}</div>
+              ) : courses && courses.length > 0 ? (
+                courses.map((course) => <Card key={course.id} course={course} />)
+              ) : (
+                <div className="col-span-4 text-center py-8 text-primary-600">
+                  Tidak ada course tersedia.
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

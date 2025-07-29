@@ -61,7 +61,7 @@ export default function InstructorCarousel({ instructors = [] }) {
   };
 
   return (
-    <div className="relative w-full pl-4 pr-4">
+    <div className="relative w-full pr-4">
       {/* Left Button */}
       <button
         className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow p-2 hover:bg-primary-100 transition disabled:opacity-50"
@@ -76,7 +76,7 @@ export default function InstructorCarousel({ instructors = [] }) {
       </button>
 
       {/* Carousel */}
-      <div className="overflow-hidden w-full">
+      <div className="ml-[-24px] overflow-hidden w-full">
         <motion.div
           ref={carouselRef}
           className="flex flex-nowrap justify-start mx-4 py-4 cursor-grab"

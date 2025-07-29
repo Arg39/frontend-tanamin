@@ -1,65 +1,127 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Icon from '../icons/icon';
+
+function getPriceDisplay(price, discount) {
+  // Jika harga 0 atau kurang, tampilkan Gratis
+  if (price <= 0) {
+    return <span className="text-base sm:text-lg font-bold text-green-600">Gratis</span>;
+  }
+  if (discount === null) {
+    return (
+      <p className="text-base sm:text-lg font-bold text-primary-700">
+        Rp {price.toLocaleString('id-ID')}
+      </p>
+    );
+  }
+  if (typeof discount === 'string' && discount.includes('%')) {
+    const percent = parseFloat(discount) / 100;
+    const discountedPrice = Math.round(price * (1 - percent));
+    if (discountedPrice <= 0) {
+      return <span className="text-base sm:text-lg font-bold text-green-600">Gratis</span>;
+    }
+    return (
+      <>
+        <p className="text-base sm:text-lg font-bold text-primary-700">
+          Rp {discountedPrice.toLocaleString('id-ID')}
+        </p>
+        <p className="text-sm sm:text-base text-gray-400 line-through">
+          Rp {price.toLocaleString('id-ID')}
+        </p>
+        <span className="text-xs sm:text-sm text-green-600 font-semibold ml-1">{discount} OFF</span>
+      </>
+    );
+  }
+  if (typeof discount === 'number') {
+    const discountedPrice = price - discount;
+    if (discountedPrice <= 0) {
+      return <span className="text-base sm:text-lg font-bold text-green-600">Gratis</span>;
+    }
+    return (
+      <>
+        <p className="text-base sm:text-lg font-bold text-primary-700">
+          Rp {discountedPrice.toLocaleString('id-ID')}
+        </p>
+        <p className="text-sm sm:text-base text-gray-400 line-through">
+          Rp {price.toLocaleString('id-ID')}
+        </p>
+      </>
+    );
+  }
+  // fallback
+  return (
+    <p className="text-base sm:text-lg font-bold text-primary-700">
+      Rp {price.toLocaleString('id-ID')}
+    </p>
+  );
+}
 
 export default function Card({ course, content = 'true' }) {
   return (
-    <div className="w-[300px] lg:w-[400px] h-[480px] lg:h-[560px] bg-white rounded-xl shadow-2xl">
-      {content && (
-        <>
-          <div className="flex justify-center items-center">
-            <img
-              src={course.image}
-              alt={course.title}
-              className="rounded-md mt-6"
-              style={{ width: '90%', height: '180px', objectFit: 'cover' }}
-            />
-          </div>
-          <div className="w-full px-4 lg:px-8 mt-4 flex-row justify-center">
-            <div className="h-full flex justify-between items-center">
-              <div className="flex items-center mt-2">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, index) => (
-                    <Icon
-                      key={index}
-                      type={'star'}
-                      className={`h-4 w-4 lg:h-5 lg:w-5 ${
-                        index < course.rating ? 'text-yellow-500' : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
+    <Link
+      to={`/kursus/${course.id}`}
+      className="w-full"
+      style={{ textDecoration: 'none', color: 'inherit' }}
+    >
+      <div className="w-full bg-white rounded-xl shadow-md p-3 sm:p-4 flex flex-col h-full lg:min-h-[420px] cursor-pointer">
+        {content && (
+          <div className="flex flex-col justify-between h-full flex-grow">
+            {/* Gambar */}
+            <div>
+              <div className="w-full aspect-video relative overflow-hidden rounded-md">
+                <img
+                  src={course.image}
+                  alt={course.title}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Rating & Bookmark */}
+              <div className="w-full mt-2">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, index) => (
+                      <Icon
+                        key={index}
+                        type={'star'}
+                        className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                          index < course.average_rating ? 'text-tertiary-400' : 'text-gray-300'
+                        }`}
+                      />
+                    ))}
+                    <p className="ml-2 text-xs sm:text-sm text-gray-600">({course.total_rating})</p>
+                  </div>
                 </div>
-                <p className="ml-2 font-light text-xs lg:text-sm">({course.participant})</p>
+
+                {/* Judul */}
+                <h2 className="mt-2 font-medium text-sm sm:text-base line-clamp-3">
+                  {course.title}
+                </h2>
+
+                {/* Info materi dan evaluasi */}
+                <div className="mt-3 flex flex-wrap justify-between gap-y-1 text-gray-600 text-xs sm:text-sm">
+                  <div className="flex items-center gap-1 min-w-[48%]">
+                    <Icon type="book" className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span>{course.total_material} Materi</span>
+                  </div>
+                  <div className="flex items-center gap-1 min-w-[48%] justify-end sm:justify-start">
+                    <Icon type="clipboard" className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <span>{course.total_quiz} Evaluasi</span>
+                  </div>
+                </div>
               </div>
-              <Icon type={'bookmark'} className="h-5 w-5 lg:h-6 lg:w-6 text-black" />
             </div>
 
-            <h2 className="mt-4 font-medium text-lg lg:text-xl line-clamp-3">{course.title}</h2>
-
-            <div className="mt-4 flex justify-between text-gray-600">
-              <div className="flex w-full">
-                <Icon type={'book'} className="h-5 w-5 lg:h-6 lg:w-6 mr-2" />
-                <p className="font-light text-xs lg:text-sm">{course.lotMaterial} Materi</p>
+            {/* Instructor & Harga */}
+            <div className="mt-4">
+              <p className="text-sm sm:text-base font-medium text-gray-700">{course.instructor}</p>
+              <div className="mt-1 flex flex-wrap items-center gap-x-2">
+                {getPriceDisplay(course.price, course.discount)}
               </div>
-              <div className="flex w-full">
-                <Icon type={'clock'} className="h-5 w-5 lg:h-6 lg:w-6 mr-2" />
-                <p className="font-light text-xs lg:text-sm">{course.duration} Jam Total</p>
-              </div>
-            </div>
-            <p className="mt-4 font-medium text-sm lg:text-base">{course.instructor}</p>
-            <div className="mt-4 flex">
-              <p className="font-semibold text-lg lg:text-2xl">
-                Rp {course.price.toLocaleString('id-ID')}
-              </p>
-              <p
-                className="font-semibold text-sm lg:text-lg line-through ml-2 text-gray-500"
-                style={{ textDecorationThickness: '2px' }}
-              >
-                Rp {course.priceBeforeDiscount.toLocaleString('id-ID')}
-              </p>
             </div>
           </div>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+    </Link>
   );
 }
