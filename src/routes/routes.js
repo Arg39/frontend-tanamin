@@ -124,19 +124,26 @@ const ValidatedAboutCompany = () => {
 
 const adminRoutes = [
   { path: 'dashboard', element: <DashboardAdmin /> },
-  { path: 'kategori', element: <Category /> },
-  { path: 'kategori/tambah', element: <CategoryAdd /> },
-  { path: 'kategori/edit/:id', element: <CategoryEdit /> },
-  { path: 'kursus', element: <Course /> },
-  { path: 'kursus/tambah', element: <CourseAdd /> },
-  { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
-  { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEditAdmin /> },
-  { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
+  // instructor
   { path: 'instruktur', element: <Instructor /> },
   { path: 'instruktur/:id', element: <InstructorDetail /> },
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
+  // student
   { path: 'siswa', element: <Student /> },
   { path: 'siswa/:id', element: <StudentDetail /> },
+  // category
+  { path: 'kategori', element: <Category /> },
+  { path: 'kategori/tambah', element: <CategoryAdd /> },
+  { path: 'kategori/edit/:id', element: <CategoryEdit /> },
+  // course
+  { path: 'kursus', element: <Course /> },
+  { path: 'kursus/tambah', element: <CourseAdd /> },
+  { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
+  { path: 'kursus/:id/edit/ringkasan', element: <RingkasanEditAdmin /> },
+  { path: 'kursus/:id/edit/diskon', element: <RingkasanEditAdmin /> },
+  { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
+  // coupon
+  // about company
   {
     path: 'tentang-perusahaan',
     element: <Navigate to="/admin/tentang-perusahaan/profil" replace />,
@@ -147,6 +154,7 @@ const adminRoutes = [
   { path: 'tentang-perusahaan/kegiatan/edit/:id', element: <KegiatanPerusahaanEdit /> },
   { path: 'tentang-perusahaan/kerja-sama/tambah', element: <KerjaSamaAdd /> },
   { path: 'tentang-perusahaan/kerja-sama/edit/:id', element: <KerjaSamaEdit /> },
+  // faq
   { path: 'faq', element: <FaqAdmin /> },
   { path: 'faq/tambah', element: <FaqAdd /> },
   { path: 'faq/edit/:id', element: <FaqEdit /> },

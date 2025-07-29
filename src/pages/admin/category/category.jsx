@@ -172,45 +172,43 @@ export default function Category() {
   ];
 
   return (
-    <div>
-      <AdminTemplate activeNav="kategori" breadcrumbItems={breadcrumbItems}>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
-            <h2 className="text-2xl font-bold">Daftar Kategori</h2>
-            <Button
-              variant="primary"
-              className="flex items-center px-2 gap-2"
-              to={'/admin/kategori/tambah'}
-            >
-              <Icon type="plus" className="size-6" color="black" />
-              <span className="text-lg font-normal">Kategori</span>
-            </Button>
-          </div>
-          <h4 className="mb-4 md:mb-2">Filtering</h4>
-          <div className="mb-2 md:mb-6">
-            <TableFilter
-              filters={filterConfigs}
-              values={filterValues}
-              onFilterChange={setFilterValues}
-              searchInput={searchInput}
-              setSearchInput={setSearchInput}
-            />
-          </div>
-          {error && <p className="text-red-500">{error}</p>}
-          <ReactTable
-            columns={columns}
-            data={categories}
-            numbering={true}
-            onSortChange={handleSortChange}
-            pagination={{ ...pagination, perPage }}
-            onPageChange={handlePageChange}
-            onPageSizeChange={handlePageSizeChange}
-            sortBy={sortBy}
-            sortOrder={sortOrder}
-            loading={isLoading}
+    <AdminTemplate activeNav="kategori" breadcrumbItems={breadcrumbItems}>
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
+          <h2 className="text-2xl font-bold">Daftar Kategori</h2>
+          <Button
+            variant="primary"
+            className="flex items-center px-2 gap-2"
+            to={'/admin/kategori/tambah'}
+          >
+            <Icon type="plus" className="size-6" color="black" />
+            <span className="text-lg font-normal">Kategori</span>
+          </Button>
+        </div>
+        <h4 className="mb-4 md:mb-2">Filtering</h4>
+        <div className="mb-2 md:mb-6">
+          <TableFilter
+            filters={filterConfigs}
+            values={filterValues}
+            onFilterChange={setFilterValues}
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
           />
         </div>
-      </AdminTemplate>
-    </div>
+        {error && <p className="text-red-500">{error}</p>}
+        <ReactTable
+          columns={columns}
+          data={categories}
+          numbering={true}
+          onSortChange={handleSortChange}
+          pagination={{ ...pagination, perPage }}
+          onPageChange={handlePageChange}
+          onPageSizeChange={handlePageSizeChange}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          loading={isLoading}
+        />
+      </div>
+    </AdminTemplate>
   );
 }

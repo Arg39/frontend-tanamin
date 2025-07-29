@@ -34,11 +34,22 @@ const useNavigationStore = create((set) => ({
       links: [{ text: 'dashboard', href: '/admin/dashboard', icon: 'round-dashboard' }],
     },
     {
+      label: 'pengguna',
+      links: [
+        { text: 'instruktur', href: '/admin/instruktur', icon: 'user-filled' },
+        { text: 'siswa', href: '/admin/siswa', icon: 'user-filled' },
+      ],
+    },
+    {
       label: 'kursus',
       links: [
         { text: 'kategori', href: '/admin/kategori', icon: 'swatch' },
         { text: 'kursus', href: '/admin/kursus', icon: 'book' },
       ],
+    },
+    {
+      label: 'promo',
+      links: [{ text: 'kupon', href: '/admin/kupon', icon: 'coupon' }],
     },
     {
       label: 'keuangan',
@@ -59,13 +70,6 @@ const useNavigationStore = create((set) => ({
       ],
     },
     {
-      label: 'pengguna',
-      links: [
-        { text: 'instruktur', href: '/admin/instruktur', icon: 'user-filled' },
-        { text: 'siswa', href: '/admin/siswa', icon: 'user-filled' },
-      ],
-    },
-    {
       label: 'pesan',
       links: [{ text: 'pesan', href: '/admin/pesan', icon: 'message-question' }],
     },
@@ -79,8 +83,15 @@ const useNavigationStore = create((set) => ({
     {
       label: 'kursus',
       links: [
-        { text: 'kursus', href: '/instruktur/kursus', icon: 'book' },
         { text: 'kategori', href: '/instruktur/kategori', icon: 'swatch' },
+        { text: 'kursus', href: '/instruktur/kursus', icon: 'book' },
+      ],
+    },
+    {
+      label: 'promo',
+      links: [
+        { text: 'diskon', href: '/instruktur/diskon', icon: 'discount' },
+        { text: 'kupon', href: '/instruktur/kupon', icon: 'coupon' },
       ],
     },
   ],

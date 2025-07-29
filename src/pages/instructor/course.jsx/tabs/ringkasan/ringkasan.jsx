@@ -167,18 +167,27 @@ export default function CourseRingkasan({ editable }) {
         <div className="flex flex-col md:flex-row gap-2">
           {role === 'instructor' && (data.status === 'new' || data.status === 'edited') && (
             <button
-              className="p-2 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
+              className="p-2 px-4 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
               onClick={handlePublish}
             >
               <Icon type="send" className="h-5 w-5" />
               Ajukan Publikasi
             </button>
           )}
+          {role === 'admin' && data.price !== null && (
+            <button
+              className="p-2 px-4 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
+              onClick={() => navigate(`/admin/kursus/${id}/edit/ringkasan`)}
+            >
+              <Icon type="discount" className="h-5 w-5" />
+              Diskon
+            </button>
+          )}
           <Link
             to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
-            className="flex items-center gap-2 bg-secondary-500 text-white px-6 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
+            className="flex items-center gap-2 bg-secondary-500 text-white px-4 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
           >
-            <Icon type="edit" className="h-4 w-4" />
+            <Icon type="edit" className="h-3 w-3" />
             Edit
           </Link>
         </div>
@@ -197,6 +206,7 @@ export default function CourseRingkasan({ editable }) {
           <InfoItem icon="book" label="Kategori" value={displayValue(data.category?.name)} />
           <InfoItem icon="star-circle-outline" label="Level" value={displayLevel(data.level)} />
           <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
+          <InfoItem icon="discount" label="Diskon" value={displayHarga(data.discount)} />
           <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.updated_at)} />
         </div>
         {/* Right Column (Image) */}
