@@ -58,7 +58,6 @@ export default function RingkasanEdit() {
       setForm({
         title: courseDetailByTab.title || '',
         level: courseDetailByTab.level || '',
-        price: courseDetailByTab.price || '',
         requirement: courseDetailByTab.requirement || '',
         description: courseDetailByTab.description || '',
         detail: courseDetailByTab.detail || '',
@@ -98,7 +97,6 @@ export default function RingkasanEdit() {
       const formData = new FormData();
       formData.append('title', form.title);
       formData.append('level', form.level);
-      formData.append('price', form.price);
       formData.append('requirement', form.requirement);
       formData.append('description', form.description);
       formData.append('detail', finalDetail);
@@ -191,22 +189,7 @@ export default function RingkasanEdit() {
             onChange={handleChange}
             options={LEVEL_OPTIONS}
             placeholder="Pilih Level"
-            disabled={role === 'admin'}
           />
-          {/* Harga */}
-          <div>
-            <label className="mb-2 text-sm font-medium text-gray-700 block">Harga</label>
-            <TextInput
-              name="price"
-              value={String(form.price ?? '')}
-              onChange={handleChange}
-              placeholder="Masukkan harga"
-              min={0}
-              isPrice
-              required
-              disabled={role === 'instructor'}
-            />
-          </div>
           {/* Gambar */}
           <ImagePicker
             label="Gambar"
@@ -215,7 +198,6 @@ export default function RingkasanEdit() {
             preview={form.image instanceof File ? imagePreview : form.image}
             crop={true}
             cropAspect={16 / 9}
-            disabled={role === 'admin'}
           />
           {/* Detail yang akan dipelajari */}
           <div>
@@ -228,7 +210,6 @@ export default function RingkasanEdit() {
               value={form.detail}
               onChange={(e) => setForm((prev) => ({ ...prev, detail: e.target.value }))}
               placeholder="Masukkan detail yang akan dipelajari"
-              disabled={role === 'admin'}
             />
           </div>
           {/* Submit */}

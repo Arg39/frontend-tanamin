@@ -59,11 +59,59 @@ function displayHarga(price) {
   return `Rp. ${Number(price).toLocaleString('id-ID')}`;
 }
 
+// Format diskon kursus
+function StatusDiskonBlock({ active, children }) {
+  return (
+    <span
+      className={`w-fit inline-block font-normal text-sm px-3 py-1 rounded-md ${
+        active ? 'text-white bg-primary-700' : 'text-white bg-error-700'
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
+
+// Format diskon kursus dengan blok status baru
+function displayDiskonKursus(data) {
+  if (data.is_discount_active !== 1) {
+    return <StatusDiskonBlock active={false}>Tidak Aktif</StatusDiskonBlock>;
+  }
+  if (data.discount_type === 'percent') {
+    return (
+      <div className="flex items-center gap-2">
+        <StatusDiskonBlock active={true}>Aktif</StatusDiskonBlock>
+        <p>{data.discount_value}%</p>
+      </div>
+    );
+  }
+  if (data.discount_type === 'nominal') {
+    return (
+      <div className="flex items-center gap-2">
+        <StatusDiskonBlock active={true}>Aktif</StatusDiskonBlock>
+        <p>Rp. {Number(data.discount_value).toLocaleString('id-ID')}</p>
+      </div>
+    );
+  }
+  return <BelumDiatur />;
+}
+
+// Format lama diskon
+function displayLamaDiskon(data) {
+  if (data.is_discount_active !== 1) {
+    return <StatusDiskonBlock active={false}>Tidak Aktif</StatusDiskonBlock>;
+  }
+  if (data.discount_start_at && data.discount_end_at) {
+    return `${formatTanggal(data.discount_start_at)} - ${formatTanggal(data.discount_end_at)}`;
+  }
+  return 'Tanpa tenggat waktu';
+}
+
 // Komponen InfoItem untuk merapikan tampilan info utama
 function InfoItem({ icon, label, value }) {
   return (
     <div className="flex items-start gap-4">
-      <span className="text-3xl bg-secondary-100 rounded-full p-2 flex items-center justify-center w-12 h-12">
+      <span className="bg-secondary-100 rounded-full aspect-square flex items-center justify-center w-12 h-12">
         <Icon type={icon} className="h-6 w-6 text-primary-700" />
       </span>
       <div>
@@ -163,7 +211,7 @@ export default function CourseRingkasan({ editable }) {
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-        <p className="text-2xl font-bold text-primary-900">Ringaksan</p>
+        <p className="text-2xl font-bold text-primary-900">Ringkasan</p>
         <div className="flex flex-col md:flex-row gap-2">
           {role === 'instructor' && (data.status === 'new' || data.status === 'edited') && (
             <button
@@ -174,22 +222,24 @@ export default function CourseRingkasan({ editable }) {
               Ajukan Publikasi
             </button>
           )}
-          {role === 'admin' && data.price !== null && (
+          {role === 'admin' && (
             <button
               className="p-2 px-4 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
-              onClick={() => navigate(`/admin/kursus/${id}/edit/ringkasan`)}
+              onClick={() => navigate(`/admin/kursus/${id}/edit/harga`)}
             >
-              <Icon type="discount" className="h-5 w-5" />
-              Diskon
+              <Icon type="tag-label" className="h-5 w-5" />
+              Harga & Diskon
             </button>
           )}
-          <Link
-            to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
-            className="flex items-center gap-2 bg-secondary-500 text-white px-4 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
-          >
-            <Icon type="edit" className="h-3 w-3" />
-            Edit
-          </Link>
+          {role !== 'admin' && (
+            <Link
+              to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
+              className="flex items-center gap-2 bg-secondary-500 text-white px-4 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
+            >
+              <Icon type="edit" className="h-3 w-3" />
+              Edit
+            </Link>
+          )}
         </div>
       </div>
 
@@ -205,8 +255,6 @@ export default function CourseRingkasan({ editable }) {
           />
           <InfoItem icon="book" label="Kategori" value={displayValue(data.category?.name)} />
           <InfoItem icon="star-circle-outline" label="Level" value={displayLevel(data.level)} />
-          <InfoItem icon="money" label="Harga" value={displayHarga(data.price)} />
-          <InfoItem icon="discount" label="Diskon" value={displayHarga(data.discount)} />
           <InfoItem icon="update" label="Update terakhir" value={formatTanggal(data.updated_at)} />
         </div>
         {/* Right Column (Image) */}
@@ -235,6 +283,25 @@ export default function CourseRingkasan({ editable }) {
       </div>
 
       {/* Divider */}
+      <div className="border-t border-gray-200 my-8" />
+
+      {/* Diskon Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Harga Kursus */}
+        <div className="flex flex-col gap-6 col-span-1">
+          <InfoItem icon="money" label="Harga Kursus" value={displayHarga(data.price)} />
+        </div>
+        {/* Diskon Kursus */}
+        <div className="flex flex-col items-start col-span-1">
+          <InfoItem icon="tag-label" label="Diskon Kursus" value={displayDiskonKursus(data)} />
+        </div>
+        {/* Lama Diskon */}
+        <div className="flex flex-col items-start col-span-1">
+          <InfoItem icon="time" label="Lama Diskon" value={displayLamaDiskon(data)} />
+        </div>
+      </div>
+
+      {/* Divider baru sebelum detail */}
       <div className="border-t border-gray-200 my-8" />
 
       {/* Detail yang akan dipelajari */}

@@ -27,7 +27,7 @@ import TentangKami from '../pages/tentangKami';
 import Faq from '../pages/faq';
 import KontakKami from '../pages/kontakKami';
 import RingkasanEditInstructor from '../pages/instructor/course.jsx/ringkasanEditInstructor';
-import RingkasanEditAdmin from '../pages/admin/course/detail/ringkasanEditAdmin';
+import RingkasanEditAdmin from '../pages/admin/course/ringkasan/ringkasanEditAdmin';
 import InstructorProfile from '../pages/instructor/profile/profile';
 import InstructorProfileEdit from '../pages/instructor/profile/profileEdit';
 import Instructor from '../pages/admin/user/instructor/instructor';
@@ -44,6 +44,7 @@ import KerjaSamaAdd from '../pages/admin/content/aboutCompany/tabs/kerjaSama/ker
 import KerjaSamaEdit from '../pages/admin/content/aboutCompany/tabs/kerjaSama/kerjaSamaEdit';
 import FaqAdd from '../pages/admin/content/faq/faqAdd';
 import FaqEdit from '../pages/admin/content/faq/faqEdit';
+import HargaEdit from '../pages/admin/course/ringkasan/hargaEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -140,7 +141,7 @@ const adminRoutes = [
   { path: 'kursus/tambah', element: <CourseAdd /> },
   { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
   { path: 'kursus/:id/edit/ringkasan', element: <RingkasanEditAdmin /> },
-  { path: 'kursus/:id/edit/diskon', element: <RingkasanEditAdmin /> },
+  { path: 'kursus/:id/edit/harga', element: <HargaEdit /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
   // coupon
   // about company

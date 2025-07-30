@@ -4,11 +4,9 @@ import Icon from '../icons/icon';
 
 function formatRupiah(value) {
   if (value === null || value === undefined) return '';
-  const strValue = String(value); // pastikan string
-  // Remove non-digit
+  const strValue = String(value);
   const numberString = strValue.replace(/\D/g, '');
   if (!numberString) return '';
-  // Format with dot
   const formatted = numberString.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
   return `${formatted}`;
 }
@@ -23,18 +21,20 @@ export default function TextInput({
   disabled,
   isPrice,
   min,
+  max,
   required,
   textarea,
   rows,
 }) {
-  // Handler untuk input harga
   const handleInputChange = (e) => {
     let val = e.target.value;
     if (isPrice) {
-      // Remove non-digit
       const numberString = val.replace(/\D/g, '');
-      // Kirim value angka ke parent
       onChange({ target: { name, value: numberString } });
+    } else if (type === 'number') {
+      if (val === '' || /^[0-9]+$/.test(val)) {
+        onChange({ target: { name, value: val } });
+      }
     } else {
       onChange(e);
     }
@@ -46,7 +46,6 @@ export default function TextInput({
     }
   };
 
-  // Untuk input harga, tampilkan value terformat
   const displayValue = isPrice ? formatRupiah(value) : value;
 
   return (
@@ -102,9 +101,10 @@ export default function TextInput({
               onChange={handleInputChange}
               placeholder={placeholder}
               disabled={disabled}
-              min={min}
+              min={type === 'number' ? min : undefined}
+              max={type === 'number' ? max : undefined}
               required={required}
-              inputMode={isPrice ? 'numeric' : undefined}
+              inputMode={isPrice ? 'numeric' : type === 'number' ? 'numeric' : undefined}
               autoComplete="off"
               className={`border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 w-full pr-10 ${
                 isPrice ? 'pl-10' : ''
@@ -140,6 +140,7 @@ TextInput.propTypes = {
   disabled: PropTypes.bool,
   isPrice: PropTypes.bool,
   min: PropTypes.number,
+  max: PropTypes.number,
   required: PropTypes.bool,
   textarea: PropTypes.bool,
   rows: PropTypes.number,
@@ -152,6 +153,7 @@ TextInput.defaultProps = {
   disabled: false,
   isPrice: false,
   min: undefined,
+  max: undefined,
   required: false,
   textarea: false,
   rows: 4,

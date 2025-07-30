@@ -238,6 +238,56 @@ const useCourseStore = create((set, get) => ({
       return { status: 'error', message: e.message };
     }
   },
+
+  async updateCoursePrice({
+    id,
+    price,
+    discount_type,
+    discount_value,
+    discount_start_at,
+    discount_end_at,
+    is_discount_active,
+  }) {
+    set({ courseDetailLoading: true, courseDetailError: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}/overview/update-price`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            price,
+            discount_type,
+            discount_value,
+            discount_start_at,
+            discount_end_at,
+            is_discount_active,
+          }),
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') {
+        set({
+          courseDetailError: json.message || 'Gagal memperbarui harga',
+          courseDetailLoading: false,
+        });
+        return json;
+      }
+      set({
+        courseDetailByTab: json.data,
+        courseDetailLoading: false,
+        courseDetailError: null,
+      });
+      return json;
+    } catch (e) {
+      set({ courseDetailError: e.message, courseDetailLoading: false });
+      return { status: 'error', message: e.message };
+    }
+  },
 }));
 
 export default useCourseStore;

@@ -89,10 +89,7 @@ const useNavigationStore = create((set) => ({
     },
     {
       label: 'promo',
-      links: [
-        { text: 'diskon', href: '/instruktur/diskon', icon: 'discount' },
-        { text: 'kupon', href: '/instruktur/kupon', icon: 'coupon' },
-      ],
+      links: [{ text: 'kupon', href: '/instruktur/kupon', icon: 'coupon' }],
     },
   ],
 
