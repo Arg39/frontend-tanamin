@@ -122,8 +122,18 @@ export default function Course() {
       });
 
       if (res.status === 'success') {
-        toast.success(res.message || 'Berhasil memperbarui ringkasan!');
-        navigate(-1);
+        toast.success(res.message || 'Status kursus berhasil diubah!');
+        fetchCourses({
+          sortBy,
+          sortOrder,
+          perPage,
+          page: pagination.currentPage,
+          search: filterValues.search,
+          category: filterValues.category,
+          instructor: filterValues.instructor,
+          dateStart: filterValues.date.start,
+          dateEnd: filterValues.date.end,
+        });
       } else {
         toast.error(res.message || 'Gagal memperbarui ringkasan');
       }
@@ -131,6 +141,38 @@ export default function Course() {
       console.error(err);
       toast.error(err.message || 'Gagal menyimpan data');
     } finally {
+    }
+  };
+
+  const handleUnpublish = async (id) => {
+    try {
+      const formData = new FormData();
+      formData.append('status', 'edited');
+
+      const res = await updateCourseDetail({
+        id,
+        data: formData,
+      });
+
+      if (res.status === 'success') {
+        toast.success(res.message || 'Status kursus berhasil diubah!');
+        fetchCourses({
+          sortBy,
+          sortOrder,
+          perPage,
+          page: pagination.currentPage,
+          search: filterValues.search,
+          category: filterValues.category,
+          instructor: filterValues.instructor,
+          dateStart: filterValues.date.start,
+          dateEnd: filterValues.date.end,
+        });
+      } else {
+        toast.error(res.message || 'Gagal mengubah status kursus');
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error(err.message || 'Gagal menyimpan data');
     }
   };
 
@@ -245,7 +287,27 @@ export default function Course() {
               Lihat
             </button>
 
-            {course.status !== 'published' && (
+            {course.status === 'published' ? (
+              <button
+                className="p-1 px-4 rounded-md bg-yellow-500 hover:bg-yellow-700 text-white text-left"
+                onClick={() =>
+                  openModal({
+                    title: 'Konfirmasi Ubah Status',
+                    message:
+                      'Apakah Anda yakin ingin mengubah status kursus ini menjadi "Diedit"? Kursus akan tidak tersedia untuk umum.',
+                    onConfirm: async () => {
+                      closeModal();
+                      await handleUnpublish(course.id);
+                    },
+                    onCancel: () => {
+                      closeModal();
+                    },
+                  })
+                }
+              >
+                Kembali ke Draft
+              </button>
+            ) : (
               <button
                 className="p-1 px-4 rounded-md bg-blue-500 hover:bg-blue-700 text-white"
                 onClick={() =>

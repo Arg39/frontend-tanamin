@@ -95,10 +95,10 @@ export default function Navbar() {
   }, [isMenuOpen, isAccountMenuOpen]);
 
   return (
-    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 lg:p-0 md px-2 py-2 bg-white flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
+    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 lg:p-0 md px-2 py-2 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
       {/* Logo */}
       <div>
-        <img src="assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
+        <img src="/assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
       </div>
 
       {/* Desktop Menu */}

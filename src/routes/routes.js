@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useAuthStore from '../zustand/authStore';
 import Login from '../pages/login';
 import Register from '../pages/register';
-import Beranda2 from '../pages/beranda';
 import NotFound from '../pages/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
 import Category from '../pages/admin/category/category';
@@ -48,6 +47,8 @@ import HargaEdit from '../pages/admin/course/ringkasan/hargaEdit';
 import Coupon from '../pages/admin/promo/coupon/coupon';
 import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
+import Beranda from '../pages/beranda';
+import PublicCourse from '../pages/course';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -188,7 +189,8 @@ const instructorRoutes = [
 
 const publicRoutes = [
   { path: '/', element: <RoleBasedRedirect /> },
-  { path: '/beranda', element: <Beranda2 /> },
+  { path: '/beranda', element: <Beranda /> },
+  { path: '/kursus/:courseId', element: <PublicCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
   { path: '/coba-fungsi', element: <Payment /> },

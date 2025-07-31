@@ -2,20 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../icons/icon';
 
-function getPriceDisplay(price, discount) {
+function getPriceDisplay(price, discount, type_discount) {
   // Jika harga 0 atau kurang, tampilkan Gratis
   if (price <= 0) {
     return <span className="text-base sm:text-lg font-bold text-green-600">Gratis</span>;
   }
-  if (discount === null) {
+  // Tidak ada diskon
+  if (!discount || !type_discount) {
     return (
       <p className="text-base sm:text-lg font-bold text-primary-700">
         Rp {price.toLocaleString('id-ID')}
       </p>
     );
   }
-  if (typeof discount === 'string' && discount.includes('%')) {
-    const percent = parseFloat(discount) / 100;
+  // Diskon persentase
+  if (type_discount === 'percent') {
+    const percent = discount / 100;
     const discountedPrice = Math.round(price * (1 - percent));
     if (discountedPrice <= 0) {
       return <span className="text-base sm:text-lg font-bold text-green-600">Gratis</span>;
@@ -28,11 +30,14 @@ function getPriceDisplay(price, discount) {
         <p className="text-sm sm:text-base text-gray-400 line-through">
           Rp {price.toLocaleString('id-ID')}
         </p>
-        <span className="text-xs sm:text-sm text-green-600 font-semibold ml-1">{discount} OFF</span>
+        <span className="text-xs sm:text-sm text-green-600 font-semibold ml-1">
+          {discount}% OFF
+        </span>
       </>
     );
   }
-  if (typeof discount === 'number') {
+  // Diskon nominal
+  if (type_discount === 'nominal') {
     const discountedPrice = price - discount;
     if (discountedPrice <= 0) {
       return <span className="text-base sm:text-lg font-bold text-green-600">Gratis</span>;
@@ -45,6 +50,9 @@ function getPriceDisplay(price, discount) {
         <p className="text-sm sm:text-base text-gray-400 line-through">
           Rp {price.toLocaleString('id-ID')}
         </p>
+        <span className="text-xs sm:text-sm text-green-600 font-semibold ml-1">
+          -Rp {discount.toLocaleString('id-ID')}
+        </span>
       </>
     );
   }
@@ -116,7 +124,7 @@ export default function Card({ course, content = 'true' }) {
             <div className="mt-4">
               <p className="text-sm sm:text-base font-medium text-gray-700">{course.instructor}</p>
               <div className="mt-1 flex flex-wrap items-center gap-x-2">
-                {getPriceDisplay(course.price, course.discount)}
+                {getPriceDisplay(course.price, course.discount, course.type_discount)}
               </div>
             </div>
           </div>

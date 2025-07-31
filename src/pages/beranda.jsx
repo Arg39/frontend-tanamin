@@ -24,7 +24,7 @@ function useIsMobile() {
   return isMobile;
 }
 
-export default function Beranda2() {
+export default function Beranda() {
   const location = useLocation();
   const { categories, fetchCategories } = useCategoryStore();
   const isMobile = useIsMobile();
