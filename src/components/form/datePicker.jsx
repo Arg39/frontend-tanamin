@@ -2,6 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 export default function DatePicker({ label, name, value, onChange }) {
+  const handleInputChange = (e) => {
+    onChange({
+      target: {
+        name,
+        value: e.target.value,
+      },
+    });
+  };
+
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="mb-2 text-sm font-medium text-gray-700">
@@ -12,7 +21,7 @@ export default function DatePicker({ label, name, value, onChange }) {
         id={name}
         name={name}
         value={value}
-        onChange={onChange}
+        onChange={handleInputChange}
         className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
       />
     </div>

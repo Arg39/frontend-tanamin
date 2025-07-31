@@ -25,17 +25,44 @@ export default function TextInput({
   required,
   textarea,
   rows,
+  rightButton,
 }) {
   const handleInputChange = (e) => {
     let val = e.target.value;
+
+    // For price input
     if (isPrice) {
       const numberString = val.replace(/\D/g, '');
+      const numValue = Number(numberString);
+
+      // Check min and max if provided
+      if (
+        (min !== undefined && numberString !== '' && numValue < min) ||
+        (max !== undefined && numberString !== '' && numValue > max)
+      ) {
+        return; // Prevent input if out of bounds
+      }
+
       onChange({ target: { name, value: numberString } });
-    } else if (type === 'number') {
+    }
+    // For number input
+    else if (type === 'number') {
       if (val === '' || /^[0-9]+$/.test(val)) {
+        const numValue = Number(val);
+
+        // Check min and max if provided
+        if (
+          (min !== undefined && val !== '' && numValue < min) ||
+          (max !== undefined && val !== '' && numValue > max)
+        ) {
+          return; // Prevent input if out of bounds
+        }
+
         onChange({ target: { name, value: val } });
       }
-    } else {
+    }
+    // For other types
+    else {
       onChange(e);
     }
   };
@@ -85,6 +112,7 @@ export default function TextInput({
                 <Icon type="x-mark" className="size-5" />
               </button>
             )}
+            {rightButton && <div className="absolute right-10 top-2">{rightButton}</div>}
           </>
         ) : (
           <>
@@ -123,6 +151,9 @@ export default function TextInput({
                 <Icon type="x-mark" className="size-5" />
               </button>
             )}
+            {rightButton && (
+              <div className="absolute right-10 top-1/2 -translate-y-1/2">{rightButton}</div>
+            )}
           </>
         )}
       </div>
@@ -144,6 +175,7 @@ TextInput.propTypes = {
   required: PropTypes.bool,
   textarea: PropTypes.bool,
   rows: PropTypes.number,
+  rightButton: PropTypes.node,
 };
 
 TextInput.defaultProps = {
@@ -157,4 +189,5 @@ TextInput.defaultProps = {
   required: false,
   textarea: false,
   rows: 4,
+  rightButton: null,
 };

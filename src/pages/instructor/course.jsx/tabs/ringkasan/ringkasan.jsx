@@ -29,24 +29,11 @@ function formatTanggal(value) {
   if (!value) {
     return <BelumDiatur />;
   }
-  const bulan = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember',
-  ];
+  // Langsung tampilkan value jika gagal parsing
   const dateObj = new Date(value);
-  if (isNaN(dateObj)) return <BelumDiatur />;
+  if (isNaN(dateObj)) return value;
   const tanggal = dateObj.getDate();
-  const bulanNama = bulan[dateObj.getMonth()];
+  const bulanNama = value.split(' ')[1]; // Ambil nama bulan dari string asli
   const tahun = dateObj.getFullYear();
   return `${tanggal} ${bulanNama} ${tahun}`;
 }
@@ -59,8 +46,7 @@ function displayHarga(price) {
   return `Rp. ${Number(price).toLocaleString('id-ID')}`;
 }
 
-// Format diskon kursus
-function StatusDiskonBlock({ active, children }) {
+function StatusLabelBlock({ active, children }) {
   return (
     <span
       className={`w-fit inline-block font-normal text-sm px-3 py-1 rounded-md ${
@@ -72,15 +58,14 @@ function StatusDiskonBlock({ active, children }) {
   );
 }
 
-// Format diskon kursus dengan blok status baru
 function displayDiskonKursus(data) {
   if (data.is_discount_active !== 1) {
-    return <StatusDiskonBlock active={false}>Tidak Aktif</StatusDiskonBlock>;
+    return <StatusLabelBlock active={false}>Tidak Aktif</StatusLabelBlock>;
   }
   if (data.discount_type === 'percent') {
     return (
       <div className="flex items-center gap-2">
-        <StatusDiskonBlock active={true}>Aktif</StatusDiskonBlock>
+        <StatusLabelBlock active={true}>Aktif</StatusLabelBlock>
         <p>{data.discount_value}%</p>
       </div>
     );
@@ -88,7 +73,7 @@ function displayDiskonKursus(data) {
   if (data.discount_type === 'nominal') {
     return (
       <div className="flex items-center gap-2">
-        <StatusDiskonBlock active={true}>Aktif</StatusDiskonBlock>
+        <StatusLabelBlock active={true}>Aktif</StatusLabelBlock>
         <p>Rp. {Number(data.discount_value).toLocaleString('id-ID')}</p>
       </div>
     );
@@ -96,15 +81,44 @@ function displayDiskonKursus(data) {
   return <BelumDiatur />;
 }
 
-// Format lama diskon
 function displayLamaDiskon(data) {
   if (data.is_discount_active !== 1) {
-    return <StatusDiskonBlock active={false}>Tidak Aktif</StatusDiskonBlock>;
+    return <StatusLabelBlock active={false}>Tidak Aktif</StatusLabelBlock>;
   }
-  if (data.discount_start_at && data.discount_end_at) {
-    return `${formatTanggal(data.discount_start_at)} - ${formatTanggal(data.discount_end_at)}`;
+  const start = data.discount_start_at;
+  const end = data.discount_end_at;
+
+  if (start && end) {
+    return (
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <StatusLabelBlock active={true}>Mulai</StatusLabelBlock>
+          <span className="text-gray-700">{formatTanggal(start)}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <StatusLabelBlock active={false}>Selesai</StatusLabelBlock>
+          <span className="text-gray-700">{formatTanggal(end)}</span>
+        </div>
+      </div>
+    );
   }
-  return 'Tanpa tenggat waktu';
+  if (start) {
+    return (
+      <div className="flex items-center gap-2">
+        <StatusLabelBlock active={true}>Mulai</StatusLabelBlock>
+        <span className="text-gray-700">{formatTanggal(start)}</span>
+      </div>
+    );
+  }
+  if (end) {
+    return (
+      <div className="flex items-center gap-2">
+        <StatusLabelBlock active={false}>Selesai</StatusLabelBlock>
+        <span className="text-gray-700">{formatTanggal(end)}</span>
+      </div>
+    );
+  }
+  return <StatusLabelBlock active={true}>Tanpa tenggat waktu</StatusLabelBlock>;
 }
 
 // Komponen InfoItem untuk merapikan tampilan info utama
@@ -290,6 +304,12 @@ export default function CourseRingkasan({ editable }) {
         {/* Harga Kursus */}
         <div className="flex flex-col gap-6 col-span-1">
           <InfoItem icon="money" label="Harga Kursus" value={displayHarga(data.price)} />
+          {/* Harga Setelah Diskon */}
+          <InfoItem
+            icon="money"
+            label="Harga Setelah Diskon"
+            value={displayHarga(data.discounted_price)}
+          />
         </div>
         {/* Diskon Kursus */}
         <div className="flex flex-col items-start col-span-1">

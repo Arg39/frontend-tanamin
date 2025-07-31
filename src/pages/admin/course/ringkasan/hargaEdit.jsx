@@ -50,7 +50,33 @@ export default function HargaEdit() {
     // eslint-disable-next-line
   }, [id]);
 
-  // Set form state when courseDetailByTab changes
+  function parseIndonesianDate(dateStr) {
+    if (!dateStr) return '';
+    const months = {
+      Januari: '01',
+      Februari: '02',
+      Maret: '03',
+      April: '04',
+      Mei: '05',
+      Juni: '06',
+      Juli: '07',
+      Agustus: '08',
+      September: '09',
+      Oktober: '10',
+      November: '11',
+      Desember: '12',
+    };
+    const regex = /^(\d{1,2}) (\w+) (\d{4})$/;
+    const match = dateStr.match(regex);
+    if (!match) return '';
+    const [_, day, monthName, year] = match;
+    const month = months[monthName];
+    if (!month) return '';
+    // Pad day to 2 digits
+    const dayPadded = day.padStart(2, '0');
+    return `${year}-${month}-${dayPadded}`;
+  }
+
   useEffect(() => {
     if (courseDetailByTab) {
       setForm({
@@ -61,8 +87,8 @@ export default function HargaEdit() {
           courseDetailByTab.discount_value !== undefined
             ? courseDetailByTab.discount_value
             : '',
-        discount_start_at: courseDetailByTab.discount_start_at ?? '',
-        discount_end_at: courseDetailByTab.discount_end_at ?? '',
+        discount_start_at: parseIndonesianDate(courseDetailByTab.discount_start_at) ?? '',
+        discount_end_at: parseIndonesianDate(courseDetailByTab.discount_end_at) ?? '',
         is_discount_active:
           courseDetailByTab.is_discount_active === 1 ||
           courseDetailByTab.is_discount_active === true

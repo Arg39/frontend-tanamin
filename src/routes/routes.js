@@ -45,6 +45,9 @@ import KerjaSamaEdit from '../pages/admin/content/aboutCompany/tabs/kerjaSama/ke
 import FaqAdd from '../pages/admin/content/faq/faqAdd';
 import FaqEdit from '../pages/admin/content/faq/faqEdit';
 import HargaEdit from '../pages/admin/course/ringkasan/hargaEdit';
+import Coupon from '../pages/admin/promo/coupon/coupon';
+import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
+import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -144,6 +147,9 @@ const adminRoutes = [
   { path: 'kursus/:id/edit/harga', element: <HargaEdit /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
   // coupon
+  { path: 'kupon', element: <Coupon /> },
+  { path: 'kupon/tambah', element: <CouponAdd /> },
+  { path: 'kupon/:couponId/edit', element: <CouponEdit /> },
   // about company
   {
     path: 'tentang-perusahaan',
