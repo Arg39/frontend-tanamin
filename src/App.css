@@ -12,6 +12,16 @@ body {
   height: 8px;
 }
 
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.hide-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent; /* ini yang bikin track scroll tidak ada bg */
 }

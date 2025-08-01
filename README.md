@@ -5,7 +5,7 @@ Follow these steps to set up the project:
 ## Navigate to the Project Directory
 
 ```bash
-cd /c:/Users/abcxy/Documents/TA_Banu/codelearn/SCI-Frontend
+cd /c:/Users/abcxy/Documents/TA_Banu/codelearn/Tanamin-Frontend
 ```
 
 ## Install Dependencies
