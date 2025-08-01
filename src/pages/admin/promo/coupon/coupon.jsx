@@ -37,6 +37,10 @@ export default function Coupon() {
     });
   }, [sortBy, sortOrder, perPage, pagination.current_page, fetchCoupons]);
 
+  function formatRupiah(value) {
+    if (typeof value !== 'number') value = Number(value);
+    return `Rp. ${value.toLocaleString('id-ID')}`;
+  }
   const columns = [
     {
       Header: 'Nama',
@@ -52,7 +56,7 @@ export default function Coupon() {
     {
       Header: 'Diskon',
       disableSort: true,
-      accessor: (row) => (row.type === 'percent' ? `${row.value}%` : `Rp.${row.value}`),
+      accessor: (row) => (row.type === 'percent' ? `${row.value}%` : formatRupiah(row.value)),
       width: '13%',
     },
     {

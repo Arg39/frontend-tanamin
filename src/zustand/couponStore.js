@@ -99,12 +99,10 @@ const useCouponStore = create((set) => ({
       });
       const json = res.data;
       if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah kupon');
-      toast.success('Kupon berhasil ditambahkan!');
       set({ loading: false });
       return json.data;
     } catch (e) {
       set({ error: e.message, loading: false });
-      toast.error(e.message);
       throw e;
     }
   },

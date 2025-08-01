@@ -1,18 +1,45 @@
 import React, { useRef, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
-import ReactQuill from 'react-quill';
+import ReactQuill, { Quill } from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import useWysiwygStore from '../../zustand/wysiwyg/wysiwygStore';
 import 'react-quill-emoji/dist/quill-emoji.css';
-import { Quill } from 'react-quill-emoji';
+import { Quill as QuillEmoji } from 'react-quill-emoji';
 
+// Register custom toolbar button for Note
+const NoteButton = () => (
+  <button
+    type="button"
+    className="ql-note"
+    title="Note"
+    style={{ fontWeight: 'bold', borderLeft: '3px solid #3b82f6', paddingLeft: 6 }}
+  >
+    Note
+  </button>
+);
+
+// Add custom handler for Note button
+function insertNote() {
+  const quill = this.quill;
+  const range = quill.getSelection();
+  if (range) {
+    quill.formatLine(range.index, range.length, 'blockquote', true);
+  }
+}
+
+// Extend Quill toolbar with Note button
 const modules = {
-  toolbar: [
-    [{ header: [1, 2, false] }],
-    [{ align: [] }, 'bold', 'italic', 'underline', 'strike', 'emoji'],
-    [{ color: [] }, { background: [] }],
-    [{ list: 'ordered' }, { list: 'bullet' }],
-    ['link', 'image', 'code-block'],
-  ],
+  toolbar: {
+    container: [
+      [{ header: [1, 2, false] }],
+      [{ align: [] }, 'bold', 'italic', 'underline', 'strike', 'emoji'],
+      [{ color: [] }, { background: [] }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['blockquote', 'link', 'image', 'code-block'],
+    ],
+    handlers: {
+      note: insertNote, // optional: remove if not using custom note
+    },
+  },
   'emoji-toolbar': true,
   'emoji-textarea': false,
   'emoji-shortname': true,
@@ -25,7 +52,6 @@ const WysiwygInput = forwardRef(
     const uploadLocalImagesStore = useWysiwygStore((state) => state.uploadLocalImages);
 
     useEffect(() => {
-      // Jika value null, tampilkan kosong di editor
       if ((value ?? '') !== content) {
         setContent(value ?? '');
       }
@@ -45,7 +71,6 @@ const WysiwygInput = forwardRef(
     };
 
     useEffect(() => {
-      // Resize editor
       const editor = quillRef.current?.getEditor()?.root;
       if (editor) {
         editor.style.height = 'auto';
@@ -57,7 +82,6 @@ const WysiwygInput = forwardRef(
         editor.style.paddingBottom = '1px';
         editor.style.transition = 'height 0.2s';
         editor.style.height = editor.scrollHeight + 'px';
-        // Disable editor if needed
         if (disabled) {
           editor.setAttribute('contenteditable', 'false');
           editor.style.background = '#f3f4f6';
@@ -68,8 +92,6 @@ const WysiwygInput = forwardRef(
           editor.style.cursor = '';
         }
       }
-
-      // Set max width for images
       if (editor) {
         const imgs = editor.querySelectorAll('img');
         imgs.forEach((img) => {
@@ -84,14 +106,11 @@ const WysiwygInput = forwardRef(
     const uploadLocalImages = async (token) => {
       const editor = quillRef.current?.getEditor();
       if (!editor) return content;
-
       const baseUrlRaw = process.env.REACT_APP_BACKEND_BASE_URL || '';
       const baseUrl = baseUrlRaw.endsWith('/') ? baseUrlRaw.slice(0, -1) : baseUrlRaw;
-
       const finalContent = await uploadLocalImagesStore({ editor, token, baseUrl });
       setContent(finalContent);
       onChange({ target: { name, value: isEmptyContent(finalContent) ? null : finalContent } });
-
       return finalContent;
     };
 
@@ -112,11 +131,31 @@ const WysiwygInput = forwardRef(
               font-size: 0.95em;
             }
             .crop-overlay {
-              z-index: 9999 !important; /* Ensure crop overlay is on top */
+              z-index: 9999 !important;
             }
             .ql-toolbar[aria-disabled="true"] {
               pointer-events: none;
               opacity: 0.5;
+            }
+            /* Custom blockquote styling for Note */
+            .ql-editor blockquote {
+              border-left: 4px solid #3b82f6;
+              margin-left: 0;
+              margin-right: 0;
+              padding-left: 1em;
+              color: #374151;
+              background: #f0f6ff;
+              font-style: normal;
+            }
+            /* Custom Note button styling */
+            .ql-toolbar .ql-note {
+              font-weight: bold;
+              border-left: 3px solid #3b82f6;
+              padding-left: 6px;
+              background: #e0e7ff;
+              color: #2563eb;
+              border-radius: 3px;
+              margin-right: 4px;
             }
           `}
         </style>
@@ -133,7 +172,6 @@ const WysiwygInput = forwardRef(
         />
         <script>
           {`
-            // Disable toolbar if needed
             const toolbar = document.querySelector('.ql-toolbar');
             if (toolbar) {
               toolbar.setAttribute('aria-disabled', '${disabled}');

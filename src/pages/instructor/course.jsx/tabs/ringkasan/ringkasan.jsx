@@ -38,14 +38,6 @@ function formatTanggal(value) {
   return `${tanggal} ${bulanNama} ${tahun}`;
 }
 
-// Utilitas untuk format harga
-function displayHarga(price) {
-  if (price === null || price === undefined || price === '') {
-    return <BelumDiatur />;
-  }
-  return `Rp. ${Number(price).toLocaleString('id-ID')}`;
-}
-
 function StatusLabelBlock({ active, children }) {
   return (
     <span
@@ -56,6 +48,13 @@ function StatusLabelBlock({ active, children }) {
       {children}
     </span>
   );
+}
+
+function displayHarga(price, fallback) {
+  if (price === null || price === undefined || price === '') {
+    return fallback ? fallback : <BelumDiatur />;
+  }
+  return `Rp. ${Number(price).toLocaleString('id-ID')}`;
 }
 
 function displayDiskonKursus(data) {
@@ -301,21 +300,23 @@ export default function CourseRingkasan({ editable }) {
 
       {/* Diskon Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {/* Harga Kursus */}
         <div className="flex flex-col gap-6 col-span-1">
           <InfoItem icon="money" label="Harga Kursus" value={displayHarga(data.price)} />
-          {/* Harga Setelah Diskon */}
           <InfoItem
             icon="money"
             label="Harga Setelah Diskon"
-            value={displayHarga(data.discounted_price)}
+            value={
+              data.price && (!data.discounted_price || data.discounted_price === '') ? (
+                <StatusLabelBlock active={false}>Tidak Ada Diskon</StatusLabelBlock>
+              ) : (
+                displayHarga(data.discounted_price)
+              )
+            }
           />
         </div>
-        {/* Diskon Kursus */}
         <div className="flex flex-col items-start col-span-1">
           <InfoItem icon="tag-label" label="Diskon Kursus" value={displayDiskonKursus(data)} />
         </div>
-        {/* Lama Diskon */}
         <div className="flex flex-col items-start col-span-1">
           <InfoItem icon="time" label="Lama Diskon" value={displayLamaDiskon(data)} />
         </div>

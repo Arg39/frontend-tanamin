@@ -183,7 +183,12 @@ export default function CouponAdd() {
               label="Aktifkan Kupon"
               name="is_active"
               checked={form.is_active}
-              onChange={handleChange}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  is_active: !prev.is_active,
+                }))
+              }
             />
           </div>
           <div className="w-full flex justify-end">

@@ -30,6 +30,15 @@ export default function WysiwygContent({ html }) {
             padding: 0 2px;
             border-radius: 2px;
           }
+          .wysiwyg-content blockquote {
+            border-left: 4px solid #3b82f6;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 1em;
+            color: #374151;
+            background: #f0f6ff;
+            font-style: normal;
+          }
           .wysiwyg-content ol,
           .wysiwyg-content ul {
             margin-left: 1.5em;
