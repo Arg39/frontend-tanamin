@@ -47,8 +47,8 @@ import HargaEdit from '../pages/admin/course/ringkasan/hargaEdit';
 import Coupon from '../pages/admin/promo/coupon/coupon';
 import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
-import Beranda from '../pages/beranda';
-import PublicCourse from '../pages/course';
+import Beranda from '../pages/public/beranda';
+import PublicCourse from '../pages/public/detailCourse/course';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();

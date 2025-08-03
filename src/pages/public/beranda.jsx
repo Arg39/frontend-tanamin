@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import Template from '../template/template';
-import GradientText from '../blocks/TextAnimations/FuzzyText/gradientColors';
-import useCourseStore from '../zustand/courseStore';
-import Button from '../components/button/button';
+import Template from '../../template/template';
+import GradientText from '../../blocks/TextAnimations/FuzzyText/gradientColors';
+import useCourseStore from '../../zustand/courseStore';
+import Button from '../../components/button/button';
 import { useLocation } from 'react-router-dom';
-import useCategoryStore from '../zustand/categoryStore';
-import CategoryCard from '../components/card/categoryCard';
-import InstructorCarousel from '../components/carousel/InstructorCarousel';
-import useBerandaStore from '../zustand/public/beranda/berandaStore'; // import zustand store
-import Card from '../components/card/card';
+import useCategoryStore from '../../zustand/categoryStore';
+import CategoryCard from '../../components/card/categoryCard';
+import InstructorCarousel from '../../components/carousel/InstructorCarousel';
+import useBerandaStore from '../../zustand/public/beranda/berandaStore'; // import zustand store
+import Card from '../../components/card/card';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);

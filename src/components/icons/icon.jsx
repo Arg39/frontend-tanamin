@@ -751,6 +751,25 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           />
         </svg>
       );
+    case 'facebook':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={24}
+          height={24}
+          viewBox="0 0 24 24"
+          className={`size-6 ${className}`}
+        >
+          <path
+            fill="none"
+            stroke={color}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M17 2h-3a5 5 0 0 0-5 5v3H6v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+          />
+        </svg>
+      );
     case 'instagram':
       return (
         <svg
@@ -834,8 +853,8 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width={24}
+          height={24}
           viewBox="0 0 24 24"
           className={`size-6 ${className}`}
         >
@@ -901,8 +920,8 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
+          width={24}
+          height={24}
           viewBox="0 0 20 20"
           className={`size-6 ${className}`}
           fill={color}
@@ -917,8 +936,8 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width={24}
+          height={24}
           viewBox="0 0 24 24"
           fill={color}
           className={`size-6 ${className}`}
@@ -926,6 +945,25 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           <path
             fill="currentColor"
             d="m9.55 17.308l-4.97-4.97l.714-.713l4.256 4.256l9.156-9.156l.713.714z"
+          />
+        </svg>
+      );
+    case 'users':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width={24}
+          height={24}
+          viewBox="0 0 24 24"
+          className={`size-6 ${className}`}
+        >
+          <path
+            fill="none"
+            stroke={color}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M21 19.75c0-2.09-1.67-5.068-4-5.727m-2 5.727c0-2.651-2.686-6-6-6s-6 3.349-6 6m9-12.5a3 3 0 1 1-6 0a3 3 0 0 1 6 0m3 3a3 3 0 1 0 0-6"
           />
         </svg>
       );
