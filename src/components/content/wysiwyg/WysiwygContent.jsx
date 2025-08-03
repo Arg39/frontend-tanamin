@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
-export default function WysiwygContent({ html }) {
+export default function WysiwygContent({ html, maxHeight }) {
+  const contentRef = useRef(null);
+  const [expanded, setExpanded] = useState(false);
+  const [clamped, setClamped] = useState(false);
+
+  useEffect(() => {
+    if (!maxHeight) return;
+    const el = contentRef.current;
+    if (el) {
+      setClamped(el.scrollHeight > maxHeight);
+    }
+  }, [html, maxHeight]);
+
   return (
-    <>
+    <div className="relative">
       <div
-        className="text-md text-black leading-relaxed wysiwyg-content"
+        ref={contentRef}
+        className="text-md text-black leading-relaxed wysiwyg-content transition-all duration-300"
+        style={
+          maxHeight && !expanded ? { maxHeight, overflow: 'hidden', position: 'relative' } : {}
+        }
         dangerouslySetInnerHTML={{ __html: html }}
       />
       <style>
@@ -157,6 +173,23 @@ export default function WysiwygContent({ html }) {
           }
         `}
       </style>
-    </>
+      {maxHeight && !expanded && clamped && (
+        <>
+          <div
+            className="absolute left-0 right-0 bottom-0 h-24 pointer-events-none"
+            style={{
+              background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 80%)',
+            }}
+          />
+          <button
+            className="absolute left-0 bottom-0 mb-2 ml-2 px-4 py-2 bg-primary-700 text-white rounded-md text-sm font-medium shadow-lg hover:bg-primary-800 transition-colors z-10"
+            style={{ width: 'fit-content' }}
+            onClick={() => setExpanded(true)}
+          >
+            Baca selengkapnya...
+          </button>
+        </>
+      )}
+    </div>
   );
 }
