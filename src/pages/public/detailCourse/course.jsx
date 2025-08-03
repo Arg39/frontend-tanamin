@@ -61,6 +61,7 @@ export default function PublicCourse() {
   const location = useLocation();
   const breadcrumbItems = [
     { label: 'Tanamin Course', path: '/beranda' },
+    { label: 'Kursus', path: '/kursus' },
     { label: 'Detail Kursus', path: location.pathname },
   ];
   const { courseId } = useParams();
