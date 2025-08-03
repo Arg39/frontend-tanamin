@@ -6,6 +6,7 @@ import Icon from '../components/icons/icon';
 import useCourseStore from '../zustand/public/course/courseStore';
 import StarRating from '../components/content/star/star';
 import WysiwygContent from '../components/content/wysiwyg/WysiwygContent';
+import { RatingSummary } from '../components/content/star/ratingSumarry';
 
 function formatRupiah(price) {
   if (typeof price !== 'number') {
@@ -193,6 +194,48 @@ function MobileStickyCard({ course }) {
   );
 }
 
+const tabList = [
+  { key: 'overview', label: 'Ringkasan' },
+  { key: 'material', label: 'Materi Kursus' },
+  { key: 'detail', label: 'Rincian' },
+  { key: 'instructor', label: 'Instruktur' },
+  { key: 'rating', label: 'Rating' },
+  { key: 'review', label: 'Ulasan' },
+];
+
+function ScrollTabs({ activeTab, setActiveTab, sectionRefs }) {
+  const yOffset = -200;
+  const handleTabClick = (key) => {
+    setActiveTab(key);
+    if (sectionRefs[key] && sectionRefs[key].current) {
+      const element = sectionRefs[key].current;
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className="w-full overflow-x-auto">
+      <div className="flex gap-2 sm:gap-4 min-w-max">
+        {tabList.map((tab) => (
+          <button
+            key={tab.key}
+            className={`px-4 py-2 rounded-full whitespace-nowrap font-semibold transition-colors ${
+              activeTab === tab.key
+                ? 'bg-primary-700 text-white'
+                : 'bg-white text-primary-700 hover:bg-primary-200 border border-primary-700'
+            }`}
+            onClick={() => handleTabClick(tab.key)}
+            type="button"
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function PublicCourse() {
   const location = useLocation();
   const breadcrumbItems = [
@@ -204,6 +247,59 @@ export default function PublicCourse() {
 
   const { course, fetchCourseById, loading, error } = useCourseStore();
   const stickyParentRef = useRef(null);
+
+  // Tabs state and section refs
+  const [activeTab, setActiveTab] = useState('overview');
+  const activeTabRef = useRef(activeTab); // <-- Add this line
+  const sectionRefs = {
+    overview: useRef(null),
+    material: useRef(null),
+    detail: useRef(null),
+    instructor: useRef(null),
+    rating: useRef(null),
+    review: useRef(null),
+  };
+
+  // Keep activeTabRef in sync with activeTab
+  useEffect(() => {
+    activeTabRef.current = activeTab;
+  }, [activeTab]);
+
+  useEffect(() => {
+    const OFFSET = -200;
+    const handleScroll = () => {
+      // Dapatkan posisi top setiap section relatif terhadap viewport
+      const offsets = Object.entries(sectionRefs).map(([key, ref]) => {
+        if (ref.current) {
+          const rect = ref.current.getBoundingClientRect();
+          return { key, top: rect.top };
+        }
+        return { key, top: Infinity };
+      });
+
+      // Cari section yang top-nya paling kecil tapi masih <= OFFSET (paling atas yang sudah lewat offset)
+      const visibleSections = offsets.filter(({ top }) => top <= -OFFSET);
+
+      let currentSection;
+      if (visibleSections.length > 0) {
+        // Ambil section terakhir yang sudah melewati OFFSET
+        currentSection = visibleSections[visibleSections.length - 1];
+      } else {
+        // Jika belum ada yang melewati OFFSET, cari section terdekat ke OFFSET
+        currentSection = offsets.reduce((prev, curr) =>
+          Math.abs(curr.top - OFFSET) < Math.abs(prev.top - OFFSET) ? curr : prev
+        );
+      }
+
+      if (currentSection && currentSection.key !== activeTabRef.current) {
+        setActiveTab(currentSection.key);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     if (courseId) {
@@ -292,12 +388,120 @@ export default function PublicCourse() {
           <div className="mx-auto flex flex-col lg:flex-row">
             <div className="w-full lg:w-3/4 xl:pl-24 lg:pl-16 md:pl-10 sm:pl-6 px-2 sm:px-4 pr-0 lg:pr-28 pt-4 sm:pt-8 pb-8 sm:pb-16">
               {course && (
-                <div className="flex flex-col gap-6">
-                  <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-4 sm:mb-0">
-                    <img className="w-full rounded-md" src={course.image} alt="" />
+                <div className="flex flex-col">
+                  {/* Tabs */}
+                  <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg sticky top-[64px] z-20 mb-6">
+                    <ScrollTabs
+                      activeTab={activeTab}
+                      setActiveTab={setActiveTab}
+                      sectionRefs={sectionRefs}
+                    />
                   </div>
-                  <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg">
+
+                  {/* Gambar */}
+                  <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6">
+                    <img className="w-full rounded-md mb-4" src={course.image} alt="" />
+                  </div>
+
+                  {/* Overview */}
+                  <div
+                    ref={sectionRefs.overview}
+                    className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6 scroll-mt-28"
+                    id="overview"
+                  >
+                    <p className="text-2xl font-bold text-primary-700 mb-4">
+                      Apa yang akan Anda pelajari
+                    </p>
                     <WysiwygContent html={course.detail || ''} maxHeight={350} />
+                  </div>
+
+                  {/* Material */}
+                  <div
+                    ref={sectionRefs.material}
+                    className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6 scroll-mt-28"
+                    id="material"
+                  >
+                    <p className="text-2xl font-bold text-primary-700 mb-4">Materi Kursus</p>
+                    <p className="mb-24">test</p>
+                    <p className="mb-24">test</p>
+                    <p className="mb-24">test</p>
+                    <p className="mb-24">test</p>
+                  </div>
+
+                  {/* Detail */}
+                  <div
+                    ref={sectionRefs.detail}
+                    className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6 scroll-mt-28"
+                    id="detail"
+                  >
+                    <div className="flex flex-row gap-2">
+                      <div className="w-full flex flex-col gap-4">
+                        <p className="text-2xl font-bold text-primary-700 mb-2 pb-1 border-b-2 border-primary-700">
+                          Persyaratan
+                        </p>
+                        <div className="flex flex-row gap-2 mb-4">
+                          <Icon type={'check'} />
+                          <p>persyaratan 1</p>
+                        </div>
+                      </div>
+                      <div className="w-full flex flex-col gap-4 mb-6 scroll-mt-28">
+                        <p className="text-2xl font-bold text-primary-700 mb-2 pb-1 border-b-2 border-primary-700">
+                          Deskripsi
+                        </p>
+                        <div className="flex flex-row gap-2 mb-4">
+                          <Icon type={'check'} />
+                          <p>deskripsi 1</p>
+                        </div>
+                        <div className="flex flex-row gap-2 mb-4">
+                          <Icon type={'check'} />
+                          <p>deskripsi 1</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Instruktur */}
+                  <div
+                    ref={sectionRefs.instructor}
+                    className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6 scroll-mt-28"
+                    id="instructor"
+                  >
+                    <div className="w-full flex flex-col gap-4">
+                      <p className="text-2xl font-bold text-primary-700 mb-2 pb-1 border-b-2 border-primary-700">
+                        Instruktur
+                      </p>
+                      <div className="flex flex-row gap-4">
+                        {/* image photo profile circle */}
+                        {/* description about user */}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Rating */}
+                  <div
+                    ref={sectionRefs.rating}
+                    className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6 scroll-mt-28"
+                    id="rating"
+                  >
+                    <div className="w-full flex flex-col gap-4">
+                      <p className="text-2xl font-bold text-primary-700 mb-2 pb-1 border-b-2 border-primary-700">
+                        Rating
+                      </p>
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <div className="w-full sm:w-fit flex flex-col justify-center items-center p-6 sm:p-12 bg-tertiary-600 rounded-md mb-2 sm:mb-4">
+                          <p className="text-xl text-white font-semibold">4.4</p>
+                          <p className="text-xs text-white font-semibold whitespace-nowrap">
+                            Course Rating
+                          </p>
+                        </div>
+                        <div className="w-full">
+                          <RatingSummary
+                            summary={course.ratingSummary || { 5: 12, 4: 3, 3: 2, 2: 1, 1: 0 }}
+                          />
+                        </div>
+                        {/* description about user */}
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}

@@ -913,6 +913,22 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           />
         </svg>
       );
+    case 'check':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill={color}
+          className={`size-6 ${className}`}
+        >
+          <path
+            fill="currentColor"
+            d="m9.55 17.308l-4.97-4.97l.714-.713l4.256 4.256l9.156-9.156l.713.714z"
+          />
+        </svg>
+      );
     // Add more cases for different icons here
     default:
       return null;
