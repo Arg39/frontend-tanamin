@@ -6,7 +6,7 @@ export default function DetailCourseCard({ course, accessCourse }) {
   if (!course) return null;
 
   return (
-    <div className="bg-white border-4 border-primary-700 shadow-lg rounded-xl p-4 sm:p-6 w-full mb-8">
+    <div className="bg-white border-4 border-primary-700 shadow-lg rounded-xl p-4 sm:p-6 w-full mb-4">
       <img className="w-full rounded-xl" src={course.image} alt={course.title} />
       {accessCourse ? (
         <button className="w-full my-2 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">

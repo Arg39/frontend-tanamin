@@ -9,6 +9,7 @@ import MultipleOption from '../../../components/form/multipleOption';
 import { toast } from 'react-toastify';
 
 const SOCIAL_TYPES = [
+  { type: 'facebook', label: 'Facebook' },
   { type: 'instagram', label: 'Instagram' },
   { type: 'linkedin', label: 'LinkedIn' },
   { type: 'twitter-x', label: 'Twitter-X' },

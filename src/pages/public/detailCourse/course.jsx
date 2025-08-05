@@ -14,6 +14,8 @@ import AttributeCourseDetail from './section/attribute';
 import InstructorCourseDetail from './section/instructor';
 import RatingCourseDetail from './section/rating';
 import ReviewCourseDetail from './section/review';
+import Card from '../../../components/card/card';
+import Footer from '../../../components/navigation/public/footer';
 
 const tabList = [
   { key: 'overview', label: 'Ringkasan' },
@@ -36,7 +38,7 @@ function ScrollTabs({ activeTab, setActiveTab, sectionRefs }) {
   };
 
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="w-full overflow-x-auto hide-scrollbar">
       <div className="flex gap-2 sm:gap-4 min-w-max">
         {tabList.map((tab) => (
           <button
@@ -82,6 +84,87 @@ export default function PublicCourse() {
     rating: useRef(null),
     review: useRef(null),
   };
+
+  // dummy data
+  const othersCourseInstructor = [
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+    {
+      id: 1,
+      title: 'Kursus Lainnya 1',
+      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
+      instructor: 'John Doe',
+      price: 100000,
+      average_rating: 4.5,
+      total_rating: 50,
+      total_material: 5,
+      total_quiz: 2,
+    },
+  ];
 
   // Keep activeTabRef in sync with activeTab
   useEffect(() => {
@@ -131,154 +214,170 @@ export default function PublicCourse() {
   }, [courseId, fetchCourseById]);
 
   return (
-    <Template activeNav="beranda" className="h-auto w-full bg-white" locationKey={location.key}>
-      <div className="relative w-full pb-20 lg:pb-0">
-        {/* Sticky card desktop version */}
-        <div
-          ref={stickyParentRef}
-          className="hidden lg:block w-1/4 xl:right-24 lg:right-16 md:right-10 absolute top-0 h-full items-start pointer-events-none z-30"
-        >
-          <div className="sticky top-16 pointer-events-auto hide-scrollbar overflow-y-auto max-h-[calc(100vh-36px)]">
-            <div className="mt-6">
-              <DetailCourseCard course={course} accessCourse={false} />
-            </div>
-          </div>
-        </div>
-
-        {/* === Layer 1: Gradient Area === */}
-        <div className="w-full bg-gradient-to-t from-primary-100 via-primary-100 to-white z-10">
-          <div className="mx-auto flex flex-col lg:flex-row">
-            <div className="w-full lg:w-3/4 xl:pl-24 lg:pl-16 md:pl-10 sm:pl-6 px-2 sm:px-4 pr-0 lg:pr-28 pt-8 pb-8 sm:pb-16">
-              <Breadcrumb items={breadcrumbItems} />
-              <div className="pt-8">
-                <button
-                  className="flex items-center gap-2 bg-primary-700 text-white text-lg font-semibold px-6 py-2 rounded-full mb-4 hover:bg-primary-800"
-                  onClick={() => navigate(-1)}
-                >
-                  <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
-                  <span>Kembali</span>
-                </button>
-                {course && (
-                  <>
-                    <p className="text-2xl sm:text-3xl md:text-4xl font-medium">{course.title}</p>
-                    <div className="flex flex-col gap-2 mt-6 sm:mt-8">
-                      <div className="flex flex-wrap items-end gap-4 sm:gap-8">
-                        <p className="flex items-start gap-2 text-secondary-700 text-base sm:text-lg">
-                          <Icon
-                            type="user-2"
-                            className="w-5 h-5 inline-block"
-                            color="currentColor"
-                          />
-                          210 Siswa
-                        </p>
-                        <div className="flex items-end gap-2">
-                          <p className="text-base sm:text-lg text-primary-700 font-medium">4.4</p>
-                          <StarRating value={4} />
-                        </div>
-                        <p className="p-1 bg-white text-base sm:text-lg text-primary-700">
-                          168 Rating
-                        </p>
-                      </div>
-                      <div className="mt-4">
-                        <button className="flex items-center gap-3">
-                          <div className="border-2 border-primary-700 p-[4px] rounded-full">
-                            <img
-                              src={
-                                'https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                              }
-                              alt={`${course.instructor.first_name} ${course.instructor.last_name}`}
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
-                          </div>
-                          <p className="text-lg sm:text-xl text-primary-700 font-bold">
-                            {course.instructor.first_name} {course.instructor.last_name}
-                          </p>
-                        </button>
-                      </div>
-                      <p className="flex items-center gap-2 text-base sm:text-lg font-medium mt-4 text-primary-700">
-                        <Icon type={'date'} />
-                        Terakhir diupdate pada 1 Juni 2024
-                      </p>
-                    </div>
-                  </>
-                )}
+    <div className="mb-24 lg:mb-0">
+      <Template
+        activeNav="beranda"
+        className="h-auto w-full bg-white mb-12 md:mb-0"
+        locationKey={location.key}
+      >
+        <div className="relative w-full pb-20 lg:pb-0">
+          {/* Sticky card desktop version */}
+          <div
+            ref={stickyParentRef}
+            className="hidden lg:block w-1/4 xl:right-24 lg:right-16 md:right-10 absolute top-0 h-full items-start pointer-events-none z-30"
+          >
+            <div className="sticky top-16 pointer-events-auto hide-scrollbar overflow-y-auto max-h-[calc(100vh-36px)]">
+              <div className="mt-6">
+                <DetailCourseCard course={course} accessCourse={false} />
               </div>
             </div>
-            <div className="hidden lg:block w-1/4" />
           </div>
-        </div>
 
-        {/* === Layer 2: Area Putih === */}
-        <div className="w-full bg-white z-0">
-          <div className="mx-auto flex flex-col lg:flex-row">
-            <div className="w-full lg:w-3/4 xl:pl-24 lg:pl-16 md:pl-10 sm:pl-6 px-2 sm:px-4 pr-0 lg:pr-28 pt-4 sm:pt-8 pb-8 sm:pb-16">
-              {course && (
-                <div className="flex flex-col">
-                  {/* Tabs */}
-                  <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg sticky top-[64px] z-20 mb-6">
-                    <ScrollTabs
-                      activeTab={activeTab}
-                      setActiveTab={setActiveTab}
-                      sectionRefs={sectionRefs}
-                    />
-                  </div>
-
-                  {/* Gambar */}
-                  <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6">
-                    <img className="w-full rounded-md mb-4" src={course.image} alt="" />
-                  </div>
-
-                  {/* Overview */}
-                  <div ref={sectionRefs.overview}>
-                    <OverviewCourseDetail course={course} />
-                  </div>
-
-                  {/* Material */}
-                  <div ref={sectionRefs.material}>
-                    <MaterialCourseDetail />
-                  </div>
-
-                  {/* Attribute */}
-                  <div ref={sectionRefs.attribute}>
-                    <AttributeCourseDetail />
-                  </div>
-
-                  {/* Instruktur */}
-                  <InstructorCourseDetail
-                    course={course}
-                    bioExpanded={bioExpanded}
-                    setBioExpanded={setBioExpanded}
-                    sectionRef={sectionRefs.instructor}
-                  />
-
-                  {/* Rating */}
-                  <RatingCourseDetail course={course} sectionRef={sectionRefs.rating} />
-
-                  {/* Review */}
-                  <ReviewCourseDetail sectionRef={sectionRefs.review} />
+          {/* === Layer 1: Gradient Area === */}
+          <div className="w-full bg-gradient-to-t from-primary-100 via-primary-100 to-white z-10">
+            <div className="mx-auto flex flex-col lg:flex-row">
+              <div className="w-full lg:w-3/4 xl:pl-24 lg:pl-16 md:pl-10 sm:pl-6 px-2 sm:px-4 pr-0 lg:pr-28 pt-8 pb-8 sm:pb-16">
+                <Breadcrumb items={breadcrumbItems} />
+                <div className="pt-8">
+                  <button
+                    className="flex items-center gap-2 bg-primary-700 text-white text-lg font-semibold px-6 py-2 rounded-full mb-4 hover:bg-primary-800"
+                    onClick={() => navigate(-1)}
+                  >
+                    <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
+                    <span>Kembali</span>
+                  </button>
+                  {course && (
+                    <>
+                      <p className="text-2xl sm:text-3xl md:text-4xl font-medium">{course.title}</p>
+                      <div className="flex flex-col gap-2 mt-6 sm:mt-8">
+                        <div className="flex flex-wrap items-end gap-4 sm:gap-8">
+                          <p className="flex items-start gap-2 text-secondary-700 text-base sm:text-lg">
+                            <Icon
+                              type="user-2"
+                              className="w-5 h-5 inline-block"
+                              color="currentColor"
+                            />
+                            210 Siswa
+                          </p>
+                          <div className="flex items-end gap-2">
+                            <p className="text-base sm:text-lg text-primary-700 font-medium">4.4</p>
+                            <StarRating value={4} />
+                          </div>
+                          <p className="p-1 bg-white text-base sm:text-lg text-primary-700">
+                            168 Rating
+                          </p>
+                        </div>
+                        <div className="mt-4">
+                          <button className="flex items-center gap-3">
+                            <div className="border-2 border-primary-700 p-[4px] rounded-full aspect-square w-12 h-12 overflow-hidden flex items-center justify-center">
+                              <img
+                                src={
+                                  'https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+                                }
+                                alt={`${course.instructor.first_name} ${course.instructor.last_name}`}
+                                className="w-10 h-10 rounded-full object-cover"
+                              />
+                            </div>
+                            <p className="text-lg sm:text-xl text-primary-700 font-bold">
+                              {course.instructor.first_name} {course.instructor.last_name}
+                            </p>
+                          </button>
+                        </div>
+                        <p className="flex items-center gap-2 text-base sm:text-lg font-medium mt-4 text-primary-700">
+                          <Icon type={'date'} />
+                          Terakhir diupdate pada 1 Juni 2024
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
-              )}
+              </div>
+              <div className="hidden lg:block w-1/4" />
             </div>
-            <div className="hidden lg:block w-1/4" />
+          </div>
+
+          {/* === Layer 2: Area Putih === */}
+          <div className="w-full bg-white z-0">
+            <div className="mx-auto flex flex-col lg:flex-row mb-6">
+              <div className="w-full lg:w-3/4 xl:pl-24 lg:pl-16 md:pl-10 sm:pl-6 px-2 sm:px-4 pr-0 lg:pr-28 pt-4 sm:pt-8 pb-4">
+                {course && (
+                  <div className="flex flex-col">
+                    {/* Tabs */}
+                    <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg sticky top-[64px] z-20 mb-6">
+                      <ScrollTabs
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
+                        sectionRefs={sectionRefs}
+                      />
+                    </div>
+
+                    {/* Gambar */}
+                    <div className="bg-white p-4 sm:p-8 rounded-lg shadow-lg mb-6">
+                      <img className="w-full rounded-md mb-4" src={course.image} alt="" />
+                    </div>
+
+                    {/* Overview */}
+                    <div ref={sectionRefs.overview}>
+                      <OverviewCourseDetail course={course} />
+                    </div>
+
+                    {/* Material */}
+                    <div ref={sectionRefs.material}>
+                      <MaterialCourseDetail />
+                    </div>
+
+                    {/* Attribute */}
+                    <div ref={sectionRefs.attribute}>
+                      <AttributeCourseDetail />
+                    </div>
+
+                    {/* Instruktur */}
+                    <InstructorCourseDetail
+                      course={course}
+                      bioExpanded={bioExpanded}
+                      setBioExpanded={setBioExpanded}
+                      sectionRef={sectionRefs.instructor}
+                    />
+
+                    {/* Rating */}
+                    <RatingCourseDetail course={course} sectionRef={sectionRefs.rating} />
+
+                    {/* Review */}
+                    <ReviewCourseDetail sectionRef={sectionRefs.review} maxHeight={350} />
+                  </div>
+                )}
+              </div>
+              <div className="hidden lg:block w-1/4" />
+            </div>
+          </div>
+
+          {/* Sticky card mobile version */}
+          {course && <MobileDetailCourseCard course={course} accessCourse={false} />}
+
+          {/* Loading dan Error */}
+          {loading && <p className="text-center text-gray-500 py-8">Loading...</p>}
+          {error && <p className="text-center text-red-500 py-8">{error}</p>}
+        </div>
+
+        {/* content white 2 */}
+        <div className="w-full px-0 z-10">
+          <div className="w-full xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2 mb-16">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-1 border-b-2 border-primary-700">
+              <p className="text-xl sm:text-2xl font-bold text-primary-700 sm:mb-0">
+                Lainnya dari {course?.instructor?.first_name || '-'}{' '}
+                {course?.instructor?.last_name || ''}
+              </p>
+              <button className="flex items-center gap-2 font-normal text-white p-1 px-4 bg-primary-700 rounded-lg hover:bg-primary-800 transition-colors mt-2 sm:mt-0">
+                Lihat lainnya...
+                <Icon type="arrow-right" className="w-4 h-4" color="currentColor" />
+              </button>
+            </div>
+            <div className="w-full h-fit overflow-y-auto">
+              <Card course={othersCourseInstructor} maxWidth={20} flexRow />
+            </div>
           </div>
         </div>
-
-        {/* Sticky card mobile version */}
-        {course && <MobileDetailCourseCard course={course} accessCourse={false} />}
-
-        {/* Loading dan Error */}
-        {loading && <p className="text-center text-gray-500 py-8">Loading...</p>}
-        {error && <p className="text-center text-red-500 py-8">{error}</p>}
-      </div>
-
-      {/* content white 2 */}
-      <div className="w-full px-0 z-10">
-        <div className="w-full xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2">
-          <p className="mb-96">test</p>
-          <p className="mb-96">test</p>
-          <p className="mb-96">test</p>
-        </div>
-      </div>
-    </Template>
+      </Template>
+    </div>
   );
 }

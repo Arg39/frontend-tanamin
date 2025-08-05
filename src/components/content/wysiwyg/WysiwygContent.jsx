@@ -182,7 +182,7 @@ export default function WysiwygContent({ html, maxHeight }) {
             }}
           />
           <button
-            className="absolute left-0 bottom-0 mb-2 ml-2 px-4 py-2 bg-primary-700 text-white rounded-md text-sm font-medium shadow-lg hover:bg-primary-800 transition-colors z-10"
+            className="absolute left-0 bottom-0 mb-2 px-4 py-2 bg-primary-700 text-white rounded-md text-sm font-medium shadow-lg hover:bg-primary-800 transition-colors z-10"
             style={{ width: 'fit-content' }}
             onClick={() => setExpanded(true)}
           >

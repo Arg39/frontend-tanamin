@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Navbar from '../components/navigation/public/navbar';
 import useMenuStore from '../zustand/menuStore';
 import { AnimatePresence, motion } from 'framer-motion';
+import Footer from '../components/navigation/public/footer';
 
 export default function Template({ children, activeNav, className, style, locationKey }) {
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
@@ -28,6 +29,8 @@ export default function Template({ children, activeNav, className, style, locati
           </motion.div>
         </AnimatePresence>
       </div>
+
+      <Footer />
     </div>
   );
 }
