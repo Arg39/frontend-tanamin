@@ -89,7 +89,7 @@ export default function PublicCourse() {
   }, [activeTab]);
 
   useEffect(() => {
-    const OFFSET = -200;
+    const OFFSET = -205;
     const handleScroll = () => {
       // Dapatkan posisi top setiap section relatif terhadap viewport
       const offsets = Object.entries(sectionRefs).map(([key, ref]) => {
@@ -133,13 +133,15 @@ export default function PublicCourse() {
   return (
     <Template activeNav="beranda" className="h-auto w-full bg-white" locationKey={location.key}>
       <div className="relative w-full pb-20 lg:pb-0">
-        {/* === Sticky card (desktop) === */}
+        {/* Sticky card desktop version */}
         <div
           ref={stickyParentRef}
           className="hidden lg:block w-1/4 xl:right-24 lg:right-16 md:right-10 absolute top-0 h-full items-start pointer-events-none z-30"
         >
           <div className="sticky top-16 pointer-events-auto hide-scrollbar overflow-y-auto max-h-[calc(100vh-36px)]">
-            <DetailCourseCard course={course} />
+            <div className="mt-6">
+              <DetailCourseCard course={course} accessCourse={false} />
+            </div>
           </div>
         </div>
 
@@ -262,11 +264,20 @@ export default function PublicCourse() {
         </div>
 
         {/* Sticky card mobile version */}
-        {course && <MobileDetailCourseCard course={course} />}
+        {course && <MobileDetailCourseCard course={course} accessCourse={false} />}
 
         {/* Loading dan Error */}
         {loading && <p className="text-center text-gray-500 py-8">Loading...</p>}
         {error && <p className="text-center text-red-500 py-8">{error}</p>}
+      </div>
+
+      {/* content white 2 */}
+      <div className="w-full px-0 z-10">
+        <div className="w-full xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2">
+          <p className="mb-96">test</p>
+          <p className="mb-96">test</p>
+          <p className="mb-96">test</p>
+        </div>
       </div>
     </Template>
   );

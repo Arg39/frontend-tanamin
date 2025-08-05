@@ -2,25 +2,34 @@ import React from 'react';
 import { formatRupiah } from '../../utils/formatRupiah';
 import Icon from '../icons/icon';
 
-export default function DetailCourseCard({ course }) {
+export default function DetailCourseCard({ course, accessCourse }) {
   if (!course) return null;
 
   return (
     <div className="bg-white border-4 border-primary-700 shadow-lg rounded-xl p-4 sm:p-6 w-full mb-8">
       <img className="w-full rounded-xl" src={course.image} alt={course.title} />
-      <div className="w-full py-4 flex items-center justify-center">
-        <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
-          {formatRupiah(course.price)}
-        </p>
-      </div>
-      <div className="flex flex-col gap-2 mb-4">
-        <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
-          Tambahkan Ke Keranjang
+      {accessCourse ? (
+        <button className="w-full my-2 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+          <Icon type="play" className="w-5 h-5" />
+          Mulai Belajar
         </button>
-        <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
-          Beli Sekarang
-        </button>
-      </div>
+      ) : (
+        <>
+          <div className="w-full py-4 flex items-center justify-center">
+            <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
+              {formatRupiah(course.price)}
+            </p>
+          </div>
+          <div className="flex flex-col gap-2 mb-4">
+            <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+              Tambahkan Ke Keranjang
+            </button>
+            <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
+              Beli Sekarang
+            </button>
+          </div>
+        </>
+      )}
       <div className="flex flex-col gap-2">
         <p className="text-primary-700 font-semibold">Detail</p>
         <div className="flex flex-col gap-2 mt-2">
@@ -40,24 +49,26 @@ export default function DetailCourseCard({ course }) {
           ))}
         </div>
       </div>
-      <div className="flex flex-col gap-2 mt-4">
-        <p className="text-primary-700 font-semibold">Kupon Kursus</p>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <input
-            type="text"
-            className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
-            placeholder="Masukkan kupon"
-          />
-          <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
-            Masukkan
-          </button>
+      {!accessCourse ? (
+        <div className="flex flex-col gap-2 mt-4">
+          <p className="text-primary-700 font-semibold">Kupon Kursus</p>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
+              placeholder="Masukkan kupon"
+            />
+            <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
+              Masukkan
+            </button>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
 
-export function MobileDetailCourseCard({ course }) {
+export function MobileDetailCourseCard({ course, accessCourse }) {
   const [expanded, setExpanded] = React.useState(false);
 
   if (!course) return null;
@@ -84,21 +95,32 @@ export function MobileDetailCourseCard({ course }) {
               <img src={course.image} alt={course.title} className="w-full rounded-xl mb-4" />
               <div className="mb-2">
                 <span className="text-xl font-semibold text-primary-700">{course.title}</span>
-                <div className="text-base text-tertiary-500 font-medium mt-1">
-                  {formatRupiah(course.price)}
-                </div>
               </div>
-              <div className="flex flex-col gap-2 mb-4">
-                <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
-                  Tambahkan Ke Keranjang
+              {accessCourse ? (
+                <button className="w-full my-2 mb-6 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+                  <Icon type="play" className="w-5 h-5" />
+                  Mulai Belajar
                 </button>
-                <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
-                  Beli Sekarang
-                </button>
-              </div>
+              ) : (
+                <>
+                  <div className="w-full py-4 flex items-center justify-center">
+                    <div className="text-xl font-semibold text-tertiary-500 font-medium mb-2">
+                      {formatRupiah(course.price)}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2 mb-4">
+                    <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+                      Tambahkan Ke Keranjang
+                    </button>
+                    <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
+                      Beli Sekarang
+                    </button>
+                  </div>
+                </>
+              )}
               <div className="flex flex-col gap-2">
                 <p className="text-primary-700 font-semibold">Detail</p>
-                <div className="flex flex-col gap-2 mt-2">
+                <div className="flex flex-col gap-2">
                   {[
                     ['Peserta', '243'],
                     ['Level', 'Pemula'],
@@ -115,19 +137,24 @@ export function MobileDetailCourseCard({ course }) {
                   ))}
                 </div>
               </div>
-              <div className="flex flex-col gap-2 mt-4">
-                <p className="text-primary-700 font-semibold">Kupon Kursus</p>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <input
-                    type="text"
-                    className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
-                    placeholder="Masukkan kupon"
-                  />
-                  <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
-                    Masukkan
-                  </button>
-                </div>
-              </div>
+
+              {!accessCourse ? (
+                <>
+                  <div className="flex flex-col gap-2 mt-4">
+                    <p className="text-primary-700 font-semibold">Kupon Kursus</p>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <input
+                        type="text"
+                        className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
+                        placeholder="Masukkan kupon"
+                      />
+                      <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
+                        Masukkan
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : null}
             </div>
           </div>
         </div>
@@ -149,18 +176,31 @@ export function MobileDetailCourseCard({ course }) {
               <span className="text-base font-semibold text-primary-700 truncate">
                 {course.title}
               </span>
-              <span className="text-sm text-tertiary-500 font-medium">
-                {formatRupiah(course.price)}
-              </span>
+              {!accessCourse ? (
+                <>
+                  <span className="text-sm text-tertiary-500 font-medium">
+                    {formatRupiah(course.price)}
+                  </span>
+                </>
+              ) : null}
             </div>
           </div>
           <div className="flex flex-col gap-2 min-w-[110px]">
-            <button className="w-full py-1 px-3 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
-              Keranjang
-            </button>
-            <button className="w-full py-1 px-3 border-2 border-primary-700 bg-white text-primary-700 rounded-lg text-sm font-semibold hover:bg-primary-800 hover:text-white transition-colors">
-              Beli
-            </button>
+            {accessCourse ? (
+              <button className="w-fit flex items-center gap-2 py-1 px-2 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
+                <Icon type="play" className="w-5 h-5" />
+                Mulai Belajar
+              </button>
+            ) : (
+              <>
+                <button className="w-full py-1 px-3 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
+                  Keranjang
+                </button>
+                <button className="w-full py-1 px-3 border-2 border-primary-700 bg-white text-primary-700 rounded-lg text-sm font-semibold hover:bg-primary-800 hover:text-white transition-colors">
+                  Beli
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
