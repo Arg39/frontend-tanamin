@@ -2,8 +2,39 @@ import React from 'react';
 import { formatRupiah } from '../../utils/formatRupiah';
 import Icon from '../icons/icon';
 
+function translateLevel(level) {
+  switch (level) {
+    case 'beginner':
+      return 'Pemula';
+    case 'intermediate':
+      return 'Menengah';
+    case 'advance':
+      return 'Lanjutan';
+    default:
+      return level;
+  }
+}
+
+// Helper to calculate discounted price
+function getDiscountedPrice(price, discount) {
+  if (!discount) return price;
+  if (discount.type === 'percent') {
+    return price - Math.round((discount.value / 100) * price);
+  }
+  if (discount.type === 'nominal') {
+    return price - discount.value;
+  }
+  return price;
+}
+
 export default function DetailCourseCard({ course, accessCourse }) {
   if (!course) return null;
+
+  const hasDiscount =
+    course.discount && (course.discount.type === 'percent' || course.discount.type === 'nominal');
+  const discountedPrice = hasDiscount
+    ? getDiscountedPrice(course.price, course.discount)
+    : course.price;
 
   return (
     <div className="bg-white border-4 border-primary-700 shadow-lg rounded-xl p-4 sm:p-6 w-full mb-4">
@@ -16,9 +47,22 @@ export default function DetailCourseCard({ course, accessCourse }) {
       ) : (
         <>
           <div className="w-full py-4 flex items-center justify-center">
-            <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
-              {formatRupiah(course.price)}
-            </p>
+            {hasDiscount ? (
+              <div className="flex flex-col items-center">
+                <div className="relative flex items-start gap-2">
+                  <span className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                    {formatRupiah(discountedPrice)}
+                  </span>
+                  <span className="text-xs text-secondary-500 line-through">
+                    {formatRupiah(course.price)}
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                {formatRupiah(course.price)}
+              </p>
+            )}
           </div>
           <div className="flex flex-col gap-2 mb-4">
             <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
@@ -34,10 +78,10 @@ export default function DetailCourseCard({ course, accessCourse }) {
         <p className="text-primary-700 font-semibold">Detail</p>
         <div className="flex flex-col gap-2 mt-2">
           {[
-            ['Peserta', '243'],
-            ['Level', 'Pemula'],
-            ['Total Materi', '7'],
-            ['Evaluasi', '3'],
+            ['Peserta', course.participants],
+            ['Level', translateLevel(course.level)],
+            ['Total Materi', course.total_materials],
+            ['Evaluasi', course.total_quizzes],
           ].map(([label, value]) => (
             <div
               key={label}
@@ -73,6 +117,12 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
 
   if (!course) return null;
 
+  const hasDiscount =
+    course.discount && (course.discount.type === 'percent' || course.discount.type === 'nominal');
+  const discountedPrice = hasDiscount
+    ? getDiscountedPrice(course.price, course.discount)
+    : course.price;
+
   return (
     <>
       {/* Overlay expanded card */}
@@ -104,9 +154,22 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               ) : (
                 <>
                   <div className="w-full py-4 flex items-center justify-center">
-                    <div className="text-xl font-semibold text-tertiary-500 font-medium mb-2">
-                      {formatRupiah(course.price)}
-                    </div>
+                    {hasDiscount ? (
+                      <div className="flex flex-col items-center">
+                        <div className="relative flex items-start gap-2">
+                          <span className="text-xl sm:text-3xl font-medium text-tertiary-500">
+                            {formatRupiah(discountedPrice)}
+                          </span>
+                          <span className="text-xs text-secondary-500 line-through">
+                            {formatRupiah(course.price)}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                        {formatRupiah(course.price)}
+                      </p>
+                    )}
                   </div>
                   <div className="flex flex-col gap-2 mb-4">
                     <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
@@ -122,10 +185,10 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                 <p className="text-primary-700 font-semibold">Detail</p>
                 <div className="flex flex-col gap-2">
                   {[
-                    ['Peserta', '243'],
-                    ['Level', 'Pemula'],
-                    ['Total Materi', '7'],
-                    ['Evaluasi', '3'],
+                    ['Peserta', course.participants],
+                    ['Level', translateLevel(course.level)],
+                    ['Total Materi', course.total_materials],
+                    ['Evaluasi', course.total_quizzes],
                   ].map(([label, value]) => (
                     <div
                       key={label}
@@ -178,9 +241,20 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               </span>
               {!accessCourse ? (
                 <>
-                  <span className="text-sm text-tertiary-500 font-medium">
-                    {formatRupiah(course.price)}
-                  </span>
+                  {hasDiscount ? (
+                    <span className="flex items-center gap-2">
+                      <span className="text-sm text-tertiary-500 font-medium">
+                        {formatRupiah(discountedPrice)}
+                      </span>
+                      <span className="text-xs text-tertiary-400 line-through">
+                        {formatRupiah(course.price)}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-sm text-tertiary-500 font-medium">
+                      {formatRupiah(course.price)}
+                    </span>
+                  )}
                 </>
               ) : null}
             </div>

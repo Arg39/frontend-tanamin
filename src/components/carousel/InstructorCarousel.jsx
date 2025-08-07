@@ -12,7 +12,7 @@ function InstructorCard({ image, name, expertise, courseCount }) {
         <img src={image} alt={name} className="w-20 h-20 rounded-full object-cover" />
       </div>
       <h3 className="text-lg font-semibold text-primary-900">{name}</h3>
-      <p className="text-primary-700 text-sm mb-2">{expertise}</p>
+      <p className="text-center text-primary-700 text-sm mb-2 line-clamp-2">{expertise}</p>
       <span className="text-xs text-gray-500">{courseCount} Course</span>
     </div>
   );
