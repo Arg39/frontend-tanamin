@@ -114,7 +114,7 @@ const ValidatedCourseDetailInstructor = () => {
 
 const ValidatedAboutCompany = () => {
   const { tab } = useParams();
-  const validTabs = ['profil', 'kegiatan', 'kerja-sama'];
+  const validTabs = ['profil', 'kegiatan', 'kerja-sama', 'kontak'];
 
   if (!tab) {
     return <Navigate to="/admin/tentang-perusahaan/profil" replace />;

@@ -102,6 +102,7 @@ const useNavigationStore = create((set) => ({
 
   companyAboutTabs: [
     { key: 'profil', label: 'Profil Perusahaan' },
+    { key: 'kontak', label: 'Kontak Perusahaan' },
     { key: 'kegiatan', label: 'Kegiatan Perusahaan' },
     { key: 'kerja-sama', label: 'Kerja Sama' },
   ],

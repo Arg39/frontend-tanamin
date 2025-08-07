@@ -5,11 +5,13 @@ import useNavigationStore from '../../../../zustand/navigationStore';
 import ProfilPerusahaan from './tabs/proflPerusahaan/profilPerusahaan';
 import KegiatanPerusahaan from './tabs/kegiatanPerusahan/kegiatanPerusahaan';
 import KerjaSama from '../aboutCompany/tabs/kerjaSama/kerjaSama';
+import KontakPerusahaan from './tabs/kontakPerusahaan/kontak';
 
 const tabComponents = {
   profil: ProfilPerusahaan,
   kegiatan: KegiatanPerusahaan,
   'kerja-sama': KerjaSama,
+  kontak: KontakPerusahaan,
 };
 
 export default function AdminAboutCompany() {
