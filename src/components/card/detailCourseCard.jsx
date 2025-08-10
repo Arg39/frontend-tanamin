@@ -128,7 +128,13 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
       {/* Overlay expanded card */}
       {expanded && (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex items-end lg:hidden">
-          <div className="w-full bg-white rounded-t-2xl shadow-lg max-h-[90vh] animate-slide-up flex flex-col">
+          <div
+            className="w-full bg-white rounded-t-2xl shadow-lg animate-slide-up flex flex-col"
+            style={{
+              maxHeight: '75vh',
+              marginTop: '60px',
+            }}
+          >
             {/* Header tetap di atas */}
             <div className="flex-shrink-0 flex justify-between items-center px-4 pt-4 pb-2 border-b bg-white rounded-t-2xl z-10">
               <span className="text-lg font-semibold text-primary-700">Detail Kursus</span>

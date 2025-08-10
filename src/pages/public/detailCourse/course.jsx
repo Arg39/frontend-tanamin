@@ -268,18 +268,23 @@ export default function PublicCourse() {
                           </p>
                         </div>
                         <div className="mt-4">
-                          <button className="flex items-center gap-3">
+                          <button
+                            onClick={() => {
+                              navigate(`/instruktur/${course.id}`);
+                            }}
+                            className="flex items-center gap-3"
+                          >
                             <div className="border-2 border-primary-700 p-[4px] rounded-full aspect-square w-12 h-12 overflow-hidden flex items-center justify-center">
                               <img
                                 src={
                                   'https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
                                 }
-                                alt={`${course.instructor.first_name} ${course.instructor.last_name}`}
+                                alt={`${course.instructor.name}`}
                                 className="w-10 h-10 rounded-full object-cover"
                               />
                             </div>
                             <p className="text-lg sm:text-xl text-primary-700 font-bold">
-                              {course.instructor.first_name} {course.instructor.last_name}
+                              {course.instructor.name}
                             </p>
                           </button>
                         </div>
@@ -328,7 +333,7 @@ export default function PublicCourse() {
 
                     {/* Attribute */}
                     <div ref={sectionRefs.attribute}>
-                      <AttributeCourseDetail />
+                      <AttributeCourseDetail courseId={course.id} />
                     </div>
 
                     {/* Instruktur */}
