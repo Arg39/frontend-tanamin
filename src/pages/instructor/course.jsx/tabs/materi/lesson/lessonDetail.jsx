@@ -18,6 +18,19 @@ export default function LessonDetail() {
     }
   }, [lessonId, fetchLessonDetail]);
 
+  const getVisibleValue = () => {
+    if (
+      lessonData?.type === 'material' &&
+      lessonData?.content &&
+      typeof lessonData?.content?.visible !== 'undefined'
+    ) {
+      if (lessonData.content.visible === 1) return 'Ya';
+      if (lessonData.content.visible === 0) return 'Tidak';
+      return 'N/A';
+    }
+    return null;
+  };
+
   return (
     <InstructorTemplate activeNav="kursus">
       <div className="wf-full bg-white p-6 rounded-lg shadow-md">
@@ -66,16 +79,25 @@ export default function LessonDetail() {
               </h3>
             </div>
 
-            {/* Render content based on type */}
+            {lessonData?.type === 'material' &&
+              typeof lessonData?.content?.visible !== 'undefined' && (
+                <div className="flex flex-col mb-4">
+                  <p className="text-primary-800 text-sm font-semibold">
+                    Tampil pada pengguna umum :
+                  </p>
+                  <h3 className="text-lg font-bold text-secondary-8">{getVisibleValue()}</h3>
+                </div>
+              )}
+
             {lessonData?.type === 'material' && (
               <div className="p-4 border rounded-lg shadow-sm bg-gray-50">
                 <WysiwygContent html={lessonData?.content?.material || ''} />
               </div>
             )}
 
-            {lessonData?.type === 'quiz' && (
+            {lessonData?.type === 'quiz' && Array.isArray(lessonData?.content) && (
               <div className="flex flex-col gap-6">
-                {lessonData?.content?.map((quiz, index) => (
+                {lessonData.content.map((quiz, index) => (
                   <div key={quiz.id} className="p-4 border rounded-lg shadow-sm bg-gray-50">
                     <h4 className="flex font-semibold text-lg mb-2">Quiz {index + 1}</h4>
                     <div className="w-full h-fit">

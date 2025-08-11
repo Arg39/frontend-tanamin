@@ -10,6 +10,7 @@ import useLessonStore from '../../../../../../zustand/material/lessonStore';
 import ConfirmationModal from '../../../../../../components/modal/confirmationModal';
 import { toast } from 'react-toastify';
 import useAuthStore from '../../../../../../zustand/authStore';
+import Checkbox from '../../../../../../components/form/checkbox';
 
 export default function LessonEdit() {
   const { lessonId } = useParams();
@@ -22,6 +23,7 @@ export default function LessonEdit() {
     materialContent: '',
     type: '',
     quizContent: [],
+    visible: false, // tambahkan visible di state
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +45,10 @@ export default function LessonEdit() {
                 correctAnswer: q.options?.findIndex((opt) => opt.is_correct === 1),
               }))
             : [],
+        visible:
+          lessonData.type === 'material'
+            ? !!(lessonData.content && lessonData.content.visible)
+            : false,
       });
     }
   }, [lessonData]);
@@ -59,6 +65,14 @@ export default function LessonEdit() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Tambahkan handler untuk checkbox visible
+  const handleVisibleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      visible: e.target.checked,
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -137,10 +151,14 @@ export default function LessonEdit() {
         );
       }
 
+      // Siapkan result dengan visible jika type material
       const result = {
         title: pendingSubmit.title,
         type: pendingSubmit.type,
-        ...(pendingSubmit.type === 'material' && { materialContent: finalMaterialContent }),
+        ...(pendingSubmit.type === 'material' && {
+          materialContent: finalMaterialContent,
+          visible: pendingSubmit.visible ? 1 : 0,
+        }),
         ...(pendingSubmit.type === 'quiz' && { quizContent }),
       };
 
@@ -197,15 +215,23 @@ export default function LessonEdit() {
               disabled // type is not editable
             />
             {formData.type === 'material' && (
-              <WysiwygInput
-                ref={wysiwygRef}
-                label="Konten Materi"
-                name="materialContent"
-                value={formData.materialContent}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, materialContent: e.target.value }))
-                }
-              />
+              <>
+                <Checkbox
+                  label="Tampilkan materi ini untuk pengguna umum"
+                  name="visible"
+                  checked={!!formData.visible}
+                  onChange={handleVisibleChange}
+                />
+                <WysiwygInput
+                  ref={wysiwygRef}
+                  label="Konten Materi"
+                  name="materialContent"
+                  value={formData.materialContent}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, materialContent: e.target.value }))
+                  }
+                />
+              </>
             )}
             {formData.type === 'quiz' && (
               <QuizBuilder

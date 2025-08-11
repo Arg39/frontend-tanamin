@@ -66,11 +66,30 @@ export default function SortableLesson({
             <Icon type="drag" className="text-gray-400" />
           </span>
         )}
-        <div className="flex flex-col md:flex-row gap-1">
-          <span className={`w-fit px-2 py-1 border rounded-md text-xs sm:text-sm ${badgeStyle}`}>
-            {lesson.type === 'material' ? 'Materi' : 'Quiz'}
-          </span>
-
+        <div className="flex flex-col gap-1 md:gap-2">
+          <div className="flex items-center gap-1">
+            <span
+              className={`w-fit flex items-center px-2 py-1 border rounded-md text-xs sm:text-sm ${badgeStyle}`}
+            >
+              <Icon
+                type={lesson.type === 'material' ? 'book' : 'quiz'}
+                className="inline-block w-4 h-4 mr-1 align-middle"
+              />
+              {!isMobile && (lesson.type === 'material' ? 'Materi' : 'Quiz')}
+            </span>
+            {'visible' in lesson && (
+              <span
+                className={`${
+                  lesson.visible
+                    ? 'flex items-center w-fit p-1 px-2 border rounded-md text-xs sm:text-sm border-primary-600 text-primary-600 gap-1'
+                    : 'hidden'
+                }`}
+              >
+                <Icon type="eye" className="w-4 h-4 md:w-5 md:h-5" />
+                {!isMobile && 'public'}
+              </span>
+            )}
+          </div>
           <button
             className={`text-left flex-1 hover:underline text-xs sm:text-base ${
               isMobile ? 'text-sm' : ''

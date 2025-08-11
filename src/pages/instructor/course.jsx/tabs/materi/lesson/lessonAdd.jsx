@@ -10,6 +10,7 @@ import useLessonStore from '../../../../../../zustand/material/lessonStore';
 import ConfirmationModal from '../../../../../../components/modal/confirmationModal';
 import { toast } from 'react-toastify';
 import useAuthStore from '../../../../../../zustand/authStore';
+import Checkbox from '../../../../../../components/form/checkbox'; // Tambahkan import Checkbox
 
 export default function LessonAdd() {
   const { courseId, moduleId } = useParams();
@@ -22,6 +23,7 @@ export default function LessonAdd() {
     materialContent: '',
     type: '',
     quizContent: [],
+    visible: false,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,6 +33,11 @@ export default function LessonAdd() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handler untuk checkbox visible
+  const handleVisibleChange = (e) => {
+    setFormData((prev) => ({ ...prev, visible: e.target.checked }));
   };
 
   const handleSubmit = (e) => {
@@ -112,6 +119,7 @@ export default function LessonAdd() {
       const result = {
         title: pendingSubmit.title,
         type: pendingSubmit.type,
+        visible: pendingSubmit.visible, // Sertakan visible
         ...(pendingSubmit.type === 'material' && { materialContent: finalMaterialContent }),
         ...(pendingSubmit.type === 'quiz' && { quizContent }),
       };
@@ -164,15 +172,23 @@ export default function LessonAdd() {
             placeholder="Pilih jenis pembelajaran"
           />
           {formData.type === 'material' && (
-            <WysiwygInput
-              ref={wysiwygRef}
-              label="Konten Materi"
-              name="materialContent"
-              value={formData.materialContent}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, materialContent: e.target.value }))
-              }
-            />
+            <>
+              <Checkbox
+                label="Tampilkan materi ini untuk pengguna umum"
+                name="visible"
+                checked={formData.visible}
+                onChange={handleVisibleChange}
+              />
+              <WysiwygInput
+                ref={wysiwygRef}
+                label="Konten Materi"
+                name="materialContent"
+                value={formData.materialContent}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, materialContent: e.target.value }))
+                }
+              />
+            </>
           )}
           {formData.type === 'quiz' && (
             <QuizBuilder
