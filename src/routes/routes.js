@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useParams } from 'react-router-dom';
 import useAuthStore from '../zustand/authStore';
-import Login from '../pages/login';
-import Register from '../pages/register';
-import NotFound from '../pages/NotFound';
+import Login from '../pages/public/login';
+import Register from '../pages/public/register';
+import NotFound from '../pages/public/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard';
 import Category from '../pages/admin/category/category';
 import CategoryAdd from '../pages/admin/category/categoryAdd';
@@ -22,9 +22,9 @@ import LessonDetail from '../pages/instructor/course.jsx/tabs/materi/lesson/less
 import ModulEdit from '../pages/instructor/course.jsx/tabs/materi/module/modulEdit';
 import LessonEdit from '../pages/instructor/course.jsx/tabs/materi/lesson/lessonEdit';
 import CourseAttributeAdd from '../pages/instructor/course.jsx/tabs/atribut/atributAdd';
-import TentangKami from '../pages/tentangKami';
-import Faq from '../pages/faq';
-import KontakKami from '../pages/kontakKami';
+import TentangKami from '../pages/public/tentangKami';
+import Faq from '../pages/public/faq';
+import KontakKami from '../pages/public/kontakKami';
 import RingkasanEditInstructor from '../pages/instructor/course.jsx/ringkasanEditInstructor';
 import RingkasanEditAdmin from '../pages/admin/course/ringkasan/ringkasanEditAdmin';
 import InstructorProfile from '../pages/instructor/profile/profile';
@@ -190,6 +190,7 @@ const instructorRoutes = [
 const publicRoutes = [
   { path: '/', element: <RoleBasedRedirect /> },
   { path: '/beranda', element: <Beranda /> },
+  { path: '/kursus/:courseId', element: <PublicCourse /> },
   { path: '/kursus/:courseId', element: <PublicCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },

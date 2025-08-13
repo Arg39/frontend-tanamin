@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import Template from '../template/template';
-import Breadcrumb from '../components/breadcrumb/breadcrumb';
+import Template from '../../template/template';
+import Breadcrumb from '../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import { motion, useAnimationFrame } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Controller } from 'swiper/modules';
 import 'swiper/css';
-import GallerySwiper from '../components/carousel/swiper';
+import GallerySwiper from '../../components/carousel/swiper';
 
 function ImageCarousel({ images, interval = 4000 }) {
   const [current, setCurrent] = useState(0);

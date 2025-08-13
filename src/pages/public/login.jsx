@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import LazyImage from '../components/image/lazyImage';
+import LazyImage from '../../components/image/lazyImage';
 import { Link } from 'react-router-dom';
-import Button from '../components/button/button';
-import useAuthStore from '../zustand/authStore';
-import Template from '../template/template';
-import Icon from '../components/icons/icon';
+import Button from '../../components/button/button';
+import useAuthStore from '../../zustand/authStore';
+import Template from '../../template/template';
+import Icon from '../../components/icons/icon';
 
 export default function Login() {
   const location = useLocation();

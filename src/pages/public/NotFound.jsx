@@ -1,5 +1,5 @@
 import React from 'react';
-import FuzzyText from '../blocks/TextAnimations/FuzzyText/FuzzyText';
+import FuzzyText from '../../blocks/TextAnimations/FuzzyText/FuzzyText';
 
 export default function NotFound() {
   return (

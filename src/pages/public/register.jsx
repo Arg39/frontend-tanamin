@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import LazyImage from '../components/image/lazyImage';
-import Button from '../components/button/button';
-import useAuthStore from '../zustand/authStore';
-import Template from '../template/template';
+import LazyImage from '../../components/image/lazyImage';
+import Button from '../../components/button/button';
+import useAuthStore from '../../zustand/authStore';
+import Template from '../../template/template';
 
 export default function Register() {
   const [state, setState] = useState({

@@ -206,7 +206,7 @@ export default function CourseRingkasan({ editable }) {
 
           if (res.status === 'success') {
             toast.success(res.message || 'Berhasil memperbarui ringkasan!');
-            navigate(-1);
+            navigate('/instruktur/kursus');
           } else {
             toast.error(res.message || 'Gagal memperbarui ringkasan');
           }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Template from '../template/template';
+import Template from '../../template/template';
 import { useLocation } from 'react-router-dom';
-import Breadcrumb from '../components/breadcrumb/breadcrumb';
+import Breadcrumb from '../../components/breadcrumb/breadcrumb';
 
 const faqList = [
   {

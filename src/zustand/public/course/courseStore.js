@@ -8,6 +8,15 @@ const useCourseStore = create((set) => ({
   attribute: null,
   attributeLoading: false,
   attributeError: null,
+  material: null,
+  materialLoading: false,
+  materialError: null,
+  instructor: null,
+  instructorLoading: false,
+  instructorError: null,
+  othersCourseInstructor: [],
+  othersCourseInstructorLoading: false,
+  othersCourseInstructorError: null,
 
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });
@@ -43,6 +52,67 @@ const useCourseStore = create((set) => ({
       set({
         attributeError: error.response?.data?.message || 'Gagal mengambil data attribute',
         attributeLoading: false,
+      });
+    }
+  },
+
+  fetchMaterialByCourseId: async (courseId) => {
+    set({ materialLoading: true, materialError: null });
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/${courseId}/material`
+      );
+      if (response.status === 200) {
+        set({ material: response.data.data, materialLoading: false });
+      } else {
+        set({ materialError: 'Gagal mengambil data materi', materialLoading: false });
+      }
+    } catch (error) {
+      set({
+        materialError: error.response?.data?.message || 'Gagal mengambil data materi',
+        materialLoading: false,
+      });
+    }
+  },
+
+  fetchInstructorByCourseId: async (courseId) => {
+    set({ instructorLoading: true, instructorError: null });
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/${courseId}/instructor`
+      );
+      if (response.status === 200) {
+        set({ instructor: response.data.data, instructorLoading: false });
+      } else {
+        set({ instructorError: 'Gagal mengambil data instruktur', instructorLoading: false });
+      }
+    } catch (error) {
+      set({
+        instructorError: error.response?.data?.message || 'Gagal mengambil data instruktur',
+        instructorLoading: false,
+      });
+    }
+  },
+
+  fetchOthersCourseInstructor: async (courseId) => {
+    set({ othersCourseInstructorLoading: true, othersCourseInstructorError: null });
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/${courseId}/other-instructor-courses`
+      );
+      if (response.status === 200) {
+        set({ othersCourseInstructor: response.data.data, othersCourseInstructorLoading: false });
+      } else {
+        set({
+          othersCourseInstructorError: 'Gagal mengambil kursus lain instruktur',
+          othersCourseInstructorLoading: false,
+        });
+      }
+    } catch (error) {
+      set({
+        othersCourseInstructorError:
+          error.response?.data?.message || 'Gagal mengambil kursus lain instruktur',
+        othersCourseInstructorLoading: false,
       });
     }
   },

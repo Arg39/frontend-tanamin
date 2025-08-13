@@ -1,8 +1,8 @@
 import React from 'react';
-import Template from '../template/template';
-import Breadcrumb from '../components/breadcrumb/breadcrumb';
+import Template from '../../template/template';
+import Breadcrumb from '../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
-import Icon from '../components/icons/icon';
+import Icon from '../../components/icons/icon';
 
 export default function KontakKami() {
   const location = useLocation();

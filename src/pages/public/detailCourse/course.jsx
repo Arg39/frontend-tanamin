@@ -16,6 +16,7 @@ import RatingCourseDetail from './section/rating';
 import ReviewCourseDetail from './section/review';
 import Card from '../../../components/card/card';
 import Footer from '../../../components/navigation/public/footer';
+import MoreCourse from './section/moreCourse';
 
 const tabList = [
   { key: 'overview', label: 'Ringkasan' },
@@ -228,7 +229,7 @@ export default function PublicCourse() {
           >
             <div className="sticky top-16 pointer-events-auto hide-scrollbar overflow-y-auto max-h-[calc(100vh-36px)]">
               <div className="mt-6">
-                <DetailCourseCard course={course} accessCourse={false} />
+                <DetailCourseCard course={course} accessCourse={true} />
               </div>
             </div>
           </div>
@@ -274,14 +275,16 @@ export default function PublicCourse() {
                             }}
                             className="flex items-center gap-3"
                           >
-                            <div className="border-2 border-primary-700 p-[4px] rounded-full aspect-square w-12 h-12 overflow-hidden flex items-center justify-center">
-                              <img
-                                src={
-                                  'https://images.unsplash.com/photo-1640951613773-54706e06851d?q=80&w=580&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-                                }
-                                alt={`${course.instructor.name}`}
-                                className="w-10 h-10 rounded-full object-cover"
-                              />
+                            <div className="border-2 border-primary-700 p-[4px] rounded-full aspect-square w-12 h-12 overflow-hidden flex items-center justify-center bg-white">
+                              {course.instructor.photo_profile ? (
+                                <img
+                                  src={`${course.instructor.photo_profile}`}
+                                  alt={`${course.instructor.name}`}
+                                  className="w-10 h-10 rounded-full object-cover"
+                                />
+                              ) : (
+                                <Icon type="user" className="w-8 h-8 text-gray-700" />
+                              )}
                             </div>
                             <p className="text-lg sm:text-xl text-primary-700 font-bold">
                               {course.instructor.name}
@@ -328,7 +331,7 @@ export default function PublicCourse() {
 
                     {/* Material */}
                     <div ref={sectionRefs.material}>
-                      <MaterialCourseDetail />
+                      <MaterialCourseDetail courseId={course.id} />
                     </div>
 
                     {/* Attribute */}
@@ -365,23 +368,7 @@ export default function PublicCourse() {
         </div>
 
         {/* content white 2 */}
-        <div className="w-full px-0 z-10">
-          <div className="w-full xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2 mb-16">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pb-1 border-b-2 border-primary-700">
-              <p className="text-xl sm:text-2xl font-bold text-primary-700 sm:mb-0">
-                Lainnya dari {course?.instructor?.first_name || '-'}{' '}
-                {course?.instructor?.last_name || ''}
-              </p>
-              <button className="flex items-center gap-2 font-normal text-white p-1 px-4 bg-primary-700 rounded-lg hover:bg-primary-800 transition-colors mt-2 sm:mt-0">
-                Lihat lainnya...
-                <Icon type="arrow-right" className="w-4 h-4" color="currentColor" />
-              </button>
-            </div>
-            <div className="w-full h-fit overflow-y-auto">
-              <Card course={othersCourseInstructor} maxWidth={20} flexRow />
-            </div>
-          </div>
-        </div>
+        <MoreCourse course={course} />
       </Template>
     </div>
   );
