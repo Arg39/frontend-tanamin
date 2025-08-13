@@ -1,41 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Checkbox from '../form/checkbox';
 import StarRating from '../content/star/star';
-
-const categories = [
-  { id: 'all-categories', title: 'semua', count: 7 },
-  { id: '1231-32cas', title: 'Programming', count: 3 },
-  { id: '12sa-sad22', title: 'Design', count: 2 },
-  { id: 'sd823-123zd', title: 'Marketing', count: 2 },
-];
-
-const instructor = [
-  { id: 'all-instructor', name: 'semua', count: 21 },
-  { id: '123sa-6745d', name: 'Angra blastsada', count: 7 },
-  { id: 'sd12sd-232da', name: 'bras', count: 7 },
-  { id: 'dasd92-3cs12', name: 'vasterio', count: 7 },
-];
-
-const rating = [
-  { rating: 5, count: 17 },
-  { rating: 4, count: 2 },
-  { rating: 3, count: 4 },
-  { rating: 2, count: 3 },
-  { rating: 1, count: 2 },
-];
-
-const price = [
-  { title: 'semua', type: 'all', count: 21 },
-  { title: 'gratis', type: 'free', count: 8 },
-  { title: 'berbayar', type: 'paid', count: 13 },
-];
-
-const level = [
-  { title: 'semua', type: 'all', count: 21 },
-  { title: 'pemula', type: 'beginner', count: 7 },
-  { title: 'menengah', type: 'intermediate', count: 7 },
-  { title: 'mahir', type: 'advance', count: 7 },
-];
+import {
+  useFilterCourseStore,
+  categories,
+  instructor,
+  rating,
+  price,
+  level,
+} from '../../zustand/public/course/filterCourseStore';
 
 function handleIndividualCheckboxChange(items, name, checked, state, setState, key = 'title') {
   const newState = { ...state };
@@ -70,44 +43,60 @@ function handleSingleActiveCheckboxChange(items, name, checked, setState, key = 
   setState(newState);
 }
 
-function getInitialChecked(items, key = 'title') {
-  const checked = {};
-  items.forEach((item) => {
-    checked[item[key]] = item[key] === 'semua';
-  });
-  return checked;
-}
+export default function FilterCard({ isMobile = false }) {
+  // Zustand store hooks
+  const checkedCategories = useFilterCourseStore((state) => state.checkedCategories);
+  const setCheckedCategories = useFilterCourseStore((state) => state.setCheckedCategories);
 
-function getInitialCheckedSingle(items, key = 'type') {
-  const checked = {};
-  items.forEach((item) => {
-    checked[item[key]] = item[key] === 'all';
-  });
-  return checked;
-}
+  const checkedInstructor = useFilterCourseStore((state) => state.checkedInstructor);
+  const setCheckedInstructor = useFilterCourseStore((state) => state.setCheckedInstructor);
 
-export default function FilterCard() {
-  const [checkedCategories, setCheckedCategories] = useState(() =>
-    getInitialChecked(categories, 'title')
-  );
-  const [checkedInstructor, setCheckedInstructor] = useState(() =>
-    getInitialChecked(instructor, 'name')
-  );
-  const [checkedRatings, setCheckedRatings] = useState({});
-  const [checkedPrice, setCheckedPrice] = useState(() => getInitialCheckedSingle(price, 'type'));
-  const [checkedLevel, setCheckedLevel] = useState(() => getInitialCheckedSingle(level, 'type'));
+  const checkedRatings = useFilterCourseStore((state) => state.checkedRatings);
+  const setCheckedRatings = useFilterCourseStore((state) => state.setCheckedRatings);
 
-  return (
-    <div className="w-full flex flex-col h-fit p-8 shadow-md rounded-md">
-      <div className="w-full p-4 justify-center items-center">
+  const checkedPrice = useFilterCourseStore((state) => state.checkedPrice);
+  const setCheckedPrice = useFilterCourseStore((state) => state.setCheckedPrice);
+
+  const checkedLevel = useFilterCourseStore((state) => state.checkedLevel);
+  const setCheckedLevel = useFilterCourseStore((state) => state.setCheckedLevel);
+
+  const getActiveFilters = useFilterCourseStore((state) => state.getActiveFilters);
+
+  // State untuk "lihat lebih"
+  const [visibleCategories, setVisibleCategories] = useState(6);
+  const [visibleInstructor, setVisibleInstructor] = useState(6);
+
+  // Log active filters
+  useEffect(() => {
+    const activeFilters = getActiveFilters();
+    console.log('Active Filters:', activeFilters);
+  }, [
+    checkedCategories,
+    checkedInstructor,
+    checkedRatings,
+    checkedPrice,
+    checkedLevel,
+    getActiveFilters,
+  ]);
+
+  // Konten utama filter (biar bisa dipakai di desktop & mobile)
+  const filterContent = (
+    <div
+      className={
+        isMobile
+          ? 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white overflow-y-auto max-h-[90vh]' // mt-16 for mobile modal
+          : 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white mt-16 lg:mt-0' // mt-16 for desktop sidebar
+      }
+    >
+      <div className="w-full p-2 justify-center items-center">
         <p className="text-xl text-center text-secondary-800">Filter Kursus</p>
       </div>
       <div className="mt-8 flex flex-col gap-8">
         {/* Kategori */}
         <div className="flex flex-col gap-2">
-          <p className="w-full pb-1 border-b border-secondary-800 text-secondary-800">Kategori</p>
+          <p className="pb-1 border-b border-secondary-800 text-secondary-800">Kategori</p>
           <div className="flex flex-col gap-2">
-            {categories.map((cat) => (
+            {categories.slice(0, visibleCategories).map((cat) => (
               <div key={cat.id} className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -124,7 +113,7 @@ export default function FilterCard() {
                         'title'
                       )
                     }
-                    className={'w-4 h-4'}
+                    className="w-4 h-4"
                   />
                   <p>{cat.title}</p>
                 </div>
@@ -137,12 +126,20 @@ export default function FilterCard() {
                 </p>
               </div>
             ))}
+            {categories.length > visibleCategories && (
+              <button
+                className="text-tertiary-600 text-base mt-1 self-start"
+                onClick={() => setVisibleCategories((prev) => prev + 6)}
+              >
+                Lihat lebih...
+              </button>
+            )}
           </div>
         </div>
 
         {/* Rating */}
         <div className="flex flex-col gap-2">
-          <p className="w-full pb-1 border-b border-secondary-800 text-secondary-800">Rating</p>
+          <p className="pb-1 border-b border-secondary-800 text-secondary-800">Rating</p>
           <div className="flex flex-col gap-2">
             {rating.map((rate) => (
               <div key={rate.rating} className="flex justify-between items-center">
@@ -152,12 +149,12 @@ export default function FilterCard() {
                     name={String(rate.rating)}
                     checked={!!checkedRatings[rate.rating]}
                     onChange={({ target: { name, checked } }) =>
-                      setCheckedRatings((prev) => ({
-                        ...prev,
+                      setCheckedRatings({
+                        ...checkedRatings,
                         [name]: checked,
-                      }))
+                      })
                     }
-                    className={'w-4 h-4'}
+                    className="w-4 h-4"
                   />
                   <StarRating value={rate.rating} size={6} />
                 </div>
@@ -175,9 +172,9 @@ export default function FilterCard() {
 
         {/* Instruktur */}
         <div className="flex flex-col gap-2">
-          <p className="w-full pb-1 border-b border-secondary-800 text-secondary-800">Instruktur</p>
+          <p className="pb-1 border-b border-secondary-800 text-secondary-800">Instruktur</p>
           <div className="flex flex-col gap-2">
-            {instructor.map((ins) => (
+            {instructor.slice(0, visibleInstructor).map((ins) => (
               <div key={ins.id} className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -194,7 +191,7 @@ export default function FilterCard() {
                         'name'
                       )
                     }
-                    className={'w-4 h-4'}
+                    className="w-4 h-4"
                   />
                   <p>{ins.name}</p>
                 </div>
@@ -207,12 +204,20 @@ export default function FilterCard() {
                 </p>
               </div>
             ))}
+            {instructor.length > visibleInstructor && (
+              <button
+                className="text-tertiary-600 text-base mt-1 self-start"
+                onClick={() => setVisibleInstructor((prev) => prev + 6)}
+              >
+                Lihat lebih...
+              </button>
+            )}
           </div>
         </div>
 
         {/* Harga */}
         <div className="flex flex-col gap-2">
-          <p className="w-full pb-1 border-b border-secondary-800 text-secondary-800">Harga</p>
+          <p className="pb-1 border-b border-secondary-800 text-secondary-800">Harga</p>
           <div className="flex flex-col gap-2">
             {price.map((p) => (
               <div key={p.type} className="flex justify-between items-center">
@@ -230,7 +235,7 @@ export default function FilterCard() {
                         'type'
                       )
                     }
-                    className={'w-4 h-4'}
+                    className="w-4 h-4"
                   />
                   <p>{p.title}</p>
                 </div>
@@ -248,7 +253,7 @@ export default function FilterCard() {
 
         {/* Level */}
         <div className="flex flex-col gap-2">
-          <p className="w-full pb-1 border-b border-secondary-800 text-secondary-800">Level</p>
+          <p className="pb-1 border-b border-secondary-800 text-secondary-800">Level</p>
           <div className="flex flex-col gap-2">
             {level.map((lvl) => (
               <div key={lvl.type} className="flex justify-between items-center">
@@ -266,7 +271,7 @@ export default function FilterCard() {
                         'type'
                       )
                     }
-                    className={'w-4 h-4'}
+                    className="w-4 h-4"
                   />
                   <p>{lvl.title}</p>
                 </div>
@@ -284,4 +289,6 @@ export default function FilterCard() {
       </div>
     </div>
   );
+
+  return filterContent;
 }
