@@ -1,32 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Template from '../../template/template';
 import { useLocation } from 'react-router-dom';
 import Breadcrumb from '../../components/breadcrumb/breadcrumb';
+import { motion, AnimatePresence } from 'framer-motion';
+import useFaqStore from '../../zustand/public/faqStore';
 
-const faqList = [
-  {
-    question: 'Apa itu Tanamin Course?',
-    answer:
-      'Tanamin Course adalah platform kursus online yang dikembangkan oleh PT Tanamin Bumi Nusantara sebagai bagian dari inisiatif pemberdayaan masyarakat. Di sini, Anda dapat mengikuti berbagai pelatihan di bidang lingkungan, desain, teknologi, dan keterampilan lainnya secara gratis maupun berbayar.',
-  },
-  {
-    question: 'Bagaimana cara mendaftar di Tanamin Course?',
-    answer:
-      'Anda dapat mendaftar dengan mengklik tombol "Daftar" di halaman utama dan mengisi formulir pendaftaran.',
-  },
-  {
-    question: 'Apakah materi kursus bisa diakses gratis?',
-    answer: 'Beberapa materi tersedia gratis, namun untuk akses penuh Anda perlu berlangganan.',
-  },
-  {
-    question: 'Bagaimana cara menghubungi tim support?',
-    answer: 'Anda bisa menghubungi kami melalui halaman kontak atau email support@tanamin.com.',
-  },
-];
+const answerVariants = {
+  collapsed: { opacity: 0, height: 0, y: -10, transition: { duration: 0.3 } },
+  expanded: { opacity: 1, height: 'auto', y: 0, transition: { duration: 0.3 } },
+};
 
 export default function Faq() {
   const location = useLocation();
   const [openIndex, setOpenIndex] = useState(null);
+
+  const { faqList, loading, error, fetchFaq } = useFaqStore();
+
+  useEffect(() => {
+    fetchFaq();
+  }, [fetchFaq]);
 
   const handleToggle = (idx) => {
     setOpenIndex(openIndex === idx ? null : idx);
@@ -52,20 +44,39 @@ export default function Faq() {
 
           {/* faq */}
           <div className="mt-8 space-y-4">
-            {faqList.map((item, idx) => (
-              <div key={idx} className="border rounded-md border-primary-700 p-4">
-                <button
-                  className="w-full text-left text-lg font-semibold text-primary-800 focus:outline-none flex justify-between items-center"
-                  onClick={() => handleToggle(idx)}
-                >
-                  {item.question}
-                  <span className="text-primary-700 text-xl">{openIndex === idx ? '-' : '+'}</span>
-                </button>
-                {openIndex === idx && (
-                  <div className="mt-2 text-primary-950 text-lg">{item.answer}</div>
-                )}
-              </div>
-            ))}
+            {loading && <div>Loading FAQ...</div>}
+            {error && <div className="text-red-600">{error}</div>}
+            {!loading && !error && faqList.length === 0 && (
+              <div className="text-primary-700 text-xl">Belum ada FAQ.</div>
+            )}
+            {!loading &&
+              !error &&
+              faqList.map((item, idx) => (
+                <div key={idx} className="border rounded-md border-primary-700 p-4">
+                  <button
+                    className="w-full text-left text-lg font-semibold text-primary-800 focus:outline-none flex justify-between items-center"
+                    onClick={() => handleToggle(idx)}
+                  >
+                    {item.question}
+                    <span className="text-primary-700 text-xl">
+                      {openIndex === idx ? '-' : '+'}
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {openIndex === idx && (
+                      <motion.div
+                        className="mt-2 text-primary-950 text-lg overflow-hidden"
+                        initial="collapsed"
+                        animate="expanded"
+                        exit="collapsed"
+                        variants={answerVariants}
+                      >
+                        {item.answer}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ))}
           </div>
         </div>
       </main>
