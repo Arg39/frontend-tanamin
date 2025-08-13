@@ -49,6 +49,7 @@ import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
 import Beranda from '../pages/public/beranda';
 import PublicCourse from '../pages/public/detailCourse/course';
+import ListCourse from '../pages/public/listCourse';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -190,7 +191,7 @@ const instructorRoutes = [
 const publicRoutes = [
   { path: '/', element: <RoleBasedRedirect /> },
   { path: '/beranda', element: <Beranda /> },
-  { path: '/kursus/:courseId', element: <PublicCourse /> },
+  { path: '/kursus', element: <ListCourse /> },
   { path: '/kursus/:courseId', element: <PublicCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
