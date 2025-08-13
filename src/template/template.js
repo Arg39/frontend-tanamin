@@ -8,7 +8,7 @@ export default function Template({ children, activeNav, className, style, locati
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
   useEffect(() => {
-    setActiveNav(activeNav); // Set the active navigation when the template is rendered
+    setActiveNav(activeNav);
   }, [activeNav, setActiveNav]);
 
   return (

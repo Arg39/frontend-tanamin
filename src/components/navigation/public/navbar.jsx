@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '../../button/button';
 import useMenuStore from '../../../zustand/menuStore';
@@ -21,7 +21,33 @@ export default function Navbar() {
   const { navigationPublic } = useNavigationStore();
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  // Helper to render navigation links, with special case for Kategori
+  const dropdownCloseTimer = useRef(null);
+
+  useEffect(() => {
+    if (!isMenuOpen) setOpenDropdown(null);
+  }, [isMenuOpen]);
+
+  useEffect(() => {
+    return () => {
+      if (dropdownCloseTimer.current) {
+        clearTimeout(dropdownCloseTimer.current);
+      }
+    };
+  }, []);
+
+  const handleMouseEnterDropdown = (idx) => {
+    if (dropdownCloseTimer.current) {
+      clearTimeout(dropdownCloseTimer.current);
+    }
+    setOpenDropdown(idx);
+  };
+
+  const handleMouseLeaveDropdown = () => {
+    dropdownCloseTimer.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 200);
+  };
+
   const renderNavLinks = (className, onClick, isMobile = false) => (
     <>
       {navigationPublic.map((nav, idx) =>
@@ -29,38 +55,75 @@ export default function Navbar() {
           <div
             key={nav.label}
             className={`relative group ${isMobile ? '' : 'cursor-pointer'}`}
-            onMouseEnter={() => !isMobile && setOpenDropdown(idx)}
-            onMouseLeave={() => !isMobile && setOpenDropdown(null)}
+            onMouseEnter={() => !isMobile && handleMouseEnterDropdown(idx)}
+            onMouseLeave={() => !isMobile && handleMouseLeaveDropdown()}
           >
             <span
-              className={`${className} flex items-center`}
-              onClick={() => isMobile && setOpenDropdown(openDropdown === idx ? null : idx)}
+              className={`${className} flex items-center ${
+                activeNav === nav.label
+                  ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
+                  : ''
+              }`}
+              onClick={() => {
+                if (isMobile) {
+                  setOpenDropdown(openDropdown === idx ? null : idx);
+                }
+              }}
             >
               {nav.label.charAt(0).toUpperCase() + nav.label.slice(1)}
               <Icon type="dropdown" className="ml-1 w-4 h-4" />
             </span>
             {/* Dropdown */}
-            {openDropdown === idx && (
-              <div
-                className={`absolute ${
-                  isMobile ? 'static' : 'left-0 top-[88%] '
-                } bg-white shadow-lg rounded-md mt-2 z-50 min-w-[160px]`}
-                style={isMobile ? { position: 'static', marginTop: 0 } : {}}
-              >
-                {nav.links.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="block px-4 py-2 text-gray-800 hover:bg-primary-100"
-                    onClick={() => {
-                      if (onClick) onClick();
-                      setOpenDropdown(null);
-                    }}
+            {isMobile ? (
+              <AnimatePresence>
+                {openDropdown === idx && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex flex-col pl-4"
                   >
-                    {link.text}
-                  </Link>
-                ))}
-              </div>
+                    {nav.links.map((link) => (
+                      <Link
+                        key={link.href}
+                        to={link.href}
+                        className={`block py-2 text-gray-800 hover:text-primary-700 ${
+                          activeNav === nav.label ? 'font-semibold' : ''
+                        }`}
+                        onClick={() => {
+                          if (onClick) onClick();
+                          setOpenDropdown(null);
+                        }}
+                      >
+                        {link.text}
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            ) : (
+              openDropdown === idx && (
+                <div
+                  className="absolute left-0 top-[88%] bg-white shadow-lg rounded-md mt-2 z-50 min-w-[160px]"
+                  onMouseEnter={() => handleMouseEnterDropdown(idx)}
+                  onMouseLeave={handleMouseLeaveDropdown}
+                >
+                  {nav.links.map((link) => (
+                    <Link
+                      key={link.href}
+                      to={link.href}
+                      className={`block px-4 py-2 text-gray-800 hover:bg-primary-100`}
+                      onClick={() => {
+                        if (onClick) onClick();
+                        setOpenDropdown(null);
+                      }}
+                    >
+                      {link.text}
+                    </Link>
+                  ))}
+                </div>
+              )
             )}
           </div>
         ) : (
@@ -73,7 +136,10 @@ export default function Navbar() {
                   ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
                   : ''
               }`}
-              onClick={onClick}
+              onClick={() => {
+                if (onClick) onClick();
+                setOpenDropdown(null);
+              }}
             >
               {link.text}
             </Link>
@@ -159,7 +225,8 @@ export default function Navbar() {
               <div className="flex flex-col space-y-4 bg-white p-6 relative">
                 {renderNavLinks(
                   'text-lg font-medium text-gray-800 hover:text-primary-700',
-                  closeMenu
+                  closeMenu,
+                  true // isMobile = true
                 )}
               </div>
             </motion.div>
