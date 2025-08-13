@@ -3,6 +3,7 @@ import Template from '../../template/template';
 import Breadcrumb from '../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import FilterCard from '../../components/filter/filterCard';
+import Icon from '../../components/icons/icon';
 
 // Custom hook to detect screen width
 function useIsDesktop() {
@@ -16,6 +17,11 @@ function useIsDesktop() {
   }, []);
   return isDesktop;
 }
+
+const handleSearch = (e) => {
+  e.preventDefault();
+  // TODO: Implement search logic here
+};
 
 export default function ListCourse() {
   const location = useLocation();
@@ -38,7 +44,7 @@ export default function ListCourse() {
           <h5 className="text-xl font-light text-primary-800">
             Kembangkan Keahlian Anda Melalui Kursus yang dirancang oleh para ahli dalam industri
           </h5>
-          <div className="w-full mt-16 flex flex-row gap-2 lg:gap-8">
+          <div className="w-full mt-8 lg:mt-16 flex flex-row gap-2 lg:gap-8">
             {/* Filter Sidebar for Desktop */}
             {isDesktop && (
               <div className="w-1/5 min-w-[300px]">
@@ -47,12 +53,12 @@ export default function ListCourse() {
             )}
             {/* Filter Button for Tablet/Mobile */}
             {!isDesktop && (
-              <div className="w-1/5 min-w-[120px] flex flex-col">
+              <div className="w-2/12 flex flex-col">
                 <button
                   onClick={() => setIsFilterOpen(true)}
-                  className="bg-primary-700 text-white px-4 py-2 rounded-md w-full"
+                  className="w-full h-full bg-primary-700 text-white py-2 flex justify-center items-center rounded-md"
                 >
-                  Filter
+                  <Icon type="filter" className="w-6 h-6" />
                 </button>
                 {isFilterOpen && (
                   <div className="fixed inset-0 z-50 flex">
@@ -75,8 +81,21 @@ export default function ListCourse() {
                 )}
               </div>
             )}
-            <div className="w-4/5 min-w-0">
-              <input type="text" className="w-full p-2 border border-primary-700" />
+            <div className="w-10/12 min-w-0">
+              <form onSubmit={handleSearch} className="relative">
+                <input
+                  type="text"
+                  className="w-full p-2 pr-10 border border-primary-700 placeholder:text-primary-800 placeholder:opacity-50 rounded-md focus:outline-none focus:ring-0"
+                  placeholder="Cari Kursus Anda..."
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-primary-700"
+                  tabIndex={-1}
+                >
+                  <Icon type="magnifying-glass" />
+                </button>
+              </form>
               <div></div>
             </div>
           </div>

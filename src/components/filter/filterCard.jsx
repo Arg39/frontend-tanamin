@@ -84,8 +84,8 @@ export default function FilterCard({ isMobile = false }) {
     <div
       className={
         isMobile
-          ? 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white overflow-y-auto max-h-[90vh]' // mt-16 for mobile modal
-          : 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white mt-16 lg:mt-0' // mt-16 for desktop sidebar
+          ? 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white overflow-y-auto max-h-[90vh]'
+          : 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white mt-16 lg:mt-0'
       }
     >
       <div className="w-full p-2 justify-center items-center">
