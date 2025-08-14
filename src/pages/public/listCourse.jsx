@@ -28,22 +28,38 @@ export default function ListCourse() {
   const [searchValue, setSearchValue] = useState('');
   const searchBarRef = useRef(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCourses, setTotalCourses] = useState(0);
+
   const breadcrumbItems = [
     { label: 'Tanamin Course', path: '/beranda' },
     { label: 'Kontak Kami', path: location.pathname },
   ];
 
   // Get courses from zustand store
-  const { courses, coursesLoading, coursesError, fetchCourses } = useBerandaStore();
+  const { courses, coursesLoading, coursesError, fetchCourses, pagination } = useBerandaStore();
 
+  // Fetch courses when page changes
   useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
+    fetchCourses({ page: currentPage, search: searchValue });
+  }, [fetchCourses, currentPage, searchValue]);
+
+  // Update pagination state from backend response
+  useEffect(() => {
+    if (pagination) {
+      setCurrentPage(pagination.current_page || 1);
+      setTotalPages(pagination.last_page || 1);
+      setTotalCourses(pagination.total || 0);
+    }
+  }, [pagination]);
 
   // Search handler
   const handleSearch = (e) => {
     e.preventDefault();
-    // TODO: Implement search logic here
+    setCurrentPage(1); // Reset to first page on search
+    fetchCourses({ page: 1, search: searchValue });
   };
 
   // Get search bar height for filter modal
@@ -155,6 +171,13 @@ export default function ListCourse() {
                     </div>
                   )}
                 </div>
+                <div className="w-full mt-8">
+                  <PaginationCard
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => setCurrentPage(page)}
+                  />
+                </div>
               </div>
             )}
             {/* Desktop: Search + Course List */}
@@ -193,7 +216,11 @@ export default function ListCourse() {
                   )}
                 </div>
                 <div className="w-full mt-16">
-                  <PaginationCard />
+                  <PaginationCard
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={(page) => setCurrentPage(page)}
+                  />
                 </div>
               </div>
             )}
