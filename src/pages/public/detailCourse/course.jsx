@@ -229,7 +229,7 @@ export default function PublicCourse() {
           >
             <div className="sticky top-16 pointer-events-auto hide-scrollbar overflow-y-auto max-h-[calc(100vh-36px)]">
               <div className="mt-6">
-                <DetailCourseCard course={course} accessCourse={true} />
+                <DetailCourseCard course={course} accessCourse={false} />
               </div>
             </div>
           </div>

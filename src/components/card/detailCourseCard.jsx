@@ -1,6 +1,8 @@
 import React from 'react';
 import { formatRupiah } from '../../utils/formatRupiah';
 import Icon from '../icons/icon';
+import useAuthStore from '../../zustand/authStore';
+import { useNavigate } from 'react-router-dom';
 
 function translateLevel(level) {
   switch (level) {
@@ -15,7 +17,6 @@ function translateLevel(level) {
   }
 }
 
-// Helper to calculate discounted price
 function getDiscountedPrice(price, discount) {
   if (!discount) return price;
   if (discount.type === 'percent') {
@@ -28,6 +29,8 @@ function getDiscountedPrice(price, discount) {
 }
 
 export default function DetailCourseCard({ course, accessCourse }) {
+  const { user } = useAuthStore();
+  const navigate = useNavigate();
   if (!course) return null;
 
   const hasDiscount =
@@ -44,7 +47,7 @@ export default function DetailCourseCard({ course, accessCourse }) {
           <Icon type="play" className="w-5 h-5" />
           Mulai Belajar
         </button>
-      ) : (
+      ) : user ? (
         <>
           <div className="w-full py-4 flex items-center justify-center">
             {hasDiscount ? (
@@ -73,6 +76,15 @@ export default function DetailCourseCard({ course, accessCourse }) {
             </button>
           </div>
         </>
+      ) : (
+        <div className="w-full py-4 flex items-center justify-center">
+          <button
+            onClick={() => navigate('/masuk')}
+            className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors"
+          >
+            Login untuk mengakses kursus
+          </button>
+        </div>
       )}
       <div className="flex flex-col gap-2">
         <p className="text-primary-700 font-semibold">Detail</p>
@@ -93,7 +105,7 @@ export default function DetailCourseCard({ course, accessCourse }) {
           ))}
         </div>
       </div>
-      {!accessCourse ? (
+      {!accessCourse && user ? (
         <div className="flex flex-col gap-2 mt-4">
           <p className="text-primary-700 font-semibold">Kupon Kursus</p>
           <div className="flex flex-col sm:flex-row gap-2">
@@ -114,6 +126,7 @@ export default function DetailCourseCard({ course, accessCourse }) {
 
 export function MobileDetailCourseCard({ course, accessCourse }) {
   const [expanded, setExpanded] = React.useState(false);
+  const { user } = useAuthStore();
 
   if (!course) return null;
 
@@ -157,7 +170,7 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                   <Icon type="play" className="w-5 h-5" />
                   Mulai Belajar
                 </button>
-              ) : (
+              ) : user ? (
                 <>
                   <div className="w-full py-4 flex items-center justify-center">
                     {hasDiscount ? (
@@ -186,6 +199,12 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                     </button>
                   </div>
                 </>
+              ) : (
+                <div className="w-full py-4 flex items-center justify-center">
+                  <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+                    Login untuk mengakses kursus
+                  </button>
+                </div>
               )}
               <div className="flex flex-col gap-2">
                 <p className="text-primary-700 font-semibold">Detail</p>
@@ -207,22 +226,20 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                 </div>
               </div>
 
-              {!accessCourse ? (
-                <>
-                  <div className="flex flex-col gap-2 mt-4">
-                    <p className="text-primary-700 font-semibold">Kupon Kursus</p>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <input
-                        type="text"
-                        className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
-                        placeholder="Masukkan kupon"
-                      />
-                      <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
-                        Masukkan
-                      </button>
-                    </div>
+              {!accessCourse && user ? (
+                <div className="flex flex-col gap-2 mt-4">
+                  <p className="text-primary-700 font-semibold">Kupon Kursus</p>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
+                      placeholder="Masukkan kupon"
+                    />
+                    <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
+                      Masukkan
+                    </button>
                   </div>
-                </>
+                </div>
               ) : null}
             </div>
           </div>
@@ -232,7 +249,7 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
       {/* Sticky bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 block lg:hidden bg-white border-t border-gray-200 shadow-[0_-2px_16px_0_rgba(0,0,0,0.08)] px-4 py-3">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
+          <div className={`flex items-center gap-3 min-w-0 ${!user ? 'flex-1' : ''}`}>
             <button
               className="ml-2 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-primary-700 border border-primary-200 hover:bg-primary-50 transition"
               style={{ aspectRatio: 1 }}
@@ -245,7 +262,7 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               <span className="text-base font-semibold text-primary-700 truncate">
                 {course.title}
               </span>
-              {!accessCourse ? (
+              {!accessCourse && user ? (
                 <>
                   {hasDiscount ? (
                     <span className="flex items-center gap-2">
@@ -265,13 +282,32 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               ) : null}
             </div>
           </div>
+          {user || accessCourse ? (
+            <div className="flex flex-col gap-2 min-w-[110px]">
+              {accessCourse ? (
+                <button className="w-fit flex items-center gap-2 py-1 px-2 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
+                  <Icon type="play" className="w-5 h-5" />
+                  Mulai Belajar
+                </button>
+              ) : user ? (
+                <>
+                  <button className="w-full py-1 px-3 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
+                    Keranjang
+                  </button>
+                  <button className="w-full py-1 px-3 border-2 border-primary-700 bg-white text-primary-700 rounded-lg text-sm font-semibold hover:bg-primary-800 hover:text-white transition-colors">
+                    Beli
+                  </button>
+                </>
+              ) : null}
+            </div>
+          ) : null}
           <div className="flex flex-col gap-2 min-w-[110px]">
             {accessCourse ? (
               <button className="w-fit flex items-center gap-2 py-1 px-2 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
                 <Icon type="play" className="w-5 h-5" />
                 Mulai Belajar
               </button>
-            ) : (
+            ) : user ? (
               <>
                 <button className="w-full py-1 px-3 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
                   Keranjang
@@ -280,7 +316,7 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                   Beli
                 </button>
               </>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
