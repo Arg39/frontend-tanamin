@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminTemplate from '../../../../template/templateAdmin';
 import TextInput from '../../../../components/form/textInput';
 import ImagePicker from '../../../../components/form/imagePicker';
@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '../../../../components/icons/icon';
 import PasswordInputGenerator from '../../../../components/form/passwordInputGenerator';
 import useInstructorStore from '../../../../zustand/instructorStore';
+import SelectOption from '../../../../components/form/selectOption';
+import useCategoryStore from '../../../../zustand/categoryStore';
 
 export default function InstructorAdd() {
   const location = useLocation();
@@ -23,14 +25,31 @@ export default function InstructorAdd() {
     email: '',
     password: '',
     confirmPassword: '',
+    id_category: '',
   });
   const [loading, setLoading] = useState(false);
+
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const { fetchCategoryOptions } = useCategoryStore();
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const options = await fetchCategoryOptions();
+      setCategoryOptions(options);
+    };
+    loadCategories();
+  }, [fetchCategoryOptions]);
 
   const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -80,6 +99,14 @@ export default function InstructorAdd() {
             placeholder="Masukkan email"
             value={form.email}
             onChange={handleChange}
+          />
+          <SelectOption
+            label="Kategori terkait dengan instructor"
+            name="id_category"
+            value={form.id_category}
+            onChange={handleInputChange}
+            options={categoryOptions}
+            placeholder="Pilih kategori yang berkaitan dengan kursus"
           />
           <PasswordInputGenerator
             label="Password"

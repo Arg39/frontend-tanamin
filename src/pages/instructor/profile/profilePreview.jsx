@@ -14,6 +14,7 @@ export default function ProfilePreview({
   showEdit = true,
   showBack = true,
 }) {
+  const isInstructor = profile?.role === 'instructor';
   return (
     <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
       {/* Back Button */}
@@ -111,7 +112,12 @@ export default function ProfilePreview({
                   ['Last Name', profile.last_name],
                   ['Email', profile.email],
                   ['Telepon', profile.telephone],
-                  ['Keahlian', profile.expertise],
+                  ...(isInstructor
+                    ? [
+                        ['Kategori', profile.category_instructor],
+                        ['Keahlian', profile.expertise],
+                      ]
+                    : []),
                 ].map(([label, value], idx) => (
                   <div key={idx} className="min-w-0">
                     <span className="block text-tertiary-500 text-xs sm:text-sm font-medium mb-1">

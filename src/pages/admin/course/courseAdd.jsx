@@ -41,13 +41,21 @@ export default function CourseAdd() {
     loadCategories();
   }, []);
 
+  // Fetch instructors when id_category changes
   useEffect(() => {
     const loadInstructors = async () => {
-      const options = await fetchInstructorOptions();
-      setInstructorOptions(options);
+      if (formData.id_category) {
+        const options = await fetchInstructorOptions(formData.id_category);
+        setInstructorOptions(options);
+      } else {
+        setInstructorOptions([]);
+      }
     };
     loadInstructors();
-  }, []);
+    // Reset instructor selection when category changes
+    setFormData((prev) => ({ ...prev, id_instructor: '' }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData.id_category]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -135,7 +143,12 @@ export default function CourseAdd() {
             value={formData.id_instructor}
             onChange={handleInputChange}
             options={instructorOptions}
-            placeholder="Pilih instruktur yang akan bertanggung jawab"
+            placeholder={
+              formData.id_category
+                ? 'Pilih instruktur yang akan bertanggung jawab'
+                : 'Pilih kategori terlebih dahulu'
+            }
+            disabled={!formData.id_category}
           />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">

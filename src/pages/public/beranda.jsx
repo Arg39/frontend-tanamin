@@ -9,6 +9,7 @@ import CategoryCard from '../../components/card/categoryCard';
 import InstructorCarousel from '../../components/carousel/InstructorCarousel';
 import useBerandaStore from '../../zustand/public/beranda/berandaStore'; // import zustand store
 import Card from '../../components/card/card';
+import Icon from '../../components/icons/icon';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);
@@ -147,7 +148,15 @@ export default function Beranda() {
           </div> */}
 
           <div className="mb-16">
-            <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Instruktur Kami</h2>
+            <div className="flex justify-between items-end">
+              <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
+                Instruktur Kami
+              </h2>
+              <button className="flex items-center text-primary-700 hover:underline transition-colors font-medium text-sm lg:text-base">
+                Selengkapnya
+                <Icon type="arrow-right" className="w-4 h-4 ml-1" />
+              </button>
+            </div>
             {loading ? (
               <div className="text-center py-8 text-primary-600">Loading...</div>
             ) : error ? (

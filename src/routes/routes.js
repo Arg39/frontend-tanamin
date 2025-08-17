@@ -49,7 +49,9 @@ import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
 import Beranda from '../pages/public/beranda';
 import PublicCourse from '../pages/public/detailCourse/course';
-import ListCourse from '../pages/public/listCourse';
+import ListCourse from '../pages/public/course/listCourse';
+import Loading from '../pages/public/loading';
+import ListInstructor from '../pages/public/course/listInstructor';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -69,7 +71,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   }, [currentUser, fetchUserData]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!currentUser) {
@@ -192,6 +194,7 @@ const publicRoutes = [
   { path: '/', element: <RoleBasedRedirect /> },
   { path: '/beranda', element: <Beranda /> },
   { path: '/kursus', element: <ListCourse /> },
+  { path: '/instruktur', element: <ListInstructor /> },
   { path: '/kursus/:courseId', element: <PublicCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },

@@ -1034,33 +1034,41 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           />
         </svg>
       );
-    case 'round-arrow-left':
+    case 'alt-arrow-left':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
           viewBox="0 0 24 24"
-          className={`size-6 ${className}`}
+          className={`size-5 ${className}`}
         >
           <path
-            fill={color}
-            d="m4.431 12.822l13 9A1 1 0 0 0 19 21V3a1 1 0 0 0-1.569-.823l-13 9a1.003 1.003 0 0 0 0 1.645"
+            fill="none"
+            stroke={color}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="m15 5l-6 7l6 7"
           />
         </svg>
       );
-    case 'round-arrow-right':
+    case 'alt-arrow-right':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
           viewBox="0 0 24 24"
-          className={`size-6 ${className}`}
+          className={`size-5 ${className}`}
         >
           <path
-            fill={color}
-            d="M5.536 21.886a1 1 0 0 0 1.033-.064l13-9a1 1 0 0 0 0-1.644l-13-9A1 1 0 0 0 5 3v18a1 1 0 0 0 .536.886"
+            fill="none"
+            stroke={color}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="m9 5l6 7l-6 7"
           />
         </svg>
       );

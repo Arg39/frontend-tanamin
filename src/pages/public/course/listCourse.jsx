@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Template from '../../template/template';
-import Breadcrumb from '../../components/breadcrumb/breadcrumb';
+import Template from '../../../template/template';
+import Breadcrumb from '../../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
-import FilterCard from '../../components/filter/filterCard';
-import Icon from '../../components/icons/icon';
-import useBerandaStore from '../../zustand/public/beranda/berandaStore';
-import Card from '../../components/card/card';
-import PaginationCard from '../../components/filter/paginationCard';
+import FilterCard from '../../../components/filter/filterCard';
+import Icon from '../../../components/icons/icon';
+import useBerandaStore from '../../../zustand/public/beranda/berandaStore';
+import Card from '../../../components/card/card';
+import PaginationCard from '../../../components/filter/paginationCard';
 
 // Custom hook to detect screen width
 function useIsDesktop() {
@@ -35,7 +35,7 @@ export default function ListCourse() {
 
   const breadcrumbItems = [
     { label: 'Tanamin Course', path: '/beranda' },
-    { label: 'Kontak Kami', path: location.pathname },
+    { label: 'Kursus', path: location.pathname },
   ];
 
   // Get courses from zustand store
@@ -123,33 +123,25 @@ export default function ListCourse() {
                 </div>
                 {/* Filter Modal */}
                 {isFilterOpen && (
-                  <div className="fixed inset-0 z-50 flex items-start justify-center">
+                  <div className="fixed inset-0 z-50 flex items-center justify-center">
                     {/* Backdrop */}
                     <div
                       className="absolute inset-0 bg-black/50"
                       onClick={() => setIsFilterOpen(false)}
                     ></div>
-                    {/* Side Panel */}
-                    <div
-                      className="relative bg-white w-full max-w-xs shadow-lg rounded-md mt-4"
-                      style={{
-                        height: searchBarHeight ? `${searchBarHeight}px` : '56px',
-                        top: searchBarRef.current
-                          ? searchBarRef.current.getBoundingClientRect().top + window.scrollY
-                          : '0px',
-                        position: 'absolute',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 60,
-                      }}
-                    >
-                      <button
-                        onClick={() => setIsFilterOpen(false)}
-                        className="absolute top-2 right-2 text-primary-700 bg-white rounded-full w-8 h-8 flex items-center justify-center p-0"
-                      >
-                        ✕
-                      </button>
-                      <div className="h-full flex items-center">
+
+                    {/* Filter Panel */}
+                    <div className="relative w-full max-w-md mt-16 mx-auto p-0">
+                      <div className="relative bg-white rounded-md shadow-lg h-full overflow-y-auto">
+                        {/* Close Button */}
+                        <button
+                          onClick={() => setIsFilterOpen(false)}
+                          className="absolute top-2 right-2 text-primary-700 bg-white shadow-md rounded-full w-8 h-8 flex items-center justify-center"
+                        >
+                          ✕
+                        </button>
+
+                        {/* FilterCard */}
                         <FilterCard isMobile={true} />
                       </div>
                     </div>

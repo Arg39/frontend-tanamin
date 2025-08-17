@@ -141,9 +141,14 @@ export default function Instructor() {
   const columns = [
     {
       Header: 'Nama',
-      accessor: (row) => `${row.first_name} ${row.last_name}`,
-      width: '30%',
-      Cell: ({ value }) => <span>{value}</span>,
+      accessor: (row) => `${row.full_name}`,
+      width: '20%',
+    },
+    {
+      Header: 'Kategori',
+      accessor: (row) => `${row.category}`,
+      width: '20%',
+      disableSort: true,
     },
     {
       Header: 'Email',
