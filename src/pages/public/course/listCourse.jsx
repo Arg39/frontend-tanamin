@@ -71,7 +71,7 @@ export default function ListCourse() {
   }, [searchBarRef.current, isFilterOpen]);
 
   return (
-    <Template activeNav="kursus" locationKey={location.key}>
+    <Template activeNav="kursus.kursus" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
         <div className="flex-1 w-full mt-16">

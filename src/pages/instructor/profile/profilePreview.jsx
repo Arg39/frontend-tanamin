@@ -15,6 +15,13 @@ export default function ProfilePreview({
   showBack = true,
 }) {
   const isInstructor = profile?.role === 'instructor';
+  // Safely get nested detail fields
+  const detail = profile?.detail || {};
+  const photoCover = detail.photo_cover || '';
+  const photoProfile = profile?.photo_profile || '';
+  const socialMedia = detail.social_media || [];
+  const expertise = detail.expertise || '';
+  const about = detail.about || '';
   return (
     <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
       {/* Back Button */}
@@ -54,10 +61,10 @@ export default function ProfilePreview({
             <span className="block text-tertiary-500 text-xs sm:text-sm font-medium mb-1">
               Foto Cover Profile
             </span>
-            {profile.photo_cover ? (
+            {photoCover ? (
               <div className="w-full aspect-[3/1]">
                 <img
-                  src={profile.photo_cover}
+                  src={photoCover}
                   alt="Cover"
                   className="w-full h-full object-cover rounded-md"
                 />
@@ -73,9 +80,9 @@ export default function ProfilePreview({
           <div className="flex flex-col md:flex-row gap-4 sm:gap-8">
             {/* Photo & Social */}
             <div className="flex-shrink-0 w-full md:w-64 flex flex-col items-center bg-white rounded-lg p-4 sm:p-6 shadow border border-gray-100 mx-auto mb-4 md:mb-0">
-              {profile.photo ? (
+              {photoProfile ? (
                 <img
-                  src={profile.photo}
+                  src={photoProfile}
                   alt="Profile"
                   className="w-28 h-28 sm:w-36 sm:h-36 rounded-full object-cover border-4 mb-3 sm:mb-4 shadow"
                 />
@@ -88,9 +95,8 @@ export default function ProfilePreview({
                 @{profile.username}
               </div>
               <div className="flex gap-2 sm:gap-3 mt-2 sm:mt-3 flex-wrap justify-center overflow-x-auto max-w-full">
-                {profile.social_media &&
-                  profile.social_media.length > 0 &&
-                  profile.social_media.map((sm, idx) => (
+                {socialMedia.length > 0 &&
+                  socialMedia.map((sm, idx) => (
                     <a
                       key={idx}
                       href={sm.url}
@@ -115,7 +121,7 @@ export default function ProfilePreview({
                   ...(isInstructor
                     ? [
                         ['Kategori', profile.category_instructor],
-                        ['Keahlian', profile.expertise],
+                        ['Keahlian', expertise],
                       ]
                     : []),
                 ].map(([label, value], idx) => (
@@ -141,8 +147,8 @@ export default function ProfilePreview({
                   Tentang Saya
                 </span>
                 <div className="text-sm sm:text-base text-primary-700 font-medium whitespace-pre-wrap break-words mt-1">
-                  {profile.about && profile.about.trim && profile.about.trim() !== '' ? (
-                    profile.about
+                  {about && about.trim && about.trim() !== '' ? (
+                    about
                   ) : (
                     <span className="block text-red-500 font-normal text-xs sm:text-sm p-2 bg-error-100 rounded-md">
                       {getUnsetText(showEdit)}

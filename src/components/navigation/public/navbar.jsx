@@ -7,6 +7,36 @@ import Icon from '../../icons/icon';
 import { Link } from 'react-router-dom';
 import ProfileNav from './profileNav';
 
+// Animated underline component for nav links/buttons
+const NavLinkWithMotion = ({ to, children, className, isActive, onClick, ...rest }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Link
+      to={to}
+      className={`${className} relative`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={onClick}
+      {...rest}
+    >
+      {children}
+      <motion.div
+        className="absolute left-0 bottom-0 h-[3px] bg-primary-700"
+        initial={false}
+        animate={{
+          width: isActive || isHovered ? '100%' : '0%',
+          right: isActive || isHovered ? '0%' : '100%',
+        }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
+        style={{
+          borderRadius: '2px',
+        }}
+      />
+    </Link>
+  );
+};
+
 export default function Navbar() {
   const {
     isMenuOpen,
@@ -48,6 +78,17 @@ export default function Navbar() {
     }, 200);
   };
 
+  // Helper to get active state for dropdown and links
+  const getActiveState = (navLabel, linkText) => {
+    if (!activeNav) return false;
+    if (linkText) {
+      // For sub-links: activeNav === `${navLabel}.${linkText.toLowerCase()}`
+      return activeNav.toLowerCase() === `${navLabel.toLowerCase()}.${linkText.toLowerCase()}`;
+    }
+    // For dropdown label: activeNav starts with navLabel
+    return activeNav.toLowerCase().startsWith(navLabel.toLowerCase());
+  };
+
   const renderNavLinks = (className, onClick, isMobile = false) => (
     <>
       {navigationPublic.map((nav, idx) =>
@@ -59,11 +100,7 @@ export default function Navbar() {
             onMouseLeave={() => !isMobile && handleMouseLeaveDropdown()}
           >
             <span
-              className={`${className} flex items-center ${
-                activeNav === nav.label
-                  ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
-                  : ''
-              }`}
+              className={`${className} flex items-center relative`}
               onClick={() => {
                 if (isMobile) {
                   setOpenDropdown(openDropdown === idx ? null : idx);
@@ -72,6 +109,19 @@ export default function Navbar() {
             >
               {nav.label.charAt(0).toUpperCase() + nav.label.slice(1)}
               <Icon type="dropdown" className="ml-1 w-4 h-4" />
+              {/* Animated underline for dropdown label */}
+              <motion.div
+                className="absolute left-0 bottom-0 h-[3px] bg-primary-700"
+                initial={false}
+                animate={{
+                  width: getActiveState(nav.label) ? '100%' : '0%',
+                  right: getActiveState(nav.label) ? '0%' : '100%',
+                }}
+                transition={{ duration: 0.4, ease: 'easeInOut' }}
+                style={{
+                  borderRadius: '2px',
+                }}
+              />
             </span>
             {/* Dropdown */}
             {isMobile ? (
@@ -85,19 +135,18 @@ export default function Navbar() {
                     className="flex flex-col pl-4"
                   >
                     {nav.links.map((link) => (
-                      <Link
+                      <NavLinkWithMotion
                         key={link.href}
                         to={link.href}
-                        className={`block py-2 text-gray-800 hover:text-primary-700 ${
-                          activeNav === nav.label ? 'font-semibold' : ''
-                        }`}
+                        className={`block py-2 text-gray-800 hover:text-primary-700`}
+                        isActive={getActiveState(nav.label, link.text)}
                         onClick={() => {
                           if (onClick) onClick();
                           setOpenDropdown(null);
                         }}
                       >
                         {link.text}
-                      </Link>
+                      </NavLinkWithMotion>
                     ))}
                   </motion.div>
                 )}
@@ -110,17 +159,18 @@ export default function Navbar() {
                   onMouseLeave={handleMouseLeaveDropdown}
                 >
                   {nav.links.map((link) => (
-                    <Link
+                    <NavLinkWithMotion
                       key={link.href}
                       to={link.href}
                       className={`block px-4 py-2 text-gray-800 hover:bg-primary-100`}
+                      isActive={getActiveState(nav.label, link.text)}
                       onClick={() => {
                         if (onClick) onClick();
                         setOpenDropdown(null);
                       }}
                     >
                       {link.text}
-                    </Link>
+                    </NavLinkWithMotion>
                   ))}
                 </div>
               )
@@ -128,21 +178,18 @@ export default function Navbar() {
           </div>
         ) : (
           nav.links.map((link) => (
-            <Link
+            <NavLinkWithMotion
               key={link.href}
               to={link.href}
-              className={`${className} ${
-                activeNav === nav.label
-                  ? 'border-b-[3px] border-primary-700 text-primary-700 text-brown border-brown'
-                  : ''
-              }`}
+              className={`${className}`}
+              isActive={getActiveState(nav.label, link.text)}
               onClick={() => {
                 if (onClick) onClick();
                 setOpenDropdown(null);
               }}
             >
               {link.text}
-            </Link>
+            </NavLinkWithMotion>
           ))
         )
       )}

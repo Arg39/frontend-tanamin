@@ -51,7 +51,8 @@ import Beranda from '../pages/public/beranda';
 import PublicCourse from '../pages/public/detailCourse/course';
 import ListCourse from '../pages/public/course/listCourse';
 import Loading from '../pages/public/loading';
-import ListInstructor from '../pages/public/course/listInstructor';
+import ListInstructor from '../pages/public/instructor/listInstructor';
+import InstructorDetailPublic from '../pages/public/instructor/instructorDetail';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -202,6 +203,7 @@ const publicRoutes = [
   { path: '/tentang-kami', element: <TentangKami /> },
   { path: '/faq', element: <Faq /> },
   { path: '/kontak-kami', element: <KontakKami /> },
+  { path: '/instruktur/detail/:instructorId', element: <InstructorDetailPublic /> },
 ];
 
 const PublicRoute = ({ children }) => {

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Template from '../../../template/template';
 import Breadcrumb from '../../../components/breadcrumb/breadcrumb';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useInstructorStore from '../../../zustand/public/course/instructorStore';
 import { InstructorCard } from '../../../components/card/cardInstructor';
 
 export default function ListInstructor() {
   const location = useLocation();
+  const navigate = useNavigate();
   const breadcrumbItems = [
     { label: 'Tanamin Course', path: '/beranda' },
     { label: 'Instruktur', path: location.pathname },
@@ -27,8 +28,12 @@ export default function ListInstructor() {
     fetchMoreInstructors(categoryId, nextMore);
   };
 
+  const handleCardClick = (id) => {
+    navigate(`/instruktur/detail/${id}`);
+  };
+
   return (
-    <Template activeNav="kursus" locationKey={location.key}>
+    <Template activeNav="kursus.instruktur" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2 pt-6 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
         <div className="flex-1 w-full mt-10">
@@ -59,7 +64,7 @@ export default function ListInstructor() {
                         name={ins.name}
                         expertise={ins.expertise}
                         courseCount={ins.course_held}
-                        onClick={() => {}}
+                        onClick={handleCardClick}
                       />
                     ))}
                   </div>

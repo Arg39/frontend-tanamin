@@ -17,6 +17,9 @@ const useCourseStore = create((set) => ({
   othersCourseInstructor: [],
   othersCourseInstructorLoading: false,
   othersCourseInstructorError: null,
+  instructorCourses: [],
+  instructorCoursesLoading: false,
+  instructorCoursesError: null,
 
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });
@@ -113,6 +116,29 @@ const useCourseStore = create((set) => ({
         othersCourseInstructorError:
           error.response?.data?.message || 'Gagal mengambil kursus lain instruktur',
         othersCourseInstructorLoading: false,
+      });
+    }
+  },
+
+  fetchCoursesByInstructorId: async (instructorId) => {
+    set({ instructorCoursesLoading: true, instructorCoursesError: null });
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/instructor-courses/${instructorId}`
+      );
+      if (response.status === 200) {
+        set({ instructorCourses: response.data.data, instructorCoursesLoading: false });
+      } else {
+        set({
+          instructorCoursesError: 'Gagal mengambil kursus instruktur',
+          instructorCoursesLoading: false,
+        });
+      }
+    } catch (error) {
+      set({
+        instructorCoursesError:
+          error.response?.data?.message || 'Gagal mengambil kursus instruktur',
+        instructorCoursesLoading: false,
       });
     }
   },

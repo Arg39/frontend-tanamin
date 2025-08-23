@@ -217,7 +217,7 @@ export default function PublicCourse() {
   return (
     <div className="mb-24 lg:mb-0">
       <Template
-        activeNav="kursus"
+        activeNav="kursus.kursus"
         className="h-auto w-full bg-white mb-12 md:mb-0"
         locationKey={location.key}
       >

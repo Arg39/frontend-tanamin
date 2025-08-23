@@ -17,17 +17,17 @@ const SOCIAL_TYPES = [
 
 function getInitialForm(profile) {
   return {
-    photo: profile?.photo || '',
-    photo_cover: profile?.photo_cover || '',
+    photo: profile?.photo_profile || '',
+    photo_cover: profile?.detail?.photo_cover || '',
     first_name: profile?.first_name || '',
     last_name: profile?.last_name || '',
     username: profile?.username || '',
     email: profile?.email || '',
     telephone: profile?.telephone || '',
-    expertise: profile?.expertise || '',
-    about: profile?.about || '',
+    expertise: profile?.detail?.expertise || '',
+    about: profile?.detail?.about || '',
     social_media: SOCIAL_TYPES.map((s) => {
-      const found = profile?.social_media?.find((sm) => sm.type === s.type);
+      const found = profile?.detail?.social_media?.find((sm) => sm.type === s.type);
       return { type: s.type, url: found?.url || '' };
     }),
   };

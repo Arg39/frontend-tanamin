@@ -3,7 +3,7 @@ import Template from '../../template/template';
 import GradientText from '../../blocks/TextAnimations/FuzzyText/gradientColors';
 import useCourseStore from '../../zustand/courseStore';
 import Button from '../../components/button/button';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import useCategoryStore from '../../zustand/categoryStore';
 import CategoryCard from '../../components/card/categoryCard';
 import InstructorCarousel from '../../components/carousel/InstructorCarousel';
@@ -29,6 +29,7 @@ export default function Beranda() {
   const location = useLocation();
   const { categories, fetchCategories } = useCategoryStore();
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
 
   // Get instructors and courses from zustand store
   const {
@@ -152,7 +153,10 @@ export default function Beranda() {
               <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
                 Instruktur Kami
               </h2>
-              <button className="flex items-center text-primary-700 hover:underline transition-colors font-medium text-sm lg:text-base">
+              <button
+                onClick={() => navigate('/instruktur')}
+                className="flex items-center text-primary-700 hover:underline transition-colors font-medium text-sm lg:text-base"
+              >
                 Selengkapnya
                 <Icon type="arrow-right" className="w-4 h-4 ml-1" />
               </button>

@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import { InstructorCard } from '../card/cardInstructor';
 import Icon from '../icons/icon';
+import { useNavigate } from 'react-router-dom';
 
 export default function InstructorCarousel({ instructors = [] }) {
   const carouselRef = useRef(null);
@@ -9,6 +10,7 @@ export default function InstructorCarousel({ instructors = [] }) {
   const [width, setWidth] = React.useState(0);
   const [containerWidth, setContainerWidth] = React.useState(0);
   const [x, setX] = React.useState(0);
+  const navigate = useNavigate();
 
   // Responsive card width: 100% on mobile, 272px on desktop
   const CARD_WIDTH = 272;
@@ -42,7 +44,7 @@ export default function InstructorCarousel({ instructors = [] }) {
   };
 
   const handleCardClick = (id) => {
-    console.log(id);
+    navigate(`/instruktur/detail/${id}`);
   };
 
   // Mouse wheel horizontal scroll
