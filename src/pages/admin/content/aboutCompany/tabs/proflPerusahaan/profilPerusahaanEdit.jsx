@@ -113,19 +113,9 @@ export default function AdminProfilPerusahaanEdit() {
             <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
             <span>Kembali</span>
           </button>
-          <div className="flex justify-between items-start mb-4">
-            <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
-              Edit Profil Perusahaan
-            </h2>
-            <button
-              type="button"
-              className="flex gap-2 p-2 px-4 text-white bg-primary-700 hover:bg-primary-800 rounded-md"
-              onClick={() => navigate('/admin/tentang-perusahaan/profil/edit')}
-            >
-              <Icon type={'edit'} className={'w-6 h-6'} />
-              Edit
-            </button>
-          </div>
+          <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
+            Edit Profil Perusahaan
+          </h2>
 
           {/* Tentang Perusahaan */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow border mb-6">

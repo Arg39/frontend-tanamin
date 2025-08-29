@@ -183,7 +183,7 @@ export default function TentangKami() {
 
   return (
     <Template activeNav="tentang-kami" locationKey={location.key}>
-      <main className=" bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8">
+      <main className="w-full bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8">
         <Breadcrumb items={breadcrumbItems} />
         <section className="flex flex-col-reverse lg:flex-row items-center lg:items-start justify-between gap-8 py-8">
           <div className="flex-1 w-full">
@@ -250,7 +250,7 @@ export default function TentangKami() {
         </section>
 
         {/* Swiper Marquee Section */}
-        <section className="w-full max-w-none mb-16 px-0 relative left-1/2 right-1/2 -mx-[50vw]">
+        <section className="w-full mb-16 px-0 relative left-1/2 right-1/2 -mx-[50vw]">
           <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
             Galeri kegiatan Tanamin
           </h2>

@@ -3,6 +3,7 @@ import Template from '../../template/template';
 import Breadcrumb from '../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import Icon from '../../components/icons/icon';
+import useMessageStore from '../../zustand/public/contact/messageStore';
 
 export default function KontakKami() {
   const location = useLocation();
@@ -10,6 +11,36 @@ export default function KontakKami() {
     { label: 'Tanamin Course', path: '/beranda' },
     { label: 'Kontak Kami', path: location.pathname },
   ];
+
+  const [form, setForm] = React.useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const { loading, error, success, sendMessage, resetStatus } = useMessageStore();
+
+  React.useEffect(() => {
+    if (success || error) {
+      const timer = setTimeout(() => resetStatus(), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, error, resetStatus]);
+
+  const handleChange = (e) => {
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await sendMessage(form);
+      setForm({ name: '', email: '', subject: '', message: '' });
+    } catch {}
+  };
 
   return (
     <Template activeNav="kontak-kami" locationKey={location.key}>
@@ -35,34 +66,58 @@ export default function KontakKami() {
               <p className="text-primary-700 text-sm sm:text-base">
                 Anda dapat menghubungi kami kapan saja
               </p>
-              <form className="flex flex-col gap-3 sm:gap-4 mt-4 flex-1 justify-start overflow-auto">
+              <form
+                className="flex flex-col gap-3 sm:gap-4 mt-4 flex-1 justify-start overflow-auto"
+                onSubmit={handleSubmit}
+              >
                 <input
                   type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
                   placeholder="Nama..."
                   className="mt-1 p-2 border bg-neutral-50 rounded-lg border-neutral-100 placeholder-primary-700 placeholder-opacity-80 text-sm sm:text-base"
+                  required
                 />
                 <input
                   type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
                   placeholder="Email..."
                   className="mt-1 p-2 border bg-neutral-50 rounded-lg border-neutral-100 placeholder-primary-700 placeholder-opacity-80 text-sm sm:text-base"
+                  required
                 />
                 <input
                   type="text"
+                  name="subject"
+                  value={form.subject}
+                  onChange={handleChange}
                   placeholder="Subjek..."
                   className="mt-1 p-2 border bg-neutral-50 rounded-lg border-neutral-100 placeholder-primary-700 placeholder-opacity-80 text-sm sm:text-base"
+                  required
                 />
                 <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={handleChange}
                   placeholder="Pesan anda..."
                   className="mt-1 p-2 border bg-neutral-50 rounded-lg border-neutral-100 placeholder-primary-700 placeholder-opacity-80 text-sm sm:text-base"
                   rows={4}
+                  required
                 />
                 <button
                   type="submit"
+                  disabled={loading}
                   className="mt-2 bg-primary-700 text-white font-semibold py-2 px-4 rounded hover:bg-primary-800 placeholder-opacity-80 transition flex items-center justify-center text-sm sm:text-base"
                 >
                   <Icon type={'send'} className="inline mr-2" />
-                  Kirim Pesan
+                  {loading ? 'Mengirim...' : 'Kirim Pesan'}
                 </button>
+                {success && (
+                  <div className="text-green-600 text-sm mt-2">Pesan berhasil dikirim!</div>
+                )}
+                {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
               </form>
             </div>
           </div>
@@ -73,7 +128,7 @@ export default function KontakKami() {
             <p className="text-2xl sm:text-3xl font-bold text-primary-700">Kontak</p>
           </div>
           <div className="flex flex-col items-center w-full">
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
+            <div className="mt-8 grid grid-cols-1 md:grid-cols-4 justify-center gap-6 w-full">
               {/* Telepon */}
               <div className="bg-primary-700 p-4 rounded-lg shadow-md flex flex-col items-start w-full">
                 <p className="mt-4 text-white text-base sm:text-lg flex items-center">
@@ -81,7 +136,7 @@ export default function KontakKami() {
                   Telepon
                 </p>
                 <p className="text-white mt-2 text-sm sm:text-base">+62-821-3232-8945</p>
-                <p className="text-white text-sm sm:text-base">+62-821-3232-8945</p>
+                {/* <p className="text-white text-sm sm:text-base">+62-821-3232-8945</p> */}
               </div>
               {/* Email */}
               <div className="bg-primary-700 p-4 rounded-lg shadow-md flex flex-col items-start w-full">

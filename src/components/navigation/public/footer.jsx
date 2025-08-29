@@ -2,50 +2,65 @@ import React from 'react';
 import TextInput from '../../form/textInput';
 import Icon from '../../icons/icon';
 
-export default function Footer() {
+export default function Footer({ contact, loading, error }) {
+  const { telephone, email, social_media = {} } = contact || {};
+
   return (
     <div className="p-4 md:p-8">
-      <div className="flex flex-col md:flex-row items-start gap-6 md:gap-4 text-center pb-2 border-b border-primary-700">
-        <div className="w-full flex flex-col items-start gap-4 mb-6 md:mb-0">
-          <img src="/assets/logo.png" alt="Logo-Tanamin" className="w-fit h-10 lg:h-16" />
-          <p className="text-left">
-            PT Tanamin menyediakan berbagai course yang terbagi menjadi beberapa bidang keahlian
-            sesuai dengan kebutuhan Anda, dengan penawaran terjangkau.
-          </p>
-          <div className="flex flex-row gap-2 justify-center sm:justify-start w-full">
-            <button className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors">
-              <Icon type={'facebook'} className={'w-6 h-6'} />
-            </button>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors">
-              <Icon type={'instagram'} className={'w-6 h-6'} />
-            </button>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors">
-              <Icon type={'twitter-x'} className={'w-6 h-6'} />
-            </button>
-            <button className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors">
-              <Icon type={'linkedin'} className={'w-6 h-6'} />
-            </button>
-          </div>
-        </div>
-        <div className="w-full flex flex-col items-start gap-4">
-          <div className="flex flex-col items-start gap-2">
-            <p className="font-bold">Informasi Utama</p>
-            <p className="font-light">Telepon: </p>
-            <p className="font-light">Email: </p>
-          </div>
-          <div className="w-full flex flex-col items-start gap-2">
-            <p className="font-bold">News Letter</p>
-            <div className="w-full flex items-start flex-col gap-2">
-              <p className="font-light">Dapatkan informasi terbaru dari kami melalui email Anda:</p>
-              <div className="flex flex-col sm:flex-row items-stretch gap-2 w-full">
-                <div className="w-full sm:w-3/4">
-                  <TextInput name="email" placeholder={'Masukkan alamat e-mail'} />
-                </div>
-                <button className="w-full sm:w-1/4 p-2 flex items-center text-lg gap-2 justify-center bg-primary-700 text-white rounded-md">
-                  <Icon type={'send'} className={'w-5 h-5'} />
-                  Kirim
-                </button>
+      <div className="flex flex-col gap-6 md:gap-4 pb-4 border-b border-primary-700">
+        <div className="w-full flex flex-col gap-4 mb-6 md:mb-0">
+          <img
+            src="/assets/logo.png"
+            alt="Logo-Tanamin"
+            className="w-fit h-10 lg:h-16 mb-2 md:mb-0"
+          />
+          <div className="flex flex-col md:flex-row w-full">
+            <div className="md:w-2/3 w-full flex flex-col pr-8">
+              <p className="md:text-left text-center md:text-base text-sm mb-2">
+                PT Tanamin menyediakan berbagai course yang terbagi menjadi beberapa bidang keahlian
+                sesuai dengan kebutuhan Anda, dengan penawaran terjangkau.
+              </p>
+              <div className="w-full flex flex-row gap-2 justify-center md:justify-start mb-2 md:mb-0">
+                <a
+                  href={social_media.facebook || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                >
+                  <Icon type={'facebook'} className={'w-6 h-6'} />
+                </a>
+                <a
+                  href={social_media.instagram || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                >
+                  <Icon type={'instagram'} className={'w-6 h-6'} />
+                </a>
+                <a
+                  href={social_media.twitter || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                >
+                  <Icon type={'twitter-x'} className={'w-6 h-6'} />
+                </a>
+                <a
+                  href={social_media.linkedin || '#'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                >
+                  <Icon type={'linkedin'} className={'w-6 h-6'} />
+                </a>
               </div>
+            </div>
+            <div className="md:w-1/3 w-full flex flex-col items-start md:items-start gap-1 mt-4 md:mt-0">
+              <p className="font-bold md:text-left text-center">Kontak Kami</p>
+              <p className="font-light md:text-left text-center">Telepon: {telephone || '-'}</p>
+              <p className="font-light md:text-left text-center">Email: {email || '-'}</p>
+              {loading && <p className="text-xs text-gray-500">Memuat kontak...</p>}
+              {error && <p className="text-xs text-red-500">Gagal memuat kontak: {error}</p>}
             </div>
           </div>
         </div>

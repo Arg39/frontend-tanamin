@@ -82,9 +82,15 @@ export default function Navbar() {
   const getActiveState = (navLabel, linkText) => {
     if (!activeNav) return false;
     if (linkText) {
-      // For sub-links: activeNav === `${navLabel}.${linkText.toLowerCase()}`
-      return activeNav.toLowerCase() === `${navLabel.toLowerCase()}.${linkText.toLowerCase()}`;
+      const normalizedNavLabel = navLabel.toLowerCase();
+      const normalizedLinkText = linkText.toLowerCase();
+      return (
+        activeNav.toLowerCase() === `${normalizedNavLabel}.${normalizedLinkText}` ||
+        activeNav.toLowerCase() === normalizedNavLabel ||
+        activeNav.toLowerCase() === normalizedLinkText.replace(/\s+/g, '-')
+      );
     }
+
     // For dropdown label: activeNav starts with navLabel
     return activeNav.toLowerCase().startsWith(navLabel.toLowerCase());
   };

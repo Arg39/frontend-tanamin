@@ -5,7 +5,7 @@ import useNavigationStore from '../../../../zustand/navigationStore';
 import ProfilPerusahaan from './tabs/proflPerusahaan/profilPerusahaan';
 import KegiatanPerusahaan from './tabs/kegiatanPerusahan/kegiatanPerusahaan';
 import KerjaSama from '../aboutCompany/tabs/kerjaSama/kerjaSama';
-import KontakPerusahaan from './tabs/kontakPerusahaan/kontak';
+import KontakPerusahaan from './tabs/kontakPerusahaan/kontakPerusahaan';
 
 const tabComponents = {
   profil: ProfilPerusahaan,

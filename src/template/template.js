@@ -3,13 +3,22 @@ import Navbar from '../components/navigation/public/navbar';
 import useMenuStore from '../zustand/menuStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import Footer from '../components/navigation/public/footer';
+import useCompanyContactStore from '../zustand/companyContactStore';
 
 export default function Template({ children, activeNav, className, style, locationKey }) {
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
+  // Fetch contact only once at template level
+  const { contact, loading, error, fetchContact } = useCompanyContactStore();
+
   useEffect(() => {
     setActiveNav(activeNav);
   }, [activeNav, setActiveNav]);
+
+  useEffect(() => {
+    fetchContact();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen w-full flex flex-col">
@@ -30,7 +39,7 @@ export default function Template({ children, activeNav, className, style, locati
         </AnimatePresence>
       </div>
 
-      <Footer />
+      <Footer contact={contact} loading={loading} error={error} />
     </div>
   );
 }

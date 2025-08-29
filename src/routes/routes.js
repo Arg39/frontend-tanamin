@@ -53,6 +53,7 @@ import ListCourse from '../pages/public/course/listCourse';
 import Loading from '../pages/public/loading';
 import ListInstructor from '../pages/public/instructor/listInstructor';
 import InstructorDetailPublic from '../pages/public/instructor/instructorDetail';
+import AdminKontakPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kontakPerusahaan/kontakPerusahaanEdit';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -162,6 +163,7 @@ const adminRoutes = [
   },
   { path: 'tentang-perusahaan/:tab', element: <ValidatedAboutCompany /> },
   { path: 'tentang-perusahaan/profil/edit', element: <AdminProfilPerusahaanEdit /> },
+  { path: 'tentang-perusahaan/kontak/edit', element: <AdminKontakPerusahaanEdit /> },
   { path: 'tentang-perusahaan/kegiatan/tambah', element: <KegiatanPerusahaanAdd /> },
   { path: 'tentang-perusahaan/kegiatan/edit/:id', element: <KegiatanPerusahaanEdit /> },
   { path: 'tentang-perusahaan/kerja-sama/tambah', element: <KerjaSamaAdd /> },
