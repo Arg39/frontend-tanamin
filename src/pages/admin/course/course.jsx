@@ -314,7 +314,7 @@ export default function Course() {
                   openModal({
                     title: 'Konfirmasi Publish',
                     message:
-                      'Apakah Anda yakin ingin mem-publish kursus ini? Jika iya maka kursus ini akan tersedia untuk umum.',
+                      'Apakah Anda yakin ingin mempublish kursus ini? Jika iya maka kursus ini akan tersedia untuk umum.',
                     onConfirm: async () => {
                       closeModal();
                       await handlePublish(course.id);

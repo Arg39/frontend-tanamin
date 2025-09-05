@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import ReviewCard from '../../../../components/card/reviewCard';
+import ReviewCard from '../../../../../components/card/reviewCard';
 
 export default function ReviewCourseDetail({ sectionRef, course, maxHeight = null }) {
   const containerRef = useRef(null);

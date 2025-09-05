@@ -1,22 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Template from '../../../template/template';
+import Template from '../../../../template/template';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Breadcrumb from '../../../components/breadcrumb/breadcrumb';
-import Icon from '../../../components/icons/icon';
-import useCourseStore from '../../../zustand/public/course/courseStore';
-import StarRating from '../../../components/content/star/star';
+import Breadcrumb from '../../../../components/breadcrumb/breadcrumb';
+import Icon from '../../../../components/icons/icon';
+import useCourseStore from '../../../../zustand/public/course/courseStore';
+import StarRating from '../../../../components/content/star/star';
 import DetailCourseCard, {
   MobileDetailCourseCard,
-} from '../../../components/card/detailCourseCard';
+} from '../../../../components/card/detailCourseCard';
 import OverviewCourseDetail from './section/overview';
 import MaterialCourseDetail from './section/material';
 import AttributeCourseDetail from './section/attribute';
 import InstructorCourseDetail from './section/instructor';
 import RatingCourseDetail from './section/rating';
 import ReviewCourseDetail from './section/review';
-import Card from '../../../components/card/card';
-import Footer from '../../../components/navigation/public/footer';
+import Card from '../../../../components/card/card';
 import MoreCourse from './section/moreCourse';
+import Footer from '../../../../components/navigation/public/footer';
 
 const tabList = [
   { key: 'overview', label: 'Ringkasan' },
@@ -271,7 +271,7 @@ export default function PublicCourse() {
                         <div className="mt-4">
                           <button
                             onClick={() => {
-                              navigate(`/instruktur/${course.id}`);
+                              navigate(`/instruktur/detail/${course.instructor.id}`);
                             }}
                             className="flex items-center gap-3"
                           >

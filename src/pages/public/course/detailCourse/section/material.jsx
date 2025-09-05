@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import Icon from '../../../../components/icons/icon';
-import useCourseStore from '../../../../zustand/public/course/courseStore';
-import WysiwygContent from '../../../../components/content/wysiwyg/WysiwygContent';
+import Icon from '../../../../../components/icons/icon';
+import useCourseStore from '../../../../../zustand/public/course/courseStore';
+import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
 
 export default function MaterialCourseDetail({ courseId }) {
   const [openIndex, setOpenIndex] = useState(null);

@@ -1,5 +1,5 @@
 import React from 'react';
-import WysiwygContent from '../../../../components/content/wysiwyg/WysiwygContent';
+import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
 
 export default function OverviewCourseDetail({ course }) {
   return (

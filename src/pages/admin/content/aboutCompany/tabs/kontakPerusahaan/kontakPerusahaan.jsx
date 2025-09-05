@@ -71,9 +71,9 @@ export default function KontakPerusahaan() {
             </span>
             <div className="text-sm sm:text-base text-primary-700 font-medium whitespace-pre-wrap break-words mt-1 flex flex-col gap-1">
               {contact?.social_media ? (
-                <>
+                <div className="flex flex-col gap-6">
                   <div>
-                    <span className="font-semibold">Instagram: </span>
+                    <span className="font-semibold">Instagram : </span>
                     {contact.social_media.instagram ? (
                       <a
                         href={
@@ -93,7 +93,7 @@ export default function KontakPerusahaan() {
                     )}
                   </div>
                   <div>
-                    <span className="font-semibold">Facebook: </span>
+                    <span className="font-semibold">Facebook : </span>
                     {contact.social_media.facebook ? (
                       <a
                         href={
@@ -113,7 +113,7 @@ export default function KontakPerusahaan() {
                     )}
                   </div>
                   <div>
-                    <span className="font-semibold">LinkedIn: </span>
+                    <span className="font-semibold">LinkedIn : </span>
                     {contact.social_media.linkedin ? (
                       <a
                         href={
@@ -133,7 +133,7 @@ export default function KontakPerusahaan() {
                     )}
                   </div>
                   <div>
-                    <span className="font-semibold">Twitter: </span>
+                    <span className="font-semibold">Twitter : </span>
                     {contact.social_media.twitter ? (
                       <a
                         href={
@@ -152,7 +152,7 @@ export default function KontakPerusahaan() {
                       PLACEHOLDER
                     )}
                   </div>
-                </>
+                </div>
               ) : (
                 PLACEHOLDER
               )}

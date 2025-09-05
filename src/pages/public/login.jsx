@@ -48,6 +48,8 @@ export default function Login() {
         }
       } else if (error === 'Account inactive') {
         toast.error('Akun Anda tidak aktif. Silakan hubungi admin.');
+      } else if (error) {
+        toast.error(error);
       } else {
         toast.error('Login gagal. Silakan periksa kredensial Anda.');
       }

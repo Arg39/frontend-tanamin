@@ -5,6 +5,24 @@ import Icon from '../../icons/icon';
 export default function Footer({ contact, loading, error }) {
   const { telephone, email, social_media = {} } = contact || {};
 
+  // Check if all contact info is missing/empty
+  const isContactEmpty =
+    (!telephone || telephone.trim() === '') &&
+    (!email || email.trim() === '') &&
+    (!social_media ||
+      ((!social_media.facebook || social_media.facebook.trim() === '') &&
+        (!social_media.instagram || social_media.instagram.trim() === '') &&
+        (!social_media.twitter || social_media.twitter.trim() === '') &&
+        (!social_media.linkedin || social_media.linkedin.trim() === '')));
+
+  // Check if all social media fields are missing/empty
+  const isSocialMediaEmpty =
+    !social_media ||
+    ((!social_media.facebook || social_media.facebook.trim() === '') &&
+      (!social_media.instagram || social_media.instagram.trim() === '') &&
+      (!social_media.twitter || social_media.twitter.trim() === '') &&
+      (!social_media.linkedin || social_media.linkedin.trim() === ''));
+
   return (
     <div className="p-4 md:p-8">
       <div className="flex flex-col gap-6 md:gap-4 pb-4 border-b border-primary-700">
@@ -20,48 +38,62 @@ export default function Footer({ contact, loading, error }) {
                 PT Tanamin menyediakan berbagai course yang terbagi menjadi beberapa bidang keahlian
                 sesuai dengan kebutuhan Anda, dengan penawaran terjangkau.
               </p>
-              <div className="w-full flex flex-row gap-2 justify-center md:justify-start mb-2 md:mb-0">
-                <a
-                  href={social_media.facebook || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
-                >
-                  <Icon type={'facebook'} className={'w-6 h-6'} />
-                </a>
-                <a
-                  href={social_media.instagram || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
-                >
-                  <Icon type={'instagram'} className={'w-6 h-6'} />
-                </a>
-                <a
-                  href={social_media.twitter || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
-                >
-                  <Icon type={'twitter-x'} className={'w-6 h-6'} />
-                </a>
-                <a
-                  href={social_media.linkedin || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
-                >
-                  <Icon type={'linkedin'} className={'w-6 h-6'} />
-                </a>
+              {/* Only show social media icons if not empty */}
+              {!isSocialMediaEmpty && (
+                <div className="w-full flex flex-row gap-2 justify-center md:justify-start mb-2 md:mb-0">
+                  {social_media.facebook && social_media.facebook.trim() !== '' && (
+                    <a
+                      href={social_media.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                    >
+                      <Icon type={'facebook'} className={'w-6 h-6'} />
+                    </a>
+                  )}
+                  {social_media.instagram && social_media.instagram.trim() !== '' && (
+                    <a
+                      href={social_media.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                    >
+                      <Icon type={'instagram'} className={'w-6 h-6'} />
+                    </a>
+                  )}
+                  {social_media.twitter && social_media.twitter.trim() !== '' && (
+                    <a
+                      href={social_media.twitter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                    >
+                      <Icon type={'twitter-x'} className={'w-6 h-6'} />
+                    </a>
+                  )}
+                  {social_media.linkedin && social_media.linkedin.trim() !== '' && (
+                    <a
+                      href={social_media.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
+                    >
+                      <Icon type={'linkedin'} className={'w-6 h-6'} />
+                    </a>
+                  )}
+                </div>
+              )}
+            </div>
+            {/* Only show contact info if not empty */}
+            {!isContactEmpty && (
+              <div className="md:w-1/3 w-full flex flex-col items-start md:items-start gap-1 mt-4 md:mt-0">
+                <p className="font-bold md:text-left text-center">Kontak Kami</p>
+                <p className="font-light md:text-left text-center">Telepon: {telephone || '-'}</p>
+                <p className="font-light md:text-left text-center">Email: {email || '-'}</p>
+                {loading && <p className="text-xs text-gray-500">Memuat kontak...</p>}
+                {error && <p className="text-xs text-red-500">Gagal memuat kontak: {error}</p>}
               </div>
-            </div>
-            <div className="md:w-1/3 w-full flex flex-col items-start md:items-start gap-1 mt-4 md:mt-0">
-              <p className="font-bold md:text-left text-center">Kontak Kami</p>
-              <p className="font-light md:text-left text-center">Telepon: {telephone || '-'}</p>
-              <p className="font-light md:text-left text-center">Email: {email || '-'}</p>
-              {loading && <p className="text-xs text-gray-500">Memuat kontak...</p>}
-              {error && <p className="text-xs text-red-500">Gagal memuat kontak: {error}</p>}
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Icon from '../../components/icons/icon';
 import useMessageStore from '../../zustand/public/contact/messageStore';
 import useCompanyContactStore from '../../zustand/companyContactStore';
+import { toast } from 'react-toastify';
 
 export default function KontakKami() {
   const location = useLocation();
@@ -53,7 +54,10 @@ export default function KontakKami() {
     try {
       await sendMessage(form);
       setForm({ name: '', email: '', subject: '', message: '' });
-    } catch {}
+      toast.success('Pesan berhasil dikirim!');
+    } catch {
+      // Error sudah ditangani di store
+    }
   };
 
   const renderSocialMediaLink = (type, url) => {

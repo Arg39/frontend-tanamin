@@ -48,12 +48,13 @@ import Coupon from '../pages/admin/promo/coupon/coupon';
 import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
 import Beranda from '../pages/public/beranda';
-import PublicCourse from '../pages/public/detailCourse/course';
+import PublicCourse from '../pages/public/course/detailCourse/course';
 import ListCourse from '../pages/public/course/listCourse';
 import Loading from '../pages/public/loading';
 import ListInstructor from '../pages/public/instructor/listInstructor';
 import InstructorDetailPublic from '../pages/public/instructor/instructorDetail';
 import AdminKontakPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kontakPerusahaan/kontakPerusahaanEdit';
+import AdminMessage from '../pages/admin/message/message/message';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -172,6 +173,8 @@ const adminRoutes = [
   { path: 'faq', element: <FaqAdmin /> },
   { path: 'faq/tambah', element: <FaqAdd /> },
   { path: 'faq/edit/:id', element: <FaqEdit /> },
+  // message
+  { path: 'pesan', element: <AdminMessage /> },
 ];
 
 const instructorRoutes = [

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import Icon from '../../../../components/icons/icon';
-import useCourseStore from '../../../../zustand/public/course/courseStore';
+import Icon from '../../../../../components/icons/icon';
+import useCourseStore from '../../../../../zustand/public/course/courseStore';
 
 export default function InstructorCourseDetail({
   course,

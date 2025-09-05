@@ -192,20 +192,22 @@ export default function ListCourse() {
                   </button>
                 </form>
                 {/* Course List Grid */}
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                  {coursesLoading ? (
-                    <div className="col-span-3 text-center py-8 text-primary-600">
-                      Loading courses...
-                    </div>
-                  ) : coursesError ? (
-                    <div className="col-span-3 text-center py-8 text-red-600">{coursesError}</div>
-                  ) : courses && courses.length > 0 ? (
-                    courses.map((course) => <Card key={course.id} course={course} />)
-                  ) : (
-                    <div className="col-span-3 text-center py-8 text-primary-600">
-                      Tidak ada course tersedia.
-                    </div>
-                  )}
+                <div className="min-h-[1200px]">
+                  <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {coursesLoading ? (
+                      <div className="col-span-3 text-center py-8 text-primary-600">
+                        Loading courses...
+                      </div>
+                    ) : coursesError ? (
+                      <div className="col-span-3 text-center py-8 text-red-600">{coursesError}</div>
+                    ) : courses && courses.length > 0 ? (
+                      courses.map((course) => <Card key={course.id} course={course} />)
+                    ) : (
+                      <div className="col-span-3 text-center py-8 text-primary-600">
+                        Tidak ada course tersedia.
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="w-full mt-16">
                   <PaginationCard

@@ -1,18 +1,20 @@
 import { create } from 'zustand';
 import useAuthStore from './authStore';
 
-const useCompanyContactStore = create((set, get) => ({
-  contact: {
-    telephone: '',
-    email: '',
-    address: '',
-    social_media: {
-      instagram: '',
-      facebook: '',
-      linkedin: '',
-      twitter: '',
-    },
+const defaultContact = {
+  telephone: '',
+  email: '',
+  address: '',
+  social_media: {
+    instagram: '',
+    facebook: '',
+    linkedin: '',
+    twitter: '',
   },
+};
+
+const useCompanyContactStore = create((set, get) => ({
+  contact: { ...defaultContact },
   loading: false,
   error: null,
   fetched: false,
@@ -29,9 +31,23 @@ const useCompanyContactStore = create((set, get) => ({
         },
       });
       const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch contact');
-      set({ contact: json.data, loading: false, error: null, fetched: true });
-      return json.data;
+      if (json.status !== 'success') {
+        // If contact not added yet, set default empty contact
+        if (json.message === 'Company contact has not been added yet') {
+          set({ contact: { ...defaultContact }, loading: false, error: null, fetched: true });
+          return defaultContact;
+        }
+        throw new Error(json.message || 'Failed to fetch contact');
+      }
+      // Ensure data is not null
+      const safeData = {
+        telephone: json.data.telephone || '',
+        email: json.data.email || '',
+        address: json.data.address || '',
+        social_media: json.data.social_media || { ...defaultContact.social_media },
+      };
+      set({ contact: safeData, loading: false, error: null, fetched: true });
+      return safeData;
     } catch (e) {
       set({ error: e.message, loading: false, fetched: false });
       throw e;

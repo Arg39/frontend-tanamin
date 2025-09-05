@@ -1,5 +1,5 @@
 import React from 'react';
-import { RatingSummary } from '../../../../components/content/star/ratingSumarry';
+import { RatingSummary } from '../../../../../components/content/star/ratingSumarry';
 
 export default function RatingCourseDetail({ course, sectionRef }) {
   return (
