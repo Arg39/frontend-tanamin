@@ -57,7 +57,7 @@ export default function ProfileDropdown() {
           <p className="text-sm font-medium">{user?.first_name || 'Guest'}</p>
           <p className="text-xs text-gray-500">{user?.role || 'Role not set'}</p>
         </div>
-        <Icon type="dropdown" className="text-gray-600" />
+        <Icon type="arrow-down" className="text-gray-600" />
       </button>
 
       {isOpen && (

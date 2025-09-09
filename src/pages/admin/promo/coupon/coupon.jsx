@@ -84,10 +84,10 @@ export default function Coupon() {
       Cell: ({ value }) => (
         <span
           className={`w-fit px-2 py-1 rounded inline-block ${
-            value === 1 ? 'bg-primary-100 text-primary-700' : 'bg-error-200 text-error-700'
+            value ? 'bg-primary-100 text-primary-700' : 'bg-error-200 text-error-700'
           }`}
         >
-          {value === 1 ? 'Aktif' : 'Tidak Aktif'}
+          {value ? 'Aktif' : 'Tidak Aktif'}
         </span>
       ),
     },

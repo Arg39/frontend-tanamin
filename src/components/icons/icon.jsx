@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Icon = ({ type, className, color = 'currentColor' }) => {
+const Icon = ({ type, className, color = 'currentColor', strokeWidth = 1.5 }) => {
   switch (type) {
-    case 'dropdown':
+    case 'arrow-down':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -13,6 +13,19 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
           className={`size-6 ${className}`}
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+        </svg>
+      );
+    case 'arrow-up':
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={1.5}
+          stroke={color}
+          className={`size-6 ${className}`}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
         </svg>
       );
     case 'bell-alert':
@@ -949,16 +962,13 @@ const Icon = ({ type, className, color = 'currentColor' }) => {
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width={24}
-          height={24}
+          fill="none"
           viewBox="0 0 24 24"
-          fill={color}
+          stroke={color}
+          strokeWidth={strokeWidth}
           className={`size-6 ${className}`}
         >
-          <path
-            fill="currentColor"
-            d="m9.55 17.308l-4.97-4.97l.714-.713l4.256 4.256l9.156-9.156l.713.714z"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
         </svg>
       );
     case 'users':

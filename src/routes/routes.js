@@ -55,6 +55,7 @@ import ListInstructor from '../pages/public/instructor/listInstructor';
 import InstructorDetailPublic from '../pages/public/instructor/instructorDetail';
 import AdminKontakPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kontakPerusahaan/kontakPerusahaanEdit';
 import AdminMessage from '../pages/admin/message/message/message';
+import LearningCourse from '../pages/public/course/learning/learningCourse';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -202,6 +203,7 @@ const publicRoutes = [
   { path: '/kursus', element: <ListCourse /> },
   { path: '/instruktur', element: <ListInstructor /> },
   { path: '/kursus/:courseId', element: <PublicCourse /> },
+  { path: '/kursus/:courseId/belajar', element: <LearningCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
   { path: '/coba-fungsi', element: <Payment /> },

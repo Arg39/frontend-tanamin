@@ -114,7 +114,7 @@ export default function Navbar() {
               }}
             >
               {nav.label.charAt(0).toUpperCase() + nav.label.slice(1)}
-              <Icon type="dropdown" className="ml-1 w-4 h-4" />
+              <Icon type="arrow-down" className="ml-1 w-4 h-4" />
               {/* Animated underline for dropdown label */}
               <motion.div
                 className="absolute left-0 bottom-0 h-[3px] bg-primary-700"

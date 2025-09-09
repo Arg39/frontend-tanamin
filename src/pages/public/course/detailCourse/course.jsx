@@ -14,9 +14,7 @@ import AttributeCourseDetail from './section/attribute';
 import InstructorCourseDetail from './section/instructor';
 import RatingCourseDetail from './section/rating';
 import ReviewCourseDetail from './section/review';
-import Card from '../../../../components/card/card';
 import MoreCourse from './section/moreCourse';
-import Footer from '../../../../components/navigation/public/footer';
 
 const tabList = [
   { key: 'overview', label: 'Ringkasan' },
@@ -76,7 +74,7 @@ export default function PublicCourse() {
 
   // Tabs state and section refs
   const [activeTab, setActiveTab] = useState('overview');
-  const activeTabRef = useRef(activeTab); // <-- Add this line
+  const activeTabRef = useRef(activeTab);
   const sectionRefs = {
     overview: useRef(null),
     material: useRef(null),
@@ -85,87 +83,6 @@ export default function PublicCourse() {
     rating: useRef(null),
     review: useRef(null),
   };
-
-  // dummy data
-  const othersCourseInstructor = [
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-    {
-      id: 1,
-      title: 'Kursus Lainnya 1',
-      image: 'https://i.pinimg.com/736x/77/fa/d8/77fad8f6ab6740147dbfbe54c61f9381.jpg',
-      instructor: 'John Doe',
-      price: 100000,
-      average_rating: 4.5,
-      total_rating: 50,
-      total_material: 5,
-      total_quiz: 2,
-    },
-  ];
 
   // Keep activeTabRef in sync with activeTab
   useEffect(() => {
@@ -203,7 +120,7 @@ export default function PublicCourse() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: false });
     return () => window.removeEventListener('scroll', handleScroll);
     // eslint-disable-next-line
   }, []);

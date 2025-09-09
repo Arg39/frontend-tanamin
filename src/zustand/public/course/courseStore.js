@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import axios from 'axios';
+import useAuthStore from '../../authStore'; // adjust path if needed
 
 const useCourseStore = create((set) => ({
   course: null,
@@ -24,8 +25,14 @@ const useCourseStore = create((set) => ({
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });
     try {
+      const token = useAuthStore.getState().token;
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-course/${id}`
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-course/${id}`,
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
       );
       if (response.status === 200) {
         set({ course: response.data.data, loading: false });

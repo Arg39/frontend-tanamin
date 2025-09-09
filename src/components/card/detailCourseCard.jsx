@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { formatRupiah } from '../../utils/formatRupiah';
 import Icon from '../icons/icon';
 import useAuthStore from '../../zustand/authStore';
 import { useNavigate } from 'react-router-dom';
+import useCouponStore from '../../zustand/public/course/couponStore';
+import { toast } from 'react-toastify';
 
 function translateLevel(level) {
   switch (level) {
@@ -31,23 +33,113 @@ function getDiscountedPrice(price, discount) {
 export default function DetailCourseCard({ course, accessCourse }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const [couponInput, setCouponInput] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
+
   if (!course) return null;
 
   const hasDiscount =
     course.discount && (course.discount.type === 'percent' || course.discount.type === 'nominal');
-  const discountedPrice = hasDiscount
+  let discountedPrice = hasDiscount
     ? getDiscountedPrice(course.price, course.discount)
     : course.price;
+
+  // Coupon logic
+  const couponUsed = user && course.coupon && course.coupon.available === true;
+  if (couponUsed) {
+    if (course.coupon.type === 'percent') {
+      discountedPrice = Math.max(
+        0,
+        discountedPrice - Math.round((course.coupon.discount / 100) * discountedPrice)
+      );
+    } else if (course.coupon.type === 'nominal') {
+      discountedPrice = Math.max(0, discountedPrice - (course.coupon.discount || 0));
+    } else {
+      discountedPrice = Math.max(0, discountedPrice - (course.coupon.discount || 0));
+    }
+  }
+
+  // Coupon submit handler
+  const handleCouponSubmit = async (e) => {
+    e.preventDefault();
+    setCouponError('');
+    if (!couponInput.trim()) {
+      setCouponError('Kode kupon harus diisi');
+      toast.error('Kode kupon harus diisi');
+      return;
+    }
+    try {
+      const result = await applyCoupon({ courseId: course.id, coupon_code: couponInput.trim() });
+      if (result && result.status === 'success') {
+        toast.success(result.message || 'Kupon berhasil digunakan');
+        window.location.reload();
+      } else {
+        toast.error(result?.message || 'Gagal menggunakan kupon');
+      }
+    } catch (err) {
+      toast.error(err?.message || 'Gagal menggunakan kupon');
+      setCouponError(err?.message || 'Gagal menggunakan kupon');
+    }
+  };
 
   return (
     <div className="bg-white border-4 border-primary-700 shadow-lg rounded-xl p-4 sm:p-6 w-full mb-4">
       <img className="w-full rounded-xl" src={course.image} alt={course.title} />
       {accessCourse ? (
-        <button className="w-full my-2 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+        <button
+          className="w-full my-2 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors"
+          onClick={() => navigate(`/kursus/${course.id}/belajar`)}
+        >
           <Icon type="play" className="w-5 h-5" />
-          Mulai Belajar
+          Lanjut Belajar
         </button>
       ) : user ? (
+        <>
+          <div className="w-full py-4 flex items-center justify-center">
+            {hasDiscount || couponUsed ? (
+              <div className="flex flex-col items-center">
+                <div className="relative flex items-start gap-2">
+                  <span className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                    {formatRupiah(discountedPrice)}
+                  </span>
+                  {hasDiscount && !couponUsed && (
+                    <span className="text-xs text-secondary-500 line-through">
+                      {formatRupiah(course.price)}
+                    </span>
+                  )}
+                  {couponUsed && (hasDiscount || course.price !== discountedPrice) && (
+                    <span className="text-xs text-secondary-500 line-through">
+                      {formatRupiah(
+                        hasDiscount
+                          ? getDiscountedPrice(course.price, course.discount)
+                          : course.price
+                      )}
+                    </span>
+                  )}
+                </div>
+                {couponUsed && (
+                  <span className="text-xs text-green-600 font-semibold mt-1">
+                    Kupon telah digunakan
+                  </span>
+                )}
+              </div>
+            ) : (
+              <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                {formatRupiah(course.price)}
+              </p>
+            )}
+          </div>
+          <div className="flex flex-col gap-2 mb-4">
+            <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+              Tambahkan Ke Keranjang
+            </button>
+            <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
+              Beli Sekarang
+            </button>
+          </div>
+        </>
+      ) : (
         <>
           <div className="w-full py-4 flex items-center justify-center">
             {hasDiscount ? (
@@ -67,24 +159,15 @@ export default function DetailCourseCard({ course, accessCourse }) {
               </p>
             )}
           </div>
-          <div className="flex flex-col gap-2 mb-4">
-            <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
-              Tambahkan Ke Keranjang
-            </button>
-            <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
-              Beli Sekarang
+          <div className="w-full py-4 flex items-center justify-center">
+            <button
+              onClick={() => navigate('/masuk')}
+              className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors"
+            >
+              Login untuk mengakses kursus
             </button>
           </div>
         </>
-      ) : (
-        <div className="w-full py-4 flex items-center justify-center">
-          <button
-            onClick={() => navigate('/masuk')}
-            className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors"
-          >
-            Login untuk mengakses kursus
-          </button>
-        </div>
       )}
       <div className="flex flex-col gap-2">
         <p className="text-primary-700 font-semibold">Detail</p>
@@ -105,20 +188,29 @@ export default function DetailCourseCard({ course, accessCourse }) {
           ))}
         </div>
       </div>
-      {!accessCourse && user ? (
-        <div className="flex flex-col gap-2 mt-4">
+      {/* Coupon input only if not used */}
+      {!accessCourse && user && !couponUsed ? (
+        <form className="flex flex-col gap-2 mt-4" onSubmit={handleCouponSubmit}>
           <p className="text-primary-700 font-semibold">Kupon Kursus</p>
           <div className="flex flex-col sm:flex-row gap-2">
             <input
               type="text"
               className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
               placeholder="Masukkan kupon"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value)}
+              disabled={couponLoading}
             />
-            <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
-              Masukkan
+            <button
+              type="submit"
+              className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto"
+              disabled={couponLoading}
+            >
+              {couponLoading ? 'Memproses...' : 'Masukkan'}
             </button>
           </div>
-        </div>
+          {couponError && <span className="text-xs text-red-600 font-semibold">{couponError}</span>}
+        </form>
       ) : null}
     </div>
   );
@@ -127,14 +219,56 @@ export default function DetailCourseCard({ course, accessCourse }) {
 export function MobileDetailCourseCard({ course, accessCourse }) {
   const [expanded, setExpanded] = React.useState(false);
   const { user } = useAuthStore();
+  const navigate = useNavigate();
+  const [couponInput, setCouponInput] = useState('');
+  const [couponError, setCouponError] = useState('');
+  const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
 
   if (!course) return null;
 
   const hasDiscount =
     course.discount && (course.discount.type === 'percent' || course.discount.type === 'nominal');
-  const discountedPrice = hasDiscount
+  let discountedPrice = hasDiscount
     ? getDiscountedPrice(course.price, course.discount)
     : course.price;
+
+  // Coupon logic
+  const couponUsed = user && course.coupon && course.coupon.available === true;
+  if (couponUsed) {
+    if (course.coupon.type === 'percent') {
+      discountedPrice = Math.max(
+        0,
+        discountedPrice - Math.round((course.coupon.discount / 100) * discountedPrice)
+      );
+    } else if (course.coupon.type === 'nominal') {
+      discountedPrice = Math.max(0, discountedPrice - (course.coupon.discount || 0));
+    } else {
+      discountedPrice = Math.max(0, discountedPrice - (course.coupon.discount || 0));
+    }
+  }
+
+  // Coupon submit handler
+  const handleCouponSubmit = async (e) => {
+    e.preventDefault();
+    setCouponError('');
+    if (!couponInput.trim()) {
+      setCouponError('Kode kupon harus diisi');
+      toast.error('Kode kupon harus diisi');
+      return;
+    }
+    try {
+      const result = await applyCoupon({ courseId: course.id, coupon_code: couponInput.trim() });
+      if (result && result.status === 'success') {
+        toast.success(result.message || 'Kupon berhasil digunakan');
+        window.location.reload();
+      } else {
+        toast.error(result?.message || 'Gagal menggunakan kupon');
+      }
+    } catch (err) {
+      toast.error(err?.message || 'Gagal menggunakan kupon');
+      setCouponError(err?.message || 'Gagal menggunakan kupon');
+    }
+  };
 
   return (
     <>
@@ -166,23 +300,42 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                 <span className="text-xl font-semibold text-primary-700">{course.title}</span>
               </div>
               {accessCourse ? (
-                <button className="w-full my-2 mb-6 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+                <button
+                  className="w-full my-2 mb-6 py-2 flex gap-2 items-center justify-center bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors"
+                  onClick={() => navigate(`/kursus/${course.id}/belajar`)}
+                >
                   <Icon type="play" className="w-5 h-5" />
                   Mulai Belajar
                 </button>
               ) : user ? (
                 <>
                   <div className="w-full py-4 flex items-center justify-center">
-                    {hasDiscount ? (
+                    {hasDiscount || couponUsed ? (
                       <div className="flex flex-col items-center">
                         <div className="relative flex items-start gap-2">
                           <span className="text-xl sm:text-3xl font-medium text-tertiary-500">
                             {formatRupiah(discountedPrice)}
                           </span>
-                          <span className="text-xs text-secondary-500 line-through">
-                            {formatRupiah(course.price)}
-                          </span>
+                          {hasDiscount && !couponUsed && (
+                            <span className="text-xs text-secondary-500 line-through">
+                              {formatRupiah(course.price)}
+                            </span>
+                          )}
+                          {couponUsed && (hasDiscount || course.price !== discountedPrice) && (
+                            <span className="text-xs text-secondary-500 line-through">
+                              {formatRupiah(
+                                hasDiscount
+                                  ? getDiscountedPrice(course.price, course.discount)
+                                  : course.price
+                              )}
+                            </span>
+                          )}
                         </div>
+                        {couponUsed && (
+                          <span className="text-xs text-green-600 font-semibold mt-1">
+                            Kupon telah digunakan
+                          </span>
+                        )}
                       </div>
                     ) : (
                       <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
@@ -200,11 +353,31 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                   </div>
                 </>
               ) : (
-                <div className="w-full py-4 flex items-center justify-center">
-                  <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
-                    Login untuk mengakses kursus
-                  </button>
-                </div>
+                <>
+                  <div className="w-full py-4 flex items-center justify-center">
+                    {hasDiscount ? (
+                      <div className="flex flex-col items-center">
+                        <div className="relative flex items-start gap-2">
+                          <span className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                            {formatRupiah(discountedPrice)}
+                          </span>
+                          <span className="text-xs text-secondary-500 line-through">
+                            {formatRupiah(course.price)}
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-xl sm:text-2xl font-medium text-tertiary-500">
+                        {formatRupiah(course.price)}
+                      </p>
+                    )}
+                  </div>
+                  <div className="w-full py-4 flex items-center justify-center">
+                    <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
+                      Login untuk mengakses kursus
+                    </button>
+                  </div>
+                </>
               )}
               <div className="flex flex-col gap-2">
                 <p className="text-primary-700 font-semibold">Detail</p>
@@ -226,20 +399,31 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                 </div>
               </div>
 
-              {!accessCourse && user ? (
-                <div className="flex flex-col gap-2 mt-4">
+              {/* Coupon input only if not used */}
+              {!accessCourse && user && !couponUsed ? (
+                <form className="flex flex-col gap-2 mt-4" onSubmit={handleCouponSubmit}>
                   <p className="text-primary-700 font-semibold">Kupon Kursus</p>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <input
                       type="text"
                       className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
                       placeholder="Masukkan kupon"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value)}
+                      disabled={couponLoading}
                     />
-                    <button className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto">
-                      Masukkan
+                    <button
+                      type="submit"
+                      className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto"
+                      disabled={couponLoading}
+                    >
+                      {couponLoading ? 'Memproses...' : 'Masukkan'}
                     </button>
                   </div>
-                </div>
+                  {couponError && (
+                    <span className="text-xs text-red-600 font-semibold">{couponError}</span>
+                  )}
+                </form>
               ) : null}
             </div>
           </div>
@@ -264,18 +448,34 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               </span>
               {!accessCourse && user ? (
                 <>
-                  {hasDiscount ? (
+                  {hasDiscount || couponUsed ? (
                     <span className="flex items-center gap-2">
                       <span className="text-sm text-tertiary-500 font-medium">
                         {formatRupiah(discountedPrice)}
                       </span>
-                      <span className="text-xs text-tertiary-400 line-through">
-                        {formatRupiah(course.price)}
-                      </span>
+                      {hasDiscount && !couponUsed && (
+                        <span className="text-xs text-tertiary-400 line-through">
+                          {formatRupiah(course.price)}
+                        </span>
+                      )}
+                      {couponUsed && (hasDiscount || course.price !== discountedPrice) && (
+                        <span className="text-xs text-tertiary-400 line-through">
+                          {formatRupiah(
+                            hasDiscount
+                              ? getDiscountedPrice(course.price, course.discount)
+                              : course.price
+                          )}
+                        </span>
+                      )}
                     </span>
                   ) : (
                     <span className="text-sm text-tertiary-500 font-medium">
                       {formatRupiah(course.price)}
+                    </span>
+                  )}
+                  {couponUsed && (
+                    <span className="text-xs text-green-600 font-semibold mt-1">
+                      Kupon telah digunakan
                     </span>
                   )}
                 </>
@@ -301,23 +501,6 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               ) : null}
             </div>
           ) : null}
-          <div className="flex flex-col gap-2 min-w-[110px]">
-            {accessCourse ? (
-              <button className="w-fit flex items-center gap-2 py-1 px-2 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
-                <Icon type="play" className="w-5 h-5" />
-                Mulai Belajar
-              </button>
-            ) : user ? (
-              <>
-                <button className="w-full py-1 px-3 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
-                  Keranjang
-                </button>
-                <button className="w-full py-1 px-3 border-2 border-primary-700 bg-white text-primary-700 rounded-lg text-sm font-semibold hover:bg-primary-800 hover:text-white transition-colors">
-                  Beli
-                </button>
-              </>
-            ) : null}
-          </div>
         </div>
       </div>
       {/* Animasi slide-up */}

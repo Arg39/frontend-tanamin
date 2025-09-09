@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Icon from '../icons/icon';
 
 export default function Checkbox({
   label,
@@ -37,24 +38,17 @@ export default function Checkbox({
           required={required}
           onClick={handleToggle}
           className={`relative rounded border transition-colors duration-200 focus:outline-none
-            ${checked ? 'bg-primary-500 border-primary-500' : 'bg-white border-primary-700'}
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            w-6 h-6 flex items-center justify-center
+            ${checked ? 'bg-white border-primary-700' : 'bg-white border-primary-700'}
+            ${disabled ? 'cursor-not-allowed' : ''}
             ${className || ''}
           `}
           role="checkbox"
           tabIndex={0}
         >
           {checked && (
-            <span className="absolute inset-0 flex items-center justify-center text-white">
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                <path
-                  d="M5 10l4 4 6-6"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
+            <span className="absolute inset-0 flex items-center justify-center text-primary-700">
+              <Icon type="check" className="w-8 h-8 text-primary-700" strokeWidth={2.2} />
             </span>
           )}
         </button>
@@ -68,8 +62,9 @@ export default function Checkbox({
           required={required}
           onClick={handleToggle}
           className={`relative rounded-full transition-colors duration-200 focus:outline-none
-            ${checked ? 'bg-primary-500' : 'bg-gray-300'}
-            ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+            w-12 h-7 flex items-center
+            ${checked ? 'bg-primary-700' : 'bg-gray-300'}
+            ${disabled ? 'cursor-not-allowed' : ''}
             ${className || ''}
           `}
           role="switch"
