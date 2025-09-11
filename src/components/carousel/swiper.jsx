@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 
+// refs for both swipers (move outside conditional)
 export default function GallerySwiper({ images }) {
+  const swiperRefLtr = useRef(null);
+  const swiperRefRtl = useRef(null);
+
+  // function to start autoplay on mount
+  const handleSwiperInit = (swiper, ref) => {
+    ref.current = swiper;
+    if (swiper.autoplay && typeof swiper.autoplay.start === 'function') {
+      swiper.autoplay.start();
+    }
+  };
+
   // If less than 6 images, show static images in a flex container
   if (images.length < 6) {
     return (
@@ -45,14 +57,15 @@ export default function GallerySwiper({ images }) {
           loop={true}
           loopedSlides={images.length}
           autoplay={{
-            delay: 1, // autoplay berjalan terus
+            delay: 0, // autoplay langsung jalan
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
           }}
           speed={6000} // gerakan smooth
           dir="ltr"
           className="w-full"
-          style={{ width: '100vw' }}
+          style={{ width: '100%' }}
+          onSwiper={(swiper) => handleSwiperInit(swiper, swiperRefLtr)}
         >
           {extendedImages.map((img, idx) => (
             <SwiperSlide
@@ -84,14 +97,15 @@ export default function GallerySwiper({ images }) {
           loop={true}
           loopedSlides={images.length}
           autoplay={{
-            delay: 1, // autoplay berjalan terus
+            delay: 0, // autoplay langsung jalan
             disableOnInteraction: false,
             pauseOnMouseEnter: false,
           }}
           speed={6000} // gerakan smooth
           dir="rtl"
           className="w-full"
-          style={{ width: '100vw' }}
+          style={{ width: '100%' }}
+          onSwiper={(swiper) => handleSwiperInit(swiper, swiperRefRtl)}
         >
           {extendedImages.map((img, idx) => (
             <SwiperSlide

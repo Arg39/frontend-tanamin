@@ -4,12 +4,18 @@ import useMenuStore from '../zustand/menuStore';
 import { AnimatePresence, motion } from 'framer-motion';
 import Footer from '../components/navigation/public/footer';
 import useCompanyContactStore from '../zustand/companyContactStore';
+import ConfirmationModal from '../components/modal/confirmationModal';
+import useConfirmationModalStore from '../zustand/confirmationModalStore';
 
 export default function Template({ children, activeNav, className, style, locationKey }) {
   const setActiveNav = useMenuStore((state) => state.setActiveNav);
 
   // Fetch contact only once at template level
   const { contact, loading, error, fetchContact } = useCompanyContactStore();
+
+  // Confirmation modal global state
+  const { isOpen, title, message, onConfirm, onCancel, closeModal, variant } =
+    useConfirmationModalStore();
 
   useEffect(() => {
     setActiveNav(activeNav);
@@ -40,6 +46,23 @@ export default function Template({ children, activeNav, className, style, locati
       </div>
 
       <Footer contact={contact} loading={loading} error={error} />
+
+      {/* Global Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={isOpen}
+        title={title}
+        message={message}
+        onConfirm={() => {
+          onConfirm();
+          closeModal();
+        }}
+        onCancel={() => {
+          onCancel();
+          closeModal();
+        }}
+        closeModal={closeModal}
+        variant={variant}
+      />
     </div>
   );
 }

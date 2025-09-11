@@ -6,8 +6,10 @@ import useNavigationStore from '../../../zustand/navigationStore';
 import Icon from '../../icons/icon';
 import { Link } from 'react-router-dom';
 import ProfileNav from './profileNav';
+import useAuthStore from '../../../zustand/authStore';
+import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 
-// Animated underline component for nav links/buttons
+// Animated underline component
 const NavLinkWithMotion = ({ to, children, className, isActive, onClick, ...rest }) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -29,9 +31,7 @@ const NavLinkWithMotion = ({ to, children, className, isActive, onClick, ...rest
           right: isActive || isHovered ? '0%' : '100%',
         }}
         transition={{ duration: 0.4, ease: 'easeInOut' }}
-        style={{
-          borderRadius: '2px',
-        }}
+        style={{ borderRadius: '2px' }}
       />
     </Link>
   );
@@ -50,8 +50,25 @@ export default function Navbar() {
 
   const { navigationPublic } = useNavigationStore();
   const [openDropdown, setOpenDropdown] = useState(null);
-
   const dropdownCloseTimer = useRef(null);
+
+  const { user, logout } = useAuthStore();
+  const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
+
+  const handleLogoutClick = () => {
+    openConfirmationModal({
+      title: 'Konfirmasi Logout',
+      message: 'Apakah Anda yakin ingin keluar dari akun?',
+      variant: 'danger',
+      onConfirm: () => {
+        logout();
+        closeAccountMenu();
+      },
+      onCancel: () => {
+        closeAccountMenu();
+      },
+    });
+  };
 
   useEffect(() => {
     if (!isMenuOpen) setOpenDropdown(null);
@@ -59,26 +76,18 @@ export default function Navbar() {
 
   useEffect(() => {
     return () => {
-      if (dropdownCloseTimer.current) {
-        clearTimeout(dropdownCloseTimer.current);
-      }
+      if (dropdownCloseTimer.current) clearTimeout(dropdownCloseTimer.current);
     };
   }, []);
 
   const handleMouseEnterDropdown = (idx) => {
-    if (dropdownCloseTimer.current) {
-      clearTimeout(dropdownCloseTimer.current);
-    }
+    if (dropdownCloseTimer.current) clearTimeout(dropdownCloseTimer.current);
     setOpenDropdown(idx);
   };
-
   const handleMouseLeaveDropdown = () => {
-    dropdownCloseTimer.current = setTimeout(() => {
-      setOpenDropdown(null);
-    }, 200);
+    dropdownCloseTimer.current = setTimeout(() => setOpenDropdown(null), 200);
   };
 
-  // Helper to get active state for dropdown and links
   const getActiveState = (navLabel, linkText) => {
     if (!activeNav) return false;
     if (linkText) {
@@ -90,8 +99,6 @@ export default function Navbar() {
         activeNav.toLowerCase() === normalizedLinkText.replace(/\s+/g, '-')
       );
     }
-
-    // For dropdown label: activeNav starts with navLabel
     return activeNav.toLowerCase().startsWith(navLabel.toLowerCase());
   };
 
@@ -108,14 +115,11 @@ export default function Navbar() {
             <span
               className={`${className} flex items-center relative`}
               onClick={() => {
-                if (isMobile) {
-                  setOpenDropdown(openDropdown === idx ? null : idx);
-                }
+                if (isMobile) setOpenDropdown(openDropdown === idx ? null : idx);
               }}
             >
               {nav.label.charAt(0).toUpperCase() + nav.label.slice(1)}
               <Icon type="arrow-down" className="ml-1 w-4 h-4" />
-              {/* Animated underline for dropdown label */}
               <motion.div
                 className="absolute left-0 bottom-0 h-[3px] bg-primary-700"
                 initial={false}
@@ -124,12 +128,9 @@ export default function Navbar() {
                   right: getActiveState(nav.label) ? '0%' : '100%',
                 }}
                 transition={{ duration: 0.4, ease: 'easeInOut' }}
-                style={{
-                  borderRadius: '2px',
-                }}
+                style={{ borderRadius: '2px' }}
               />
             </span>
-            {/* Dropdown */}
             {isMobile ? (
               <AnimatePresence>
                 {openDropdown === idx && (
@@ -144,7 +145,7 @@ export default function Navbar() {
                       <NavLinkWithMotion
                         key={link.href}
                         to={link.href}
-                        className={`block py-2 text-gray-800 hover:text-primary-700`}
+                        className="block py-2 text-gray-800 hover:text-primary-700"
                         isActive={getActiveState(nav.label, link.text)}
                         onClick={() => {
                           if (onClick) onClick();
@@ -168,7 +169,7 @@ export default function Navbar() {
                     <NavLinkWithMotion
                       key={link.href}
                       to={link.href}
-                      className={`block px-4 py-2 text-gray-800 hover:bg-primary-100`}
+                      className="block px-4 py-2 text-gray-800 hover:bg-primary-100"
                       isActive={getActiveState(nav.label, link.text)}
                       onClick={() => {
                         if (onClick) onClick();
@@ -187,7 +188,7 @@ export default function Navbar() {
             <NavLinkWithMotion
               key={link.href}
               to={link.href}
-              className={`${className}`}
+              className={className}
               isActive={getActiveState(nav.label, link.text)}
               onClick={() => {
                 if (onClick) onClick();
@@ -203,19 +204,13 @@ export default function Navbar() {
   );
 
   useEffect(() => {
-    if (isMenuOpen || isAccountMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
+    if (isMenuOpen || isAccountMenuOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'auto';
+    return () => (document.body.style.overflow = 'auto');
   }, [isMenuOpen, isAccountMenuOpen]);
 
   return (
-    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 lg:p-0 md px-2 py-2 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
-      {/* Logo */}
+    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 px-2 pt-2 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
       <div>
         <img src="/assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
       </div>
@@ -225,10 +220,9 @@ export default function Navbar() {
         {renderNavLinks('flex justify-center items-center cursor-pointer py-4 font-semibold')}
       </div>
 
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Buttons */}
       <div className="lg:hidden">
         <div className="flex space-x-4">
-          {/* User Icon for Account Menu */}
           <motion.button
             onClick={toggleAccountMenu}
             className="text-gray-700 focus:outline-none"
@@ -239,7 +233,6 @@ export default function Navbar() {
             <Icon type={isAccountMenuOpen ? 'x-mark' : 'user'} className="h-6 w-6" />
           </motion.button>
 
-          {/* Hamburger Menu Icon */}
           <motion.button
             onClick={toggleMenu}
             className="text-gray-700 focus:outline-none"
@@ -252,13 +245,12 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Nav Menu */}
       <AnimatePresence>
         {isMenuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
-              className="fixed inset-0 bg-black bg-opacity-50 z-40 flex justify-center items-start"
+              className="fixed inset-0 bg-black bg-opacity-50 z-40"
               onClick={closeMenu}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -266,14 +258,12 @@ export default function Navbar() {
               transition={{ duration: 0.3 }}
             />
 
-            {/* Menu Content */}
             <motion.div
               initial={{ height: 0 }}
               animate={{ height: 'auto' }}
               exit={{ height: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden mt-16 w-full bg-white shadow-md lg:hidden fixed left-0 top-0 z-50"
-              style={{ marginTop: '64px' }}
+              className="overflow-hidden mt-14 w-full bg-white shadow-md lg:hidden fixed left-0 top-0 z-50"
             >
               <div className="flex flex-col space-y-4 bg-white p-6 relative">
                 {renderNavLinks(
@@ -287,11 +277,10 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* Account Menu */}
+      {/* Mobile Account Menu */}
       <AnimatePresence>
         {isAccountMenuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               className="fixed inset-0 bg-black bg-opacity-50 z-40"
               onClick={closeAccountMenu}
@@ -301,38 +290,143 @@ export default function Navbar() {
               transition={{ duration: 0.3 }}
             />
 
-            {/* Account Menu Content */}
             <motion.div
               initial={{ height: 0 }}
               animate={{ height: 'auto' }}
               exit={{ height: 0 }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden fixed top-16 left-0 w-full bg-white shadow-md lg:hidden z-50"
+              className="overflow-hidden fixed top-14 left-0 w-full bg-white shadow-md lg:hidden z-50"
             >
-              <div className="flex flex-col space-y-4 bg-white p-6 relative">
-                <Button
-                  variant="login"
-                  to={'masuk'}
-                  className="text-lg font-medium"
-                  onClick={closeAccountMenu}
-                >
-                  Masuk
-                </Button>
-                <Button
-                  variant="login"
-                  to={'daftar'}
-                  className="text-lg font-medium"
-                  onClick={closeAccountMenu}
-                >
-                  Daftar
-                </Button>
+              <div className="flex flex-col space-y-4 bg-white p-6">
+                {user ? (
+                  <>
+                    <div className="flex items-center space-x-3 border-b pb-3">
+                      {user?.profile_picture ? (
+                        <img
+                          src={user.profile_picture}
+                          alt="Foto Profil"
+                          className="w-12 h-12 rounded-full object-cover border"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center border">
+                          <Icon type="user" className="w-6 h-6 text-gray-400" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-800">
+                          {user?.first_name || user?.username} {user?.last_name || ''}
+                        </p>
+                        {user?.username && (
+                          <p className="text-sm text-gray-500">@{user.username}</p>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col space-y-2">
+                      <Link
+                        to="/notifications"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="bell-alert" className="w-5 h-5 mr-3" />
+                        Notifikasi
+                      </Link>
+
+                      <Link
+                        to="/cart"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="cart-outline" className="w-5 h-5 mr-3" />
+                        Keranjang
+                      </Link>
+
+                      <div className="border-t my-2" />
+
+                      <Link
+                        to="/profile"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="user" className="w-5 h-5 mr-3 text-primary-700" />
+                        Profil
+                      </Link>
+
+                      <Link
+                        to="/my-courses"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="book" className="w-5 h-5 mr-3 text-primary-700" />
+                        Kursus Saya
+                      </Link>
+
+                      <Link
+                        to="/purchase-history"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="work-history" className="w-5 h-5 mr-3 text-primary-700" />
+                        Riwayat Pembelian
+                      </Link>
+
+                      <Link
+                        to="/bookmarks"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="bookmark" className="w-5 h-5 mr-3 text-primary-700" />
+                        Bookmark
+                      </Link>
+
+                      <div className="border-t my-2" />
+
+                      <Link
+                        to="/settings"
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        onClick={closeAccountMenu}
+                      >
+                        <Icon type="gear" className="w-5 h-5 mr-3 text-secondary-700" />
+                        Pengaturan
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={handleLogoutClick}
+                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100 text-left text-red-600"
+                      >
+                        <Icon type="logout" className="w-5 h-5 mr-3" />
+                        Logout
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      variant="login"
+                      to={'masuk'}
+                      className="text-lg font-medium"
+                      onClick={closeAccountMenu}
+                    >
+                      Masuk
+                    </Button>
+                    <Button
+                      variant="login"
+                      to={'daftar'}
+                      className="text-lg font-medium"
+                      onClick={closeAccountMenu}
+                    >
+                      Daftar
+                    </Button>
+                  </>
+                )}
               </div>
             </motion.div>
           </>
         )}
       </AnimatePresence>
 
-      {/* Buttons */}
+      {/* Buttons / Desktop Profile Nav */}
       <ProfileNav />
     </div>
   );

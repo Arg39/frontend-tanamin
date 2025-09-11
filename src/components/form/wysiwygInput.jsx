@@ -26,7 +26,48 @@ function insertNote() {
   }
 }
 
-// Extend Quill toolbar with Note button
+// Handler video pakai tooltip bawaan + convert yt → embed
+function insertVideo() {
+  const quill = this.quill;
+  const tooltip = quill.theme.tooltip;
+  const originalSave = tooltip.save;
+  const originalHide = tooltip.hide;
+
+  tooltip.save = function () {
+    let value = tooltip.textbox.value;
+
+    // convert YouTube → embed
+    if (value.includes('youtube.com/watch?v=')) {
+      const videoId = value.split('v=')[1]?.split('&')[0];
+      value = `https://www.youtube.com/embed/${videoId}`;
+    } else if (value.includes('youtu.be/')) {
+      const videoId = value.split('youtu.be/')[1]?.split('?')[0];
+      value = `https://www.youtube.com/embed/${videoId}`;
+    }
+
+    let range = quill.getSelection();
+    // If no selection, set cursor to end
+    if (!range) {
+      const length = quill.getLength();
+      quill.setSelection(length, 0);
+      range = quill.getSelection();
+    }
+    if (range) {
+      quill.insertEmbed(range.index, 'video', value, 'user');
+    }
+    tooltip.hide();
+  };
+
+  tooltip.hide = function () {
+    tooltip.save = originalSave;
+    tooltip.hide = originalHide;
+    originalHide.call(tooltip);
+  };
+
+  tooltip.edit('video');
+}
+
+// Extend Quill toolbar with Note button & Video
 const modules = {
   toolbar: {
     container: [
@@ -34,10 +75,11 @@ const modules = {
       [{ align: [] }, 'bold', 'italic', 'underline', 'strike', 'emoji'],
       [{ color: [] }, { background: [] }],
       [{ list: 'ordered' }, { list: 'bullet' }],
-      ['blockquote', 'link', 'image', 'code-block'],
+      ['blockquote', 'link', 'image', 'video', 'code-block'],
     ],
     handlers: {
-      note: insertNote, // optional: remove if not using custom note
+      note: insertNote,
+      video: insertVideo, // pakai tooltip
     },
   },
   'emoji-toolbar': true,
@@ -99,6 +141,16 @@ const WysiwygInput = forwardRef(
           img.style.height = 'auto';
           img.style.display = 'block';
           img.style.margin = '0 auto';
+        });
+        const iframes = editor.querySelectorAll('iframe');
+        iframes.forEach((iframe) => {
+          iframe.style.width = '100%';
+          iframe.style.maxWidth = '600px';
+          iframe.style.height = '340px';
+          iframe.style.display = 'block';
+          iframe.style.margin = '12px auto';
+          iframe.setAttribute('frameborder', '0');
+          iframe.setAttribute('allowfullscreen', true);
         });
       }
     }, [content, maxImageWidth, disabled]);

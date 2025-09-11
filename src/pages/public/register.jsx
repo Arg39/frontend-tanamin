@@ -5,6 +5,7 @@ import LazyImage from '../../components/image/lazyImage';
 import Button from '../../components/button/button';
 import useAuthStore from '../../zustand/authStore';
 import Template from '../../template/template';
+import Icon from '../../components/icons/icon'; // Tambahkan import Icon
 
 export default function Register() {
   const [state, setState] = useState({
@@ -15,6 +16,8 @@ export default function Register() {
     password_confirmation: '',
   });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State untuk password
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State untuk konfirmasi password
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -101,28 +104,48 @@ export default function Register() {
                 />
               </div>
               {/** Password **/}
-              <div className="mb-4 lg:mb-6">
+              <div className="mb-4 lg:mb-6 relative">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={state.password}
                   onChange={handleChange}
                   placeholder="Password"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2 pr-10"
                 />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  tabIndex={-1}
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  disabled={loading}
+                  aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+                >
+                  <Icon type={showPassword ? 'eye-off' : 'eye'} />
+                </button>
               </div>
               {/** Confirm Password **/}
-              <div className="mb-4 lg:mb-6">
+              <div className="mb-4 lg:mb-6 relative">
                 <input
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   name="password_confirmation"
                   value={state.password_confirmation}
                   onChange={handleChange}
                   placeholder="Ulangi Password"
                   disabled={loading}
-                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2"
+                  className="w-full border-b-2 p-2 px-4 border-gray-300 focus:border-black outline-none py-2 pr-10"
                 />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  tabIndex={-1}
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
+                  disabled={loading}
+                  aria-label={showConfirmPassword ? 'Sembunyikan password' : 'Lihat password'}
+                >
+                  <Icon type={showConfirmPassword ? 'eye-off' : 'eye'} />
+                </button>
               </div>
               {/** Link to login **/}
               <div className="text-start mb-6 lg:mb-10">

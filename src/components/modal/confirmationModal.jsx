@@ -30,7 +30,7 @@ export default function ConfirmationModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-65">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-65">
       <div ref={modalRef} className="bg-white rounded-lg shadow-lg p-6 w-96">
         <h2 className="text-lg font-bold mb-4">{title}</h2>
         <p className="text-gray-700 mb-6">{message}</p>

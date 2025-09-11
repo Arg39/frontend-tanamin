@@ -3,6 +3,7 @@ import AdminTemplate from '../../../../../../template/templateAdmin';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '../../../../../../components/icons/icon';
 import TextInput from '../../../../../../components/form/textInput';
+import WysiwygInput from '../../../../../../components/form/wysiwygInput';
 import useCompanyStore from '../../../../../../zustand/companyProfileStore';
 import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
@@ -90,10 +91,14 @@ export default function AdminProfilPerusahaanEdit() {
             statistics,
           });
           toast.success('Profil perusahaan berhasil disimpan');
+          navigate(-1);
         } catch (error) {
-          toast.error('Error saving company profile:', error);
+          // Ambil pesan error dari response jika ada
+          const apiMsg =
+            error?.response?.data?.message || error?.message || 'Gagal menyimpan profil perusahaan';
+          toast.error(apiMsg);
+          // Jangan navigate(-1) di sini!
         }
-        navigate(-1);
       },
       onCancel: () => {
         closeModal();
@@ -119,14 +124,12 @@ export default function AdminProfilPerusahaanEdit() {
 
           {/* Tentang Perusahaan */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow border mb-6">
-            <TextInput
+            <WysiwygInput
               label="Tentang Perusahaan"
               name="about"
               value={about}
               onChange={(e) => setAbout(e.target.value)}
               placeholder="Tentang perusahaan"
-              textarea
-              rows={3}
             />
           </div>
 

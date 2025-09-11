@@ -3,13 +3,43 @@ import ReactDOM from 'react-dom';
 import Button from '../../button/button';
 import Icon from '../../icons/icon';
 import useAuthStore from '../../../zustand/authStore';
+import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 
 export default function ProfileNav() {
   const { user, logout } = useAuthStore();
+  const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
+  const isModalOpen = useConfirmationModalStore((state) => state.isOpen);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState({});
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+
+  // Fungsi untuk update posisi dropdown
+  const updateDropdownPosition = () => {
+    if (dropdownOpen && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const navbar = document.querySelector('.tanamin-navbar');
+      const navbarRect = navbar ? navbar.getBoundingClientRect() : { bottom: 0, height: 0 };
+
+      // Set desired dropdown width
+      const dropdownWidth = 240; // px
+      // Calculate left position, prevent overflow right
+      let left = buttonRect.left;
+      if (left + dropdownWidth > window.innerWidth - 16) {
+        // 16px margin
+        left = window.innerWidth - dropdownWidth - 16;
+      }
+      if (left < 16) left = 16; // prevent overflow left
+
+      setDropdownStyle({
+        position: 'fixed',
+        top: `${navbarRect.bottom + 8}px`, // 8px gap from navbar
+        left: `${left}px`,
+        minWidth: `${dropdownWidth}px`,
+        zIndex: 1001,
+      });
+    }
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -31,24 +61,37 @@ export default function ProfileNav() {
   }, [dropdownOpen]);
 
   useEffect(() => {
-    if (dropdownOpen && buttonRef.current) {
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      const navbar = document.querySelector('.tanamin-navbar');
-      const navbarRect = navbar ? navbar.getBoundingClientRect() : { bottom: 0 };
-      setDropdownStyle({
-        position: 'absolute',
-        top: `${navbarRect.bottom - 6}px`,
-        left: `${buttonRect.left}px`,
-        minWidth: `${buttonRect.width}px`,
-        zIndex: 1001,
-      });
+    updateDropdownPosition();
+    if (dropdownOpen) {
+      window.addEventListener('resize', updateDropdownPosition);
+      window.addEventListener('scroll', updateDropdownPosition, true);
     }
+    return () => {
+      window.removeEventListener('resize', updateDropdownPosition);
+      window.removeEventListener('scroll', updateDropdownPosition, true);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dropdownOpen]);
 
+  const handleLogoutClick = () => {
+    openConfirmationModal({
+      title: 'Konfirmasi Logout',
+      message: 'Apakah Anda yakin ingin keluar dari akun?',
+      variant: 'danger',
+      onConfirm: () => {
+        logout();
+        setDropdownOpen(false);
+      },
+      onCancel: () => {
+        setDropdownOpen(false);
+      },
+    });
+  };
+
   return (
-    <div className="hidden lg:flex space-x-4">
+    <div className="hidden lg:flex space-x-8">
       {user && user.role === 'student' ? (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-6">
           <button className="text-primary-700">
             <Icon type={'bell-alert'} />
           </button>
@@ -71,14 +114,80 @@ export default function ProfileNav() {
                 <div
                   ref={dropdownRef}
                   style={dropdownStyle}
-                  className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded shadow-lg z-50"
+                  className={`bg-white border border-gray-200 rounded shadow-lg z-40 min-w-[60] max-w-[90vw] px-4 py-3 ${
+                    isModalOpen ? 'pointer-events-none opacity-60' : ''
+                  }`}
                 >
+                  <div className="flex flex-row mb-2">
+                    <div className="flex justify-center mb-1">
+                      {user?.profile_picture ? (
+                        <img
+                          src={user.profile_picture}
+                          alt="Foto Profil"
+                          className="w-12 h-12 rounded-full object-cover border border-gray-200"
+                        />
+                      ) : (
+                        <span className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 border border-gray-200">
+                          <Icon type="user" className="w-8 h-8 text-gray-400" />
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex flex-col justify-center ml-3">
+                      <p
+                        className="text-sm font-semibold text-gray-800 max-w-[140px] line-clamp-2"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          wordBreak: 'break-word',
+                        }}
+                      >
+                        {user?.first_name} {user?.last_name}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-100 my-2"></div>
                   <button
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => {
-                      logout();
-                      setDropdownOpen(false);
-                    }}
+                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={() => {}}
+                  >
+                    <Icon type="user" className="w-5 h-5 mr-2 text-primary-700" />
+                    Profil
+                  </button>
+                  <button
+                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={() => {}}
+                  >
+                    <Icon type="book" className="w-5 h-5 mr-2 text-primary-700" />
+                    Kursus saya
+                  </button>
+                  <button
+                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={() => {}}
+                  >
+                    <Icon type="work-history" className="w-5 h-5 mr-2 text-primary-700" />
+                    Riwayat Pembelian
+                  </button>
+                  <button
+                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={() => {}}
+                  >
+                    <Icon type="bookmark" className="w-5 h-5 mr-2 text-primary-700" />
+                    Bookmark
+                  </button>
+                  <div className="border-t border-gray-100 my-2"></div>
+                  <button
+                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={() => {}}
+                  >
+                    <Icon type="gear" className="w-5 h-5 mr-2 text-secondary-700" />
+                    Pengaturan
+                  </button>
+                  <button
+                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    onClick={handleLogoutClick}
                   >
                     <Icon type="logout" className="w-5 h-5 mr-2 text-red-500" />
                     Logout

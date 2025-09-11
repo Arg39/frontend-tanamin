@@ -56,15 +56,22 @@ const useCompanyStore = create((set, get) => ({
         profileData,
         { headers: { Authorization: `Bearer ${token}` } }
       );
+      // Tambahkan pengecekan jika status failed
+      if (res.data?.status === 'failed') {
+        set({ error: res.data?.message || 'Gagal menyimpan profil perusahaan', loading: false });
+        // Lempar error agar bisa ditangkap di catch
+        throw new Error(res.data?.message || 'Gagal menyimpan profil perusahaan');
+      }
       if (res.data?.data) {
         set({ companyProfile: mapCompanyProfile(res.data.data), loading: false });
       } else {
         set({ error: 'Gagal menyimpan profil perusahaan', loading: false });
+        throw new Error('Gagal menyimpan profil perusahaan');
       }
       return res.data;
     } catch (err) {
       set({
-        error: err.response?.data?.message || 'Gagal menyimpan profil perusahaan',
+        error: err.response?.data?.message || err.message || 'Gagal menyimpan profil perusahaan',
         loading: false,
       });
       throw err;

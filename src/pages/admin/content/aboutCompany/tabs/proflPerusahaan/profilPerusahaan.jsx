@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Icon from '../../../../../../components/icons/icon';
 import { useNavigate } from 'react-router-dom';
 import useCompanyStore from '../../../../../../zustand/companyProfileStore';
+import WysiwygContent from '../../../../../../components/content/wysiwyg/WysiwygContent';
 
 const PLACEHOLDER = (
   <span className="italic text-error-500 p-2 bg-red-200 rounded-md">
@@ -20,7 +21,7 @@ export default function ProfilPerusahaan() {
   if (loading) {
     return (
       <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
-        <div className="text-center py-10 text-primary-700">Memuat data perusahaan...</div>
+        <div className="text-center py-10 ">Memuat data perusahaan...</div>
       </div>
     );
   }
@@ -37,9 +38,7 @@ export default function ProfilPerusahaan() {
   return (
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
-        <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-2 sm:mb-4">
-          Profil Perusahaan
-        </h2>
+        <h2 className="text-lg sm:text-2xl font-bold  mb-2 sm:mb-4">Profil Perusahaan</h2>
         <button
           className="flex gap-2 p-2 px-4 text-white bg-primary-700 hover:bg-primary-800 rounded-md w-full sm:w-auto"
           onClick={() => navigate('/admin/tentang-perusahaan/profil/edit')}
@@ -53,15 +52,19 @@ export default function ProfilPerusahaan() {
         <span className="block text-tertiary-500 text-xs sm:text-sm font-medium mb-1">
           Tentang Perusahaan
         </span>
-        <div className="text-sm sm:text-base text-primary-700 font-medium whitespace-pre-wrap break-words mt-1">
-          {companyProfile?.about ? companyProfile.about : PLACEHOLDER}
-        </div>
+        {companyProfile?.about ? (
+          <WysiwygContent html={companyProfile.about} />
+        ) : (
+          <div className="text-sm sm:text-base  font-medium whitespace-pre-wrap break-words mt-1">
+            {PLACEHOLDER}
+          </div>
+        )}
       </div>
 
       {/* Vision */}
       <div className="bg-white mb-4 rounded-lg p-3 sm:p-6 shadow border">
         <span className="block text-tertiary-500 text-xs sm:text-sm font-medium mb-1">Visi</span>
-        <div className="text-sm sm:text-base text-primary-700 font-medium whitespace-pre-wrap break-words mt-1">
+        <div className="text-sm sm:text-base  font-medium whitespace-pre-wrap break-words mt-1">
           {companyProfile?.vision ? companyProfile.vision : PLACEHOLDER}
         </div>
       </div>
@@ -69,7 +72,7 @@ export default function ProfilPerusahaan() {
       {/* Mission */}
       <div className="bg-white mb-4 rounded-lg p-3 sm:p-6 shadow border">
         <span className="block text-tertiary-500 text-xs sm:text-sm font-medium mb-1">Misi</span>
-        <div className="text-sm sm:text-base text-primary-700 font-medium whitespace-pre-wrap break-words mt-1">
+        <div className="text-sm sm:text-base  font-medium whitespace-pre-wrap break-words mt-1">
           {Array.isArray(companyProfile?.mission) && companyProfile.mission.length > 0 ? (
             <ol className="list-decimal pl-5 space-y-1">
               {companyProfile.mission.map((point, idx) => (
@@ -97,11 +100,11 @@ export default function ProfilPerusahaan() {
                 className="flex-1 min-w-[140px] max-w-full sm:min-w-[120px] md:min-w-[160px] flex flex-col items-center justify-start bg-primary-50 rounded-lg p-3 sm:p-4 shadow-inner"
                 style={{ flexBasis: 'calc(50% - 0.75rem)' }} // 2 per row on mobile, gap-3
               >
-                <div className="text-xl sm:text-3xl font-bold text-primary-700 break-words text-center">
+                <div className="text-xl sm:text-3xl font-bold break-words text-center">
                   {stat.value}
                   {stat.unit && <span className="text-base font-normal ml-1">{stat.unit}</span>}
                 </div>
-                <div className="text-xs sm:text-base text-primary-600 mt-1 text-center break-words">
+                <div className="text-xs sm:text-base mt-1 text-center break-words">
                   {stat.title}
                 </div>
               </div>
