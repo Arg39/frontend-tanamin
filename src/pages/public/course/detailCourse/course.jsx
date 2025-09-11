@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Template from '../../../../template/template';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Breadcrumb from '../../../../components/breadcrumb/breadcrumb';
@@ -16,16 +16,23 @@ import RatingCourseDetail from './section/rating';
 import ReviewCourseDetail from './section/review';
 import MoreCourse from './section/moreCourse';
 
-const tabList = [
+const baseTabList = [
   { key: 'overview', label: 'Ringkasan' },
   { key: 'material', label: 'Materi Kursus' },
-  { key: 'attribute', label: 'Persyaratan & Deskripsi' },
+  // { key: 'attribute', label: 'Persyaratan & Deskripsi' }, // will be conditionally added
   { key: 'instructor', label: 'Instruktur' },
   { key: 'rating', label: 'Rating' },
   { key: 'review', label: 'Ulasan' },
 ];
 
-function ScrollTabs({ activeTab, setActiveTab, sectionRefs }) {
+function ScrollTabs({ activeTab, setActiveTab, sectionRefs, attributeAvailable }) {
+  // Build tab list dynamically
+  const tabList = [
+    ...baseTabList.slice(0, 2),
+    ...(attributeAvailable ? [{ key: 'attribute', label: 'Persyaratan & Deskripsi' }] : []),
+    ...baseTabList.slice(2),
+  ];
+
   const yOffset = -200;
   const handleTabClick = (key) => {
     setActiveTab(key);
@@ -72,16 +79,29 @@ export default function PublicCourse() {
   const stickyParentRef = useRef(null);
   const [bioExpanded, setBioExpanded] = useState(false);
 
+  // Attribute availability state
+  const [attributeAvailable, setAttributeAvailable] = useState(false);
+
   // Tabs state and section refs
   const [activeTab, setActiveTab] = useState('overview');
   const activeTabRef = useRef(activeTab);
+
+  // Always declare all refs (never conditionally)
+  const overviewRef = useRef(null);
+  const materialRef = useRef(null);
+  const attributeRef = useRef(null);
+  const instructorRef = useRef(null);
+  const ratingRef = useRef(null);
+  const reviewRef = useRef(null);
+
+  // Map section keys to refs
   const sectionRefs = {
-    overview: useRef(null),
-    material: useRef(null),
-    attribute: useRef(null),
-    instructor: useRef(null),
-    rating: useRef(null),
-    review: useRef(null),
+    overview: overviewRef,
+    material: materialRef,
+    attribute: attributeRef,
+    instructor: instructorRef,
+    rating: ratingRef,
+    review: reviewRef,
   };
 
   // Keep activeTabRef in sync with activeTab
@@ -89,12 +109,50 @@ export default function PublicCourse() {
     activeTabRef.current = activeTab;
   }, [activeTab]);
 
+  // Fetch attribute availability
+  const fetchAttributeAvailable = useCallback(async (id) => {
+    try {
+      const res = await fetch(
+        `${
+          process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'
+        }/api/tanamin-courses/${id}/attribute`
+      );
+      const data = await res.json();
+      // If attributes found, set true, else false
+      if (data.status === 'success' && Array.isArray(data.data) && data.data.length > 0) {
+        setAttributeAvailable(true);
+      } else {
+        setAttributeAvailable(false);
+      }
+    } catch (e) {
+      setAttributeAvailable(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (courseId) {
+      fetchCourseById(courseId);
+      fetchAttributeAvailable(courseId);
+    }
+  }, [courseId, fetchCourseById, fetchAttributeAvailable]);
+
+  // Scroll handler for dynamic tabs
   useEffect(() => {
     const OFFSET = -205;
     const handleScroll = () => {
+      // Build tab order dynamically
+      const tabOrder = [
+        'overview',
+        'material',
+        ...(attributeAvailable ? ['attribute'] : []),
+        'instructor',
+        'rating',
+        'review',
+      ];
       // Dapatkan posisi top setiap section relatif terhadap viewport
-      const offsets = Object.entries(sectionRefs).map(([key, ref]) => {
-        if (ref.current) {
+      const offsets = tabOrder.map((key) => {
+        const ref = sectionRefs[key];
+        if (ref && ref.current) {
           const rect = ref.current.getBoundingClientRect();
           return { key, top: rect.top };
         }
@@ -123,13 +181,7 @@ export default function PublicCourse() {
     window.addEventListener('scroll', handleScroll, { passive: false });
     return () => window.removeEventListener('scroll', handleScroll);
     // eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
-    if (courseId) {
-      fetchCourseById(courseId);
-    }
-  }, [courseId, fetchCourseById]);
+  }, [attributeAvailable]);
 
   return (
     <div className="mb-24 lg:mb-0">
@@ -233,6 +285,7 @@ export default function PublicCourse() {
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
                         sectionRefs={sectionRefs}
+                        attributeAvailable={attributeAvailable}
                       />
                     </div>
 
@@ -242,33 +295,35 @@ export default function PublicCourse() {
                     </div>
 
                     {/* Overview */}
-                    <div ref={sectionRefs.overview}>
+                    <div ref={overviewRef}>
                       <OverviewCourseDetail course={course} />
                     </div>
 
                     {/* Material */}
-                    <div ref={sectionRefs.material}>
+                    <div ref={materialRef}>
                       <MaterialCourseDetail courseId={course.id} />
                     </div>
 
                     {/* Attribute */}
-                    <div ref={sectionRefs.attribute}>
-                      <AttributeCourseDetail courseId={course.id} />
-                    </div>
+                    {attributeAvailable && (
+                      <div ref={attributeRef}>
+                        <AttributeCourseDetail courseId={course.id} />
+                      </div>
+                    )}
 
                     {/* Instruktur */}
                     <InstructorCourseDetail
                       course={course}
                       bioExpanded={bioExpanded}
                       setBioExpanded={setBioExpanded}
-                      sectionRef={sectionRefs.instructor}
+                      sectionRef={instructorRef}
                     />
 
                     {/* Rating */}
-                    <RatingCourseDetail course={course} sectionRef={sectionRefs.rating} />
+                    <RatingCourseDetail course={course} sectionRef={ratingRef} />
 
                     {/* Review */}
-                    <ReviewCourseDetail sectionRef={sectionRefs.review} maxHeight={350} />
+                    <ReviewCourseDetail sectionRef={reviewRef} maxHeight={350} />
                   </div>
                 )}
               </div>
