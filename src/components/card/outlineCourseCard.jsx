@@ -22,6 +22,18 @@ export default function OutlineCourseCard({
     setOpenModuleIndex(openModuleIndex === idx ? null : idx);
   };
 
+  // Helper: Only allow click if lesson is completed OR all previous lessons in module are completed
+  const isLessonEnabled = (module, lessonIdx) => {
+    const lessons = module.lessons || [];
+    const lesson = lessons[lessonIdx];
+    if (lesson.completed) return true;
+    // Check if all previous lessons are completed
+    for (let i = 0; i < lessonIdx; i++) {
+      if (!lessons[i].completed) return false;
+    }
+    return true;
+  };
+
   return (
     <div
       className={`p-4 border border-primary-700 rounded-lg mb-4 bg-white ${
@@ -67,17 +79,23 @@ export default function OutlineCourseCard({
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                   >
                     {(module.lessons || []).map((lesson, lidx) => {
-                      const disabled = !!module.complete;
                       const selected = selectedLessonId === lesson.id;
+                      const enabled = isLessonEnabled(module, lidx);
                       return (
                         <button
                           key={lesson.id || lidx}
                           className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
                             selected ? 'bg-primary-700 font-bold text-white' : 'bg-neutral-400'
-                          }`}
-                          onClick={() => !disabled && onLessonSelect && onLessonSelect(lesson.id)}
-                          disabled={disabled}
-                          title={disabled ? 'Modul sudah selesai' : ''}
+                          } ${!enabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+                          onClick={() => enabled && onLessonSelect && onLessonSelect(lesson.id)}
+                          disabled={!enabled}
+                          title={
+                            lesson.completed
+                              ? ''
+                              : enabled
+                              ? ''
+                              : 'Selesaikan materi sebelumnya terlebih dahulu'
+                          }
                         >
                           <Checkbox
                             checked={lesson.completed || false}
