@@ -19,7 +19,7 @@ import MoreCourse from './section/moreCourse';
 const baseTabList = [
   { key: 'overview', label: 'Ringkasan' },
   { key: 'material', label: 'Materi Kursus' },
-  // { key: 'attribute', label: 'Persyaratan & Deskripsi' }, // will be conditionally added
+  // { key: 'attribute', label: 'Persyaratan & Deskripsi' },
   { key: 'instructor', label: 'Instruktur' },
   { key: 'rating', label: 'Rating' },
   { key: 'review', label: 'Ulasan' },
@@ -198,7 +198,7 @@ export default function PublicCourse() {
           >
             <div className="sticky top-16 pointer-events-auto hide-scrollbar overflow-y-auto max-h-[calc(100vh-36px)]">
               <div className="mt-6">
-                <DetailCourseCard course={course} accessCourse={false} />
+                <DetailCourseCard course={course} accessCourse={course?.access || false} />
               </div>
             </div>
           </div>
@@ -332,7 +332,9 @@ export default function PublicCourse() {
           </div>
 
           {/* Sticky card mobile version */}
-          {course && <MobileDetailCourseCard course={course} accessCourse={false} />}
+          {course && (
+            <MobileDetailCourseCard course={course} accessCourse={course?.access || false} />
+          )}
 
           {/* Loading dan Error */}
           {loading && <p className="text-center text-gray-500 py-8">Loading...</p>}

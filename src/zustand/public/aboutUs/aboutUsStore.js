@@ -24,10 +24,12 @@ const useAboutUsStore = create((set, get) => ({
   activitiesImages: [],
   loadingActivities: false,
   errorActivities: null,
+  fetchedActivities: false, // <-- new
 
   partnerships: [],
   loadingPartnerships: false,
   errorPartnerships: null,
+  fetchedPartnerships: false, // <-- new
 
   fetchAboutUs: async () => {
     set({ loading: true, error: null, notFound: false });
@@ -50,19 +52,26 @@ const useAboutUsStore = create((set, get) => ({
   },
 
   fetchActivitiesImages: async () => {
+    // prevent refetch if already fetched
+    if (get().fetchedActivities) return;
     set({ loadingActivities: true, errorActivities: null });
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activities`
       );
-      // Asumsikan response: { data: [ { src: "...", alt: "..." }, ... ] }
       if (Array.isArray(res.data?.data)) {
-        set({ activitiesImages: res.data.data, loadingActivities: false, errorActivities: null });
+        set({
+          activitiesImages: res.data.data,
+          loadingActivities: false,
+          errorActivities: null,
+          fetchedActivities: true,
+        });
       } else {
         set({
           activitiesImages: [],
           loadingActivities: false,
           errorActivities: 'No activities images found',
+          fetchedActivities: true,
         });
       }
     } catch (err) {
@@ -70,28 +79,32 @@ const useAboutUsStore = create((set, get) => ({
         activitiesImages: [],
         loadingActivities: false,
         errorActivities: err.response?.data?.message || 'Failed to fetch activities images',
+        fetchedActivities: true,
       });
     }
   },
 
   fetchPartnerships: async () => {
+    // prevent refetch if already fetched
+    if (get().fetchedPartnerships) return;
     set({ loadingPartnerships: true, errorPartnerships: null });
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnerships`
       );
-      // Asumsikan response: { data: [ { name, logo, description }, ... ] }
       if (Array.isArray(res.data?.data)) {
         set({
           partnerships: res.data.data,
           loadingPartnerships: false,
           errorPartnerships: null,
+          fetchedPartnerships: true,
         });
       } else {
         set({
           partnerships: [],
           loadingPartnerships: false,
           errorPartnerships: 'No partnerships found',
+          fetchedPartnerships: true,
         });
       }
     } catch (err) {
@@ -99,6 +112,7 @@ const useAboutUsStore = create((set, get) => ({
         partnerships: [],
         loadingPartnerships: false,
         errorPartnerships: err.response?.data?.message || 'Failed to fetch partnerships',
+        fetchedPartnerships: true,
       });
     }
   },

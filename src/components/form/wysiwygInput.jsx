@@ -46,14 +46,17 @@ function insertVideo() {
     }
 
     let range = quill.getSelection();
-    // If no selection, set cursor to end
+    // Jangan ubah selection jika sudah ada
     if (!range) {
+      // Jika tidak ada selection, set cursor ke akhir dokumen
       const length = quill.getLength();
       quill.setSelection(length, 0);
       range = quill.getSelection();
     }
     if (range) {
       quill.insertEmbed(range.index, 'video', value, 'user');
+      // Optional: pindahkan cursor setelah video
+      quill.setSelection(range.index + 1, 0);
     }
     tooltip.hide();
   };

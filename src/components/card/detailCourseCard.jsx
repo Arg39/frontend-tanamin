@@ -5,6 +5,8 @@ import useAuthStore from '../../zustand/authStore';
 import { useNavigate } from 'react-router-dom';
 import useCouponStore from '../../zustand/public/course/couponStore';
 import { toast } from 'react-toastify';
+import useConfirmationModalStore from '../../zustand/confirmationModalStore';
+import useEnrollmentStore from '../../zustand/public/course/enrollmentStore';
 
 function translateLevel(level) {
   switch (level) {
@@ -30,12 +32,73 @@ function getDiscountedPrice(price, discount) {
   return price;
 }
 
+function loadMidtransScript() {
+  return new Promise((resolve, reject) => {
+    if (window.snap) return resolve();
+    const script = document.createElement('script');
+    script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    script.setAttribute('data-client-key', process.env.REACT_APP_MIDTRANS_CLIENT_KEY);
+    script.onload = resolve;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+}
+
 export default function DetailCourseCard({ course, accessCourse }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
+
+  const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
+  const { buyNow, loading: enrollLoading } = useEnrollmentStore();
+  const [snapOpen, setSnapOpen] = useState(false);
+
+  const handleBuyNow = async () => {
+    openConfirmationModal({
+      title: 'Konfirmasi Pembelian',
+      message: 'Apakah Anda yakin ingin membeli kursus ini?',
+      variant: 'primary',
+      onConfirm: async () => {
+        try {
+          const res = await buyNow(course.id);
+          if (res?.data?.redirect_url) {
+            await loadMidtransScript();
+            window.snap.pay(
+              // Extract token from redirect_url
+              res.data.redirect_url.split('/').pop(),
+              {
+                onSuccess: function (result) {
+                  toast.success('Pembayaran berhasil!');
+                  setSnapOpen(false);
+                  window.location.reload();
+                },
+                onPending: function (result) {
+                  toast.info('Pembayaran sedang diproses.');
+                  setSnapOpen(false);
+                  window.location.reload();
+                },
+                onError: function (result) {
+                  toast.error('Pembayaran gagal.');
+                  setSnapOpen(false);
+                },
+                onClose: function () {
+                  setSnapOpen(false);
+                },
+              }
+            );
+            setSnapOpen(true);
+          } else {
+            toast.error(res?.message || 'Gagal mendapatkan link pembayaran');
+          }
+        } catch (err) {
+          toast.error(err?.message || 'Gagal melakukan pembelian');
+        }
+      },
+      onCancel: () => {},
+    });
+  };
 
   if (!course) return null;
 
@@ -134,8 +197,13 @@ export default function DetailCourseCard({ course, accessCourse }) {
             <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
               Tambahkan Ke Keranjang
             </button>
-            <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
-              Beli Sekarang
+            <button
+              className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors"
+              onClick={handleBuyNow}
+              type="button"
+              disabled={enrollLoading}
+            >
+              {enrollLoading ? 'Memproses...' : 'Beli Sekarang'}
             </button>
           </div>
         </>
@@ -224,7 +292,44 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
   const [couponError, setCouponError] = useState('');
   const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
 
+  const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
+  const { buyNow, loading: enrollLoading } = useEnrollmentStore();
   if (!course) return null;
+
+  const handleBuyNow = async () => {
+    openConfirmationModal({
+      title: 'Konfirmasi Pembelian',
+      message: 'Apakah Anda yakin ingin membeli kursus ini?',
+      variant: 'primary',
+      onConfirm: async () => {
+        try {
+          const res = await buyNow(course.id);
+          if (res?.data?.redirect_url) {
+            await loadMidtransScript();
+            window.snap.pay(res.data.redirect_url.split('/').pop(), {
+              onSuccess: function (result) {
+                toast.success('Pembayaran berhasil!');
+                window.location.reload();
+              },
+              onPending: function (result) {
+                toast.info('Pembayaran sedang diproses.');
+                window.location.reload();
+              },
+              onError: function (result) {
+                toast.error('Pembayaran gagal.');
+              },
+              onClose: function () {},
+            });
+          } else {
+            toast.error(res?.message || 'Gagal mendapatkan link pembayaran');
+          }
+        } catch (err) {
+          toast.error(err?.message || 'Gagal melakukan pembelian');
+        }
+      },
+      onCancel: () => {},
+    });
+  };
 
   const hasDiscount =
     course.discount && (course.discount.type === 'percent' || course.discount.type === 'nominal');
@@ -347,8 +452,13 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                     <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
                       Tambahkan Ke Keranjang
                     </button>
-                    <button className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors">
-                      Beli Sekarang
+                    <button
+                      className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors"
+                      onClick={handleBuyNow}
+                      type="button"
+                      disabled={enrollLoading}
+                    >
+                      {enrollLoading ? 'Memproses...' : 'Beli Sekarang'}
                     </button>
                   </div>
                 </>

@@ -4,6 +4,8 @@ import Button from '../../button/button';
 import Icon from '../../icons/icon';
 import useAuthStore from '../../../zustand/authStore';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export default function ProfileNav() {
   const { user, logout } = useAuthStore();
@@ -13,6 +15,7 @@ export default function ProfileNav() {
   const [dropdownStyle, setDropdownStyle] = useState({});
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   // Fungsi untuk update posisi dropdown
   const updateDropdownPosition = () => {
@@ -80,6 +83,8 @@ export default function ProfileNav() {
       variant: 'danger',
       onConfirm: () => {
         logout();
+        navigate('/');
+        toast.success('Anda telah berhasil keluar dari akun.');
         setDropdownOpen(false);
       },
       onCancel: () => {

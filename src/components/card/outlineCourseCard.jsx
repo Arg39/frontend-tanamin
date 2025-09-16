@@ -1,19 +1,34 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Icon from '../icons/icon';
 import Checkbox from '../form/checkbox';
 
-export default function OutlineCourseCard({ modules = [], loading, error }) {
-  const [openModuleIndex, setOpenModuleIndex] = useState(null);
+export default function OutlineCourseCard({
+  modules = [],
+  loading,
+  error,
+  onLessonSelect,
+  selectedLessonId,
+  openModuleIndex: openModuleIndexProp,
+}) {
+  const [openModuleIndex, setOpenModuleIndex] = useState(openModuleIndexProp);
+
+  useEffect(() => {
+    setOpenModuleIndex(openModuleIndexProp);
+  }, [openModuleIndexProp]);
 
   const handleToggle = (idx) => {
     setOpenModuleIndex(openModuleIndex === idx ? null : idx);
   };
 
   return (
-    <div className="p-4 border border-primary-700 rounded-lg mb-4">
+    <div
+      className="p-4 border border-primary-700 rounded-lg mb-4"
+      style={{ height: '600px', overflowY: 'auto' }}
+    >
       <p className="font-bold text-2xl text-primary-700 mb-2">Outline Materi</p>
       {loading && <div className="text-secondary-700">Loading...</div>}
+      {/* Jangan tampilkan error akses, hanya error fetch lain */}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
         <ul>
@@ -45,7 +60,12 @@ export default function OutlineCourseCard({ modules = [], loading, error }) {
                     {(module.lessons || []).map((lesson, lidx) => (
                       <button
                         key={lesson.id || lidx}
-                        className="flex gap-2 p-1 px-2 bg-neutral-400 rounded-md"
+                        className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
+                          selectedLessonId === lesson.id
+                            ? 'bg-primary-700 font-bold'
+                            : 'bg-neutral-400'
+                        }`}
+                        onClick={() => onLessonSelect && onLessonSelect(lesson.id)}
                       >
                         <Checkbox
                           checked={lesson.learned || false}

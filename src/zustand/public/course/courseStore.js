@@ -21,6 +21,7 @@ const useCourseStore = create((set) => ({
   instructorCourses: [],
   instructorCoursesLoading: false,
   instructorCoursesError: null,
+  access: false,
 
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });
@@ -35,7 +36,12 @@ const useCourseStore = create((set) => ({
         }
       );
       if (response.status === 200) {
-        set({ course: response.data.data, loading: false });
+        const courseData = response.data.data;
+        set({
+          course: courseData,
+          access: courseData.access || false,
+          loading: false,
+        });
       } else {
         set({ error: 'Gagal mengambil data kursus', loading: false });
       }

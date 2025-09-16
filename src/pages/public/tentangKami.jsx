@@ -52,6 +52,8 @@ export default function TentangKami() {
     loadingPartnerships,
     errorPartnerships,
     fetchPartnerships,
+    fetchedActivities,
+    fetchedPartnerships,
   } = useAboutUsStore();
 
   useEffect(() => {
@@ -60,18 +62,18 @@ export default function TentangKami() {
   }, [aboutUs, loading, fetchAboutUs]);
 
   useEffect(() => {
-    if (activitiesImages.length === 0 && !loadingActivities) {
+    if (!fetchedActivities && !loadingActivities) {
       fetchActivitiesImages();
     }
     // eslint-disable-next-line
-  }, [activitiesImages.length, loadingActivities, fetchActivitiesImages]);
+  }, [fetchedActivities, loadingActivities, fetchActivitiesImages]);
 
   useEffect(() => {
-    if (partnerships.length === 0 && !loadingPartnerships) {
+    if (!fetchedPartnerships && !loadingPartnerships) {
       fetchPartnerships();
     }
     // eslint-disable-next-line
-  }, [partnerships.length, loadingPartnerships, fetchPartnerships]);
+  }, [fetchedPartnerships, loadingPartnerships, fetchPartnerships]);
 
   // Ref for statistics section
   const statsRef = useRef(null);
@@ -170,77 +172,93 @@ export default function TentangKami() {
         </section>
 
         {/* Swiper Marquee Section */}
-        <section className="w-full mb-16 px-0 relative">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
-            Galeri kegiatan Tanamin
-          </h2>
-          <div className="w-full">
-            {loadingActivities && <p>Memuat galeri kegiatan...</p>}
-            {errorActivities && <p className="text-red-600">{errorActivities}</p>}
-            {!loadingActivities && !errorActivities && activitiesImages.length > 0 && (
-              <GallerySwiper images={activitiesImages} />
-            )}
-            {!loadingActivities && !errorActivities && activitiesImages.length === 0 && (
-              <p className="text-gray-500 text-center">Belum ada gambar kegiatan.</p>
-            )}
-          </div>
-        </section>
+        {(loadingActivities ||
+          errorActivities ||
+          (activitiesImages.length > 0 && fetchedActivities)) && (
+          <section className="w-full mb-16 px-0 relative">
+            <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
+              Galeri kegiatan Tanamin
+            </h2>
+            <div className="w-full">
+              {loadingActivities && <p>Memuat galeri kegiatan...</p>}
+              {errorActivities && <p className="text-red-600">{errorActivities}</p>}
+              {!loadingActivities && !errorActivities && activitiesImages.length > 0 && (
+                <GallerySwiper images={activitiesImages} />
+              )}
+              {!loadingActivities &&
+                !errorActivities &&
+                activitiesImages.length === 0 &&
+                fetchedActivities && (
+                  <p className="text-gray-500 text-center">Belum ada gambar kegiatan.</p>
+                )}
+            </div>
+          </section>
+        )}
 
-        <section className="w-full mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
-            Kerja Sama Kami
-          </h2>
-          <div className="w-full flex flex-wrap justify-center gap-8">
-            {loadingPartnerships && <p>Memuat data mitra...</p>}
-            {errorPartnerships && <p className="text-red-600">{errorPartnerships}</p>}
-            {!loadingPartnerships && !errorPartnerships && partnerships.length === 0 && (
-              <p className="text-gray-500 text-center">Belum ada data mitra.</p>
-            )}
-            {!loadingPartnerships &&
-              !errorPartnerships &&
-              partnerships.length > 0 &&
-              partnerships.map((mitra, idx) => {
-                const PartnerContent = (
-                  <>
-                    {mitra.logo && (
-                      <img
-                        src={mitra.logo}
-                        alt={mitra.name}
-                        className="h-16 w-auto object-contain mb-3"
-                        loading="lazy"
-                      />
-                    )}
-                    <h3 className="text-lg font-semibold text-primary-700 mb-1 text-center">
-                      {mitra.name}
-                    </h3>
-                    {mitra.description && (
-                      <p className="text-sm text-secondary-900 text-center">{mitra.description}</p>
-                    )}
-                  </>
-                );
-                return (
-                  <div
-                    key={idx}
-                    className="flex flex-col items-center bg-white rounded-lg shadow-md px-6 py-4 w-64"
-                  >
-                    {mitra.website ? (
-                      <a
-                        href={mitra.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex flex-col items-center w-full"
-                        title={mitra.website}
-                      >
-                        {PartnerContent}
-                      </a>
-                    ) : (
-                      PartnerContent
-                    )}
-                  </div>
-                );
-              })}
-          </div>
-        </section>
+        {(loadingPartnerships ||
+          errorPartnerships ||
+          (partnerships.length > 0 && fetchedPartnerships)) && (
+          <section className="w-full mb-16">
+            <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
+              Kerja Sama Kami
+            </h2>
+            <div className="w-full flex flex-wrap justify-center gap-8">
+              {loadingPartnerships && <p>Memuat data mitra...</p>}
+              {errorPartnerships && <p className="text-red-600">{errorPartnerships}</p>}
+              {!loadingPartnerships &&
+                !errorPartnerships &&
+                partnerships.length === 0 &&
+                fetchedPartnerships && (
+                  <p className="text-gray-500 text-center">Belum ada data mitra.</p>
+                )}
+              {!loadingPartnerships &&
+                !errorPartnerships &&
+                partnerships.length > 0 &&
+                partnerships.map((mitra, idx) => {
+                  const PartnerContent = (
+                    <>
+                      {mitra.logo && (
+                        <img
+                          src={mitra.logo}
+                          alt={mitra.name}
+                          className="h-16 w-auto object-contain mb-3"
+                          loading="lazy"
+                        />
+                      )}
+                      <h3 className="text-lg font-semibold text-primary-700 mb-1 text-center">
+                        {mitra.name}
+                      </h3>
+                      {mitra.description && (
+                        <p className="text-sm text-secondary-900 text-center">
+                          {mitra.description}
+                        </p>
+                      )}
+                    </>
+                  );
+                  return (
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center bg-white rounded-lg shadow-md px-6 py-4 w-64"
+                    >
+                      {mitra.website ? (
+                        <a
+                          href={mitra.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex flex-col items-center w-full"
+                          title={mitra.website}
+                        >
+                          {PartnerContent}
+                        </a>
+                      ) : (
+                        PartnerContent
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+          </section>
+        )}
       </main>
     </Template>
   );

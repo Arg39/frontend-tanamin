@@ -1,18 +1,17 @@
-// moduleStore.js
 import { create } from 'zustand';
 import useAuthStore from '../../../authStore';
 
-const useModuleStore = create((set) => ({
+const useLessonStore = create((set) => ({
   loading: false,
   error: null,
-  modules: [],
-  status: null, // tambahin status
-  async fetchModules(courseId) {
+  lesson: null,
+  status: null,
+  async fetchLesson(lessonId) {
     set({ loading: true, error: null, status: null });
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-course/${courseId}/modules`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-course/lesson/${lessonId}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -20,12 +19,10 @@ const useModuleStore = create((set) => ({
           },
         }
       );
-
       const json = await res.json();
-
       if (json.status === 'success') {
         set({
-          modules: json.data,
+          lesson: json.data,
           loading: false,
           error: null,
           status: 'success',
@@ -38,8 +35,8 @@ const useModuleStore = create((set) => ({
     }
   },
   reset() {
-    set({ loading: false, error: null, modules: [], status: null });
+    set({ loading: false, error: null, lesson: null, status: null });
   },
 }));
 
-export default useModuleStore;
+export default useLessonStore;
