@@ -18,20 +18,16 @@ export default function OutlineCourseCard({
     setOpenModuleIndex(openModuleIndexProp);
   }, [openModuleIndexProp]);
 
-  const handleToggle = (idx) => {
-    setOpenModuleIndex(openModuleIndex === idx ? null : idx);
-  };
-
-  // Helper: Only allow click if lesson is completed OR all previous lessons in module are completed
-  const isLessonEnabled = (module, lessonIdx) => {
-    const lessons = module.lessons || [];
+  // Only allow click if lesson is completed OR lesson is before or equal to selectedLessonId
+  const isLessonEnabled = (lessons, lessonIdx, selectedLessonId) => {
     const lesson = lessons[lessonIdx];
+    if (lesson.id === selectedLessonId) return true; // always enable selected lesson
     if (lesson.completed) return true;
-    // Check if all previous lessons are completed
-    for (let i = 0; i < lessonIdx; i++) {
-      if (!lessons[i].completed) return false;
-    }
-    return true;
+    // Find index of selectedLessonId in lessons
+    const selectedIdx = lessons.findIndex((ls) => ls.id === selectedLessonId);
+    // Enable if lessonIdx <= selectedIdx
+    if (selectedIdx !== -1 && lessonIdx <= selectedIdx) return true;
+    return false;
   };
 
   return (
@@ -51,67 +47,71 @@ export default function OutlineCourseCard({
       {!loading && !error && (
         <ul>
           {modules.length === 0 && <li className="text-secondary-700">Belum ada modul.</li>}
-          {modules.map((module, idx) => (
-            <li key={module.id || idx} className="mb-2 ">
-              <button
-                className={`w-full text-left flex gap-2 items-center py-2 pb-2 border-b border-secondary-700 font-semibold focus:outline-none ${
-                  module.complete ? 'bg-green-100' : ''
-                }`}
-                onClick={() => handleToggle(idx)}
-              >
-                <span>
-                  {openModuleIndex === idx ? (
-                    <Icon type="arrow-down" className="w-4 h-4 text-secondary-700" />
-                  ) : (
-                    <Icon type="arrow-up" className="w-4 h-4 text-secondary-700" />
+          {modules.map((module, idx) => {
+            // Show all lessons, do not filter by visible
+            const lessons = module.lessons || [];
+            return (
+              <li key={module.id || idx} className="mb-2 ">
+                <button
+                  className={`w-full text-left flex gap-2 items-center py-2 pb-2 border-b border-secondary-700 font-semibold focus:outline-none ${
+                    module.complete ? 'bg-green-100' : ''
+                  }`}
+                  onClick={() => setOpenModuleIndex(openModuleIndex === idx ? null : idx)}
+                >
+                  <span>
+                    {openModuleIndex === idx ? (
+                      <Icon type="arrow-down" className="w-4 h-4 text-secondary-700" />
+                    ) : (
+                      <Icon type="arrow-up" className="w-4 h-4 text-secondary-700" />
+                    )}
+                  </span>
+                  <span className="text-secondary-700">{module.title}</span>
+                  {module.complete && <Icon type="check" className="w-4 h-4 text-green-600 ml-2" />}
+                </button>
+                <AnimatePresence initial={false}>
+                  {openModuleIndex === idx && (
+                    <motion.ul
+                      className="mt-2 origin-top flex flex-col gap-2"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.25, ease: 'easeInOut' }}
+                    >
+                      {lessons.map((lesson, lidx) => {
+                        const selected = selectedLessonId === lesson.id;
+                        const enabled = isLessonEnabled(lessons, lidx, selectedLessonId);
+                        return (
+                          <button
+                            key={lesson.id || lidx}
+                            className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
+                              selected ? 'bg-primary-700 font-bold text-white' : 'bg-neutral-400'
+                            } ${!enabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+                            onClick={() => enabled && onLessonSelect && onLessonSelect(lesson.id)}
+                            disabled={!enabled}
+                            title={
+                              lesson.completed || selected
+                                ? ''
+                                : enabled
+                                ? ''
+                                : 'Selesaikan materi sebelumnya terlebih dahulu'
+                            }
+                          >
+                            <Checkbox
+                              checked={lesson.completed || false}
+                              disabled={true}
+                              onChange={() => {}}
+                              box={true}
+                            />
+                            <span className="text-start">{lesson.title}</span>
+                          </button>
+                        );
+                      })}
+                    </motion.ul>
                   )}
-                </span>
-                <span className="text-secondary-700">{module.title}</span>
-                {module.complete && <Icon type="check" className="w-4 h-4 text-green-600 ml-2" />}
-              </button>
-              <AnimatePresence initial={false}>
-                {openModuleIndex === idx && (
-                  <motion.ul
-                    className="mt-2 origin-top flex flex-col gap-2"
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.25, ease: 'easeInOut' }}
-                  >
-                    {(module.lessons || []).map((lesson, lidx) => {
-                      const selected = selectedLessonId === lesson.id;
-                      const enabled = isLessonEnabled(module, lidx);
-                      return (
-                        <button
-                          key={lesson.id || lidx}
-                          className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
-                            selected ? 'bg-primary-700 font-bold text-white' : 'bg-neutral-400'
-                          } ${!enabled ? 'opacity-60 cursor-not-allowed' : ''}`}
-                          onClick={() => enabled && onLessonSelect && onLessonSelect(lesson.id)}
-                          disabled={!enabled}
-                          title={
-                            lesson.completed
-                              ? ''
-                              : enabled
-                              ? ''
-                              : 'Selesaikan materi sebelumnya terlebih dahulu'
-                          }
-                        >
-                          <Checkbox
-                            checked={lesson.completed || false}
-                            disabled={true}
-                            onChange={() => {}}
-                            box={true}
-                          />
-                          <span className="text-start">{lesson.title}</span>
-                        </button>
-                      );
-                    })}
-                  </motion.ul>
-                )}
-              </AnimatePresence>
-            </li>
-          ))}
+                </AnimatePresence>
+              </li>
+            );
+          })}
         </ul>
       )}
 

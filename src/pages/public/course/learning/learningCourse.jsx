@@ -9,6 +9,7 @@ import MaterialContentCourse from './content/materialContentCourse';
 import QuizContentCourse from './content/quizContentCourse';
 import { toast } from 'react-toastify';
 import Icon from '../../../../components/icons/icon';
+import AnsweredQuiz from './content/quiz/answeredQuiz';
 
 // ✅ Cek device
 function useIsDesktop() {
@@ -25,22 +26,16 @@ function useIsDesktop() {
 
 /**
  * Cari lesson pertama yang belum complete (ikut urutan asli)
- * - Untuk quiz: jika property `visible` tidak ada, anggap `true`
+ * - Tampilkan semua lesson, tidak filter visible
  */
 function getFirstIncompleteLesson(modules = []) {
   for (let m = 0; m < modules.length; m++) {
-    for (let l = 0; l < (modules[m].lessons || []).length; l++) {
-      const lesson = modules[m].lessons[l];
+    const lessons = modules[m].lessons || [];
+    for (let l = 0; l < lessons.length; l++) {
+      const lesson = lessons[l];
       if (!lesson) continue;
       if (!lesson.completed) {
-        if (lesson.type === 'quiz') {
-          // treat missing `visible` as true
-          const visible = lesson.visible === undefined ? true : !!lesson.visible;
-          if (visible) return lesson.id;
-          // else skip quiz if explicitly not visible
-        } else {
-          return lesson.id;
-        }
+        return lesson.id;
       }
     }
   }
@@ -64,22 +59,18 @@ function getInitialLesson(modules = []) {
 
 /**
  * Cari lesson berikutnya yang belum complete (sesudah selectedLessonId)
- * - Perhatikan quiz visibility default true jika property missing
+ * - Tampilkan semua lesson, tidak filter visible
  */
 function getNextIncompleteLesson(modules = [], selectedLessonId) {
   let found = false;
   for (let m = 0; m < modules.length; m++) {
-    for (let l = 0; l < (modules[m].lessons || []).length; l++) {
-      const lesson = modules[m].lessons[l];
+    const lessons = modules[m].lessons || [];
+    for (let l = 0; l < lessons.length; l++) {
+      const lesson = lessons[l];
       if (!lesson) continue;
       if (found) {
         if (!lesson.completed) {
-          if (lesson.type === 'quiz') {
-            const visible = lesson.visible === undefined ? true : !!lesson.visible;
-            if (visible) return lesson.id;
-          } else {
-            return lesson.id;
-          }
+          return lesson.id;
         }
       }
       if (lesson.id === selectedLessonId) found = true;
@@ -96,11 +87,33 @@ export default function LearningCourse() {
 
   const { modules, loading, error, fetchModules, saveLessonProgress, reloadModules } =
     useModuleStore();
-  const { lesson, loading: lessonLoading, error: lessonError, fetchLesson } = useLessonStore();
+  const {
+    lesson,
+    loading: lessonLoading,
+    error: lessonError,
+    fetchLesson,
+    fetchQuizLesson,
+    submitQuizAnswers,
+    submitLoading,
+    submitError,
+    submitStatus,
+  } = useLessonStore();
 
   const [selectedLessonId, setSelectedLessonId] = useState(null);
   const [openModuleIndex, setOpenModuleIndex] = useState(null);
   const [isOutlineOpen, setIsOutlineOpen] = useState(false);
+
+  const handleSubmitQuizAnswers = useCallback(
+    async (answer) => {
+      if (!selectedLessonId) return;
+      const res = await submitQuizAnswers(selectedLessonId, answer);
+      if (res.status === 'success') {
+        // Reload quiz lesson to show answered state
+        await fetchQuizLesson(selectedLessonId);
+      }
+    },
+    [selectedLessonId, submitQuizAnswers, fetchQuizLesson]
+  );
 
   // Fetch modules
   useEffect(() => {
@@ -115,6 +128,7 @@ export default function LearningCourse() {
   // Set initial lesson (hanya kalau belum ada selectedLessonId atau selectedLessonId ga ada di modules)
   useEffect(() => {
     if (modules && modules.length > 0) {
+      // Only consider all lessons, do not filter by visible
       const selectedExists =
         selectedLessonId &&
         modules.some((mod) => (mod.lessons || []).some((ls) => ls.id === selectedLessonId));
@@ -151,8 +165,20 @@ export default function LearningCourse() {
 
   // Fetch lesson data
   useEffect(() => {
-    if (selectedLessonId) fetchLesson(selectedLessonId);
-  }, [selectedLessonId, fetchLesson]);
+    if (selectedLessonId && modules && modules.length > 0) {
+      const selectedLesson = modules
+        .flatMap((mod) => mod.lessons || [])
+        .find((ls) => ls.id === selectedLessonId);
+
+      if (selectedLesson) {
+        if (selectedLesson.type === 'quiz') {
+          fetchQuizLesson(selectedLessonId);
+        } else {
+          fetchLesson(selectedLessonId);
+        }
+      }
+    }
+  }, [selectedLessonId, fetchLesson, fetchQuizLesson, modules]);
 
   const handleLessonSelect = useCallback(
     (lessonId) => {
@@ -210,7 +236,18 @@ export default function LearningCourse() {
         />
       );
     } else if (lesson.type === 'quiz') {
-      contentComponent = <QuizContentCourse data={lesson.content} />;
+      contentComponent = (
+        <QuizContentCourse
+          data={lesson}
+          onSubmitAnswers={handleSubmitQuizAnswers}
+          submitLoading={submitLoading}
+          submitError={submitError}
+          submitStatus={submitStatus}
+          onNextLesson={handleNextLesson}
+          hasNextLesson={hasNextLesson}
+          onSaveProgressAndNext={handleSaveProgressAndNext}
+        />
+      );
     } else {
       contentComponent = <div>Unknown lesson type</div>;
     }
