@@ -177,7 +177,16 @@ export default function WysiwygContent({ html, maxHeight }) {
           /* --- MOBILE RESPONSIVE --- */
           @media (max-width: 640px) {
             .wysiwyg-content {
-              font-size: 0.98rem;
+              font-size: 0.90rem; /* reduced from 0.98rem */
+            }
+            .wysiwyg-content h1 {
+              font-size: 1.3rem; /* reduced from default */
+            }
+            .wysiwyg-content h2 {
+              font-size: 1.1rem; /* reduced from default */
+            }
+            .wysiwyg-content p {
+              margin-bottom: 0.35em; /* slightly reduced */
             }
             .wysiwyg-content img {
               max-width: 100vw;
@@ -196,39 +205,36 @@ export default function WysiwygContent({ html, maxHeight }) {
               margin: 1em auto;
             }
             .wysiwyg-content pre.ql-syntax {
-              font-size: 0.92em;
+              font-size: 0.85em; /* reduced from 0.92em */
               padding: 8px;
             }
             .wysiwyg-content iframe.ql-video {
-            display: block;
-            margin: 1.5em auto;
-            width: 100% !important;
-            max-width: 600px !important;
-            aspect-ratio: 16 / 9 !important;
-            height: auto !important;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 1.5px 4px rgba(0,0,0,0.04);
-            background: #f8fafc;
-          }
-          /* Fallback for browsers without aspect-ratio support */
-          @supports not (aspect-ratio: 16 / 9) {
-            .wysiwyg-content iframe.ql-video {
-              position: relative !important;
+              display: block;
+              margin: 1.5em auto;
               width: 100% !important;
               max-width: 600px !important;
-              height: 0 !important;
-              padding-bottom: 56.25% !important; /* 16:9 */
-              margin: 1.5em auto !important;
-              display: block !important;
+              aspect-ratio: 16 / 9 !important;
+              height: auto !important;
+              border-radius: 8px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 1.5px 4px rgba(0,0,0,0.04);
+              background: #f8fafc;
             }
-            .wysiwyg-content iframe.ql-video[src] {
-              position: absolute !important;
-              top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important;
+            /* Fallback for browsers without aspect-ratio support */
+            @supports not (aspect-ratio: 16 / 9) {
+              .wysiwyg-content iframe.ql-video {
+                position: relative !important;
+                width: 100% !important;
+                max-width: 600px !important;
+                height: 0 !important;
+                padding-bottom: 56.25% !important; /* 16:9 */
+                margin: 1.5em auto !important;
+                display: block !important;
+              }
+              .wysiwyg-content iframe.ql-video[src] {
+                position: absolute !important;
+                top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important;
+              }
             }
-          }
-
-          /* --- MOBILE RESPONSIVE --- */
-          @media (max-width: 640px) {
             .wysiwyg-content iframe.ql-video {
               max-width: 100vw !important;
               width: 100% !important;

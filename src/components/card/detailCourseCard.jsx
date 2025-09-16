@@ -595,7 +595,10 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
           {user || accessCourse ? (
             <div className="flex flex-col gap-2 min-w-[110px]">
               {accessCourse ? (
-                <button className="w-fit flex items-center gap-2 py-1 px-2 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
+                <button
+                  onClick={() => navigate(`/kursus/${course.id}/belajar`)}
+                  className="w-fit flex items-center gap-2 py-1 px-2 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors"
+                >
                   <Icon type="play" className="w-5 h-5" />
                   Mulai Belajar
                 </button>

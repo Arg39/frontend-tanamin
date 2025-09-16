@@ -10,6 +10,7 @@ export default function OutlineCourseCard({
   onLessonSelect,
   selectedLessonId,
   openModuleIndex: openModuleIndexProp,
+  isMobile = false,
 }) {
   const [openModuleIndex, setOpenModuleIndex] = useState(openModuleIndexProp);
 
@@ -23,12 +24,17 @@ export default function OutlineCourseCard({
 
   return (
     <div
-      className="p-4 border border-primary-700 rounded-lg mb-4"
-      style={{ height: '600px', overflowY: 'auto' }}
+      className={`p-4 border border-primary-700 rounded-lg mb-4 bg-white ${
+        isMobile ? 'shadow-lg' : ''
+      }`}
+      style={{
+        height: isMobile ? 'auto' : '600px',
+        maxHeight: isMobile ? '70vh' : '600px',
+        overflowY: 'auto',
+      }}
     >
       <p className="font-bold text-2xl text-primary-700 mb-2">Outline Materi</p>
       {loading && <div className="text-secondary-700">Loading...</div>}
-      {/* Jangan tampilkan error akses, hanya error fetch lain */}
       {error && <div className="text-red-600">{error}</div>}
       {!loading && !error && (
         <ul>
@@ -36,7 +42,9 @@ export default function OutlineCourseCard({
           {modules.map((module, idx) => (
             <li key={module.id || idx} className="mb-2 ">
               <button
-                className="w-full text-left flex gap-2 items-center py-2 pb-2 border-b border-secondary-700 font-semibold focus:outline-none"
+                className={`w-full text-left flex gap-2 items-center py-2 pb-2 border-b border-secondary-700 font-semibold focus:outline-none ${
+                  module.complete ? 'bg-green-100' : ''
+                }`}
                 onClick={() => handleToggle(idx)}
               >
                 <span>
@@ -47,6 +55,7 @@ export default function OutlineCourseCard({
                   )}
                 </span>
                 <span className="text-secondary-700">{module.title}</span>
+                {module.complete && <Icon type="check" className="w-4 h-4 text-green-600 ml-2" />}
               </button>
               <AnimatePresence initial={false}>
                 {openModuleIndex === idx && (
@@ -62,13 +71,15 @@ export default function OutlineCourseCard({
                         key={lesson.id || lidx}
                         className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
                           selectedLessonId === lesson.id
-                            ? 'bg-primary-700 font-bold'
+                            ? 'bg-primary-700 font-bold text-white'
                             : 'bg-neutral-400'
                         }`}
                         onClick={() => onLessonSelect && onLessonSelect(lesson.id)}
+                        disabled={module.complete}
+                        title={module.complete ? 'Modul sudah selesai' : ''}
                       >
                         <Checkbox
-                          checked={lesson.learned || false}
+                          checked={lesson.completed || false}
                           disabled={true}
                           onChange={() => {}}
                           box={true}
@@ -86,7 +97,7 @@ export default function OutlineCourseCard({
 
       <p className="mt-8 font-bold text-2xl text-primary-700 mb-2">Sertifikasi</p>
       <button className="w-full flex gap-2 p-1 bg-neutral-400 rounded-md px-2">
-        <span className="text-start">Final Exam Course</span>
+        <span className="text-start">Sertifikat</span>
       </button>
     </div>
   );
