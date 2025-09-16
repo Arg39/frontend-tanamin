@@ -66,27 +66,29 @@ export default function OutlineCourseCard({
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.25, ease: 'easeInOut' }}
                   >
-                    {(module.lessons || []).map((lesson, lidx) => (
-                      <button
-                        key={lesson.id || lidx}
-                        className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
-                          selectedLessonId === lesson.id
-                            ? 'bg-primary-700 font-bold text-white'
-                            : 'bg-neutral-400'
-                        }`}
-                        onClick={() => onLessonSelect && onLessonSelect(lesson.id)}
-                        disabled={module.complete}
-                        title={module.complete ? 'Modul sudah selesai' : ''}
-                      >
-                        <Checkbox
-                          checked={lesson.completed || false}
-                          disabled={true}
-                          onChange={() => {}}
-                          box={true}
-                        />
-                        <span className="text-start">{lesson.title}</span>
-                      </button>
-                    ))}
+                    {(module.lessons || []).map((lesson, lidx) => {
+                      const disabled = !!module.complete;
+                      const selected = selectedLessonId === lesson.id;
+                      return (
+                        <button
+                          key={lesson.id || lidx}
+                          className={`flex gap-2 p-1 px-2 rounded-md transition-colors ${
+                            selected ? 'bg-primary-700 font-bold text-white' : 'bg-neutral-400'
+                          }`}
+                          onClick={() => !disabled && onLessonSelect && onLessonSelect(lesson.id)}
+                          disabled={disabled}
+                          title={disabled ? 'Modul sudah selesai' : ''}
+                        >
+                          <Checkbox
+                            checked={lesson.completed || false}
+                            disabled={true}
+                            onChange={() => {}}
+                            box={true}
+                          />
+                          <span className="text-start">{lesson.title}</span>
+                        </button>
+                      );
+                    })}
                   </motion.ul>
                 )}
               </AnimatePresence>
