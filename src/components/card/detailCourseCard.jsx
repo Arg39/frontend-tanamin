@@ -65,30 +65,29 @@ export default function DetailCourseCard({ course, accessCourse }) {
           const res = await buyNow(course.id);
           if (res?.data?.redirect_url) {
             await loadMidtransScript();
-            window.snap.pay(
-              // Extract token from redirect_url
-              res.data.redirect_url.split('/').pop(),
-              {
-                onSuccess: function (result) {
-                  toast.success('Pembayaran berhasil!');
-                  setSnapOpen(false);
-                  window.location.reload();
-                },
-                onPending: function (result) {
-                  toast.info('Pembayaran sedang diproses.');
-                  setSnapOpen(false);
-                  window.location.reload();
-                },
-                onError: function (result) {
-                  toast.error('Pembayaran gagal.');
-                  setSnapOpen(false);
-                },
-                onClose: function () {
-                  setSnapOpen(false);
-                },
-              }
-            );
+            window.snap.pay(res.data.redirect_url.split('/').pop(), {
+              onSuccess: function () {
+                toast.success('Pembayaran berhasil!');
+                setSnapOpen(false);
+                window.location.reload();
+              },
+              onPending: function () {
+                toast.info('Pembayaran sedang diproses.');
+                setSnapOpen(false);
+                window.location.reload();
+              },
+              onError: function () {
+                toast.error('Pembayaran gagal.');
+                setSnapOpen(false);
+              },
+              onClose: function () {
+                setSnapOpen(false);
+              },
+            });
             setSnapOpen(true);
+          } else if (res?.status === 'success') {
+            toast.success(res?.message || 'Kursus berhasil diakses.');
+            window.location.reload();
           } else {
             toast.error(res?.message || 'Gagal mendapatkan link pembayaran');
           }
@@ -307,19 +306,22 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
           if (res?.data?.redirect_url) {
             await loadMidtransScript();
             window.snap.pay(res.data.redirect_url.split('/').pop(), {
-              onSuccess: function (result) {
+              onSuccess: function () {
                 toast.success('Pembayaran berhasil!');
                 window.location.reload();
               },
-              onPending: function (result) {
+              onPending: function () {
                 toast.info('Pembayaran sedang diproses.');
                 window.location.reload();
               },
-              onError: function (result) {
+              onError: function () {
                 toast.error('Pembayaran gagal.');
               },
               onClose: function () {},
             });
+          } else if (res?.status === 'success') {
+            toast.success(res?.message || 'Kursus berhasil diakses.');
+            window.location.reload();
           } else {
             toast.error(res?.message || 'Gagal mendapatkan link pembayaran');
           }

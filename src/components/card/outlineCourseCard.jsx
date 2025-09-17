@@ -11,6 +11,9 @@ export default function OutlineCourseCard({
   selectedLessonId,
   openModuleIndex: openModuleIndexProp,
   isMobile = false,
+  onShowCertificate,
+  certificateActive = false,
+  certificateDisabled = false,
 }) {
   const [openModuleIndex, setOpenModuleIndex] = useState(openModuleIndexProp);
 
@@ -18,14 +21,13 @@ export default function OutlineCourseCard({
     setOpenModuleIndex(openModuleIndexProp);
   }, [openModuleIndexProp]);
 
-  // Only allow click if lesson is completed OR lesson is before or equal to selectedLessonId
+  // Allow selecting completed lessons even if certificateActive
   const isLessonEnabled = (lessons, lessonIdx, selectedLessonId) => {
     const lesson = lessons[lessonIdx];
-    if (lesson.id === selectedLessonId) return true; // always enable selected lesson
+    // Always allow selecting completed lessons
     if (lesson.completed) return true;
-    // Find index of selectedLessonId in lessons
+    if (lesson.id === selectedLessonId) return true;
     const selectedIdx = lessons.findIndex((ls) => ls.id === selectedLessonId);
-    // Enable if lessonIdx <= selectedIdx
     if (selectedIdx !== -1 && lessonIdx <= selectedIdx) return true;
     return false;
   };
@@ -48,7 +50,6 @@ export default function OutlineCourseCard({
         <ul>
           {modules.length === 0 && <li className="text-secondary-700">Belum ada modul.</li>}
           {modules.map((module, idx) => {
-            // Show all lessons, do not filter by visible
             const lessons = module.lessons || [];
             return (
               <li key={module.id || idx} className="mb-2 ">
@@ -78,7 +79,8 @@ export default function OutlineCourseCard({
                       transition={{ duration: 0.25, ease: 'easeInOut' }}
                     >
                       {lessons.map((lesson, lidx) => {
-                        const selected = selectedLessonId === lesson.id;
+                        // Always allow selecting completed lessons
+                        const selected = selectedLessonId === lesson.id && !certificateActive;
                         const enabled = isLessonEnabled(lessons, lidx, selectedLessonId);
                         return (
                           <button
@@ -116,7 +118,16 @@ export default function OutlineCourseCard({
       )}
 
       <p className="mt-8 font-bold text-2xl text-primary-700 mb-2">Sertifikasi</p>
-      <button className="w-full flex gap-2 p-1 bg-neutral-400 rounded-md px-2">
+      <button
+        className={`w-full flex gap-2 p-1 rounded-md px-2 transition ${
+          certificateActive
+            ? 'bg-primary-700 text-white font-bold'
+            : 'bg-neutral-400 hover:bg-primary-700 hover:text-white'
+        } ${certificateDisabled ? 'opacity-60 cursor-not-allowed' : ''}`}
+        onClick={() => !certificateDisabled && onShowCertificate && onShowCertificate()}
+        disabled={certificateDisabled}
+        title={certificateDisabled ? 'Selesaikan semua materi sebelum mengakses sertifikat' : ''}
+      >
         <span className="text-start">Sertifikat</span>
       </button>
     </div>

@@ -23,7 +23,7 @@ const useEnrollmentStore = create((set, get) => ({
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Gagal melakukan pembelian');
       set({ loading: false, error: null });
-      return json;
+      return json; // always return full response
     } catch (e) {
       set({ error: e.message, loading: false });
       throw e;
