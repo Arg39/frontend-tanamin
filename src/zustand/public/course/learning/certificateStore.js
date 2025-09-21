@@ -52,6 +52,35 @@ const useCertificateStore = create((set) => ({
       status: null,
     });
   },
+
+  async downloadCertificatePdf(certificateCode) {
+    set({ loading: true, error: null, status: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/certificates/${certificateCode}/pdf`,
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      if (!res.ok) throw new Error('Gagal mengunduh sertifikat');
+      const blob = await res.blob();
+      // Create a link and trigger download
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `sertifikat-${certificateCode}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      set({ loading: false, error: null, status: 'success' });
+    } catch (e) {
+      set({ loading: false, error: e.message, status: 'failed' });
+    }
+  },
 }));
 
 export default useCertificateStore;
