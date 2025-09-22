@@ -1,6 +1,6 @@
 import React from 'react';
-import AdminTemplate from '../../../../template/templateAdmin';
-import RingkasanEdit from '../../../instructor/course.jsx/tabs/ringkasan/ringkasanEdit';
+import AdminTemplate from '../../../../../template/templateAdmin';
+import RingkasanEdit from '../../../../instructor/course.jsx/tabs/ringkasan/ringkasanEdit';
 import { useLocation, useParams } from 'react-router-dom';
 
 export default function RingkasanEditAdmin() {

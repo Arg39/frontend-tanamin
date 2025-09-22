@@ -4,7 +4,8 @@ import Breadcrumb from '../../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import FilterCard from '../../../components/filter/filterCard';
 import Icon from '../../../components/icons/icon';
-import useBerandaStore from '../../../zustand/public/beranda/berandaStore';
+// Changed import to useCourseStore
+import useCourseStore from '../../../zustand/public/course/courseStore';
 import Card from '../../../components/card/card';
 import PaginationCard from '../../../components/filter/paginationCard';
 
@@ -38,8 +39,7 @@ export default function ListCourse() {
     { label: 'Kursus', path: location.pathname },
   ];
 
-  // Get courses from zustand store
-  const { courses, coursesLoading, coursesError, fetchCourses, pagination } = useBerandaStore();
+  const { courses, coursesLoading, coursesError, fetchCourses, pagination } = useCourseStore();
 
   // Fetch courses when page changes
   useEffect(() => {

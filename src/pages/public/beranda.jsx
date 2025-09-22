@@ -1,15 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Template from '../../template/template';
 import GradientText from '../../blocks/TextAnimations/FuzzyText/gradientColors';
-import useCourseStore from '../../zustand/courseStore';
+import useCourseStore from '../../zustand/public/course/courseStore';
 import Button from '../../components/button/button';
 import { useLocation, useNavigate } from 'react-router-dom';
 import useCategoryStore from '../../zustand/categoryStore';
 import CategoryCard from '../../components/card/categoryCard';
 import InstructorCarousel from '../../components/carousel/InstructorCarousel';
-import useBerandaStore from '../../zustand/public/beranda/berandaStore'; // import zustand store
 import Card from '../../components/card/card';
 import Icon from '../../components/icons/icon';
+import useInstructorStore from '../../zustand/public/course/instructorStore';
+import useBerandaStore from '../../zustand/public/beranda/berandaStore';
+import StackedCourseCards from '../../components/card/stackedCards'; // Import here
+
+// Helper to get full image URL
+const getImageUrl = (image) => {
+  if (!image) return '';
+  if (image.startsWith('http')) return image;
+  return `${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${image}`;
+};
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);
@@ -31,17 +40,11 @@ export default function Beranda() {
   const isMobile = useIsMobile();
   const navigate = useNavigate();
 
-  // Get instructors and courses from zustand store
-  const {
-    instructors,
-    loading,
-    error,
-    fetchInstructors,
-    courses,
-    coursesLoading,
-    coursesError,
-    fetchCourses,
-  } = useBerandaStore();
+  const { instructors, loading, error, fetchInstructors } = useInstructorStore();
+  const { courses, coursesLoading, coursesError, fetchCourses } = useCourseStore();
+
+  // Best courses store
+  const { bestCourses, bestCoursesLoading, bestCoursesError, fetchBestCourses } = useBerandaStore();
 
   useEffect(() => {
     fetchCategories({ perPage: 8 });
@@ -55,12 +58,9 @@ export default function Beranda() {
     fetchCourses();
   }, [fetchCourses]);
 
-  // Helper to get full image URL
-  const getImageUrl = (image) => {
-    if (!image) return '';
-    if (image.startsWith('http')) return image;
-    return `${process.env.REACT_APP_BACKEND_BASE_URL}/storage/${image}`;
-  };
+  useEffect(() => {
+    fetchBestCourses();
+  }, [fetchBestCourses]);
 
   const handleCategoryClick = (category) => {
     // TODO: Implementasi pencarian berdasarkan kategori
@@ -84,8 +84,9 @@ export default function Beranda() {
       className="h-screen w-full bg-gradient-to-t from-primary-300 from-0% via-primary-100 via-50% to-white to-100%"
       locationKey={location.key}
     >
-      <div className="xl:px-20 lg:px-10 md:px-14 sm:px-8 px-8 pt-8 w-full">
+      <div className="xl:px-20 lg:px-10 md:px-14 sm:px-8 px-6 pt-8 w-full">
         <div className="mt-16 gap-8 w-full flex flex-col lg:flex-row">
+          {/* Left side */}
           <div className="flex flex-col w-full lg:w-1/2">
             <h3 className="p-2 px-4 rounded-full bg-primary-200 text-primary-900 font-medium items-center max-w-fit text-lg lg:text-xl">
               Welcome to Course Tanamin
@@ -112,22 +113,34 @@ export default function Beranda() {
               Jelajahi Course
             </Button>
           </div>
-          <div className="w-full lg:w-1/2 flex justify-center items-center min-h-[20rem]">
-            {/* Stacked cards with bottom-right corners joined */}
-            <div className="relative w-56 h-80 flex justify-start items-center">
-              <div className="absolute w-40 h-64 bg-green-600 shadow-lg rounded-lg transform translate-y-[10px] z-20"></div>
-              <div className="absolute w-40 h-64 bg-red-600 shadow-lg rounded-lg transform rotate-[4deg] translate-x-[8px] translate-y-[5px] z-10"></div>
-              <div className="absolute w-40 h-64 bg-yellow-600 shadow-lg rounded-lg transform rotate-[8deg] translate-x-[16px] translate-y-[1px] z-0"></div>
-            </div>
+
+          {/* Right side: Stacked Cards */}
+          <div
+            className="w-full lg:w-1/2 flex justify-center items-center min-h-[22rem] sm:min-h-[26rem] relative"
+            style={{ overflow: 'visible', paddingTop: '2.5rem' }}
+          >
+            {bestCoursesLoading ? (
+              <div className="text-primary-600">Loading...</div>
+            ) : bestCoursesError ? (
+              <div className="text-red-600">{bestCoursesError}</div>
+            ) : (
+              <div
+                className="flex sm:justify-center items-center w-full"
+                style={{ overflow: 'visible' }}
+              >
+                <StackedCourseCards courses={bestCourses} />
+              </div>
+            )}
           </div>
         </div>
       </div>
+
       <div className="mt-16 lg:mt-32 w-full bg-white">
         <div className="xl:p-20 lg:p-10 md:p-8 sm:p-6 p-4">
           <div className="mb-16">
             <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">Kategori Populer</h2>
             <div className="mt-8 mx-auto">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 w-full place-items-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 w-full place-items-start">
                 {(isMobile ? categories.slice(0, 4) : categories.slice(0, 8)).map((cat) => (
                   <CategoryCard
                     key={cat.id}

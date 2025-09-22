@@ -24,42 +24,49 @@ const useAboutUsStore = create((set, get) => ({
   activitiesImages: [],
   loadingActivities: false,
   errorActivities: null,
-  fetchedActivities: false, // <-- new
+  fetchedActivities: false,
 
   partnerships: [],
   loadingPartnerships: false,
   errorPartnerships: null,
-  fetchedPartnerships: false, // <-- new
+  fetchedPartnerships: false,
 
   fetchAboutUs: async () => {
     set({ loading: true, error: null, notFound: false });
     try {
       const res = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/profile`);
-      if (res.data?.status === 'failed' && res.data?.message === 'Company profile not found') {
-        set({ aboutUs: defaultAboutUs, loading: false, notFound: true });
+      if (res.data?.status === 'failed') {
+        set({ aboutUs: null, loading: false, notFound: true });
       } else if (res.data?.data) {
         set({ aboutUs: mapAboutUs(res.data.data), loading: false, notFound: false });
       } else {
-        set({ error: 'No about us data', loading: false, notFound: false });
+        set({ aboutUs: null, error: 'No about us data', loading: false, notFound: true });
       }
     } catch (err) {
       set({
+        aboutUs: null,
         error: err.response?.data?.message || 'Failed to fetch about us',
         loading: false,
-        notFound: false,
+        notFound: true,
       });
     }
   },
 
   fetchActivitiesImages: async () => {
-    // prevent refetch if already fetched
     if (get().fetchedActivities) return;
     set({ loadingActivities: true, errorActivities: null });
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/activities`
       );
-      if (Array.isArray(res.data?.data)) {
+      if (res.data?.status === 'failed') {
+        set({
+          activitiesImages: [],
+          loadingActivities: false,
+          errorActivities: null,
+          fetchedActivities: true,
+        });
+      } else if (Array.isArray(res.data?.data)) {
         set({
           activitiesImages: res.data.data,
           loadingActivities: false,
@@ -85,14 +92,20 @@ const useAboutUsStore = create((set, get) => ({
   },
 
   fetchPartnerships: async () => {
-    // prevent refetch if already fetched
     if (get().fetchedPartnerships) return;
     set({ loadingPartnerships: true, errorPartnerships: null });
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/company/partnerships`
       );
-      if (Array.isArray(res.data?.data)) {
+      if (res.data?.status === 'failed') {
+        set({
+          partnerships: [],
+          loadingPartnerships: false,
+          errorPartnerships: null,
+          fetchedPartnerships: true,
+        });
+      } else if (Array.isArray(res.data?.data)) {
         set({
           partnerships: res.data.data,
           loadingPartnerships: false,

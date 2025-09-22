@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import axios from 'axios';
-import useAuthStore from '../../authStore'; // adjust path if needed
+import useAuthStore from '../../authStore';
 
 const useCourseStore = create((set) => ({
+  courses: [],
+  coursesError: null,
+  coursesLoading: false,
+  pagination: null,
   course: null,
   error: null,
   loading: false,
@@ -22,6 +26,33 @@ const useCourseStore = create((set) => ({
   instructorCoursesLoading: false,
   instructorCoursesError: null,
   access: false,
+
+  fetchCourses: async ({ page = 1, search = '' } = {}) => {
+    set({ coursesLoading: true, coursesError: null });
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses`,
+        {
+          params: { page, search },
+        }
+      );
+
+      if (response.status === 200) {
+        set({
+          courses: response.data.data.items,
+          pagination: response.data.data.pagination,
+          coursesLoading: false,
+        });
+      } else {
+        set({ coursesError: 'Failed to fetch courses', coursesLoading: false });
+      }
+    } catch (error) {
+      set({
+        coursesError: error.response?.data?.message || 'Failed to fetch courses',
+        coursesLoading: false,
+      });
+    }
+  },
 
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });

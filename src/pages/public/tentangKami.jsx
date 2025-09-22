@@ -43,6 +43,7 @@ export default function TentangKami() {
     aboutUs,
     loading,
     error,
+    notFound,
     fetchAboutUs,
     activitiesImages,
     loadingActivities,
@@ -57,9 +58,9 @@ export default function TentangKami() {
   } = useAboutUsStore();
 
   useEffect(() => {
-    if (!aboutUs && !loading) fetchAboutUs();
+    if (!aboutUs && !loading && !notFound) fetchAboutUs();
     // eslint-disable-next-line
-  }, [aboutUs, loading, fetchAboutUs]);
+  }, [aboutUs, loading, notFound, fetchAboutUs]);
 
   useEffect(() => {
     if (!fetchedActivities && !loadingActivities) {
@@ -88,9 +89,11 @@ export default function TentangKami() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary-700 mb-4">
               PT Tanamin Bumi Nusantara
             </h1>
-            <blockquote className="text-base sm:text-lg md:text-xl text-secondary-950 mt-4 border-l-4 border-primary-500 pl-4 italic">
-              {aboutUs?.vision}
-            </blockquote>
+            {aboutUs?.vision && (
+              <blockquote className="text-base sm:text-lg md:text-xl text-secondary-950 mt-4 border-l-4 border-primary-500 pl-4 italic">
+                {aboutUs.vision}
+              </blockquote>
+            )}
           </div>
           <figure className="flex-shrink-0 flex justify-center items-center w-full lg:w-auto mb-8 lg:mb-0">
             <img
@@ -101,80 +104,98 @@ export default function TentangKami() {
             />
           </figure>
         </section>
-        <section className="w-full mt-2 md:mt-6 bg-gray-50 rounded-xl p-4 md:p-8 shadow-sm">
-          {loading && <p>Memuat data...</p>}
-          {error && <p className="text-red-600">{error}</p>}
-          {aboutUs && <WysiwygContent html={aboutUs?.about} />}
-        </section>
 
-        <section className="w-full mt-8 mb-8">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm">
-            <div className="flex-1 flex flex-col gap-8 w-full">
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">Visi Kami</h2>
-                <p className="text-base md:text-lg text-secondary-950">{aboutUs?.vision}</p>
-              </div>
-              <div>
-                <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">Misi Kami</h2>
-                <ul className="list-disc pl-5 space-y-3 text-base md:text-lg text-secondary-950">
-                  {aboutUs?.mission && aboutUs.mission.length > 0
-                    ? aboutUs.mission.map((misi, idx) => <li key={idx}>{misi}</li>)
-                    : null}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Only show sections if not notFound and aboutUs exists */}
+        {!notFound && aboutUs && (
+          <>
+            {aboutUs.about && (
+              <section className="w-full mt-2 md:mt-6 bg-gray-50 rounded-xl p-4 md:p-8 shadow-sm">
+                {loading && <p>Memuat data...</p>}
+                {error && <p className="text-red-600">{error}</p>}
+                <WysiwygContent html={aboutUs.about} />
+              </section>
+            )}
 
-        <section className="w-full mt-8 mb-8">
-          <div
-            ref={statsRef}
-            className="w-full flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm"
-          >
-            <div>
-              {/* Statistik */}
-              <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">Statistik</h2>
-              <ul className="list-disc space-y-3 mb-4 text-base md:text-lg text-secondary-950">
-                Adapun beberapa statistik keberhasilan yang kami miliki adalah sebagai berikut:
-              </ul>
-              {aboutUs?.statistics && aboutUs.statistics.length > 0 && (
-                <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center items-center">
-                  {aboutUs.statistics.map((stat, idx) => (
-                    <div
-                      key={idx}
-                      className="flex flex-col justify-between bg-white rounded-lg shadow-md px-6 py-4 min-w-[120px] w-full h-40" // fixed card height
-                    >
-                      <span
-                        className="block text-2xl md:text-lg font-bold text-secondary-900 mb-2 h-24 md:h-12 overflow-hidden text-ellipsis whitespace-normal" // fixed title height
-                        style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                        }}
-                        title={stat.title}
-                      >
-                        {stat.title} :
-                      </span>
-                      <div className="flex flex-row items-end gap-2 mt-auto">
-                        <span className="text-2xl md:text-5xl font-bold text-primary-700">
-                          <AnimatedCounter to={stat.value} start={isInView} />
-                        </span>
-                        <span className="text-base md:text-lg text-secondary-900 font-medium capitalize">
-                          {stat.unit}
-                        </span>
+            {(aboutUs.vision || (aboutUs.mission && aboutUs.mission.length > 0)) && (
+              <section className="w-full mt-8 mb-8">
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm">
+                  <div className="flex-1 flex flex-col gap-8 w-full">
+                    {aboutUs.vision && (
+                      <div>
+                        <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">
+                          Visi Kami
+                        </h2>
+                        <p className="text-base md:text-lg text-secondary-950">{aboutUs.vision}</p>
                       </div>
-                    </div>
-                  ))}
+                    )}
+                    {aboutUs.mission && aboutUs.mission.length > 0 && (
+                      <div>
+                        <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">
+                          Misi Kami
+                        </h2>
+                        <ul className="list-disc pl-5 space-y-3 text-base md:text-lg text-secondary-950">
+                          {aboutUs.mission.map((misi, idx) => (
+                            <li key={idx}>{misi}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              )}
-            </div>
-          </div>
-        </section>
+              </section>
+            )}
+
+            {aboutUs.statistics && aboutUs.statistics.length > 0 && (
+              <section className="w-full mt-8 mb-8">
+                <div
+                  ref={statsRef}
+                  className="w-full flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm"
+                >
+                  <div>
+                    <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">
+                      Statistik
+                    </h2>
+                    <ul className="list-disc space-y-3 mb-4 text-base md:text-lg text-secondary-950">
+                      Adapun beberapa statistik keberhasilan yang kami miliki adalah sebagai
+                      berikut:
+                    </ul>
+                    <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-center items-center">
+                      {aboutUs.statistics.map((stat, idx) => (
+                        <div
+                          key={idx}
+                          className="flex flex-col justify-between bg-white rounded-lg shadow-md px-6 py-4 min-w-[120px] w-full h-40"
+                        >
+                          <span
+                            className="block text-2xl md:text-lg font-bold text-secondary-900 mb-2 h-24 md:h-12 overflow-hidden text-ellipsis whitespace-normal"
+                            style={{
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                            }}
+                            title={stat.title}
+                          >
+                            {stat.title} :
+                          </span>
+                          <div className="flex flex-row items-end gap-2 mt-auto">
+                            <span className="text-2xl md:text-5xl font-bold text-primary-700">
+                              <AnimatedCounter to={stat.value} start={isInView} />
+                            </span>
+                            <span className="text-base md:text-lg text-secondary-900 font-medium capitalize">
+                              {stat.unit}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
+          </>
+        )}
 
         {/* Swiper Marquee Section */}
-        {(loadingActivities ||
-          errorActivities ||
-          (activitiesImages.length > 0 && fetchedActivities)) && (
+        {!notFound && activitiesImages.length > 0 && fetchedActivities && (
           <section className="w-full mb-16 px-0 relative">
             <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
               Galeri kegiatan Tanamin
@@ -185,19 +206,12 @@ export default function TentangKami() {
               {!loadingActivities && !errorActivities && activitiesImages.length > 0 && (
                 <GallerySwiper images={activitiesImages} />
               )}
-              {!loadingActivities &&
-                !errorActivities &&
-                activitiesImages.length === 0 &&
-                fetchedActivities && (
-                  <p className="text-gray-500 text-center">Belum ada gambar kegiatan.</p>
-                )}
             </div>
           </section>
         )}
 
-        {(loadingPartnerships ||
-          errorPartnerships ||
-          (partnerships.length > 0 && fetchedPartnerships)) && (
+        {/* Partnerships Section */}
+        {!notFound && partnerships.length > 0 && fetchedPartnerships && (
           <section className="w-full mb-16">
             <h2 className="text-2xl md:text-3xl font-bold text-primary-700 text-center mb-6">
               Kerja Sama Kami
@@ -205,12 +219,6 @@ export default function TentangKami() {
             <div className="w-full flex flex-wrap justify-center gap-8">
               {loadingPartnerships && <p>Memuat data mitra...</p>}
               {errorPartnerships && <p className="text-red-600">{errorPartnerships}</p>}
-              {!loadingPartnerships &&
-                !errorPartnerships &&
-                partnerships.length === 0 &&
-                fetchedPartnerships && (
-                  <p className="text-gray-500 text-center">Belum ada data mitra.</p>
-                )}
               {!loadingPartnerships &&
                 !errorPartnerships &&
                 partnerships.length > 0 &&

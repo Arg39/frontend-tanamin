@@ -13,14 +13,14 @@ export default function ListInstructor() {
     { label: 'Instruktur', path: location.pathname },
   ];
 
-  const { instructors, loading, error, fetchInstructors, fetchMoreInstructors } =
+  const { instructors, loading, error, fetchInstructorList, fetchMoreInstructors } =
     useInstructorStore();
 
   const [moreCounts, setMoreCounts] = useState({});
 
   useEffect(() => {
-    fetchInstructors();
-  }, [fetchInstructors]);
+    fetchInstructorList();
+  }, [fetchInstructorList]);
 
   const handleLoadMore = (categoryId) => {
     const nextMore = (moreCounts[categoryId] || 0) + 1;

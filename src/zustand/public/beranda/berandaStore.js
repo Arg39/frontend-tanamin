@@ -2,55 +2,30 @@ import { create } from 'zustand';
 import axios from 'axios';
 
 const useBerandaStore = create((set) => ({
-  instructors: [],
-  error: null,
-  loading: false,
+  bestCourses: [],
+  bestCoursesLoading: false,
+  bestCoursesError: null,
+  bestCoursesPagination: null,
 
-  courses: [],
-  coursesError: null,
-  coursesLoading: false,
-  pagination: null,
-
-  fetchInstructors: async () => {
-    set({ loading: true, error: null });
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor`);
-      if (response.status === 200) {
-        set({ instructors: response.data.data, loading: false });
-      } else {
-        set({ error: 'Failed to fetch instructors', loading: false });
-      }
-    } catch (error) {
-      set({
-        error: error.response?.data?.message || 'Failed to fetch instructors',
-        loading: false,
-      });
-    }
-  },
-
-  fetchCourses: async ({ page = 1, search = '' } = {}) => {
-    set({ coursesLoading: true, coursesError: null });
+  fetchBestCourses: async () => {
+    set({ bestCoursesLoading: true, bestCoursesError: null });
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses`,
-        {
-          params: { page, search },
-        }
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/best`
       );
-
       if (response.status === 200) {
         set({
-          courses: response.data.data.items,
-          pagination: response.data.data.pagination,
-          coursesLoading: false,
+          bestCourses: response.data.data.items,
+          bestCoursesPagination: response.data.data.pagination,
+          bestCoursesLoading: false,
         });
       } else {
-        set({ coursesError: 'Failed to fetch courses', coursesLoading: false });
+        set({ bestCoursesError: 'Gagal mengambil kursus terbaik', bestCoursesLoading: false });
       }
     } catch (error) {
       set({
-        coursesError: error.response?.data?.message || 'Failed to fetch courses',
-        coursesLoading: false,
+        bestCoursesError: error.response?.data?.message || 'Gagal mengambil kursus terbaik',
+        bestCoursesLoading: false,
       });
     }
   },

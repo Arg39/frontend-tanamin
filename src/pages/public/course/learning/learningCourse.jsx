@@ -368,21 +368,21 @@ export default function LearningCourse() {
                   onShowCertificate={handleShowCertificate}
                   certificateActive={showCertificate}
                   certificateDisabled={!allLessonsCompleted}
+                  sticky={true}
                 />
               </div>
             )}
-
             {!isDesktop && isOutlineOpen && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center">
+              <div className="fixed inset-0 z-50 flex items-start justify-center">
                 <div
                   className="absolute inset-0 bg-black/50"
                   onClick={() => setIsOutlineOpen(false)}
                 ></div>
-                <div className="relative w-full max-w-md mx-auto p-0">
-                  <div className="relative bg-white rounded-md shadow-lg h-[80vh] overflow-y-auto">
+                <div className="relative w-full mx-auto p-0 flex items-start justify-center">
+                  <div className="relative w-full h-[calc(100vh-4rem)] mt-16 bg-white rounded-none shadow-none overflow-y-auto">
                     <button
                       onClick={() => setIsOutlineOpen(false)}
-                      className="absolute top-2 right-2 text-primary-700 bg-white shadow-md rounded-full w-8 h-8 flex items-center justify-center z-10"
+                      className="absolute top-4 right-4 text-primary-700 bg-white shadow-md rounded-full w-10 h-10 flex items-center justify-center z-10"
                     >
                       ✕
                     </button>

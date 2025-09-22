@@ -11,6 +11,7 @@ const useNavigationStore = create((set) => ({
       links: [
         { text: 'Kursus', href: '/kursus' },
         { text: 'Instruktur', href: '/instruktur' },
+        { text: 'verifikasi sertifikat', href: '/verifikasi/sertifikat-kursus/' },
       ],
     },
     {
@@ -44,6 +45,7 @@ const useNavigationStore = create((set) => ({
       links: [
         { text: 'kategori', href: '/admin/kategori', icon: 'swatch' },
         { text: 'kursus', href: '/admin/kursus', icon: 'book' },
+        { text: 'transaksi kursus', href: '/admin/transaksi-kursus', icon: 'invoice' },
       ],
     },
     {
@@ -51,11 +53,8 @@ const useNavigationStore = create((set) => ({
       links: [{ text: 'kupon', href: '/admin/kupon', icon: 'coupon' }],
     },
     {
-      label: 'keuangan',
-      links: [
-        { text: 'pembayaran kursus', href: '/admin/pembayaran-kursus', icon: 'payment-solid' },
-        { text: 'pemasukan', href: '/admin/pemasukan', icon: 'money' },
-      ],
+      label: 'Keuangan',
+      links: [{ text: 'pendapatan', href: '/admin/pendapatan', icon: 'money' }],
     },
     {
       label: 'konten',

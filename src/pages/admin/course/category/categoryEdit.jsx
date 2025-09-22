@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import AdminTemplate from '../../../template/templateAdmin';
-import Icon from '../../../components/icons/icon';
-import TextInput from '../../../components/form/textInput';
-import ImagePicker from '../../../components/form/imagePicker';
-import Button from '../../../components/button/button';
-import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
-import useCategoryStore from '../../../zustand/categoryStore';
+import AdminTemplate from '../../../../template/templateAdmin';
+import Icon from '../../../../components/icons/icon';
+import TextInput from '../../../../components/form/textInput';
+import ImagePicker from '../../../../components/form/imagePicker';
+import Button from '../../../../components/button/button';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import useCategoryStore from '../../../../zustand/categoryStore';
 
 export default function CategoryEdit() {
   const location = useLocation();

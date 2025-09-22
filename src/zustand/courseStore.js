@@ -81,14 +81,14 @@ const useCourseStore = create((set, get) => ({
     }
   },
 
-  async addCourse({ title, id_category, id_instructor }) {
+  async addCourse({ title, category_id, instructor_id }) {
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
       const params = new URLSearchParams({
         title,
-        id_category,
-        id_instructor,
+        category_id,
+        instructor_id,
       }).toString();
       const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/course?${params}`, {
         method: 'POST',

@@ -25,7 +25,7 @@ export default function InstructorAdd() {
     email: '',
     password: '',
     confirmPassword: '',
-    id_category: '',
+    category_id: '',
   });
   const [loading, setLoading] = useState(false);
 
@@ -102,8 +102,8 @@ export default function InstructorAdd() {
           />
           <SelectOption
             label="Kategori terkait dengan instructor"
-            name="id_category"
-            value={form.id_category}
+            name="category_id"
+            value={form.category_id}
             onChange={handleInputChange}
             options={categoryOptions}
             placeholder="Pilih kategori yang berkaitan dengan kursus"

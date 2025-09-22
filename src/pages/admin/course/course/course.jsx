@@ -1,16 +1,16 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import AdminTemplate from '../../../template/templateAdmin';
-import useCourseStore from '../../../zustand/courseStore';
-import ReactTable from '../../../components/table/reactTable';
-import Button from '../../../components/button/button';
-import Icon from '../../../components/icons/icon';
-import useAuthStore from '../../../zustand/authStore';
-import useCategoryStore from '../../../zustand/categoryStore';
-import useInstructorStore from '../../../zustand/instructorStore';
-import TableFilter from '../../../components/table/tableFilter';
+import AdminTemplate from '../../../../template/templateAdmin';
+import useCourseStore from '../../../../zustand/courseStore';
+import ReactTable from '../../../../components/table/reactTable';
+import Button from '../../../../components/button/button';
+import Icon from '../../../../components/icons/icon';
+import useAuthStore from '../../../../zustand/authStore';
+import useCategoryStore from '../../../../zustand/categoryStore';
+import useInstructorStore from '../../../../zustand/instructorStore';
+import TableFilter from '../../../../components/table/tableFilter';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
 
 export default function Course() {

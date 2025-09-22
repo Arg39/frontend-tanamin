@@ -1,6 +1,11 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import Icon from '../icons/icon';
+
+// Utility function for transformation
+function toUpperDash(str) {
+  if (typeof str !== 'string') return str;
+  return str.toUpperCase().replace(/\s+/g, '-');
+}
 
 function formatRupiah(value) {
   if (value === null || value === undefined) return '';
@@ -26,9 +31,18 @@ export default function TextInput({
   textarea,
   rows,
   rightButton,
+  transformToUpperDash, // NEW PROP
 }) {
   const handleInputChange = (e) => {
     let val = e.target.value;
+
+    // Apply transformation if enabled
+    if (transformToUpperDash) {
+      val = toUpperDash(val);
+      // Simulate event for controlled input
+      onChange({ target: { name, value: val } });
+      return;
+    }
 
     // For price input
     if (isPrice) {
@@ -176,6 +190,7 @@ TextInput.propTypes = {
   textarea: PropTypes.bool,
   rows: PropTypes.number,
   rightButton: PropTypes.node,
+  transformToUpperDash: PropTypes.bool, // NEW PROP
 };
 
 TextInput.defaultProps = {
@@ -190,4 +205,5 @@ TextInput.defaultProps = {
   textarea: false,
   rows: 4,
   rightButton: null,
+  transformToUpperDash: false, // NEW PROP
 };

@@ -1,6 +1,6 @@
 import React from 'react';
-import AdminTemplate from '../../../template/templateAdmin';
-import CuourseDetail from '../../instructor/course.jsx/courseDetail';
+import AdminTemplate from '../../../../template/templateAdmin';
+import CuourseDetail from '../../../instructor/course.jsx/courseDetail';
 import { useLocation } from 'react-router-dom';
 
 export default function CuourseDetailAdmin() {

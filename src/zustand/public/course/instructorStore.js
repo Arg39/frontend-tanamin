@@ -9,6 +9,23 @@ const useInstructorStore = create((set, get) => ({
   fetchInstructors: async () => {
     set({ loading: true, error: null });
     try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/instructor`);
+      if (response.status === 200) {
+        set({ instructors: response.data.data, loading: false });
+      } else {
+        set({ error: 'Failed to fetch instructors', loading: false });
+      }
+    } catch (error) {
+      set({
+        error: error.response?.data?.message || 'Failed to fetch instructors',
+        loading: false,
+      });
+    }
+  },
+
+  fetchInstructorList: async () => {
+    set({ loading: true, error: null });
+    try {
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/instructor-list`
       );

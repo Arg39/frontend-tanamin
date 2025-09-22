@@ -81,6 +81,54 @@ const useCertificateStore = create((set) => ({
       set({ loading: false, error: e.message, status: 'failed' });
     }
   },
+
+  // Fungsi baru untuk verifikasi sertifikat
+  async verifyCertificate(certificateCode) {
+    set({ loading: true, error: null, status: null, certificate: null });
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/certificates/verify/${certificateCode}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const json = await res.json();
+      if (json.status === 'success') {
+        // Map API fields to frontend fields
+        const mappedData = {
+          certificateCode: json.data.certificate_code,
+          userFullname: json.data.user_fullname,
+          courseTitle: json.data.course_title,
+          issuedAt: json.data.issued_at,
+        };
+        set({
+          certificate: mappedData,
+          loading: false,
+          error: null,
+          status: 'success',
+        });
+        return mappedData;
+      } else {
+        set({
+          certificate: null,
+          loading: false,
+          error: json.message || 'Sertifikat tidak ditemukan',
+          status: 'failed',
+        });
+        return null;
+      }
+    } catch (e) {
+      set({
+        certificate: null,
+        loading: false,
+        error: e.message,
+        status: 'failed',
+      });
+      return null;
+    }
+  },
 }));
 
 export default useCertificateStore;

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import AdminTemplate from '../../../template/templateAdmin';
-import Icon from '../../../components/icons/icon';
-import TextInput from '../../../components/form/textInput';
-import Button from '../../../components/button/button';
-import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
-import useCategoryStore from '../../../zustand/categoryStore';
-import SelectOption from '../../../components/form/selectOption';
-import useInstructorStore from '../../../zustand/instructorStore';
-import useCourseStore from '../../../zustand/courseStore';
+import AdminTemplate from '../../../../template/templateAdmin';
+import Icon from '../../../../components/icons/icon';
+import TextInput from '../../../../components/form/textInput';
+import Button from '../../../../components/button/button';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import useCategoryStore from '../../../../zustand/categoryStore';
+import SelectOption from '../../../../components/form/selectOption';
+import useInstructorStore from '../../../../zustand/instructorStore';
+import useCourseStore from '../../../../zustand/courseStore';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -22,8 +22,8 @@ export default function CourseAdd() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: '',
-    id_category: '',
-    id_instructor: '',
+    category_id: '',
+    instructor_id: '',
   });
 
   const [categoryOptions, setCategoryOptions] = useState([]);
@@ -41,11 +41,11 @@ export default function CourseAdd() {
     loadCategories();
   }, []);
 
-  // Fetch instructors when id_category changes
+  // Fetch instructors when category_id changes
   useEffect(() => {
     const loadInstructors = async () => {
-      if (formData.id_category) {
-        const options = await fetchInstructorOptions(formData.id_category);
+      if (formData.category_id) {
+        const options = await fetchInstructorOptions(formData.category_id);
         setInstructorOptions(options);
       } else {
         setInstructorOptions([]);
@@ -53,9 +53,9 @@ export default function CourseAdd() {
     };
     loadInstructors();
     // Reset instructor selection when category changes
-    setFormData((prev) => ({ ...prev, id_instructor: '' }));
+    setFormData((prev) => ({ ...prev, instructor_id: '' }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.id_category]);
+  }, [formData.category_id]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -65,8 +65,8 @@ export default function CourseAdd() {
   const validateForm = () => {
     const errors = [];
     if (!formData.title.trim()) errors.push('Judul kursus');
-    if (!formData.id_category) errors.push('Kategori terkait');
-    if (!formData.id_instructor) errors.push('Instruktur penanggung jawab');
+    if (!formData.category_id) errors.push('Kategori terkait');
+    if (!formData.instructor_id) errors.push('Instruktur penanggung jawab');
     return errors;
   };
 
@@ -91,8 +91,8 @@ export default function CourseAdd() {
         try {
           const result = await addCourse({
             title: formData.title,
-            id_category: formData.id_category,
-            id_instructor: formData.id_instructor,
+            category_id: formData.category_id,
+            instructor_id: formData.instructor_id,
           });
           navigate('/admin/kursus');
         } catch (err) {
@@ -131,24 +131,24 @@ export default function CourseAdd() {
           />
           <SelectOption
             label="Kategori terkait"
-            name="id_category"
-            value={formData.id_category}
+            name="category_id"
+            value={formData.category_id}
             onChange={handleInputChange}
             options={categoryOptions}
             placeholder="Pilih kategori yang berkaitan dengan kursus"
           />
           <SelectOption
             label="Instruktur penanggung jawab"
-            name="id_instructor"
-            value={formData.id_instructor}
+            name="instructor_id"
+            value={formData.instructor_id}
             onChange={handleInputChange}
             options={instructorOptions}
             placeholder={
-              formData.id_category
+              formData.category_id
                 ? 'Pilih instruktur yang akan bertanggung jawab'
                 : 'Pilih kategori terlebih dahulu'
             }
-            disabled={!formData.id_category}
+            disabled={!formData.category_id}
           />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">

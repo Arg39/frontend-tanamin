@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useCertificateStore from '../../../../../zustand/public/course/learning/certificateStore';
+import useReviewCourseStore from '../../../../../zustand/public/course/reviewCourseStore';
 import Icon from '../../../../../components/icons/icon';
 import TextInput from '../../../../../components/form/textInput';
 import { toast } from 'react-toastify';
@@ -12,7 +13,22 @@ export default function CertificateContentCourse({ data, loading, error, onNextL
   // Review state
   const [reviewStars, setReviewStars] = useState(0);
   const [reviewComment, setReviewComment] = useState('');
-  const [reviewLoading, setReviewLoading] = useState(false);
+
+  // Review store
+  const {
+    loading: reviewLoading,
+    error: reviewError,
+    review,
+    fetchReview,
+    submitReview,
+  } = useReviewCourseStore();
+
+  useEffect(() => {
+    if (data?.course_id) {
+      fetchReview(data.course_id).catch(() => {});
+    }
+    // eslint-disable-next-line
+  }, [data?.course_id]);
 
   const handleDownload = async () => {
     setDownloadLoading(true);
@@ -44,33 +60,31 @@ export default function CertificateContentCourse({ data, loading, error, onNextL
       toast.error('Silakan pilih rating bintang.');
       return;
     }
-    if (!reviewComment.trim()) {
-      toast.error('Komentar tidak boleh kosong.');
+    // comment nullable, but let's keep UX
+    if (reviewComment.length > 1000) {
+      toast.error('Komentar maksimal 1000 karakter.');
       return;
     }
 
-    setReviewLoading(true);
     try {
-      // Simulate async submit (replace with actual API call)
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      await submitReview(data.course_id, reviewStars, reviewComment);
       toast.success('Review berhasil dikirim. Terima kasih!');
       setReviewComment('');
       setReviewStars(0);
     } catch (err) {
-      toast.error('Gagal mengirim review.');
+      toast.error(err.message || 'Gagal mengirim review.');
     }
-    setReviewLoading(false);
   };
 
   return (
-    <div className="min-h-[600px] p-8 border border-primary-700 rounded-lg mb-4 flex flex-col items-center justify-center">
+    <div className="w-full min-h-[600px] p-8 border border-primary-700 rounded-lg mb-4 flex flex-col items-center justify-center">
       {error ? (
         <div className="text-red-500">{error}</div>
       ) : !data ? (
         <div>Belum ada sertifikat.</div>
       ) : (
-        <div className="flex flex-col items-center gap-4">
-          <div className="bg-white border-4 border-primary-700 rounded-xl shadow-lg p-8 w-full text-center">
+        <div className="w-full flex flex-col items-center gap-4">
+          <div className="bg-white border-4 border-primary-700 rounded-xl shadow-lg p-4 md:p-8 w-full text-center">
             <h2 className="text-3xl font-bold text-primary-700 mb-4">Sertifikat Penyelesaian</h2>
             <p className="text-lg mb-2">Diberikan kepada:</p>
             <p className="text-2xl font-bold mb-4">{data.user_name || 'Nama User'}</p>
@@ -88,46 +102,83 @@ export default function CertificateContentCourse({ data, loading, error, onNextL
           </div>
 
           {/* content for review course */}
-          <div className="bg-white border-4 border-primary-700 rounded-xl shadow-lg p-8 w-full text-center">
+          <div className="bg-white border-4 border-primary-700 rounded-xl shadow-lg p-4 md:p-8 w-full text-center">
             <h3 className="text-xl font-bold text-primary-700 mb-4">Review Kursus</h3>
-            <form onSubmit={handleReviewSubmit} className="flex flex-col items-center gap-4">
-              <div className="flex items-center justify-center gap-1 mb-2">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    onClick={() => handleStarClick(star)}
-                    className="focus:outline-none"
-                    aria-label={`Beri rating ${star} bintang`}
-                  >
+            {reviewLoading ? (
+              <div>Mengambil data review...</div>
+            ) : reviewError ? (
+              <div className="text-red-500">{reviewError}</div>
+            ) : review ? (
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex items-center justify-center gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
                     <Icon
+                      key={star}
                       type="star"
-                      className={`size-7 transition ${
-                        star <= reviewStars ? 'text-tertiary-500' : 'text-gray-300'
+                      className={`size-6 ${
+                        star <= (review.rating || review.stars)
+                          ? 'text-tertiary-500'
+                          : 'text-gray-300'
                       }`}
-                      color={star <= reviewStars ? '#facc15' : '#d1d5db'}
                     />
-                  </button>
-                ))}
+                  ))}
+                </div>
+                <div className="text-lg font-semibold">{review.comment}</div>
+                <div className="text-sm text-gray-500 mt-1">
+                  {review.created_at ? `Dikirim pada ${review.created_at.split(' ')[0]}` : ''}
+                </div>
               </div>
-              <TextInput
-                name="reviewComment"
-                value={reviewComment}
-                onChange={handleCommentChange}
-                placeholder="Tulis komentar Anda tentang kursus ini..."
-                textarea
-                rows={3}
-                disabled={reviewLoading}
-                required
-              />
-              <button
-                type="submit"
-                className="bg-primary-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-800 transition disabled:opacity-50 mt-2"
-                disabled={reviewLoading}
-              >
-                {reviewLoading ? 'Mengirim...' : 'Kirim Review'}
-              </button>
-            </form>
+            ) : (
+              <>
+                <p className="mb-4 text-secondary-700">
+                  Mohon berikan penilaian bintang untuk kursus ini untuk membantu kami meningkatkan
+                  kualitas pembelajaran.
+                </p>
+                <form
+                  onSubmit={handleReviewSubmit}
+                  className="w-full flex flex-col items-center gap-4"
+                >
+                  <div className="w-full flex items-center justify-center gap-4 mb-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => handleStarClick(star)}
+                        className="focus:outline-none"
+                        aria-label={`Beri rating ${star} bintang`}
+                      >
+                        <Icon
+                          type="star"
+                          className={`size-7 transition ${
+                            star <= reviewStars ? 'text-tertiary-500' : 'text-gray-300'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                  <div className="w-full">
+                    <TextInput
+                      name="reviewComment"
+                      value={reviewComment}
+                      onChange={handleCommentChange}
+                      placeholder="Tulis komentar Anda tentang kursus ini..."
+                      textarea
+                      rows={3}
+                      disabled={reviewLoading}
+                      maxLength={1000}
+                      className="w-full"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="bg-primary-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-800 transition disabled:opacity-50 mt-2"
+                    disabled={reviewLoading}
+                  >
+                    {reviewLoading ? 'Mengirim...' : 'Kirim Review'}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       )}

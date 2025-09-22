@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import AdminTemplate from '../../../template/templateAdmin';
-import useCategoryStore from '../../../zustand/categoryStore';
-import ReactTable from '../../../components/table/reactTable';
-import Button from '../../../components/button/button';
-import Icon from '../../../components/icons/icon';
-import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
-import TableFilter from '../../../components/table/tableFilter';
+import AdminTemplate from '../../../../template/templateAdmin';
+import useCategoryStore from '../../../../zustand/categoryStore';
+import ReactTable from '../../../../components/table/reactTable';
+import Button from '../../../../components/button/button';
+import Icon from '../../../../components/icons/icon';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import TableFilter from '../../../../components/table/tableFilter';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function Category() {

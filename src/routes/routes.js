@@ -4,17 +4,17 @@ import useAuthStore from '../zustand/authStore';
 import Login from '../pages/public/login';
 import Register from '../pages/public/register';
 import NotFound from '../pages/public/NotFound';
-import DashboardAdmin from '../pages/admin/dashboard';
-import Category from '../pages/admin/category/category';
-import CategoryAdd from '../pages/admin/category/categoryAdd';
-import CategoryEdit from '../pages/admin/category/categoryEdit';
-import Course from '../pages/admin/course/course';
+import DashboardAdmin from '../pages/admin/dashboard/dashboard';
+import Category from '../pages/admin/course/category/category';
+import CategoryAdd from '../pages/admin/course/category/categoryAdd';
+import CategoryEdit from '../pages/admin/course/category/categoryEdit';
+import Course from '../pages/admin/course/course/course';
 import DashboardInstructor from '../pages/instructor/dashboard';
 import Payment from '../pages/student/testPayment';
-import CourseAdd from '../pages/admin/course/courseAdd';
+import CourseAdd from '../pages/admin/course/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
-import CuourseDetailAdmin from '../pages/admin/category/courseDetailAdmin';
+import CuourseDetailAdmin from '../pages/admin/course/category/courseDetailAdmin';
 import CourseAttributeEdit from '../pages/instructor/course.jsx/tabs/atribut/atributEdit';
 import ModulAdd from '../pages/instructor/course.jsx/tabs/materi/module/modulAdd';
 import LessonAdd from '../pages/instructor/course.jsx/tabs/materi/lesson/lessonAdd';
@@ -26,7 +26,6 @@ import TentangKami from '../pages/public/tentangKami';
 import Faq from '../pages/public/faq';
 import KontakKami from '../pages/public/kontakKami';
 import RingkasanEditInstructor from '../pages/instructor/course.jsx/ringkasanEditInstructor';
-import RingkasanEditAdmin from '../pages/admin/course/ringkasan/ringkasanEditAdmin';
 import InstructorProfile from '../pages/instructor/profile/profile';
 import InstructorProfileEdit from '../pages/instructor/profile/profileEdit';
 import Instructor from '../pages/admin/user/instructor/instructor';
@@ -43,7 +42,7 @@ import KerjaSamaAdd from '../pages/admin/content/aboutCompany/tabs/kerjaSama/ker
 import KerjaSamaEdit from '../pages/admin/content/aboutCompany/tabs/kerjaSama/kerjaSamaEdit';
 import FaqAdd from '../pages/admin/content/faq/faqAdd';
 import FaqEdit from '../pages/admin/content/faq/faqEdit';
-import HargaEdit from '../pages/admin/course/ringkasan/hargaEdit';
+import HargaEdit from '../pages/admin/course/course/ringkasan/hargaEdit';
 import Coupon from '../pages/admin/promo/coupon/coupon';
 import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
@@ -56,6 +55,9 @@ import InstructorDetailPublic from '../pages/public/instructor/instructorDetail'
 import AdminKontakPerusahaanEdit from '../pages/admin/content/aboutCompany/tabs/kontakPerusahaan/kontakPerusahaanEdit';
 import AdminMessage from '../pages/admin/message/message/message';
 import LearningCourse from '../pages/public/course/learning/learningCourse';
+import VerifyCertificate, { CertificateInputPage } from '../pages/public/course/verifyCertificate';
+import CourseTransaction from '../pages/admin/course/courseTransactions/courseTransaction';
+import Income from '../pages/admin/financial/income/income';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -151,13 +153,16 @@ const adminRoutes = [
   { path: 'kursus', element: <Course /> },
   { path: 'kursus/tambah', element: <CourseAdd /> },
   { path: 'kursus/:id/lihat/:tab', element: <CuourseDetailAdmin /> },
-  { path: 'kursus/:id/edit/ringkasan', element: <RingkasanEditAdmin /> },
   { path: 'kursus/:id/edit/harga', element: <HargaEdit /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
+  // transaction courses
+  { path: 'transaksi-kursus', element: <CourseTransaction /> },
   // coupon
   { path: 'kupon', element: <Coupon /> },
   { path: 'kupon/tambah', element: <CouponAdd /> },
   { path: 'kupon/:couponId/edit', element: <CouponEdit /> },
+  // income
+  { path: 'pendapatan', element: <Income /> },
   // about company
   {
     path: 'tentang-perusahaan',
@@ -211,6 +216,8 @@ const publicRoutes = [
   { path: '/faq', element: <Faq /> },
   { path: '/kontak-kami', element: <KontakKami /> },
   { path: '/instruktur/detail/:instructorId', element: <InstructorDetailPublic /> },
+  { path: '/verifikasi/sertifikat-kursus', element: <CertificateInputPage /> },
+  { path: '/verifikasi/sertifikat-kursus/:certificateCode', element: <VerifyCertificate /> },
 ];
 
 const PublicRoute = ({ children }) => {

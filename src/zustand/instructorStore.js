@@ -74,7 +74,7 @@ const useInstructorStore = create((set) => ({
     }
   },
 
-  fetchInstructorOptions: async (id_category = null) => {
+  fetchInstructorOptions: async (category_id = null) => {
     const { token } = useAuthStore.getState();
     if (!token) {
       set({ error: 'Unauthorized: No token found' });
@@ -87,7 +87,7 @@ const useInstructorStore = create((set) => ({
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          params: id_category ? { id_category } : {},
+          params: category_id ? { category_id } : {},
         }
       );
       if (response.status === 200) {

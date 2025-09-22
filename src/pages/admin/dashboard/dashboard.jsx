@@ -1,11 +1,11 @@
 import React from 'react';
-import AdminTemplate from '../../template/templateAdmin';
-import StatCard from '../../components/card/statCard';
-import dashboardStore from '../../zustand/temporaryDummyData/dashboardStore';
+import AdminTemplate from '../../../template/templateAdmin';
+import StatCard from '../../../components/card/statCard';
+import dashboardStore from '../../../zustand/temporaryDummyData/dashboardStore';
 import { Link, useLocation } from 'react-router-dom';
-import Icon from '../../components/icons/icon';
-import LineChart from '../../components/chart/lineChart';
-import CourseTopicChart from '../../components/chart/courseTopicChart';
+import Icon from '../../../components/icons/icon';
+import LineChart from '../../../components/chart/lineChart';
+import CourseTopicChart from '../../../components/chart/courseTopicChart';
 
 export default function DashboardAdmin() {
   const location = useLocation();
@@ -51,7 +51,7 @@ export default function DashboardAdmin() {
             <div className="flex flex-col gap-4 bg-white rounded-md p-4 px-8 shadow-md">
               <div className="flex justify-between items-center">
                 <h4 className="text-lg md:text-xl font-bold">Total Pendapatan</h4>
-                <Link to="/admin/pemasukan">
+                <Link to="/admin/pendapatan">
                   <Icon
                     type="arrow-top-right"
                     className="size-6 md:size-8 border border-primary-800 rounded-md"

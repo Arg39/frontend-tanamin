@@ -14,6 +14,7 @@ export default function OutlineCourseCard({
   onShowCertificate,
   certificateActive = false,
   certificateDisabled = false,
+  sticky = false, // NEW PROP
 }) {
   const [openModuleIndex, setOpenModuleIndex] = useState(openModuleIndexProp);
 
@@ -34,13 +35,16 @@ export default function OutlineCourseCard({
 
   return (
     <div
-      className={`p-4 border border-primary-700 rounded-lg mb-4 bg-white ${
-        isMobile ? 'shadow-lg' : ''
-      }`}
+      className={`p-4 border border-primary-700 ${
+        isMobile
+          ? 'rounded-none shadow-none mb-0 h-full max-h-full'
+          : 'rounded-lg mb-4 bg-white shadow-lg'
+      } ${sticky ? 'sticky top-24' : ''}`}
       style={{
-        height: isMobile ? 'auto' : '600px',
-        maxHeight: isMobile ? '70vh' : '600px',
+        height: isMobile ? '100%' : '600px',
+        maxHeight: isMobile ? '100%' : '600px',
         overflowY: 'auto',
+        background: isMobile ? 'white' : undefined,
       }}
     >
       <p className="font-bold text-2xl text-primary-700 mb-2">Outline Materi</p>
