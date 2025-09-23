@@ -103,16 +103,16 @@ export default function Login() {
                   <Icon type={showPassword ? 'eye-off' : 'eye'} />
                 </button>
               </div>
-              <div className="flex flex-row justify-between items-center mb-6">
-                <label className="flex items-center mb-0 mr-4">
+              <div className="flex flex-row justify-end items-center mb-6">
+                {/* <label className="flex items-center mb-0 mr-4">
                   <input type="checkbox" className="mr-2" disabled={loading} />
                   Ingat Saya
-                </label>
+                </label> */}
                 <button className="hover:underline ml-4" disabled={loading}>
                   Lupa Password?
                 </button>
               </div>
-              <div className="text-start mb-6 lg:mb-10">
+              <div className="w-full flex justify-center mb-6 lg:mb-10">
                 <span>Belum Memiliki Akun? </span>
                 <Link to={'/daftar'} className="text-primary-800 font-semibold hover:underline">
                   Daftar Sekarang

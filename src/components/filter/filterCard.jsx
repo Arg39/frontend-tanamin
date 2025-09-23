@@ -3,8 +3,6 @@ import Checkbox from '../form/checkbox';
 import StarRating from '../content/star/star';
 import {
   useFilterCourseStore,
-  categories,
-  instructor,
   rating,
   price,
   level,
@@ -45,6 +43,12 @@ function handleSingleActiveCheckboxChange(items, name, checked, setState, key = 
 
 export default function FilterCard({ isMobile = false }) {
   // Zustand store hooks
+  const categories = useFilterCourseStore((state) => state.categories);
+  const instructor = useFilterCourseStore((state) => state.instructor);
+  const loading = useFilterCourseStore((state) => state.loading);
+  const error = useFilterCourseStore((state) => state.error);
+  const fetchFilterData = useFilterCourseStore((state) => state.fetchFilterData);
+
   const checkedCategories = useFilterCourseStore((state) => state.checkedCategories);
   const setCheckedCategories = useFilterCourseStore((state) => state.setCheckedCategories);
 
@@ -66,6 +70,12 @@ export default function FilterCard({ isMobile = false }) {
   const [visibleCategories, setVisibleCategories] = useState(6);
   const [visibleInstructor, setVisibleInstructor] = useState(6);
 
+  // Fetch filter data on mount
+  useEffect(() => {
+    fetchFilterData();
+    // eslint-disable-next-line
+  }, []);
+
   // Log active filters
   useEffect(() => {
     const activeFilters = getActiveFilters();
@@ -78,6 +88,22 @@ export default function FilterCard({ isMobile = false }) {
     checkedLevel,
     getActiveFilters,
   ]);
+
+  if (loading) {
+    return (
+      <div className="w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white">
+        <p>Loading filter data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white">
+        <p className="text-red-600">Error: {error}</p>
+      </div>
+    );
+  }
 
   // Konten utama filter (biar bisa dipakai di desktop & mobile)
   const filterContent = (

@@ -192,7 +192,7 @@ export default function ListCourse() {
                   </button>
                 </form>
                 {/* Course List Grid */}
-                <div className="min-h-[1200px]">
+                <div className="min-h-[800px]">
                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     {coursesLoading ? (
                       <div className="col-span-3 text-center py-8 text-primary-600">
@@ -209,7 +209,7 @@ export default function ListCourse() {
                     )}
                   </div>
                 </div>
-                <div className="w-full mt-16">
+                <div className="w-full mt-8">
                   <PaginationCard
                     currentPage={currentPage}
                     totalPages={totalPages}

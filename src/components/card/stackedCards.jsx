@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Card from './card';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -19,10 +19,53 @@ export default function StackedCourseCards({ courses }) {
   const maxVisible = Math.min(3, courses?.length || 0);
   const [order, setOrder] = useState(Array.from({ length: maxVisible }, (_, i) => i));
   const [animating, setAnimating] = useState(false);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     setOrder(Array.from({ length: maxVisible }, (_, i) => i));
   }, [courses, maxVisible]);
+
+  // Auto-rotate every 5 seconds
+  useEffect(() => {
+    if (!courses || courses.length <= 1) return;
+    function rotateCards() {
+      if (!animating) {
+        setAnimating(true);
+        setOrder((prev) => {
+          const next = [...prev.slice(1), (prev[prev.length - 1] + 1) % courses.length];
+          return next;
+        });
+        setTimeout(() => setAnimating(false), 600);
+      }
+    }
+    intervalRef.current = setInterval(rotateCards, 5000);
+    return () => clearInterval(intervalRef.current);
+  }, [courses, animating, maxVisible]);
+
+  // Reset interval on manual click
+  const handleCardClick = () => {
+    if (animating || courses.length <= 1) return;
+    setAnimating(true);
+    setOrder((prev) => {
+      const next = [...prev.slice(1), (prev[prev.length - 1] + 1) % courses.length];
+      return next;
+    });
+    setTimeout(() => setAnimating(false), 600);
+    // Reset interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(() => {
+        if (!animating) {
+          setAnimating(true);
+          setOrder((prev) => {
+            const next = [...prev.slice(1), (prev[prev.length - 1] + 1) % courses.length];
+            return next;
+          });
+          setTimeout(() => setAnimating(false), 600);
+        }
+      }, 5000);
+    }
+  };
 
   if (!courses || courses.length === 0) {
     return (
@@ -34,17 +77,6 @@ export default function StackedCourseCards({ courses }) {
 
   // Only show up to maxVisible cards
   const visibleCards = order.map((idx) => courses[idx % courses.length]);
-
-  const handleCardClick = () => {
-    if (animating || courses.length <= 1) return;
-    setAnimating(true);
-    setOrder((prev) => {
-      // Rotate only within available courses
-      const next = [...prev.slice(1), (prev[prev.length - 1] + 1) % courses.length];
-      return next;
-    });
-    setTimeout(() => setAnimating(false), 600);
-  };
 
   const cardWidth = isMobile ? 260 : 340;
   const cardHeight = isMobile ? 400 : 480;
@@ -109,7 +141,7 @@ export default function StackedCourseCards({ courses }) {
     <div
       className="relative flex justify-center items-center"
       style={{
-        width: `${cardWidth}px`, // No subtraction for mobile/desktop
+        width: `${cardWidth}px`,
         height: `${cardHeight + extraHeight}px`,
       }}
     >

@@ -1,38 +1,20 @@
 import { create } from 'zustand';
 
-const categories = [
-  { id: 'all-categories', title: 'semua', count: 7 },
-  { id: 'cat-1', title: 'Programming', count: 3 },
-  { id: 'cat-2', title: 'Design', count: 2 },
-  { id: 'cat-3', title: 'Marketing', count: 2 },
-  { id: 'cat-4', title: 'Business', count: 4 },
-  { id: 'cat-5', title: 'Finance', count: 1 },
-  { id: 'cat-6', title: 'Photography', count: 2 },
-  { id: 'cat-7', title: 'Music', count: 3 },
-  { id: 'cat-8', title: 'Cooking', count: 2 },
-  { id: 'cat-9', title: 'Language', count: 2 },
-  { id: 'cat-10', title: 'Science', count: 1 },
-  { id: 'cat-11', title: 'Health', count: 2 },
-];
+function getInitialChecked(items, key = 'title') {
+  const checked = {};
+  items.forEach((item) => {
+    checked[item[key]] = item[key] === 'semua';
+  });
+  return checked;
+}
 
-const instructor = [
-  { id: 'all-instructor', name: 'semua', count: 21 },
-  { id: 'ins-1', name: 'Angra blastsada', count: 7 },
-  { id: 'ins-2', name: 'bras', count: 7 },
-  { id: 'ins-3', name: 'vasterio', count: 7 },
-  { id: 'ins-4', name: 'Rina', count: 2 },
-  { id: 'ins-5', name: 'Budi', count: 3 },
-  { id: 'ins-6', name: 'Siti', count: 2 },
-  { id: 'ins-7', name: 'Joko', count: 1 },
-  { id: 'ins-8', name: 'Dewi', count: 2 },
-  { id: 'ins-9', name: 'Tono', count: 2 },
-  { id: 'ins-10', name: 'Lisa', count: 1 },
-  { id: 'ins-11', name: 'Andi', count: 2 },
-  { id: 'ins-12', name: 'Rudi', count: 1 },
-  { id: 'ins-13', name: 'Sari', count: 2 },
-  { id: 'ins-14', name: 'Eko', count: 1 },
-  { id: 'ins-15', name: 'Wati', count: 2 },
-];
+function getInitialCheckedSingle(items, key = 'type') {
+  const checked = {};
+  items.forEach((item) => {
+    checked[item[key]] = item[key] === 'all';
+  });
+  return checked;
+}
 
 const rating = [
   { rating: 5, count: 17 },
@@ -55,25 +37,14 @@ const level = [
   { title: 'mahir', type: 'advance', count: 7 },
 ];
 
-function getInitialChecked(items, key = 'title') {
-  const checked = {};
-  items.forEach((item) => {
-    checked[item[key]] = item[key] === 'semua';
-  });
-  return checked;
-}
-
-function getInitialCheckedSingle(items, key = 'type') {
-  const checked = {};
-  items.forEach((item) => {
-    checked[item[key]] = item[key] === 'all';
-  });
-  return checked;
-}
-
 export const useFilterCourseStore = create((set, get) => ({
-  checkedCategories: getInitialChecked(categories, 'title'),
-  checkedInstructor: getInitialChecked(instructor, 'name'),
+  categories: [],
+  instructor: [],
+  loading: false,
+  error: null,
+
+  checkedCategories: {},
+  checkedInstructor: {},
   checkedRatings: {},
   checkedPrice: getInitialCheckedSingle(price, 'type'),
   checkedLevel: getInitialCheckedSingle(level, 'type'),
@@ -84,28 +55,74 @@ export const useFilterCourseStore = create((set, get) => ({
   setCheckedPrice: (newState) => set({ checkedPrice: newState }),
   setCheckedLevel: (newState) => set({ checkedLevel: newState }),
 
+  fetchFilterData: async () => {
+    set({ loading: true, error: null });
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/filtering`,
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      const json = await res.json();
+      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch filter data');
+
+      // Transform category and instructor objects to arrays
+      const categoriesArr = [
+        {
+          id: 'all-categories',
+          title: 'semua',
+          count: Object.values(json.data.category).reduce((a, b) => a + b, 0),
+        },
+        ...Object.entries(json.data.category).map(([title, count], idx) => ({
+          id: `cat-${idx + 1}`,
+          title,
+          count,
+        })),
+      ];
+      const instructorArr = [
+        {
+          id: 'all-instructor',
+          name: 'semua',
+          count: Object.values(json.data.instructor).reduce((a, b) => a + b, 0),
+        },
+        ...Object.entries(json.data.instructor).map(([name, count], idx) => ({
+          id: `ins-${idx + 1}`,
+          name,
+          count,
+        })),
+      ];
+
+      set({
+        categories: categoriesArr,
+        instructor: instructorArr,
+        checkedCategories: getInitialChecked(categoriesArr, 'title'),
+        checkedInstructor: getInitialChecked(instructorArr, 'name'),
+        loading: false,
+        error: null,
+      });
+    } catch (e) {
+      set({ error: e.message, loading: false });
+    }
+  },
+
   // Utility to get only active filters (id/type)
   getActiveFilters: () => {
     const state = get();
 
-    // Categories: get ids of checked categories except 'semua'
-    const activeCategories = categories
+    const activeCategories = state.categories
       .filter((cat) => state.checkedCategories[cat.title] && cat.title !== 'semua')
       .map((cat) => cat.id);
 
-    // Instructor: get ids of checked instructors except 'semua'
-    const activeInstructor = instructor
+    const activeInstructor = state.instructor
       .filter((ins) => state.checkedInstructor[ins.name] && ins.name !== 'semua')
       .map((ins) => ins.id);
 
-    // Ratings: get ratings that are checked
     const activeRatings = rating.filter((r) => state.checkedRatings[r.rating]).map((r) => r.rating);
 
-    // Price: get type that is checked
     const activePrice = price.find((p) => state.checkedPrice[p.type]);
     const activePriceType = activePrice ? activePrice.type : null;
 
-    // Level: get type that is checked
     const activeLevel = level.find((lvl) => state.checkedLevel[lvl.type]);
     const activeLevelType = activeLevel ? activeLevel.type : null;
 
@@ -119,5 +136,4 @@ export const useFilterCourseStore = create((set, get) => ({
   },
 }));
 
-// Export data for use in FilterCard
-export { categories, instructor, rating, price, level };
+export { rating, price, level };

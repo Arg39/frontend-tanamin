@@ -108,7 +108,7 @@ export default function Beranda() {
             <Button
               variant="primary"
               className="font-medium bg-primary-700 text-white text-base lg:text-lg mt-8 lg:mt-16 w-fit px-6 lg:px-8"
-              to="/course"
+              to="/kursus"
             >
               Jelajahi Course
             </Button>
