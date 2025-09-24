@@ -82,7 +82,7 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
 
   useEffect(() => {
     const activeFilters = getActiveFilters();
-    console.log('Active Filters:', activeFilters);
+    // console.log('Active Filters:', activeFilters);
   }, [
     checkedCategories,
     checkedInstructor,
@@ -154,25 +154,27 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
                 <div className="flex items-center gap-2">
                   <Checkbox
                     box
-                    name={cat.title}
-                    checked={!!checkedCategories[cat.title]}
-                    onChange={({ target: { name, checked } }) =>
-                      handleIndividualCheckboxChange(
-                        categories,
-                        name,
-                        checked,
-                        checkedCategories,
-                        setCheckedCategories,
-                        'title'
-                      )
-                    }
+                    name={cat.id}
+                    checked={!!checkedCategories[cat.id]}
+                    onChange={({ target: { name, checked } }) => {
+                      // Perubahan: trigger filter langsung
+                      const newState = {};
+                      categories.forEach((item) => {
+                        newState[item.id] = item.id === name ? checked : false;
+                      });
+                      // Jika uncheck, fallback ke 'all-categories'
+                      if (!checked) {
+                        newState['all-categories'] = true;
+                      }
+                      setCheckedCategories(newState);
+                    }}
                     className="w-4 h-4"
                   />
                   <p>{cat.title}</p>
                 </div>
                 <p
                   className={`p-[1px] px-2 rounded-md text-white ${
-                    checkedCategories[cat.title] ? 'bg-primary-700' : 'bg-secondary-500'
+                    checkedCategories[cat.id] ? 'bg-primary-700' : 'bg-secondary-500'
                   }`}
                 >
                   {cat.count}

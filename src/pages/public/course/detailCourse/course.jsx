@@ -75,7 +75,7 @@ export default function PublicCourse() {
   const { courseId } = useParams();
   const navigate = useNavigate();
 
-  const { course, fetchCourseById, loading, error } = useCourseStore();
+  const { course, fetchCourseById, loading, error, othersCourseInstructor } = useCourseStore();
   const stickyParentRef = useRef(null);
   const [bioExpanded, setBioExpanded] = useState(false);
 

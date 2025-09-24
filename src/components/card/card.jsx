@@ -205,10 +205,16 @@ export default function Card({
               {course.instructor || '-'}
             </p>
             <div className="mt-1 flex flex-wrap items-center gap-x-2">
-              {getPriceDisplay(
-                course.price ?? 0,
-                course.discount ?? 0,
-                course.type_discount ?? null
+              {course.owned ? (
+                <span className="text-base sm:text-lg font-bold text-green-600">
+                  Sudah Dimiliki
+                </span>
+              ) : (
+                getPriceDisplay(
+                  course.price ?? 0,
+                  course.discount ?? 0,
+                  course.type_discount ?? null
+                )
               )}
             </div>
           </div>

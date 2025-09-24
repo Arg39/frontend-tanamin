@@ -2,10 +2,10 @@ import { create } from 'zustand';
 
 const FILTER_STORAGE_KEY = 'tanamin_course_filters';
 
-function getInitialChecked(items, key = 'title') {
+function getInitialChecked(items, key = 'id') {
   const checked = {};
   items.forEach((item) => {
-    checked[item[key]] = item[key] === 'semua';
+    checked[item[key]] = item[key] === 'all-categories';
   });
   return checked;
 }
@@ -44,9 +44,9 @@ export const useFilterCourseStore = create((set, get) => {
   const initialState = {
     categories: [],
     instructor: [],
-    ratings: [], // dynamic from API
-    prices: [], // dynamic from API
-    levels: [], // dynamic from API
+    ratings: [],
+    prices: [],
+    levels: [],
     loading: false,
     error: null,
     checkedCategories: stored?.checkedCategories || {},
@@ -97,7 +97,7 @@ export const useFilterCourseStore = create((set, get) => {
       const state = get();
       const defaultCheckedCategories =
         state.categories && state.categories.length > 0
-          ? getInitialChecked(state.categories, 'title')
+          ? getInitialChecked(state.categories, 'id')
           : {};
       const defaultCheckedInstructor =
         state.instructor && state.instructor.length > 0
@@ -130,15 +130,15 @@ export const useFilterCourseStore = create((set, get) => {
     },
 
     // Set category filter directly (for navigation from beranda)
-    setCategoryFilter: (categoryTitle) => {
+    setCategoryFilter: (categoryId) => {
       const state = get();
       const newChecked = {};
       state.categories.forEach((cat) => {
-        newChecked[cat.title] = cat.title === categoryTitle;
+        newChecked[cat.id] = cat.id === categoryId;
       });
-      // 'semua' must be false if not selected
-      if (newChecked['semua'] !== undefined && categoryTitle !== 'semua') {
-        newChecked['semua'] = false;
+      // 'all-categories' must be false if not selected
+      if (newChecked['all-categories'] !== undefined && categoryId !== 'all-categories') {
+        newChecked['all-categories'] = false;
       }
       set({ checkedCategories: newChecked });
       persistFilters({ checkedCategories: newChecked });
@@ -147,10 +147,9 @@ export const useFilterCourseStore = create((set, get) => {
     // Utility to check if any filter is active (not default)
     hasActiveFilters: () => {
       const state = get();
-
-      // Cek kategori (selain 'semua')
+      // Cek kategori (selain 'all-categories')
       const catActive = state.categories.some(
-        (cat) => cat.title !== 'semua' && state.checkedCategories[cat.title]
+        (cat) => cat.id !== 'all-categories' && state.checkedCategories[cat.id]
       );
       // Cek instruktur (selain 'semua')
       const insActive = state.instructor.some(
@@ -309,7 +308,7 @@ export const useFilterCourseStore = create((set, get) => {
           checkedCategories:
             stored?.checkedCategories && Object.keys(stored.checkedCategories).length > 0
               ? stored.checkedCategories
-              : getInitialChecked(categoriesArr, 'title'),
+              : getInitialChecked(categoriesArr, 'id'),
           checkedInstructor:
             stored?.checkedInstructor && Object.keys(stored.checkedInstructor).length > 0
               ? stored.checkedInstructor
@@ -330,7 +329,7 @@ export const useFilterCourseStore = create((set, get) => {
       const state = get();
 
       const activeCategories = state.categories
-        .filter((cat) => state.checkedCategories[cat.title] && cat.title !== 'semua')
+        .filter((cat) => state.checkedCategories[cat.id] && cat.id !== 'all-categories')
         .map((cat) => cat.id);
 
       const activeInstructor = state.instructor

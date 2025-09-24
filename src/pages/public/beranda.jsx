@@ -11,7 +11,7 @@ import Card from '../../components/card/card';
 import Icon from '../../components/icons/icon';
 import useInstructorStore from '../../zustand/public/course/instructorStore';
 import useBerandaStore from '../../zustand/public/beranda/berandaStore';
-import StackedCourseCards from '../../components/card/stackedCards'; // Import here
+import StackedCourseCards from '../../components/card/stackedCards';
 import { useFilterCourseStore } from '../../zustand/public/course/filterCourseStore';
 
 // Helper to get full image URL
@@ -63,10 +63,16 @@ export default function Beranda() {
     fetchBestCourses();
   }, [fetchBestCourses]);
 
+  // --- FILTER LOGIC ---
   const setCategoryFilter = useFilterCourseStore((state) => state.setCategoryFilter);
+  const checkedCategories = useFilterCourseStore((state) => state.checkedCategories);
+
+  // Find which category is currently selected (for highlight)
+  const selectedCategoryId = Object.entries(checkedCategories).find(([, v]) => v)?.[0];
 
   const handleCategoryClick = (category) => {
-    setCategoryFilter(category.name || category.title);
+    setCategoryFilter(category.id);
+    // Optionally: scroll to course list after navigation
     navigate('/kursus');
   };
 
@@ -152,17 +158,12 @@ export default function Beranda() {
                       imageUrl: getImageUrl(cat.image),
                     }}
                     onClick={handleCategoryClick}
+                    selected={selectedCategoryId === cat.id}
                   />
                 ))}
               </div>
             </div>
           </div>
-          {/* <div className="mb-16">
-            <h2 className="text-xl text-primary-800 lg:text-4xl font-semibold">
-              Teratas Minggu Ini
-            </h2>
-            <div className="mb-20"></div>
-          </div> */}
 
           <div className="mb-16">
             <div className="flex justify-between items-end">

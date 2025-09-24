@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import Template from '../../../template/template';
 import Breadcrumb from '../../../components/breadcrumb/breadcrumb';
 import useProfileStore from '../../../zustand/profileStore';
@@ -7,6 +7,7 @@ import Icon from '../../../components/icons/icon';
 import useCourseStore from '../../../zustand/public/course/courseStore';
 import Card from '../../../components/card/card';
 import UserProfileContent from '../profile/content/profileContent';
+import { useFilterCourseStore } from '../../../zustand/public/course/filterCourseStore';
 
 // Custom hook for responsive breakpoint
 function useIsMobile(breakpoint = 768) {
@@ -23,6 +24,7 @@ function useIsMobile(breakpoint = 768) {
 
 export default function InstructorDetailPublic() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { instructorId } = useParams();
   const isMobile = useIsMobile(768);
   const breadcrumbItems = [
@@ -41,6 +43,10 @@ export default function InstructorDetailPublic() {
     fetchCoursesByInstructorId,
   } = useCourseStore();
 
+  // --- FILTER LOGIC ---
+  const setCheckedInstructor = useFilterCourseStore((state) => state.setCheckedInstructor);
+  const instructorList = useFilterCourseStore((state) => state.instructor);
+
   useEffect(() => {
     if (instructorId) {
       fetchUserProfileById(instructorId);
@@ -49,6 +55,30 @@ export default function InstructorDetailPublic() {
   }, [instructorId, fetchUserProfileById, fetchCoursesByInstructorId]);
 
   const photoCover = userProfile?.detail?.photo_cover;
+
+  // Handler for "Lihat lainnya..." button
+  const handleLihatLainnya = () => {
+    // Cari nama instruktur dari daftar filter (karena filter by name, bukan id)
+    let instructorName = null;
+    if (Array.isArray(instructorList)) {
+      const found = instructorList.find((ins) => String(ins.id) === String(instructorId));
+      instructorName = found?.name;
+    }
+    if (instructorName) {
+      // Set filter hanya pada instruktur ini
+      const newChecked = {};
+      instructorList.forEach((ins) => {
+        newChecked[ins.name] = ins.name === instructorName;
+      });
+      // 'semua' harus false jika ada instruktur lain yang dipilih
+      if (newChecked['semua'] !== undefined && instructorName !== 'semua') {
+        newChecked['semua'] = false;
+      }
+      setCheckedInstructor(newChecked);
+    }
+    // Navigasi ke halaman kursus
+    navigate('/kursus');
+  };
 
   return (
     <Template activeNav="course.Instruktur" locationKey={location.key}>
@@ -122,7 +152,7 @@ export default function InstructorDetailPublic() {
         )}
 
         {/* Biografi */}
-        <div className="p-8">
+        <div className="shadow-lg rounded-md mt-8 p-8">
           <p className="w-full border-b pb-2 border-gray-300 text-lg font-medium">Biografi</p>
           <p>{userProfile?.detail?.about || 'Belum ada biografi'}</p>
           <div className="flex gap-2 sm:gap-3 mt-6 flex-wrap">
@@ -139,23 +169,27 @@ export default function InstructorDetailPublic() {
                 </a>
               ))}
           </div>
-          <div className="flex gap-8 mt-8 flex-wrap">
-            <a
-              href={`https://wa.me/${userProfile?.telephone?.replace(/\D/g, '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex gap-2 text-gray-500 items-center"
-            >
-              <Icon type={'phone'} className={'w-5 h-5'} />
-              {userProfile?.telephone}
-            </a>
-            <a
-              href={`mailto:${userProfile?.email}`}
-              className="flex gap-2 text-gray-500 items-center"
-            >
-              <Icon type={'envelope'} className={'w-5 h-5'} />
-              {userProfile?.email}
-            </a>
+          <div className="flex gap-8 mt-4 flex-wrap">
+            {userProfile?.telephone ? (
+              <a
+                href={`https://wa.me/${userProfile?.telephone?.replace(/\D/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex gap-2 text-gray-500 items-center"
+              >
+                <Icon type={'phone'} className={'w-5 h-5'} />
+                {userProfile?.telephone}
+              </a>
+            ) : null}
+            {userProfile?.email ? (
+              <a
+                href={`mailto:${userProfile?.email}`}
+                className="flex gap-2 text-gray-500 items-center"
+              >
+                <Icon type={'envelope'} className={'w-5 h-5'} />
+                {userProfile?.email}
+              </a>
+            ) : null}
           </div>
         </div>
 
@@ -163,7 +197,11 @@ export default function InstructorDetailPublic() {
         <div className="p-8">
           <div className="w-full flex justify-between border-b pb-2 border-gray-300 text-lg font-medium">
             <p>Kursus Lainnya dari {userProfile?.first_name}</p>
-            <button className="flex items-center gap-2 text-primary-700 hover:underline transition-colors">
+            <button
+              className="flex items-center gap-2 text-primary-700 hover:underline transition-colors"
+              onClick={handleLihatLainnya}
+              type="button"
+            >
               Lihat lainnya...
               <Icon type="arrow-right" className="w-4 h-4" />
             </button>

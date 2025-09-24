@@ -3,8 +3,6 @@ import axios from 'axios';
 import useAuthStore from '../../authStore';
 
 function buildFilterParams(filters) {
-  // Ubah filters menjadi query params sesuai kebutuhan backend
-  // Contoh: categories[], instructor[], ratings[], price, level
   const params = {};
   if (!filters) return params;
   if (filters.categories && filters.categories.length > 0) {
@@ -50,7 +48,6 @@ const useCourseStore = create((set) => ({
   instructorCoursesError: null,
   access: false,
 
-  // Tambahkan filters ke parameter
   fetchCourses: async ({ page = 1, search = '', filters = {} } = {}) => {
     set({ coursesLoading: true, coursesError: null });
     try {
@@ -60,10 +57,14 @@ const useCourseStore = create((set) => ({
         search,
         ...filterParams,
       };
+      const token = useAuthStore.getState().token;
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses`,
         {
           params,
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
         }
       );
 
@@ -84,7 +85,6 @@ const useCourseStore = create((set) => ({
     }
   },
 
-  // ...existing code...
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });
     try {
@@ -115,7 +115,6 @@ const useCourseStore = create((set) => ({
     }
   },
 
-  // ...existing code...
   fetchAttributeByCourseId: async (courseId) => {
     set({ attributeLoading: true, attributeError: null });
     try {
