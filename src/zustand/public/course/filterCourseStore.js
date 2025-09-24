@@ -18,27 +18,6 @@ function getInitialCheckedSingle(items, key = 'type') {
   return checked;
 }
 
-const rating = [
-  { rating: 5, count: 17 },
-  { rating: 4, count: 2 },
-  { rating: 3, count: 4 },
-  { rating: 2, count: 3 },
-  { rating: 1, count: 2 },
-];
-
-const price = [
-  { title: 'semua', type: 'all', count: 21 },
-  { title: 'gratis', type: 'free', count: 8 },
-  { title: 'berbayar', type: 'paid', count: 13 },
-];
-
-const level = [
-  { title: 'semua', type: 'all', count: 21 },
-  { title: 'pemula', type: 'beginner', count: 7 },
-  { title: 'menengah', type: 'intermediate', count: 7 },
-  { title: 'mahir', type: 'advance', count: 7 },
-];
-
 // Helper to load filters from localStorage
 function loadFiltersFromStorage() {
   try {
@@ -65,13 +44,16 @@ export const useFilterCourseStore = create((set, get) => {
   const initialState = {
     categories: [],
     instructor: [],
+    ratings: [], // dynamic from API
+    prices: [], // dynamic from API
+    levels: [], // dynamic from API
     loading: false,
     error: null,
     checkedCategories: stored?.checkedCategories || {},
     checkedInstructor: stored?.checkedInstructor || {},
     checkedRatings: stored?.checkedRatings || {},
-    checkedPrice: stored?.checkedPrice || getInitialCheckedSingle(price, 'type'),
-    checkedLevel: stored?.checkedLevel || getInitialCheckedSingle(level, 'type'),
+    checkedPrice: stored?.checkedPrice || {},
+    checkedLevel: stored?.checkedLevel || {},
   };
 
   // Save all filters to localStorage
@@ -122,8 +104,14 @@ export const useFilterCourseStore = create((set, get) => {
           ? getInitialChecked(state.instructor, 'name')
           : {};
       const defaultCheckedRatings = {};
-      const defaultCheckedPrice = getInitialCheckedSingle(price, 'type');
-      const defaultCheckedLevel = getInitialCheckedSingle(level, 'type');
+      const defaultCheckedPrice = {};
+      state.prices.forEach((p) => {
+        defaultCheckedPrice[p.type] = p.type === 'all';
+      });
+      const defaultCheckedLevel = {};
+      state.levels.forEach((lvl) => {
+        defaultCheckedLevel[lvl.type] = lvl.type === 'all';
+      });
 
       set({
         checkedCategories: defaultCheckedCategories,
@@ -139,6 +127,21 @@ export const useFilterCourseStore = create((set, get) => {
         checkedPrice: defaultCheckedPrice,
         checkedLevel: defaultCheckedLevel,
       });
+    },
+
+    // Set category filter directly (for navigation from beranda)
+    setCategoryFilter: (categoryTitle) => {
+      const state = get();
+      const newChecked = {};
+      state.categories.forEach((cat) => {
+        newChecked[cat.title] = cat.title === categoryTitle;
+      });
+      // 'semua' must be false if not selected
+      if (newChecked['semua'] !== undefined && categoryTitle !== 'semua') {
+        newChecked['semua'] = false;
+      }
+      set({ checkedCategories: newChecked });
+      persistFilters({ checkedCategories: newChecked });
     },
 
     // Utility to check if any filter is active (not default)
@@ -206,12 +209,103 @@ export const useFilterCourseStore = create((set, get) => {
           })),
         ];
 
+        // Transform rating
+        const ratingsArr = (json.data.rating || []).map((r) => ({
+          rating: r.rating,
+          count: r.total,
+        }));
+
+        // Transform price
+        // Always add 'semua' (all) as first option
+        const pricesArr = [
+          {
+            title: 'semua',
+            type: 'all',
+            count:
+              json.data.price && json.data.price[0]
+                ? (json.data.price[0].free || 0) + (json.data.price[0].paid || 0)
+                : 0,
+          },
+          {
+            title: 'gratis',
+            type: 'free',
+            count: json.data.price && json.data.price[0] ? json.data.price[0].free || 0 : 0,
+          },
+          {
+            title: 'berbayar',
+            type: 'paid',
+            count: json.data.price && json.data.price[0] ? json.data.price[0].paid || 0 : 0,
+          },
+        ];
+
+        // Transform level
+        // Always add 'semua' (all) as first option
+        const levelsArr = [
+          {
+            title: 'semua',
+            type: 'all',
+            count: json.data.level
+              ? (json.data.level.beginner || 0) +
+                (json.data.level.intermediate || 0) +
+                (json.data.level.advance || 0)
+              : 0,
+          },
+          {
+            title: 'pemula',
+            type: 'beginner',
+            count: json.data.level ? json.data.level.beginner || 0 : 0,
+          },
+          {
+            title: 'menengah',
+            type: 'intermediate',
+            count: json.data.level ? json.data.level.intermediate || 0 : 0,
+          },
+          {
+            title: 'mahir',
+            type: 'advance',
+            count: json.data.level ? json.data.level.advance || 0 : 0,
+          },
+        ];
+
         // If no checkedCategories/instructor in storage, set default
         const stored = loadFiltersFromStorage();
+
+        // Checked ratings
+        let checkedRatings = {};
+        if (stored?.checkedRatings && Object.keys(stored.checkedRatings).length > 0) {
+          checkedRatings = stored.checkedRatings;
+        } else {
+          ratingsArr.forEach((r) => {
+            checkedRatings[r.rating] = false;
+          });
+        }
+
+        // Checked price
+        let checkedPrice = {};
+        if (stored?.checkedPrice && Object.keys(stored.checkedPrice).length > 0) {
+          checkedPrice = stored.checkedPrice;
+        } else {
+          pricesArr.forEach((p) => {
+            checkedPrice[p.type] = p.type === 'all';
+          });
+        }
+
+        // Checked level
+        let checkedLevel = {};
+        if (stored?.checkedLevel && Object.keys(stored.checkedLevel).length > 0) {
+          checkedLevel = stored.checkedLevel;
+        } else {
+          levelsArr.forEach((lvl) => {
+            checkedLevel[lvl.type] = lvl.type === 'all';
+          });
+        }
 
         set({
           categories: categoriesArr,
           instructor: instructorArr,
+          ratings: ratingsArr,
+          prices: pricesArr,
+          levels: levelsArr,
           checkedCategories:
             stored?.checkedCategories && Object.keys(stored.checkedCategories).length > 0
               ? stored.checkedCategories
@@ -220,6 +314,9 @@ export const useFilterCourseStore = create((set, get) => {
             stored?.checkedInstructor && Object.keys(stored.checkedInstructor).length > 0
               ? stored.checkedInstructor
               : getInitialChecked(instructorArr, 'name'),
+          checkedRatings,
+          checkedPrice,
+          checkedLevel,
           loading: false,
           error: null,
         });
@@ -240,14 +337,14 @@ export const useFilterCourseStore = create((set, get) => {
         .filter((ins) => state.checkedInstructor[ins.name] && ins.name !== 'semua')
         .map((ins) => ins.id);
 
-      const activeRatings = rating
+      const activeRatings = state.ratings
         .filter((r) => state.checkedRatings[r.rating])
         .map((r) => r.rating);
 
-      const activePrice = price.find((p) => state.checkedPrice[p.type]);
+      const activePrice = state.prices.find((p) => state.checkedPrice[p.type]);
       const activePriceType = activePrice ? activePrice.type : null;
 
-      const activeLevel = level.find((lvl) => state.checkedLevel[lvl.type]);
+      const activeLevel = state.levels.find((lvl) => state.checkedLevel[lvl.type]);
       const activeLevelType = activeLevel ? activeLevel.type : null;
 
       return {
@@ -260,5 +357,3 @@ export const useFilterCourseStore = create((set, get) => {
     },
   };
 });
-
-export { rating, price, level };

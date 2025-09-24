@@ -7,9 +7,9 @@ const useNavigationStore = create((set) => ({
       links: [{ text: 'Beranda', href: '/beranda' }],
     },
     {
-      label: 'kursus',
+      label: 'course',
       links: [
-        { text: 'Kursus', href: '/kursus' },
+        { text: 'course', href: '/kursus' },
         { text: 'Instruktur', href: '/instruktur' },
         { text: 'verifikasi sertifikat', href: '/verifikasi/sertifikat-kursus/' },
       ],

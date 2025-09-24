@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Checkbox from '../form/checkbox';
 import StarRating from '../content/star/star';
-import {
-  useFilterCourseStore,
-  rating,
-  price,
-  level,
-} from '../../zustand/public/course/filterCourseStore';
+import { useFilterCourseStore } from '../../zustand/public/course/filterCourseStore';
 import Icon from '../icons/icon';
-// Tambahan: framer-motion
 import { motion, AnimatePresence } from 'framer-motion';
 
 function handleIndividualCheckboxChange(items, name, checked, state, setState, key = 'title') {
@@ -48,6 +42,10 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
   // Zustand store hooks
   const categories = useFilterCourseStore((state) => state.categories);
   const instructor = useFilterCourseStore((state) => state.instructor);
+  const ratings = useFilterCourseStore((state) => state.ratings);
+  const prices = useFilterCourseStore((state) => state.prices);
+  const levels = useFilterCourseStore((state) => state.levels);
+
   const loading = useFilterCourseStore((state) => state.loading);
   const error = useFilterCourseStore((state) => state.error);
   const fetchFilterData = useFilterCourseStore((state) => state.fetchFilterData);
@@ -69,23 +67,19 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
 
   const getActiveFilters = useFilterCourseStore((state) => state.getActiveFilters);
 
-  // Tambahan: resetFilters
   const resetFilters = useFilterCourseStore((state) => state.resetFilters);
 
-  // Tambahan: cek apakah ada filter aktif
   const hasActiveFilters = useFilterCourseStore((state) => state.hasActiveFilters());
 
   // State untuk "lihat lebih"
   const [visibleCategories, setVisibleCategories] = useState(6);
   const [visibleInstructor, setVisibleInstructor] = useState(6);
 
-  // Fetch filter data on mount
   useEffect(() => {
     fetchFilterData();
     // eslint-disable-next-line
   }, []);
 
-  // Log active filters
   useEffect(() => {
     const activeFilters = getActiveFilters();
     console.log('Active Filters:', activeFilters);
@@ -114,7 +108,6 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
     );
   }
 
-  // Konten utama filter (biar bisa dipakai di desktop & mobile)
   const filterContent = (
     <div
       className={
@@ -201,7 +194,7 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
         <div className="flex flex-col gap-2">
           <p className="pb-1 border-b border-secondary-800 text-secondary-800">Rating</p>
           <div className="flex flex-col gap-2">
-            {rating.map((rate) => (
+            {ratings.map((rate) => (
               <div key={rate.rating} className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -279,7 +272,7 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
         <div className="flex flex-col gap-2">
           <p className="pb-1 border-b border-secondary-800 text-secondary-800">Harga</p>
           <div className="flex flex-col gap-2">
-            {price.map((p) => (
+            {prices.map((p) => (
               <div key={p.type} className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -288,7 +281,7 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
                     checked={!!checkedPrice[p.type]}
                     onChange={({ target: { name, checked } }) =>
                       handleSingleActiveCheckboxChange(
-                        price,
+                        prices,
                         name,
                         checked,
                         setCheckedPrice,
@@ -315,7 +308,7 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
         <div className="flex flex-col gap-2">
           <p className="pb-1 border-b border-secondary-800 text-secondary-800">Level</p>
           <div className="flex flex-col gap-2">
-            {level.map((lvl) => (
+            {levels.map((lvl) => (
               <div key={lvl.type} className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Checkbox
@@ -324,7 +317,7 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
                     checked={!!checkedLevel[lvl.type]}
                     onChange={({ target: { name, checked } }) =>
                       handleSingleActiveCheckboxChange(
-                        level,
+                        levels,
                         name,
                         checked,
                         setCheckedLevel,

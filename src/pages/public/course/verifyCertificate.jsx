@@ -28,7 +28,7 @@ export function CertificateInputPage() {
   };
 
   return (
-    <Template activeNav="kursus.verifikasi sertifikat" locationKey={location.key}>
+    <Template activeNav="course.verifikasi sertifikat" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
         <div className="flex-1 w-full mt-10 sm:mt-16 flex flex-col items-center">
@@ -85,7 +85,7 @@ export default function VerifyCertificate() {
   }, [certificateCode]);
 
   return (
-    <Template activeNav="kursus.verifikasi sertifikat" locationKey={location.key}>
+    <Template activeNav="course.verifikasi sertifikat" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
         <div className="flex-1 w-full mt-10 sm:mt-16 flex flex-col items-center">

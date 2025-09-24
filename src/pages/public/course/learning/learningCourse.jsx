@@ -340,7 +340,7 @@ export default function LearningCourse() {
   }
 
   return (
-    <Template activeNav="kursus.kursus" locationKey={location.key}>
+    <Template activeNav="course.course" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
 

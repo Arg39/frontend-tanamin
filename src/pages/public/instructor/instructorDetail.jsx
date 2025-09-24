@@ -51,7 +51,7 @@ export default function InstructorDetailPublic() {
   const photoCover = userProfile?.detail?.photo_cover;
 
   return (
-    <Template activeNav="kursus.instruktur" locationKey={location.key}>
+    <Template activeNav="course.Instruktur" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-2 pt-6 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
 

@@ -12,6 +12,7 @@ import Icon from '../../components/icons/icon';
 import useInstructorStore from '../../zustand/public/course/instructorStore';
 import useBerandaStore from '../../zustand/public/beranda/berandaStore';
 import StackedCourseCards from '../../components/card/stackedCards'; // Import here
+import { useFilterCourseStore } from '../../zustand/public/course/filterCourseStore';
 
 // Helper to get full image URL
 const getImageUrl = (image) => {
@@ -62,9 +63,11 @@ export default function Beranda() {
     fetchBestCourses();
   }, [fetchBestCourses]);
 
+  const setCategoryFilter = useFilterCourseStore((state) => state.setCategoryFilter);
+
   const handleCategoryClick = (category) => {
-    // TODO: Implementasi pencarian berdasarkan kategori
-    console.log('Cari kategori:', category);
+    setCategoryFilter(category.name || category.title);
+    navigate('/kursus');
   };
 
   // Map backend instructor data to carousel format
@@ -148,7 +151,7 @@ export default function Beranda() {
                       ...cat,
                       imageUrl: getImageUrl(cat.image),
                     }}
-                    onClick={() => handleCategoryClick(cat)}
+                    onClick={handleCategoryClick}
                   />
                 ))}
               </div>

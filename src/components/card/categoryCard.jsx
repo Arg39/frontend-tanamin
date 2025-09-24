@@ -7,7 +7,7 @@ export default function CategoryCard({ category, onClick }) {
       type="button"
       className="w-full max-w-xs h-24 bg-white rounded-lg flex overflow-hidden focus:outline-none focus:ring-2 focus:ring-primary-400 transition"
       style={{ boxShadow: '0px 4px 20px 0px rgba(0,0,0,0.2)' }}
-      onClick={onClick}
+      onClick={() => onClick(category)}
       aria-label={`Cari kategori ${category.name}`}
       whileHover={{ y: -8 }}
       transition={{ type: 'spring', stiffness: 300 }}
