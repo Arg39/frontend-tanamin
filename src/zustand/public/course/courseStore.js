@@ -47,6 +47,9 @@ const useCourseStore = create((set) => ({
   instructorCoursesLoading: false,
   instructorCoursesError: null,
   access: false,
+  courseRatings: null,
+  courseRatingsLoading: false,
+  courseRatingsError: null,
 
   fetchCourses: async ({ page = 1, search = '', filters = {} } = {}) => {
     set({ coursesLoading: true, coursesError: null });
@@ -168,6 +171,31 @@ const useCourseStore = create((set) => ({
       set({
         instructorError: error.response?.data?.message || 'Gagal mengambil data instruktur',
         instructorLoading: false,
+      });
+    }
+  },
+
+  fetchRatingsByCourseId: async (courseId) => {
+    set({ courseRatingsLoading: true, courseRatingsError: null });
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/${courseId}/ratings`
+      );
+      if (response.status === 200) {
+        set({
+          courseRatings: response.data.data,
+          courseRatingsLoading: false,
+        });
+      } else {
+        set({
+          courseRatingsError: 'Gagal mengambil data rating kursus',
+          courseRatingsLoading: false,
+        });
+      }
+    } catch (error) {
+      set({
+        courseRatingsError: error.response?.data?.message || 'Gagal mengambil data rating kursus',
+        courseRatingsLoading: false,
       });
     }
   },

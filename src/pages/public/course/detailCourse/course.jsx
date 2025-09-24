@@ -75,7 +75,17 @@ export default function PublicCourse() {
   const { courseId } = useParams();
   const navigate = useNavigate();
 
-  const { course, fetchCourseById, loading, error, othersCourseInstructor } = useCourseStore();
+  const { course, fetchCourseById, loading, error } = useCourseStore();
+  function roundingValues(value) {
+    const decimal = value - Math.floor(value);
+    if (decimal < 0.5) {
+      return Math.floor(value);
+    } else if (decimal < 0.7) {
+      return Math.floor(value);
+    } else {
+      return Math.ceil(value);
+    }
+  }
   const stickyParentRef = useRef(null);
   const [bioExpanded, setBioExpanded] = useState(false);
 
@@ -227,14 +237,16 @@ export default function PublicCourse() {
                               className="w-5 h-5 inline-block"
                               color="currentColor"
                             />
-                            210 Siswa
+                            {course?.students_count} Siswa
                           </p>
                           <div className="flex items-end gap-2">
-                            <p className="text-base sm:text-lg text-primary-700 font-medium">4.4</p>
-                            <StarRating value={4} />
+                            <p className="text-base sm:text-lg text-primary-700 font-medium">
+                              {course?.rating?.average}
+                            </p>
+                            <StarRating value={roundingValues(course?.rating?.average)} />
                           </div>
                           <p className="p-1 bg-white text-base sm:text-lg text-primary-700">
-                            168 Rating
+                            {course?.rating?.total} Rating
                           </p>
                         </div>
                         <div className="mt-4">
@@ -262,7 +274,7 @@ export default function PublicCourse() {
                         </div>
                         <p className="flex items-center gap-2 text-base sm:text-lg font-medium mt-4 text-primary-700">
                           <Icon type={'date'} />
-                          Terakhir diupdate pada 1 Juni 2024
+                          Terakhir diupdate pada {course?.updated_at}
                         </p>
                       </div>
                     </>

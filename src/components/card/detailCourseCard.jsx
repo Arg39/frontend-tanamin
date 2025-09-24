@@ -145,6 +145,8 @@ export default function DetailCourseCard({ course, accessCourse }) {
     }
   };
 
+  const isFree = discountedPrice <= 0;
+
   return (
     <div className="bg-white border-4 border-primary-700 shadow-lg rounded-xl p-4 sm:p-6 w-full mb-4">
       <img className="w-full rounded-xl" src={course.image} alt={course.title} />
@@ -159,7 +161,9 @@ export default function DetailCourseCard({ course, accessCourse }) {
       ) : user ? (
         <>
           <div className="w-full py-4 flex items-center justify-center">
-            {hasDiscount || couponUsed ? (
+            {isFree ? (
+              <span className="text-xl sm:text-2xl font-bold text-green-600">Gratis</span>
+            ) : hasDiscount || couponUsed ? (
               <div className="flex flex-col items-center">
                 <div className="relative flex items-start gap-2">
                   <span className="text-xl sm:text-2xl font-medium text-tertiary-500">
@@ -202,14 +206,16 @@ export default function DetailCourseCard({ course, accessCourse }) {
               type="button"
               disabled={enrollLoading}
             >
-              {enrollLoading ? 'Memproses...' : 'Beli Sekarang'}
+              {enrollLoading ? 'Memproses...' : isFree ? 'Ambil Gratis' : 'Beli Sekarang'}
             </button>
           </div>
         </>
       ) : (
         <>
           <div className="w-full py-4 flex items-center justify-center">
-            {hasDiscount ? (
+            {isFree ? (
+              <span className="text-xl sm:text-2xl font-bold text-green-600">Gratis</span>
+            ) : hasDiscount ? (
               <div className="flex flex-col items-center">
                 <div className="relative flex items-start gap-2">
                   <span className="text-xl sm:text-2xl font-medium text-tertiary-500">
@@ -377,6 +383,8 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
     }
   };
 
+  const isFree = discountedPrice <= 0;
+
   return (
     <>
       {/* Overlay expanded card */}
@@ -417,7 +425,9 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               ) : user ? (
                 <>
                   <div className="w-full py-4 flex items-center justify-center">
-                    {hasDiscount || couponUsed ? (
+                    {isFree ? (
+                      <span className="text-xl sm:text-3xl font-bold text-green-600">Gratis</span>
+                    ) : hasDiscount || couponUsed ? (
                       <div className="flex flex-col items-center">
                         <div className="relative flex items-start gap-2">
                           <span className="text-xl sm:text-3xl font-medium text-tertiary-500">
@@ -460,14 +470,16 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                       type="button"
                       disabled={enrollLoading}
                     >
-                      {enrollLoading ? 'Memproses...' : 'Beli Sekarang'}
+                      {enrollLoading ? 'Memproses...' : isFree ? 'Ambil Gratis' : 'Beli Sekarang'}
                     </button>
                   </div>
                 </>
               ) : (
                 <>
                   <div className="w-full py-4 flex items-center justify-center">
-                    {hasDiscount ? (
+                    {isFree ? (
+                      <span className="text-xl sm:text-2xl font-bold text-green-600">Gratis</span>
+                    ) : hasDiscount ? (
                       <div className="flex flex-col items-center">
                         <div className="relative flex items-start gap-2">
                           <span className="text-xl sm:text-2xl font-medium text-tertiary-500">
@@ -491,52 +503,7 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                   </div>
                 </>
               )}
-              <div className="flex flex-col gap-2">
-                <p className="text-primary-700 font-semibold">Detail</p>
-                <div className="flex flex-col gap-2">
-                  {[
-                    ['Peserta', course.participants],
-                    ['Level', translateLevel(course.level)],
-                    ['Total Materi', course.total_materials],
-                    ['Evaluasi', course.total_quizzes],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      className="flex justify-between items-center border-b-2 border-secondary-500 pb-1 mb-2"
-                    >
-                      <p className="text-secondary-700 font-medium">{label}</p>
-                      <p className="p-1 px-2 bg-secondary-500 text-white rounded-lg">{value}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Coupon input only if not used */}
-              {!accessCourse && user && !couponUsed ? (
-                <form className="flex flex-col gap-2 mt-4" onSubmit={handleCouponSubmit}>
-                  <p className="text-primary-700 font-semibold">Kupon Kursus</p>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <input
-                      type="text"
-                      className="w-full border-2 border-primary-700 text-primary-700 rounded-lg p-2 flex-1"
-                      placeholder="Masukkan kupon"
-                      value={couponInput}
-                      onChange={(e) => setCouponInput(e.target.value)}
-                      disabled={couponLoading}
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-primary-700 text-white rounded-lg px-4 py-2 sm:w-auto"
-                      disabled={couponLoading}
-                    >
-                      {couponLoading ? 'Memproses...' : 'Masukkan'}
-                    </button>
-                  </div>
-                  {couponError && (
-                    <span className="text-xs text-red-600 font-semibold">{couponError}</span>
-                  )}
-                </form>
-              ) : null}
+              {/* ...existing code... */}
             </div>
           </div>
         </div>
@@ -560,7 +527,9 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
               </span>
               {!accessCourse && user ? (
                 <>
-                  {hasDiscount || couponUsed ? (
+                  {isFree ? (
+                    <span className="text-sm font-bold text-green-600">Gratis</span>
+                  ) : hasDiscount || couponUsed ? (
                     <span className="flex items-center gap-2">
                       <span className="text-sm text-tertiary-500 font-medium">
                         {formatRupiah(discountedPrice)}
@@ -610,7 +579,7 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                     Keranjang
                   </button>
                   <button className="w-full py-1 px-3 border-2 border-primary-700 bg-white text-primary-700 rounded-lg text-sm font-semibold hover:bg-primary-800 hover:text-white transition-colors">
-                    Beli
+                    {isFree ? 'Ambil Gratis' : 'Beli'}
                   </button>
                 </>
               ) : null}
