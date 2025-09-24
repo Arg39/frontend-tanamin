@@ -50,6 +50,9 @@ export default function ListCourse() {
   const checkedPrice = useFilterCourseStore((state) => state.checkedPrice);
   const checkedLevel = useFilterCourseStore((state) => state.checkedLevel);
 
+  // Tambahan: resetFilters
+  const resetFilters = useFilterCourseStore((state) => state.resetFilters);
+
   // Fetch courses when page, search, or filter changes
   useEffect(() => {
     const filters = getActiveFilters();
@@ -83,6 +86,11 @@ export default function ListCourse() {
     // fetchCourses dipanggil oleh useEffect di atas
   };
 
+  // Reset filter handler
+  const handleResetFilter = () => {
+    setCurrentPage(1);
+  };
+
   // Get search bar height for filter modal
   const [searchBarHeight, setSearchBarHeight] = useState(0);
   useEffect(() => {
@@ -106,7 +114,7 @@ export default function ListCourse() {
             {/* Filter Sidebar for Desktop */}
             {isDesktop && (
               <div className="w-1/5 min-w-[300px]">
-                <FilterCard />
+                <FilterCard onResetFilter={handleResetFilter} />
               </div>
             )}
             {/* Mobile/Tablet: Filter + Search in 2-column grid */}
@@ -163,7 +171,12 @@ export default function ListCourse() {
                         </button>
 
                         {/* FilterCard */}
-                        <FilterCard isMobile={true} />
+                        <FilterCard
+                          isMobile={true}
+                          onResetFilter={() => {
+                            handleResetFilter();
+                          }}
+                        />
                       </div>
                     </div>
                   </div>

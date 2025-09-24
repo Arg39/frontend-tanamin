@@ -7,6 +7,9 @@ import {
   price,
   level,
 } from '../../zustand/public/course/filterCourseStore';
+import Icon from '../icons/icon';
+// Tambahan: framer-motion
+import { motion, AnimatePresence } from 'framer-motion';
 
 function handleIndividualCheckboxChange(items, name, checked, state, setState, key = 'title') {
   const newState = { ...state };
@@ -41,7 +44,7 @@ function handleSingleActiveCheckboxChange(items, name, checked, setState, key = 
   setState(newState);
 }
 
-export default function FilterCard({ isMobile = false }) {
+export default function FilterCard({ isMobile = false, onResetFilter }) {
   // Zustand store hooks
   const categories = useFilterCourseStore((state) => state.categories);
   const instructor = useFilterCourseStore((state) => state.instructor);
@@ -65,6 +68,12 @@ export default function FilterCard({ isMobile = false }) {
   const setCheckedLevel = useFilterCourseStore((state) => state.setCheckedLevel);
 
   const getActiveFilters = useFilterCourseStore((state) => state.getActiveFilters);
+
+  // Tambahan: resetFilters
+  const resetFilters = useFilterCourseStore((state) => state.resetFilters);
+
+  // Tambahan: cek apakah ada filter aktif
+  const hasActiveFilters = useFilterCourseStore((state) => state.hasActiveFilters());
 
   // State untuk "lihat lebih"
   const [visibleCategories, setVisibleCategories] = useState(6);
@@ -114,8 +123,33 @@ export default function FilterCard({ isMobile = false }) {
           : 'w-full flex flex-col h-fit p-6 sm:p-8 shadow-md rounded-md bg-white mt-16 lg:mt-0'
       }
     >
-      <div className="w-full p-2 justify-center items-center">
+      <div className="w-full p-2 justify-center items-center flex flex-col gap-2">
         <p className="text-xl text-center text-secondary-800">Filter Kursus</p>
+        {/* Tombol Reset Filter dengan animasi */}
+        <AnimatePresence>
+          {hasActiveFilters && (
+            <motion.div
+              key="reset-filter-btn"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="w-full flex justify-center"
+            >
+              <button
+                className="mt-2 flex items-center gap-2 px-6 py-2 rounded bg-error-500 text-white hover:bg-error-600 border border-error-600 text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-error-400 transition"
+                onClick={() => {
+                  resetFilters();
+                  if (onResetFilter) onResetFilter();
+                }}
+                type="button"
+              >
+                <Icon type="trash" className="" />
+                Reset Filter
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div className="mt-8 flex flex-col gap-8">
         {/* Kategori */}

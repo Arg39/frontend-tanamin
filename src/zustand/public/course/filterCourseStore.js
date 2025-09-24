@@ -110,6 +110,63 @@ export const useFilterCourseStore = create((set, get) => {
       persistFilters({ checkedLevel: newState });
     },
 
+    // RESET FILTERS
+    resetFilters: () => {
+      const state = get();
+      const defaultCheckedCategories =
+        state.categories && state.categories.length > 0
+          ? getInitialChecked(state.categories, 'title')
+          : {};
+      const defaultCheckedInstructor =
+        state.instructor && state.instructor.length > 0
+          ? getInitialChecked(state.instructor, 'name')
+          : {};
+      const defaultCheckedRatings = {};
+      const defaultCheckedPrice = getInitialCheckedSingle(price, 'type');
+      const defaultCheckedLevel = getInitialCheckedSingle(level, 'type');
+
+      set({
+        checkedCategories: defaultCheckedCategories,
+        checkedInstructor: defaultCheckedInstructor,
+        checkedRatings: defaultCheckedRatings,
+        checkedPrice: defaultCheckedPrice,
+        checkedLevel: defaultCheckedLevel,
+      });
+      persistFilters({
+        checkedCategories: defaultCheckedCategories,
+        checkedInstructor: defaultCheckedInstructor,
+        checkedRatings: defaultCheckedRatings,
+        checkedPrice: defaultCheckedPrice,
+        checkedLevel: defaultCheckedLevel,
+      });
+    },
+
+    // Utility to check if any filter is active (not default)
+    hasActiveFilters: () => {
+      const state = get();
+
+      // Cek kategori (selain 'semua')
+      const catActive = state.categories.some(
+        (cat) => cat.title !== 'semua' && state.checkedCategories[cat.title]
+      );
+      // Cek instruktur (selain 'semua')
+      const insActive = state.instructor.some(
+        (ins) => ins.name !== 'semua' && state.checkedInstructor[ins.name]
+      );
+      // Cek rating
+      const ratingActive = Object.values(state.checkedRatings).some(Boolean);
+      // Cek price (selain 'all')
+      const priceActive = Object.entries(state.checkedPrice).some(
+        ([key, val]) => key !== 'all' && val
+      );
+      // Cek level (selain 'all')
+      const levelActive = Object.entries(state.checkedLevel).some(
+        ([key, val]) => key !== 'all' && val
+      );
+
+      return catActive || insActive || ratingActive || priceActive || levelActive;
+    },
+
     fetchFilterData: async () => {
       set({ loading: true, error: null });
       try {
