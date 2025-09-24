@@ -2,6 +2,29 @@ import { create } from 'zustand';
 import axios from 'axios';
 import useAuthStore from '../../authStore';
 
+function buildFilterParams(filters) {
+  // Ubah filters menjadi query params sesuai kebutuhan backend
+  // Contoh: categories[], instructor[], ratings[], price, level
+  const params = {};
+  if (!filters) return params;
+  if (filters.categories && filters.categories.length > 0) {
+    params['categories'] = filters.categories;
+  }
+  if (filters.instructor && filters.instructor.length > 0) {
+    params['instructor'] = filters.instructor;
+  }
+  if (filters.ratings && filters.ratings.length > 0) {
+    params['ratings'] = filters.ratings;
+  }
+  if (filters.price) {
+    params['price'] = filters.price;
+  }
+  if (filters.level) {
+    params['level'] = filters.level;
+  }
+  return params;
+}
+
 const useCourseStore = create((set) => ({
   courses: [],
   coursesError: null,
@@ -27,13 +50,20 @@ const useCourseStore = create((set) => ({
   instructorCoursesError: null,
   access: false,
 
-  fetchCourses: async ({ page = 1, search = '' } = {}) => {
+  // Tambahkan filters ke parameter
+  fetchCourses: async ({ page = 1, search = '', filters = {} } = {}) => {
     set({ coursesLoading: true, coursesError: null });
     try {
+      const filterParams = buildFilterParams(filters);
+      const params = {
+        page,
+        search,
+        ...filterParams,
+      };
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses`,
         {
-          params: { page, search },
+          params,
         }
       );
 
@@ -54,6 +84,7 @@ const useCourseStore = create((set) => ({
     }
   },
 
+  // ...existing code...
   fetchCourseById: async (id) => {
     set({ loading: true, error: null });
     try {
@@ -84,6 +115,7 @@ const useCourseStore = create((set) => ({
     }
   },
 
+  // ...existing code...
   fetchAttributeByCourseId: async (courseId) => {
     set({ attributeLoading: true, attributeError: null });
     try {

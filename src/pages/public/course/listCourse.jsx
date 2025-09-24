@@ -4,12 +4,13 @@ import Breadcrumb from '../../../components/breadcrumb/breadcrumb';
 import { useLocation } from 'react-router-dom';
 import FilterCard from '../../../components/filter/filterCard';
 import Icon from '../../../components/icons/icon';
-// Changed import to useCourseStore
 import useCourseStore from '../../../zustand/public/course/courseStore';
 import Card from '../../../components/card/card';
 import PaginationCard from '../../../components/filter/paginationCard';
 
-// Custom hook to detect screen width
+// Tambahan: Import filter store
+import { useFilterCourseStore } from '../../../zustand/public/course/filterCourseStore';
+
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
   useEffect(() => {
@@ -41,10 +42,30 @@ export default function ListCourse() {
 
   const { courses, coursesLoading, coursesError, fetchCourses, pagination } = useCourseStore();
 
-  // Fetch courses when page changes
+  // Ambil filter state dari zustand filterCourseStore
+  const getActiveFilters = useFilterCourseStore((state) => state.getActiveFilters);
+  const checkedCategories = useFilterCourseStore((state) => state.checkedCategories);
+  const checkedInstructor = useFilterCourseStore((state) => state.checkedInstructor);
+  const checkedRatings = useFilterCourseStore((state) => state.checkedRatings);
+  const checkedPrice = useFilterCourseStore((state) => state.checkedPrice);
+  const checkedLevel = useFilterCourseStore((state) => state.checkedLevel);
+
+  // Fetch courses when page, search, or filter changes
   useEffect(() => {
-    fetchCourses({ page: currentPage, search: searchValue });
-  }, [fetchCourses, currentPage, searchValue]);
+    const filters = getActiveFilters();
+    fetchCourses({ page: currentPage, search: searchValue, filters });
+  }, [
+    fetchCourses,
+    currentPage,
+    searchValue,
+    // depend on filter state
+    checkedCategories,
+    checkedInstructor,
+    checkedRatings,
+    checkedPrice,
+    checkedLevel,
+    getActiveFilters,
+  ]);
 
   // Update pagination state from backend response
   useEffect(() => {
@@ -59,7 +80,7 @@ export default function ListCourse() {
   const handleSearch = (e) => {
     e.preventDefault();
     setCurrentPage(1); // Reset to first page on search
-    fetchCourses({ page: 1, search: searchValue });
+    // fetchCourses dipanggil oleh useEffect di atas
   };
 
   // Get search bar height for filter modal

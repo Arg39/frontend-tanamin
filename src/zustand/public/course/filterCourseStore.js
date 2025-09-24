@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+const FILTER_STORAGE_KEY = 'tanamin_course_filters';
+
 function getInitialChecked(items, key = 'title') {
   const checked = {};
   items.forEach((item) => {
@@ -37,103 +39,169 @@ const level = [
   { title: 'mahir', type: 'advance', count: 7 },
 ];
 
-export const useFilterCourseStore = create((set, get) => ({
-  categories: [],
-  instructor: [],
-  loading: false,
-  error: null,
+// Helper to load filters from localStorage
+function loadFiltersFromStorage() {
+  try {
+    const data = localStorage.getItem(FILTER_STORAGE_KEY);
+    if (!data) return null;
+    return JSON.parse(data);
+  } catch {
+    return null;
+  }
+}
 
-  checkedCategories: {},
-  checkedInstructor: {},
-  checkedRatings: {},
-  checkedPrice: getInitialCheckedSingle(price, 'type'),
-  checkedLevel: getInitialCheckedSingle(level, 'type'),
+// Helper to save filters to localStorage
+function saveFiltersToStorage(filters) {
+  try {
+    localStorage.setItem(FILTER_STORAGE_KEY, JSON.stringify(filters));
+  } catch {}
+}
 
-  setCheckedCategories: (newState) => set({ checkedCategories: newState }),
-  setCheckedInstructor: (newState) => set({ checkedInstructor: newState }),
-  setCheckedRatings: (newState) => set({ checkedRatings: newState }),
-  setCheckedPrice: (newState) => set({ checkedPrice: newState }),
-  setCheckedLevel: (newState) => set({ checkedLevel: newState }),
+export const useFilterCourseStore = create((set, get) => {
+  // Try to load from localStorage
+  const stored = loadFiltersFromStorage();
 
-  fetchFilterData: async () => {
-    set({ loading: true, error: null });
-    try {
-      const res = await fetch(
-        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/filtering`,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-      const json = await res.json();
-      if (json.status !== 'success') throw new Error(json.message || 'Failed to fetch filter data');
+  // Initial state
+  const initialState = {
+    categories: [],
+    instructor: [],
+    loading: false,
+    error: null,
+    checkedCategories: stored?.checkedCategories || {},
+    checkedInstructor: stored?.checkedInstructor || {},
+    checkedRatings: stored?.checkedRatings || {},
+    checkedPrice: stored?.checkedPrice || getInitialCheckedSingle(price, 'type'),
+    checkedLevel: stored?.checkedLevel || getInitialCheckedSingle(level, 'type'),
+  };
 
-      // Transform category and instructor objects to arrays
-      const categoriesArr = [
-        {
-          id: 'all-categories',
-          title: 'semua',
-          count: Object.values(json.data.category).reduce((a, b) => a + b, 0),
-        },
-        ...Object.entries(json.data.category).map(([title, count], idx) => ({
-          id: `cat-${idx + 1}`,
-          title,
-          count,
-        })),
-      ];
-      const instructorArr = [
-        {
-          id: 'all-instructor',
-          name: 'semua',
-          count: Object.values(json.data.instructor).reduce((a, b) => a + b, 0),
-        },
-        ...Object.entries(json.data.instructor).map(([name, count], idx) => ({
-          id: `ins-${idx + 1}`,
-          name,
-          count,
-        })),
-      ];
-
-      set({
-        categories: categoriesArr,
-        instructor: instructorArr,
-        checkedCategories: getInitialChecked(categoriesArr, 'title'),
-        checkedInstructor: getInitialChecked(instructorArr, 'name'),
-        loading: false,
-        error: null,
-      });
-    } catch (e) {
-      set({ error: e.message, loading: false });
-    }
-  },
-
-  // Utility to get only active filters (id/type)
-  getActiveFilters: () => {
+  // Save all filters to localStorage
+  function persistFilters(partial = {}) {
     const state = get();
+    saveFiltersToStorage({
+      checkedCategories: partial.checkedCategories ?? state.checkedCategories,
+      checkedInstructor: partial.checkedInstructor ?? state.checkedInstructor,
+      checkedRatings: partial.checkedRatings ?? state.checkedRatings,
+      checkedPrice: partial.checkedPrice ?? state.checkedPrice,
+      checkedLevel: partial.checkedLevel ?? state.checkedLevel,
+    });
+  }
 
-    const activeCategories = state.categories
-      .filter((cat) => state.checkedCategories[cat.title] && cat.title !== 'semua')
-      .map((cat) => cat.id);
+  return {
+    ...initialState,
 
-    const activeInstructor = state.instructor
-      .filter((ins) => state.checkedInstructor[ins.name] && ins.name !== 'semua')
-      .map((ins) => ins.id);
+    setCheckedCategories: (newState) => {
+      set({ checkedCategories: newState });
+      persistFilters({ checkedCategories: newState });
+    },
+    setCheckedInstructor: (newState) => {
+      set({ checkedInstructor: newState });
+      persistFilters({ checkedInstructor: newState });
+    },
+    setCheckedRatings: (newState) => {
+      set({ checkedRatings: newState });
+      persistFilters({ checkedRatings: newState });
+    },
+    setCheckedPrice: (newState) => {
+      set({ checkedPrice: newState });
+      persistFilters({ checkedPrice: newState });
+    },
+    setCheckedLevel: (newState) => {
+      set({ checkedLevel: newState });
+      persistFilters({ checkedLevel: newState });
+    },
 
-    const activeRatings = rating.filter((r) => state.checkedRatings[r.rating]).map((r) => r.rating);
+    fetchFilterData: async () => {
+      set({ loading: true, error: null });
+      try {
+        const res = await fetch(
+          `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/filtering`,
+          {
+            headers: { 'Content-Type': 'application/json' },
+          }
+        );
+        const json = await res.json();
+        if (json.status !== 'success')
+          throw new Error(json.message || 'Failed to fetch filter data');
 
-    const activePrice = price.find((p) => state.checkedPrice[p.type]);
-    const activePriceType = activePrice ? activePrice.type : null;
+        // Transform category and instructor arrays to expected format
+        const categoriesArr = [
+          {
+            id: 'all-categories',
+            title: 'semua',
+            count: json.data.category.reduce((a, b) => a + (b.published_courses_count || 0), 0),
+          },
+          ...json.data.category.map((cat) => ({
+            id: cat.id,
+            title: cat.name,
+            count: cat.published_courses_count,
+          })),
+        ];
+        const instructorArr = [
+          {
+            id: 'all-instructor',
+            name: 'semua',
+            count: json.data.instructor.reduce((a, b) => a + (b.published_courses_count || 0), 0),
+          },
+          ...json.data.instructor.map((ins) => ({
+            id: ins.id,
+            name: ins.full_name,
+            count: ins.published_courses_count,
+          })),
+        ];
 
-    const activeLevel = level.find((lvl) => state.checkedLevel[lvl.type]);
-    const activeLevelType = activeLevel ? activeLevel.type : null;
+        // If no checkedCategories/instructor in storage, set default
+        const stored = loadFiltersFromStorage();
 
-    return {
-      categories: activeCategories,
-      instructor: activeInstructor,
-      ratings: activeRatings,
-      price: activePriceType,
-      level: activeLevelType,
-    };
-  },
-}));
+        set({
+          categories: categoriesArr,
+          instructor: instructorArr,
+          checkedCategories:
+            stored?.checkedCategories && Object.keys(stored.checkedCategories).length > 0
+              ? stored.checkedCategories
+              : getInitialChecked(categoriesArr, 'title'),
+          checkedInstructor:
+            stored?.checkedInstructor && Object.keys(stored.checkedInstructor).length > 0
+              ? stored.checkedInstructor
+              : getInitialChecked(instructorArr, 'name'),
+          loading: false,
+          error: null,
+        });
+      } catch (e) {
+        set({ error: e.message, loading: false });
+      }
+    },
+
+    // Utility to get only active filters (id/type)
+    getActiveFilters: () => {
+      const state = get();
+
+      const activeCategories = state.categories
+        .filter((cat) => state.checkedCategories[cat.title] && cat.title !== 'semua')
+        .map((cat) => cat.id);
+
+      const activeInstructor = state.instructor
+        .filter((ins) => state.checkedInstructor[ins.name] && ins.name !== 'semua')
+        .map((ins) => ins.id);
+
+      const activeRatings = rating
+        .filter((r) => state.checkedRatings[r.rating])
+        .map((r) => r.rating);
+
+      const activePrice = price.find((p) => state.checkedPrice[p.type]);
+      const activePriceType = activePrice ? activePrice.type : null;
+
+      const activeLevel = level.find((lvl) => state.checkedLevel[lvl.type]);
+      const activeLevelType = activeLevel ? activeLevel.type : null;
+
+      return {
+        categories: activeCategories,
+        instructor: activeInstructor,
+        ratings: activeRatings,
+        price: activePriceType,
+        level: activeLevelType,
+      };
+    },
+  };
+});
 
 export { rating, price, level };
