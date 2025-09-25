@@ -58,6 +58,9 @@ import LearningCourse from '../pages/public/course/learning/learningCourse';
 import VerifyCertificate, { CertificateInputPage } from '../pages/public/course/verifyCertificate';
 import CourseTransaction from '../pages/admin/course/courseTransactions/courseTransaction';
 import Income from '../pages/admin/financial/income/income';
+import BuyNowCourse from '../pages/public/course/detailCourse/butNow/buyNowCourse';
+import CheckoutChart from '../pages/public/chart/checkoutChart';
+import Notification from '../pages/public/notification/notification';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -208,6 +211,7 @@ const publicRoutes = [
   { path: '/kursus', element: <ListCourse /> },
   { path: '/instruktur', element: <ListInstructor /> },
   { path: '/kursus/:courseId', element: <PublicCourse /> },
+  { path: '/kursus/:courseId/beli-sekarang', element: <BuyNowCourse /> },
   { path: '/kursus/:courseId/belajar', element: <LearningCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
@@ -218,6 +222,9 @@ const publicRoutes = [
   { path: '/instruktur/detail/:instructorId', element: <InstructorDetailPublic /> },
   { path: '/verifikasi/sertifikat-kursus', element: <CertificateInputPage /> },
   { path: '/verifikasi/sertifikat-kursus/:certificateCode', element: <VerifyCertificate /> },
+
+  { path: '/notifikasi', element: <Notification /> },
+  { path: '/chart/checkout', element: <CheckoutChart /> },
 ];
 
 const PublicRoute = ({ children }) => {

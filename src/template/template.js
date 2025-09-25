@@ -28,7 +28,7 @@ export default function Template({ children, activeNav, className, style, locati
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      <Navbar />
+      <Navbar activeNav={activeNav} />
 
       <div className={`w-full flex-1 z-0 relative ${className}`} style={style}>
         <AnimatePresence mode="wait">

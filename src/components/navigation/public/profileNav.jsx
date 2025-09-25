@@ -4,10 +4,10 @@ import Button from '../../button/button';
 import Icon from '../../icons/icon';
 import useAuthStore from '../../../zustand/authStore';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-export default function ProfileNav() {
+export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
   const { user, logout } = useAuthStore();
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
   const isModalOpen = useConfirmationModalStore((state) => state.isOpen);
@@ -16,6 +16,7 @@ export default function ProfileNav() {
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Fungsi untuk update posisi dropdown
   const updateDropdownPosition = () => {
@@ -93,21 +94,44 @@ export default function ProfileNav() {
     });
   };
 
+  // Helper for active state
+  const isActive = (route) => location.pathname === route;
+
   return (
     <div className="hidden lg:flex space-x-8">
       {user && user.role === 'student' ? (
         <div className="flex items-center space-x-6">
-          <button className="text-primary-700">
+          <button
+            className={`text-primary-700 rounded-full p-2 transition ${
+              isActive('/notifikasi') ? 'bg-primary-700 text-white' : ''
+            }`}
+            onClick={() => navigate('/notifikasi')}
+          >
             <Icon type={'bell-alert'} />
           </button>
-          <button className="text-primary-700">
+          <button
+            className={`text-primary-700 rounded-full p-2 transition ${
+              isActive('/cart') ? 'bg-primary-700 text-white' : ''
+            }`}
+            onClick={() => navigate('/cart')}
+          >
             <Icon type={'cart-outline'} />
           </button>
           <div className="border-l-[2px] border-primary-700 h-8 opacity-70"></div>
           <div className="relative">
             <button
               ref={buttonRef}
-              className="flex items-center gap-2 text-primary-700"
+              className={`flex items-center gap-2 text-primary-700 rounded-full p-2 transition ${
+                [
+                  '/profile',
+                  '/my-courses',
+                  '/purchase-history',
+                  '/bookmarks',
+                  '/settings',
+                ].includes(location.pathname)
+                  ? 'bg-primary-700 text-white'
+                  : ''
+              }`}
               onClick={() => setDropdownOpen((prev) => !prev)}
             >
               <Icon type="user" className="h-6 w-6" />
@@ -155,37 +179,62 @@ export default function ProfileNav() {
                   </div>
                   <div className="border-t border-gray-100 my-2"></div>
                   <button
-                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                    onClick={() => {}}
+                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
+                      isActive('/profile') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    }`}
+                    onClick={() => {
+                      navigate('/profile');
+                      setDropdownOpen(false);
+                    }}
                   >
                     <Icon type="user" className="w-5 h-5 mr-2 text-primary-700" />
                     Profil
                   </button>
                   <button
-                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                    onClick={() => {}}
+                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
+                      isActive('/my-courses') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    }`}
+                    onClick={() => {
+                      navigate('/my-courses');
+                      setDropdownOpen(false);
+                    }}
                   >
                     <Icon type="book" className="w-5 h-5 mr-2 text-primary-700" />
                     Kursus saya
                   </button>
                   <button
-                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                    onClick={() => {}}
+                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
+                      isActive('/purchase-history') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    }`}
+                    onClick={() => {
+                      navigate('/purchase-history');
+                      setDropdownOpen(false);
+                    }}
                   >
                     <Icon type="work-history" className="w-5 h-5 mr-2 text-primary-700" />
                     Riwayat Pembelian
                   </button>
                   <button
-                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                    onClick={() => {}}
+                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
+                      isActive('/bookmarks') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    }`}
+                    onClick={() => {
+                      navigate('/bookmarks');
+                      setDropdownOpen(false);
+                    }}
                   >
                     <Icon type="bookmark" className="w-5 h-5 mr-2 text-primary-700" />
                     Bookmark
                   </button>
                   <div className="border-t border-gray-100 my-2"></div>
                   <button
-                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                    onClick={() => {}}
+                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
+                      isActive('/settings') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    }`}
+                    onClick={() => {
+                      navigate('/settings');
+                      setDropdownOpen(false);
+                    }}
                   >
                     <Icon type="gear" className="w-5 h-5 mr-2 text-secondary-700" />
                     Pengaturan

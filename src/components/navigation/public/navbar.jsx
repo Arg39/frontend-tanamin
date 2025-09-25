@@ -324,20 +324,38 @@ export default function Navbar() {
 
                     <div className="flex flex-col space-y-2">
                       <Link
-                        to="/notifications"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        to="/notifikasi"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'notifikasi'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="bell-alert" className="w-5 h-5 mr-3" />
+                        <Icon
+                          type="bell-alert"
+                          className={`w-5 h-5 mr-3 transition ${
+                            activeNav === 'notifikasi' ? 'text-primary-700' : ''
+                          }`}
+                        />
                         Notifikasi
                       </Link>
 
                       <Link
-                        to="/cart"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        to="/keranjang"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'keranjang'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="cart-outline" className="w-5 h-5 mr-3" />
+                        <Icon
+                          type="cart-outline"
+                          className={`w-5 h-5 mr-3 transition ${
+                            activeNav === 'cart' ? 'text-primary-700' : ''
+                          }`}
+                        />
                         Keranjang
                       </Link>
 
@@ -345,37 +363,73 @@ export default function Navbar() {
 
                       <Link
                         to="/profile"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'profile'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="user" className="w-5 h-5 mr-3 text-primary-700" />
+                        <Icon
+                          type="user"
+                          className={`w-5 h-5 mr-3 text-primary-700 transition ${
+                            activeNav === 'profile' ? 'font-bold' : ''
+                          }`}
+                        />
                         Profil
                       </Link>
 
                       <Link
                         to="/my-courses"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'my-courses'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="book" className="w-5 h-5 mr-3 text-primary-700" />
+                        <Icon
+                          type="book"
+                          className={`w-5 h-5 mr-3 text-primary-700 transition ${
+                            activeNav === 'my-courses' ? 'font-bold' : ''
+                          }`}
+                        />
                         Kursus Saya
                       </Link>
 
                       <Link
                         to="/purchase-history"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'purchase-history'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="work-history" className="w-5 h-5 mr-3 text-primary-700" />
+                        <Icon
+                          type="work-history"
+                          className={`w-5 h-5 mr-3 text-primary-700 transition ${
+                            activeNav === 'purchase-history' ? 'font-bold' : ''
+                          }`}
+                        />
                         Riwayat Pembelian
                       </Link>
 
                       <Link
                         to="/bookmarks"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'bookmarks'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="bookmark" className="w-5 h-5 mr-3 text-primary-700" />
+                        <Icon
+                          type="bookmark"
+                          className={`w-5 h-5 mr-3 text-primary-700 transition ${
+                            activeNav === 'bookmarks' ? 'font-bold' : ''
+                          }`}
+                        />
                         Bookmark
                       </Link>
 
@@ -383,10 +437,19 @@ export default function Navbar() {
 
                       <Link
                         to="/settings"
-                        className="flex items-center px-3 py-2 rounded hover:bg-gray-100"
+                        className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
+                          activeNav === 'settings'
+                            ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
+                            : ''
+                        }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon type="gear" className="w-5 h-5 mr-3 text-secondary-700" />
+                        <Icon
+                          type="gear"
+                          className={`w-5 h-5 mr-3 text-secondary-700 transition ${
+                            activeNav === 'settings' ? 'font-bold' : ''
+                          }`}
+                        />
                         Pengaturan
                       </Link>
 
