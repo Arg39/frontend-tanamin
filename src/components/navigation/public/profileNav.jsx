@@ -6,6 +6,7 @@ import useAuthStore from '../../../zustand/authStore';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import useNotificationStore from '../../../zustand/public/notificationStore';
 
 export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
   const { user, logout } = useAuthStore();
@@ -17,6 +18,12 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { unreadCount, fetchUnreadCount } = useNotificationStore();
+
+  useEffect(() => {
+    if (user) fetchUnreadCount();
+  }, [user, fetchUnreadCount]);
 
   // Fungsi untuk update posisi dropdown
   const updateDropdownPosition = () => {
@@ -102,12 +109,20 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
       {user && user.role === 'student' ? (
         <div className="flex items-center space-x-6">
           <button
-            className={`text-primary-700 rounded-full p-2 transition ${
+            className={`relative text-primary-700 rounded-full p-2 transition ${
               isActive('/notifikasi') ? 'bg-primary-700 text-white' : ''
             }`}
             onClick={() => navigate('/notifikasi')}
           >
             <Icon type={'bell-alert'} />
+            {unreadCount > 0 && (
+              <span
+                className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1.5 min-w-[18px] h-5 flex items-center justify-center font-bold shadow"
+                style={{ aspectRatio: '1 / 1' }}
+              >
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
           </button>
           <button
             className={`text-primary-700 rounded-full p-2 transition ${

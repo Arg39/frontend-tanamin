@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import ProfileNav from './profileNav';
 import useAuthStore from '../../../zustand/authStore';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
+import useNotificationStore from '../../../zustand/public/notificationStore';
 
 // Animated underline component
 const NavLinkWithMotion = ({ to, children, className, isActive, onClick, ...rest }) => {
@@ -53,6 +54,11 @@ export default function Navbar() {
   const dropdownCloseTimer = useRef(null);
 
   const { user, logout } = useAuthStore();
+  const { unreadCount, fetchUnreadCount } = useNotificationStore();
+  useEffect(() => {
+    if (user) fetchUnreadCount();
+  }, [user, fetchUnreadCount]);
+
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
 
   const handleLogoutClick = () => {
@@ -332,12 +338,22 @@ export default function Navbar() {
                         }`}
                         onClick={closeAccountMenu}
                       >
-                        <Icon
-                          type="bell-alert"
-                          className={`w-5 h-5 mr-3 transition ${
-                            activeNav === 'notifikasi' ? 'text-primary-700' : ''
-                          }`}
-                        />
+                        <span className="relative flex items-center">
+                          <Icon
+                            type="bell-alert"
+                            className={`w-5 h-5 mr-3 transition ${
+                              activeNav === 'notifikasi' ? 'text-primary-700' : ''
+                            }`}
+                          />
+                          {unreadCount > 0 && (
+                            <span
+                              className="absolute -top-2 -right-0 flex items-center justify-center bg-red-500 text-white text-xs font-semibold shadow w-5 h-5 rounded-full px-0 min-w-0"
+                              style={{ aspectRatio: '1 / 1' }}
+                            >
+                              {unreadCount > 99 ? '99+' : unreadCount}
+                            </span>
+                          )}
+                        </span>
                         Notifikasi
                       </Link>
 
