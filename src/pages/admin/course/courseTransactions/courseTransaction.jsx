@@ -81,11 +81,6 @@ export default function CourseTransaction() {
     setFilterValues(values);
   };
 
-  const formatRupiah = (angka) => {
-    if (typeof angka !== 'number') return '-';
-    return 'Rp. ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  };
-
   const columns = [
     {
       Header: 'Pengguna',
@@ -95,28 +90,31 @@ export default function CourseTransaction() {
     },
     {
       Header: 'Kursus',
-      accessor: 'course',
+      accessor: 'courses',
       width: '30%',
       disableSort: true,
+      Cell: ({ value }) =>
+        Array.isArray(value) ? (
+          <p className="list-disc pl-4">
+            {value.map((course, idx) => (
+              <li key={idx}>{course}</li>
+            ))}
+          </p>
+        ) : (
+          '-'
+        ),
     },
     {
-      Header: 'Tanggal Enroll',
-      accessor: 'enrolled_at',
+      Header: 'Tanggal Transaksi',
+      accessor: 'created_at',
       width: '15%',
       Cell: ({ value }) => (value ? value : '-'),
       disableSort: true,
     },
     {
-      Header: 'Harga',
-      accessor: 'price',
-      width: '10%',
-      disableSort: true,
-      Cell: ({ value }) => <span>{formatRupiah(value)}</span>,
-    },
-    {
       Header: 'Status Pembayaran',
       accessor: 'payment_status',
-      width: '10%',
+      width: '15%',
       disableSort: true,
       Cell: ({ value }) => {
         let label = '';
@@ -138,28 +136,11 @@ export default function CourseTransaction() {
       },
     },
     {
-      Header: 'Status Akses',
-      accessor: 'access_status',
+      Header: 'Tipe Pembayaran',
+      accessor: 'payment_type',
       width: '15%',
       disableSort: true,
-      Cell: ({ value }) => {
-        let label = '';
-        let colorClass = '';
-        switch (value) {
-          case 'active':
-            label = 'Aktif';
-            colorClass = 'bg-blue-200 text-blue-800';
-            break;
-          case 'completed':
-            label = 'Selesai';
-            colorClass = 'bg-primary-200 text-primary-800';
-            break;
-          default:
-            label = value;
-            colorClass = 'bg-gray-100 text-gray-500';
-        }
-        return <div className={`inline-block px-2 py-1 rounded ${colorClass}`}>{label}</div>;
-      },
+      Cell: ({ value }) => (value ? value : '-'),
     },
   ];
 

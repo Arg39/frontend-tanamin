@@ -35,7 +35,9 @@ export default function Notification() {
     <Template activeNav="notifikasi" locationKey={location.key}>
       <main className="min-h-screen bg-white xl:px-24 lg:px-16 md:px-10 sm:px-6 px-4 pt-8 w-full mb-8">
         <Breadcrumb items={breadcrumbItems} />
-        <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">Notifikasi</h1>
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-primary-700 mb-4">
+          Notifikasi
+        </h1>
         <section>
           {loading ? (
             <div className="flex flex-col items-center justify-center text-gray-400 py-16 min-h-[300px]">

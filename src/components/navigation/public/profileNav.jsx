@@ -25,6 +25,14 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
     if (user) fetchUnreadCount();
   }, [user, fetchUnreadCount]);
 
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => {
+      fetchUnreadCount();
+    }, 30000); // 30 detik
+    return () => clearInterval(interval);
+  }, [user, fetchUnreadCount]);
+
   // Fungsi untuk update posisi dropdown
   const updateDropdownPosition = () => {
     if (dropdownOpen && buttonRef.current) {
@@ -126,9 +134,9 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
           </button>
           <button
             className={`text-primary-700 rounded-full p-2 transition ${
-              isActive('/cart') ? 'bg-primary-700 text-white' : ''
+              isActive('/keranjang') ? 'bg-primary-700 text-white' : ''
             }`}
-            onClick={() => navigate('/cart')}
+            onClick={() => navigate('/keranjang')}
           >
             <Icon type={'cart-outline'} />
           </button>

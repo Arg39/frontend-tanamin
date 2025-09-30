@@ -9,9 +9,7 @@ const useEnrollmentStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${
-          process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'
-        }/api/enrollments/buy-now/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/enrollments/buy-now/${courseId}`,
         {
           method: 'POST',
           headers: {

@@ -7,6 +7,7 @@ import ImagePicker from '../../../../components/form/imagePicker';
 import Button from '../../../../components/button/button';
 import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
 import useCategoryStore from '../../../../zustand/categoryStore';
+import { toast } from 'react-toastify';
 
 export default function CategoryAdd() {
   const location = useLocation();
@@ -47,8 +48,12 @@ export default function CategoryAdd() {
         formDataToSend.append('image', formData.image);
 
         const result = await addCategory(formDataToSend);
+        console.log(result);
         if (result.success) {
+          toast.success('Kategori berhasil ditambahkan');
           navigate('/admin/kategori');
+        } else {
+          toast.error(`Gagal menambahkan kategori: ${result.message}`);
         }
       },
       onCancel: () => {

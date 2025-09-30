@@ -10,7 +10,6 @@ import CategoryAdd from '../pages/admin/course/category/categoryAdd';
 import CategoryEdit from '../pages/admin/course/category/categoryEdit';
 import Course from '../pages/admin/course/course/course';
 import DashboardInstructor from '../pages/instructor/dashboard';
-import Payment from '../pages/student/testPayment';
 import CourseAdd from '../pages/admin/course/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
@@ -58,8 +57,9 @@ import VerifyCertificate, { CertificateInputPage } from '../pages/public/course/
 import CourseTransaction from '../pages/admin/course/courseTransactions/courseTransaction';
 import Income from '../pages/admin/financial/income/income';
 import BuyNowCourse from '../pages/public/course/detailCourse/butNow/buyNowCourse';
-import CheckoutChart from '../pages/public/chart/checkoutChart';
+import CheckoutCart from '../pages/public/cart/checkoutCart';
 import Notification from '../pages/public/notification/notification';
+import CourseCart from '../pages/public/cart/cart';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -210,7 +210,6 @@ const publicRoutes = [
   { path: '/kursus/:courseId/belajar', element: <LearningCourse /> },
   { path: '/masuk', element: <Login /> },
   { path: '/daftar', element: <Register /> },
-  { path: '/coba-fungsi', element: <Payment /> },
   { path: '/tentang-kami', element: <TentangKami /> },
   { path: '/faq', element: <Faq /> },
   { path: '/kontak-kami', element: <KontakKami /> },
@@ -219,7 +218,8 @@ const publicRoutes = [
   { path: '/verifikasi/sertifikat-kursus/:certificateCode', element: <VerifyCertificate /> },
 
   { path: '/notifikasi', element: <Notification /> },
-  { path: '/chart/checkout', element: <CheckoutChart /> },
+  { path: '/keranjang', element: <CourseCart /> },
+  { path: '/chart/checkout', element: <CheckoutCart /> },
 ];
 
 const PublicRoute = ({ children }) => {

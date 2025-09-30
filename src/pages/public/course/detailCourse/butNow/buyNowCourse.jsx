@@ -13,7 +13,7 @@ function loadMidtransScript() {
   return new Promise((resolve, reject) => {
     if (window.snap) return resolve();
     const script = document.createElement('script');
-    script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+    script.src = process.env.REACT_APP_FRONTEND_INTEGRATION_MIDTRANS;
     script.setAttribute('data-client-key', process.env.REACT_APP_MIDTRANS_CLIENT_KEY);
     script.onload = resolve;
     script.onerror = reject;
@@ -33,7 +33,6 @@ export default function BuyNowCourse() {
     // eslint-disable-next-line
   }, [courseId]);
 
-  // Tambahkan useEffect untuk handle already_enrolled
   useEffect(() => {
     if (checkoutData?.already_enrolled) {
       navigate(`/kursus/${courseId}`);
@@ -60,20 +59,28 @@ export default function BuyNowCourse() {
           const res = await buyNow(courseId);
           if (res?.data?.redirect_url) {
             await loadMidtransScript();
-            window.snap.pay(res.data.redirect_url.split('/').pop(), {
-              onSuccess: function () {
-                toast.success('Pembayaran berhasil!');
-                window.location.reload();
-              },
-              onPending: function () {
-                toast.info('Pembayaran sedang diproses.');
-                window.location.reload();
-              },
-              onError: function () {
-                toast.error('Pembayaran gagal.');
-              },
-              onClose: function () {},
-            });
+            // Ambil token dari redirect_url
+            const redirectUrl = res.data.redirect_url;
+            // Token = bagian terakhir setelah '/'
+            const token = redirectUrl.split('/').pop();
+            if (window.snap && token) {
+              window.snap.pay(token, {
+                onSuccess: function () {
+                  toast.success('Pembayaran berhasil!');
+                  window.location.reload();
+                },
+                onPending: function () {
+                  toast.info('Pembayaran sedang diproses.');
+                  window.location.reload();
+                },
+                onError: function () {
+                  toast.error('Pembayaran gagal.');
+                },
+                onClose: function () {},
+              });
+            } else {
+              toast.error('Gagal memproses pembayaran (token tidak ditemukan)');
+            }
           } else if (res?.status === 'success') {
             toast.success(res?.message || 'Kursus berhasil diakses.');
             navigate(`/kursus/${courseId}`);

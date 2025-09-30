@@ -59,6 +59,14 @@ export default function Navbar() {
     if (user) fetchUnreadCount();
   }, [user, fetchUnreadCount]);
 
+  useEffect(() => {
+    if (!user) return;
+    const interval = setInterval(() => {
+      fetchUnreadCount();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [user, fetchUnreadCount]);
+
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
 
   const handleLogoutClick = () => {

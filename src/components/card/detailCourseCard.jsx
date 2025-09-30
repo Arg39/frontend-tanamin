@@ -32,27 +32,12 @@ function getDiscountedPrice(price, discount) {
   return price;
 }
 
-function loadMidtransScript() {
-  return new Promise((resolve, reject) => {
-    if (window.snap) return resolve();
-    const script = document.createElement('script');
-    script.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
-    script.setAttribute('data-client-key', process.env.REACT_APP_MIDTRANS_CLIENT_KEY);
-    script.onload = resolve;
-    script.onerror = reject;
-    document.body.appendChild(script);
-  });
-}
-
 export default function DetailCourseCard({ course, accessCourse }) {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
-
-  const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
-  const [snapOpen, setSnapOpen] = useState(false);
 
   const handleBuyNow = async () => {
     navigate(`/kursus/${course.id}/beli-sekarang`);
