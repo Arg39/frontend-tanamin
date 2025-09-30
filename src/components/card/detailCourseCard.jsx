@@ -52,51 +52,10 @@ export default function DetailCourseCard({ course, accessCourse }) {
   const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
 
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
-  const { buyNow, loading: enrollLoading } = useEnrollmentStore();
   const [snapOpen, setSnapOpen] = useState(false);
 
   const handleBuyNow = async () => {
-    openConfirmationModal({
-      title: 'Konfirmasi Pembelian',
-      message: 'Apakah Anda yakin ingin membeli kursus ini?',
-      variant: 'primary',
-      onConfirm: async () => {
-        try {
-          const res = await buyNow(course.id);
-          if (res?.data?.redirect_url) {
-            await loadMidtransScript();
-            window.snap.pay(res.data.redirect_url.split('/').pop(), {
-              onSuccess: function () {
-                toast.success('Pembayaran berhasil!');
-                setSnapOpen(false);
-                window.location.reload();
-              },
-              onPending: function () {
-                toast.info('Pembayaran sedang diproses.');
-                setSnapOpen(false);
-                window.location.reload();
-              },
-              onError: function () {
-                toast.error('Pembayaran gagal.');
-                setSnapOpen(false);
-              },
-              onClose: function () {
-                setSnapOpen(false);
-              },
-            });
-            setSnapOpen(true);
-          } else if (res?.status === 'success') {
-            toast.success(res?.message || 'Kursus berhasil diakses.');
-            window.location.reload();
-          } else {
-            toast.error(res?.message || 'Gagal mendapatkan link pembayaran');
-          }
-        } catch (err) {
-          toast.error(err?.message || 'Gagal melakukan pembelian');
-        }
-      },
-      onCancel: () => {},
-    });
+    navigate(`/kursus/${course.id}/beli-sekarang`);
   };
 
   if (!course) return null;
@@ -204,9 +163,8 @@ export default function DetailCourseCard({ course, accessCourse }) {
               className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors"
               onClick={handleBuyNow}
               type="button"
-              disabled={enrollLoading}
             >
-              {enrollLoading ? 'Memproses...' : isFree ? 'Ambil Gratis' : 'Beli Sekarang'}
+              {isFree ? 'Ambil Gratis' : 'Beli Sekarang'}
             </button>
           </div>
         </>
@@ -298,45 +256,10 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
   const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
 
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
-  const { buyNow, loading: enrollLoading } = useEnrollmentStore();
   if (!course) return null;
 
   const handleBuyNow = async () => {
-    openConfirmationModal({
-      title: 'Konfirmasi Pembelian',
-      message: 'Apakah Anda yakin ingin membeli kursus ini?',
-      variant: 'primary',
-      onConfirm: async () => {
-        try {
-          const res = await buyNow(course.id);
-          if (res?.data?.redirect_url) {
-            await loadMidtransScript();
-            window.snap.pay(res.data.redirect_url.split('/').pop(), {
-              onSuccess: function () {
-                toast.success('Pembayaran berhasil!');
-                window.location.reload();
-              },
-              onPending: function () {
-                toast.info('Pembayaran sedang diproses.');
-                window.location.reload();
-              },
-              onError: function () {
-                toast.error('Pembayaran gagal.');
-              },
-              onClose: function () {},
-            });
-          } else if (res?.status === 'success') {
-            toast.success(res?.message || 'Kursus berhasil diakses.');
-            window.location.reload();
-          } else {
-            toast.error(res?.message || 'Gagal mendapatkan link pembayaran');
-          }
-        } catch (err) {
-          toast.error(err?.message || 'Gagal melakukan pembelian');
-        }
-      },
-      onCancel: () => {},
-    });
+    navigate(`/kursus/${course.id}/beli-sekarang`);
   };
 
   const hasDiscount =
@@ -468,9 +391,8 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                       className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors"
                       onClick={handleBuyNow}
                       type="button"
-                      disabled={enrollLoading}
                     >
-                      {enrollLoading ? 'Memproses...' : isFree ? 'Ambil Gratis' : 'Beli Sekarang'}
+                      {isFree ? 'Ambil Gratis' : 'Beli Sekarang'}
                     </button>
                   </div>
                 </>

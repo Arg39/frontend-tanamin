@@ -15,7 +15,6 @@ import CourseAdd from '../pages/admin/course/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
 import CuourseDetailAdmin from '../pages/admin/course/category/courseDetailAdmin';
-import CourseAttributeEdit from '../pages/instructor/course.jsx/tabs/atribut/atributEdit';
 import ModulAdd from '../pages/instructor/course.jsx/tabs/materi/module/modulAdd';
 import LessonAdd from '../pages/instructor/course.jsx/tabs/materi/lesson/lessonAdd';
 import LessonDetail from '../pages/instructor/course.jsx/tabs/materi/lesson/lessonDetail';
@@ -194,10 +193,6 @@ const instructorRoutes = [
   { path: 'kursus/:id/lihat/:tab', element: <ValidatedCourseDetailInstructor /> },
   { path: 'kursus/:id/edit/ringkasan/', element: <RingkasanEditInstructor /> },
   { path: 'kursus/:courseId/tambah/persyaratan-deskripsi', element: <CourseAttributeAdd /> },
-  {
-    path: 'kursus/:courseId/edit/persyaratan-deskripsi/:attributeId?',
-    element: <CourseAttributeEdit />,
-  },
   { path: 'kursus/:courseId/modul/tambah', element: <ModulAdd /> },
   { path: 'kursus/:courseId/modul/:moduleId/edit', element: <ModulEdit /> },
   { path: 'kursus/:courseId/modul/:moduleId/materi/tambah', element: <LessonAdd /> },

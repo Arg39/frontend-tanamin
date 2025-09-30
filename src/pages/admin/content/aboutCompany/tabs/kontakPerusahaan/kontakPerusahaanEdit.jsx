@@ -111,7 +111,7 @@ export default function AdminKontakPerusahaanEdit() {
         </button>
         <div className="flex justify-between items-start mb-4">
           <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
-            Edit Profil Perusahaan
+            Edit Kontak Perusahaan
           </h2>
         </div>
 

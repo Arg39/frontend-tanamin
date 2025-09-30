@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import { formatRupiah } from '../../../../../utils/formatRupiah';
 
-export default function Checkout({ benefit, course, courses = [], multiple = false }) {
+export default function Checkout({
+  benefit = [],
+  course,
+  couponUsage,
+  backendTotal,
+  ppn = 0,
+  grandTotal = 0,
+  courses = [],
+  multiple = false,
+  onPay,
+  enrollLoading = false,
+}) {
   const [showAllBenefits, setShowAllBenefits] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
   // Untuk multiple course
+  console.log(course);
   const courseList = multiple ? courses : course ? [course] : [];
   const total = courseList.reduce((sum, c) => sum + (c.total || 0), 0);
   const discount = courseList.reduce((sum, c) => sum + (c.discount || 0), 0);
-  const ppn = total * 0.12;
-  const totalBayar = total - discount + ppn;
+  const localPpn = total * 0.12;
+
+  // Untuk single course dari backend
+  const showCoupon = !!couponUsage;
+  const couponLabel =
+    couponUsage && couponUsage.type === 'percent'
+      ? `Kupon (${couponUsage.value}%)`
+      : couponUsage && couponUsage.type === 'nominal'
+      ? `Kupon`
+      : null;
 
   // Modal Syarat & Ketentuan
   const TermsModal = () => {
@@ -27,7 +47,7 @@ export default function Checkout({ benefit, course, courses = [], multiple = fal
         className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900 bg-opacity-40"
         onClick={handleBackdropClick}
       >
-        <div className="bg-neutral-50 rounded-lg shadow-lg max-w-lg w-full p-6 relative mx-2">
+        <div className="bg-neutral-50 rounded-lg shadow-lg max-w-3xl w-full p-6 relative mx-2">
           <button
             className="absolute top-2 right-2 text-neutral-500 hover:text-neutral-700"
             onClick={() => setShowTerms(false)}
@@ -102,14 +122,17 @@ export default function Checkout({ benefit, course, courses = [], multiple = fal
           <div className="relative">
             <div
               className={`mt-3 sm:mt-4 flex flex-col gap-3 sm:gap-4 overflow-hidden transition-all duration-300 ${
-                !showAllBenefits ? 'max-h-[200px] sm:max-h-[320px]' : 'max-h-none'
+                !showAllBenefits && benefit.length > 3
+                  ? 'max-h-[200px] sm:max-h-[320px]'
+                  : 'max-h-none'
               }`}
               style={{
-                maxHeight: !showAllBenefits
-                  ? window.innerWidth < 640
-                    ? '200px'
-                    : '320px'
-                  : 'none',
+                maxHeight:
+                  !showAllBenefits && benefit.length > 3
+                    ? window.innerWidth < 640
+                      ? '200px'
+                      : '320px'
+                    : 'none',
               }}
             >
               {benefit.map((item, idx) => (
@@ -121,14 +144,16 @@ export default function Checkout({ benefit, course, courses = [], multiple = fal
                 </div>
               ))}
             </div>
-            {!showAllBenefits && benefit.length > 0 && (
+            {/* Gradient putih hanya jika benefit > 3 dan tidak showAllBenefits */}
+            {!showAllBenefits && benefit.length > 3 && (
               <div
                 className="pointer-events-none absolute bottom-0 left-0 w-full h-16 sm:h-32 bg-gradient-to-t from-white via-white/80 to-transparent transition-opacity duration-300"
                 style={{ zIndex: 1 }}
               />
             )}
           </div>
-          {benefit.length > 0 && (
+          {/* Tombol tampilkan lebih banyak hanya jika benefit > 3 */}
+          {benefit.length > 3 && (
             <div className="mt-2 flex justify-between items-center relative z-10">
               <button
                 type="button"
@@ -160,50 +185,60 @@ export default function Checkout({ benefit, course, courses = [], multiple = fal
                     key={idx}
                     className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center"
                   >
-                    <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">{c.title}</p>
-                    <p className="text-sm sm:text-base">{formatRupiah(c.total)}</p>
+                    <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">{c.title}</p>
+                    <p className="text-sm sm:text-base">{formatRupiah(c.price)}</p>
                   </div>
                 ))}
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">Sub Total</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">Sub Total</p>
                   <p className="text-sm sm:text-base">{formatRupiah(total)}</p>
                 </div>
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">Diskon</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">Diskon</p>
                   <p className="text-sm sm:text-base">{formatRupiah(discount)}</p>
                 </div>
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">PPN 12%</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(ppn)}</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">PPN 12%</p>
+                  <p className="text-sm sm:text-base">{formatRupiah(localPpn)}</p>
                 </div>
                 <div className="mt-3 sm:mt-4 mb-3 sm:mb-4 flex justify-between items-center">
                   <p className="text-lg sm:text-xl font-bold">Total Bayar</p>
-                  <p className="text-lg sm:text-xl font-bold">{formatRupiah(totalBayar)}</p>
+                  <p className="text-lg sm:text-xl font-bold">
+                    {formatRupiah(total - discount + localPpn)}
+                  </p>
                 </div>
               </>
             ) : (
               <>
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">{course?.title}</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(course?.total)}</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">{course?.title}</p>
+                  <p className="text-sm sm:text-base">{formatRupiah(course?.price)}</p>
                 </div>
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">Sub Total</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(course?.total)}</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">Diskon</p>
+                  <p className="text-sm sm:text-base text-green-600">
+                    - {formatRupiah(course?.discount)}
+                  </p>
                 </div>
+                {showCoupon && (
+                  <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
+                    <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">{couponLabel}</p>
+                    <p className="text-sm sm:text-base text-green-600">
+                      {couponUsage.type === 'percent'
+                        ? `-${couponUsage.value}%`
+                        : couponUsage.type === 'nominal'
+                        ? `-${formatRupiah(couponUsage.value)}`
+                        : ''}
+                    </p>
+                  </div>
+                )}
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">Diskon</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(course?.discount)}</p>
-                </div>
-                <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-10/12 text-sm sm:text-base">PPN 12%</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(course?.total * 0.12)}</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">PPN 12%</p>
+                  <p className="text-sm sm:text-base text-red-600">+ {formatRupiah(ppn)}</p>
                 </div>
                 <div className="mt-3 sm:mt-4 mb-3 sm:mb-4 flex justify-between items-center">
                   <p className="text-lg sm:text-xl font-bold">Total Bayar</p>
-                  <p className="text-lg sm:text-xl font-bold">
-                    {formatRupiah(course?.total - course?.discount + course?.total * 0.12)}
-                  </p>
+                  <p className="text-lg sm:text-xl font-bold">{formatRupiah(grandTotal)}</p>
                 </div>
               </>
             )}
@@ -229,12 +264,17 @@ export default function Checkout({ benefit, course, courses = [], multiple = fal
             </div>
             <button
               className={`bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 sm:py-4 px-4 rounded-lg w-full ${
-                !isChecked ? 'opacity-50 cursor-not-allowed' : ''
+                !isChecked || enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
               type="button"
-              disabled={!isChecked}
+              disabled={!isChecked || enrollLoading}
+              onClick={() => {
+                if (isChecked && typeof onPay === 'function' && !enrollLoading) {
+                  onPay();
+                }
+              }}
             >
-              Lanjutkan Pembayaran
+              {enrollLoading ? 'Memproses...' : 'Lanjutkan Pembayaran'}
             </button>
           </div>
         </div>
