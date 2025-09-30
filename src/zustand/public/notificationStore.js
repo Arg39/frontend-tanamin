@@ -56,9 +56,10 @@ const useNotificationStore = create((set) => ({
         },
       });
       const json = await res.json();
-      if (res.ok && Array.isArray(json.notifications)) {
+      const notifs = json?.data?.notifications || [];
+      if (res.ok) {
         set({
-          notifications: json.notifications,
+          notifications: notifs,
           loading: false,
           error: null,
         });
