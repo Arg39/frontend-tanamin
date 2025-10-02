@@ -50,22 +50,26 @@ export default function AdminMessage() {
       accessor: 'name',
       width: '18%',
       Cell: ({ value }) => <span>{value}</span>,
+      disableSort: true,
     },
     {
       Header: 'Email',
       accessor: 'email',
       width: '18%',
+      disableSort: true,
     },
     {
       Header: 'Subjek',
       accessor: 'subject',
       width: '18%',
+      disableSort: true,
     },
     {
       Header: 'Pesan',
       accessor: 'message',
       width: '30%',
       Cell: ({ value }) => <span>{value}</span>,
+      disableSort: true,
     },
     {
       Header: 'Tanggal Kirim',
@@ -75,20 +79,7 @@ export default function AdminMessage() {
         const options = { day: 'numeric', month: 'long', year: 'numeric' };
         return new Intl.DateTimeFormat('id-ID', options).format(new Date(value));
       },
-    },
-    {
-      Header: 'Aksi',
-      accessor: 'id',
-      width: '6%',
       disableSort: true,
-      Cell: ({ value }) => (
-        <button
-          className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
-          onClick={() => navigate(`/admin/message/reply/${value}`)}
-        >
-          Balas
-        </button>
-      ),
     },
   ];
 

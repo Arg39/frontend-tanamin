@@ -1,70 +1,81 @@
-import React from 'react';
-import Icon from '../../../../components/icons/icon';
+import React, { useEffect } from 'react';
+import ProfileSidebar from '../profileSidebar';
+import useProfileStore from '../../../../zustand/profileStore';
 
-export default function UserProfileContent({ profile, isMobile }) {
-  if (!profile) {
+export default function ProfileContent() {
+  const { profile, loading, error, fetchProfile } = useProfileStore();
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  if (loading) {
     return (
-      <div
-        className={`w-full p-4 md:p-6 flex flex-col md:flex-row items-center gap-4
-          ${isMobile ? 'relative bg-secondary-600 rounded-lg' : 'md:absolute md:bottom-0 md:left-0'}
-        `}
-      >
-        <div className="w-20 h-20 md:w-40 md:h-40 rounded-full border-4 border-white flex items-center justify-center bg-white animate-pulse" />
-        <div className="w-full mt-4 md:mt-0">
-          {/* <h2 className="text-white text-xl md:text-2xl font-semibold bg-gray-300 rounded w-32 md:w-48 h-6 md:h-8 animate-pulse" />
-          <h2 className="text-white text-lg md:text-xl bg-gray-300 rounded w-24 md:w-40 h-5 md:h-7 animate-pulse" /> */}
-          <div className="flex flex-col gap-4 md:gap-6 mt-2 md:mt-4">
-            <p className="bg-gray-300 rounded w-20 md:w-32 h-4 md:h-6 animate-pulse" />
-            <p className="bg-gray-300 rounded w-24 md:w-36 h-4 md:h-6 animate-pulse" />
-          </div>
+      <ProfileSidebar>
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <p>Loading...</p>
         </div>
-      </div>
+      </ProfileSidebar>
     );
   }
 
-  const {
-    photo_profile,
-    full_name,
-    first_name,
-    last_name,
-    category_instructor,
-    created_at,
-    total_courses,
-  } = profile;
+  if (error) {
+    return (
+      <ProfileSidebar>
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <p className="text-red-500">{error}</p>
+        </div>
+      </ProfileSidebar>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <ProfileSidebar>
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <p>Profil tidak ditemukan.</p>
+        </div>
+      </ProfileSidebar>
+    );
+  }
 
   return (
-    <div
-      className={`w-full p-4 md:p-6 flex flex-col md:flex-row items-center gap-4
-        ${isMobile ? 'relative bg-secondary-600 rounded-lg' : 'md:absolute md:bottom-0 md:left-0'}
-      `}
-    >
-      {photo_profile ? (
-        <img
-          src={photo_profile}
-          alt={full_name || `${first_name} ${last_name}`}
-          className="w-20 h-20 md:w-40 md:h-40 rounded-full border-4 border-white object-cover"
-        />
-      ) : (
-        <div className="w-20 md:w-40 aspect-square rounded-full border-4 border-white flex items-center justify-center bg-white overflow-hidden">
-          <Icon type="user" className="text-black w-10 h-10 md:w-16 md:h-16" />
+    <ProfileSidebar>
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h1 className="text-2xl font-semibold border-b-2 pb-4 mb-6">Profil Saya</h1>
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Nama depan</p>
+          <p className="w-full md:w-4/5">{profile.first_name || '-'}</p>
         </div>
-      )}
-      <div className="w-full mt-4 md:mt-0">
-        <h2 className="text-white text-xl md:text-2xl font-semibold">
-          {first_name} {last_name}
-        </h2>
-        <h2 className="text-white text-lg md:text-xl">{category_instructor}</h2>
-        <div className="flex flex-col gap-2 mt-2">
-          <p className="flex items-center gap-2 text-white text-sm md:text-base">
-            <Icon type={'users'} className={'w-6 h-6 md:w-8 md:h-8'} />
-            {total_courses ?? 0} Kursus
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Nama belakang</p>
+          <p className="w-full md:w-4/5">{profile.last_name || '-'}</p>
+        </div>
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Username</p>
+          <p className="w-full md:w-4/5">{profile.username || '-'}</p>
+        </div>
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Email</p>
+          <p className="w-full md:w-4/5">{profile.email || '-'}</p>
+        </div>
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Telepon</p>
+          <p className="w-full md:w-4/5">
+            {profile.telephone
+              ? profile.telephone.replace(/(.{4})/g, '$1-').replace(/-$/, '')
+              : '-'}
           </p>
-          <p className="flex items-center gap-2 text-white text-sm md:text-base">
-            <Icon type={'date'} className={'w-6 h-6 md:w-7 md:h-7'} />
-            bergabung sejak {created_at ? new Date(created_at).toLocaleDateString('id-ID') : '-'}
-          </p>
+        </div>
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Bidang Keahlian</p>
+          <p className="w-full md:w-4/5">{profile.detail?.expertise || '-'}</p>
+        </div>
+        <div className="w-full flex flex-col md:flex-row mb-8">
+          <p className="w-full md:w-1/5 mb-2 md:mb-0 font-medium">Tentang Saya</p>
+          <p className="w-full md:w-4/5">{profile.detail?.about || '-'}</p>
         </div>
       </div>
-    </div>
+    </ProfileSidebar>
   );
 }

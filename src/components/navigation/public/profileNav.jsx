@@ -149,14 +149,10 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
           <div className="relative">
             <button
               ref={buttonRef}
-              className={`flex items-center gap-2 text-primary-700 rounded-full p-2 transition ${
-                [
-                  '/profile',
-                  '/my-courses',
-                  '/purchase-history',
-                  '/bookmarks',
-                  '/settings',
-                ].includes(location.pathname)
+              className={`flex items-center gap-2 text-primary-700 rounded-full p-2 px-4 transition ${
+                ['/profil', '/my-courses', '/purchase-history', '/bookmarks', '/settings'].includes(
+                  location.pathname
+                )
                   ? 'bg-primary-700 text-white'
                   : ''
               }`}
@@ -208,10 +204,10 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                   <div className="border-t border-gray-100 my-2"></div>
                   <button
                     className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
-                      isActive('/profile') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                      isActive('/profil') ? 'bg-primary-700 text-white' : 'text-gray-700'
                     }`}
                     onClick={() => {
-                      navigate('/profile');
+                      navigate('/profil');
                       setDropdownOpen(false);
                     }}
                   >
@@ -228,7 +224,7 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                     }}
                   >
                     <Icon type="book" className="w-5 h-5 mr-2 text-primary-700" />
-                    Kursus saya
+                    Course Saya
                   </button>
                   <button
                     className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${

@@ -13,7 +13,7 @@ export default function CourseAttributeAdd() {
     useCourseAttributeStore();
 
   // State for attributes, benefits, and prerequisites
-  const [attributes, setAttributes] = useState(['']);
+  const [description, setDescription] = useState(['']);
   const [benefits, setBenefits] = useState(['']);
   const [prerequisites, setPrerequisites] = useState(['']);
   const [loading, setLoading] = useState(false);
@@ -29,7 +29,7 @@ export default function CourseAttributeAdd() {
   // Sync store data to local state
   useEffect(() => {
     if (attribute) {
-      setAttributes(
+      setDescription(
         attribute.description && attribute.description[0]?.content?.length > 0
           ? attribute.description[0].content
           : ['']
@@ -49,12 +49,12 @@ export default function CourseAttributeAdd() {
 
   // Handlers for attributes
   const handleAttributeChange = (idx, e) => {
-    const newAttrs = [...attributes];
+    const newAttrs = [...description];
     newAttrs[idx] = e.target.value;
-    setAttributes(newAttrs);
+    setDescription(newAttrs);
   };
-  const addAttributeField = () => setAttributes([...attributes, '']);
-  const removeAttributeField = (idx) => setAttributes(attributes.filter((_, i) => i !== idx));
+  const addAttributeField = () => setDescription([...description, '']);
+  const removeAttributeField = (idx) => setDescription(description.filter((_, i) => i !== idx));
 
   // Handlers for benefits
   const handleBenefitChange = (idx, e) => {
@@ -79,14 +79,14 @@ export default function CourseAttributeAdd() {
     setLoading(true);
     try {
       // Prepare payloads as array of string (tanpa type)
-      const attrPayloads = attributes.filter((a) => a.trim() !== '');
+      const descriptionPayloads = description.filter((a) => a.trim() !== '');
       const benefitPayloads = benefits.filter((b) => b.trim() !== '');
       const prerequisitePayloads = prerequisites.filter((p) => p.trim() !== '');
 
-      // Send all data in one request
+      // Kirim field sesuai backend: description, benefits, prerequisites
       const result = await addAttributesBulk({
         id: courseId,
-        attributes: attrPayloads,
+        descriptions: descriptionPayloads,
         benefits: benefitPayloads,
         prerequisites: prerequisitePayloads,
       });
@@ -120,46 +120,6 @@ export default function CourseAttributeAdd() {
           <div className="text-red-500">{attributeError}</div>
         ) : (
           <>
-            {/* Container for Attributes */}
-            <div className="bg-white rounded-lg p-4 sm:p-6 shadow border mb-4">
-              <div className="flex items-center justify-between mb-3">
-                <span className="mb-2 text-sm font-medium text-gray-700">Atribut Kursus</span>
-                <button
-                  type="button"
-                  className="flex items-center p-1 px-2 gap-1 text-white bg-primary-700 hover:bg-primary-900 font-medium rounded-md"
-                  onClick={addAttributeField}
-                >
-                  <Icon type="plus" className="w-5 h-5" />
-                  Atribut
-                </button>
-              </div>
-              <div className="w-full flex flex-col gap-3">
-                {attributes.map((attr, idx) => (
-                  <div key={idx} className="w-full flex gap-3">
-                    <div className="flex-grow">
-                      <TextInput
-                        name={`attribute-${idx}`}
-                        value={attr}
-                        onChange={(e) => handleAttributeChange(idx, e)}
-                        placeholder={`Atribut ${idx + 1}`}
-                        className="block w-full"
-                      />
-                    </div>
-                    {attributes.length > 1 && (
-                      <button
-                        type="button"
-                        className="text-red-500 hover:text-red-700 mt-1"
-                        onClick={() => removeAttributeField(idx)}
-                        aria-label="Hapus atribut"
-                      >
-                        <Icon type="trash" className="w-5 h-5" />
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Container for Prerequisites */}
             <div className="bg-white rounded-lg p-4 sm:p-6 shadow border mb-4">
               <div className="flex items-center justify-between mb-3">
@@ -191,6 +151,46 @@ export default function CourseAttributeAdd() {
                         className="text-red-500 hover:text-red-700 mt-1"
                         onClick={() => removePrerequisiteField(idx)}
                         aria-label="Hapus persyaratan"
+                      >
+                        <Icon type="trash" className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Container for Attributes */}
+            <div className="bg-white rounded-lg p-4 sm:p-6 shadow border mb-4">
+              <div className="flex items-center justify-between mb-3">
+                <span className="mb-2 text-sm font-medium text-gray-700">Deskripsi Kursus</span>
+                <button
+                  type="button"
+                  className="flex items-center p-1 px-2 gap-1 text-white bg-primary-700 hover:bg-primary-900 font-medium rounded-md"
+                  onClick={addAttributeField}
+                >
+                  <Icon type="plus" className="w-5 h-5" />
+                  Atribut
+                </button>
+              </div>
+              <div className="w-full flex flex-col gap-3">
+                {description.map((attr, idx) => (
+                  <div key={idx} className="w-full flex gap-3">
+                    <div className="flex-grow">
+                      <TextInput
+                        name={`attribute-${idx}`}
+                        value={attr}
+                        onChange={(e) => handleAttributeChange(idx, e)}
+                        placeholder={`Atribut ${idx + 1}`}
+                        className="block w-full"
+                      />
+                    </div>
+                    {description.length > 1 && (
+                      <button
+                        type="button"
+                        className="text-red-500 hover:text-red-700 mt-1"
+                        onClick={() => removeAttributeField(idx)}
+                        aria-label="Hapus atribut"
                       >
                         <Icon type="trash" className="w-5 h-5" />
                       </button>

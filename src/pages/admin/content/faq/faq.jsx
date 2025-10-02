@@ -69,6 +69,7 @@ export default function FaqAdmin() {
       Header: 'Pertanyaan',
       accessor: 'question',
       width: '30%',
+      disableSort: true,
     },
     {
       Header: 'Jawaban',
@@ -81,6 +82,7 @@ export default function FaqAdmin() {
       Header: 'Aksi',
       accessor: 'id',
       width: '10%',
+      disableSort: true,
       Cell: ({ value }) => (
         <div className="flex flex-col gap-2 items-start">
           <button
@@ -106,9 +108,7 @@ export default function FaqAdmin() {
     <AdminTemplate activeNav={'faq'} breadcrumbItems={breadcrumbItems}>
       <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
         <div className="flex justify-between items-start mb-2">
-          <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-4">
-            Daftar Frequently Asked Questions
-          </h2>
+          <h2 className="text-lg sm:text-2xl font-bold mb-4">Daftar Frequently Asked Questions</h2>
           <button
             className="flex gap-2 p-2 px-4 items-center text-white bg-primary-700 hover:bg-primary-800 rounded-md"
             onClick={() => navigate('/admin/faq/tambah')}

@@ -38,7 +38,7 @@ const useCourseAttributeStore = create((set, get) => ({
   },
 
   // Tambah banyak atribut sekaligus (baru)
-  async addAttributesBulk({ id, attributes, benefits, prerequisites }) {
+  async addAttributesBulk({ id, descriptions, benefits, prerequisites }) {
     set({ attributeLoading: true, attributeError: null });
     try {
       const token = useAuthStore.getState().token;
@@ -51,7 +51,7 @@ const useCourseAttributeStore = create((set, get) => ({
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({
-            attributes,
+            descriptions,
             benefits,
             prerequisites,
           }),

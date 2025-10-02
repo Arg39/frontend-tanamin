@@ -386,7 +386,7 @@ export default function Navbar() {
                       <div className="border-t my-2" />
 
                       <Link
-                        to="/profile"
+                        to="/profil"
                         className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
                           activeNav === 'profile'
                             ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
@@ -418,7 +418,7 @@ export default function Navbar() {
                             activeNav === 'my-courses' ? 'font-bold' : ''
                           }`}
                         />
-                        Kursus Saya
+                        Course Saya
                       </Link>
 
                       <Link

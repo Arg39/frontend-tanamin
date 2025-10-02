@@ -60,6 +60,7 @@ import BuyNowCourse from '../pages/public/course/detailCourse/butNow/buyNowCours
 import CheckoutCart from '../pages/public/cart/checkoutCart';
 import Notification from '../pages/public/notification/notification';
 import CourseCart from '../pages/public/cart/cart';
+import ProfileContent from '../pages/public/profile/content/profileContent';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -220,6 +221,7 @@ const publicRoutes = [
   { path: '/notifikasi', element: <Notification /> },
   { path: '/keranjang', element: <CourseCart /> },
   { path: '/keranjang/checkout', element: <CheckoutCart /> },
+  { path: '/profil', element: <ProfileContent /> },
 ];
 
 const PublicRoute = ({ children }) => {
