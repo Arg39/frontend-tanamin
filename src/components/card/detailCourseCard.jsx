@@ -7,6 +7,8 @@ import useCouponStore from '../../zustand/public/course/couponStore';
 import { toast } from 'react-toastify';
 import useConfirmationModalStore from '../../zustand/confirmationModalStore';
 import useEnrollmentStore from '../../zustand/public/course/enrollmentStore';
+import useCartStore from '../../zustand/public/course/cartStore';
+import useCourseStore from '../../zustand/public/course/courseStore';
 
 function translateLevel(level) {
   switch (level) {
@@ -41,6 +43,20 @@ export default function DetailCourseCard({ course, accessCourse }) {
 
   const handleBuyNow = async () => {
     navigate(`/kursus/${course.id}/beli-sekarang`);
+  };
+
+  const { loading: cartLoading, addToCart } = useCartStore();
+  const setCourseInCart = useCourseStore((state) => state.setCourseInCart);
+  const handleAddToCart = async () => {
+    if (!course || course.in_cart) return;
+    try {
+      await addToCart(course.id);
+      toast.success('Berhasil menambahkan ke keranjang');
+      setCourseInCart(true); // update global state
+      // course.in_cart = true; // HAPUS baris ini
+    } catch (e) {
+      toast.error(e?.message || 'Gagal menambah ke keranjang');
+    }
   };
 
   if (!course) return null;
@@ -141,8 +157,20 @@ export default function DetailCourseCard({ course, accessCourse }) {
             )}
           </div>
           <div className="flex flex-col gap-2 mb-4">
-            <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
-              Tambahkan Ke Keranjang
+            <button
+              className={`w-full py-2 rounded-lg text-base transition-colors ${
+                course.in_cart
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'bg-primary-700 text-white hover:bg-primary-800'
+              }`}
+              disabled={course.in_cart || cartLoading}
+              onClick={handleAddToCart}
+            >
+              {cartLoading
+                ? 'Memproses...'
+                : course.in_cart
+                ? 'Sudah di Keranjang'
+                : 'Tambahkan Ke Keranjang'}
             </button>
             <button
               className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors"
@@ -232,6 +260,7 @@ export default function DetailCourseCard({ course, accessCourse }) {
   );
 }
 
+// Mobile version of DetailCourseCard
 export function MobileDetailCourseCard({ course, accessCourse }) {
   const [expanded, setExpanded] = React.useState(false);
   const { user } = useAuthStore();
@@ -239,12 +268,26 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState('');
   const { loading: couponLoading, applyCoupon, resetCouponResult } = useCouponStore();
+  const { loading: cartLoading, addToCart } = useCartStore();
+  const setCourseInCart = useCourseStore((state) => state.setCourseInCart);
 
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
   if (!course) return null;
 
   const handleBuyNow = async () => {
     navigate(`/kursus/${course.id}/beli-sekarang`);
+  };
+
+  const handleAddToCart = async () => {
+    if (!course || course.in_cart) return;
+    try {
+      await addToCart(course.id);
+      toast.success('Berhasil menambahkan ke keranjang');
+      setCourseInCart(true); // update global state
+      // course.in_cart = true; // HAPUS baris ini
+    } catch (e) {
+      toast.error(e?.message || 'Gagal menambah ke keranjang');
+    }
   };
 
   const hasDiscount =
@@ -369,8 +412,20 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                     )}
                   </div>
                   <div className="flex flex-col gap-2 mb-4">
-                    <button className="w-full py-2 bg-primary-700 text-white rounded-lg hover:bg-primary-800 text-base transition-colors">
-                      Tambahkan Ke Keranjang
+                    <button
+                      className={`w-full py-2 rounded-lg text-base transition-colors ${
+                        course.in_cart
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-primary-700 text-white hover:bg-primary-800'
+                      }`}
+                      disabled={course.in_cart || cartLoading}
+                      onClick={handleAddToCart}
+                    >
+                      {cartLoading
+                        ? 'Memproses...'
+                        : course.in_cart
+                        ? 'Sudah di Keranjang'
+                        : 'Tambahkan Ke Keranjang'}
                     </button>
                     <button
                       className="w-full py-2 border-2 border-primary-700 bg-white text-primary-700 rounded-lg hover:bg-primary-800 hover:text-white text-base transition-colors"
@@ -482,8 +537,20 @@ export function MobileDetailCourseCard({ course, accessCourse }) {
                 </button>
               ) : user ? (
                 <>
-                  <button className="w-full py-1 px-3 bg-primary-700 text-white rounded-lg text-sm font-semibold hover:bg-primary-800 transition-colors">
-                    Keranjang
+                  <button
+                    className={`w-full py-1 px-3 rounded-lg text-sm font-semibold transition-colors ${
+                      course.in_cart
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-primary-700 text-white hover:bg-primary-800'
+                    }`}
+                    disabled={course.in_cart || cartLoading}
+                    onClick={handleAddToCart}
+                  >
+                    {cartLoading
+                      ? 'Memproses...'
+                      : course.in_cart
+                      ? 'Sudah di Keranjang'
+                      : 'Keranjang'}
                   </button>
                   <button className="w-full py-1 px-3 border-2 border-primary-700 bg-white text-primary-700 rounded-lg text-sm font-semibold hover:bg-primary-800 hover:text-white transition-colors">
                     {isFree ? 'Ambil Gratis' : 'Beli'}

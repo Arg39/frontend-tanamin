@@ -54,16 +54,16 @@ export default function StackedCourseCards({ courses }) {
     // Reset interval
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
-      intervalRef.current = setInterval(() => {
-        if (!animating) {
-          setAnimating(true);
-          setOrder((prev) => {
-            const next = [...prev.slice(1), (prev[prev.length - 1] + 1) % courses.length];
-            return next;
-          });
-          setTimeout(() => setAnimating(false), 600);
-        }
-      }, 5000);
+      // intervalRef.current = setInterval(() => {
+      //   if (!animating) {
+      //     setAnimating(true);
+      //     setOrder((prev) => {
+      //       const next = [...prev.slice(1), (prev[prev.length - 1] + 1) % courses.length];
+      //       return next;
+      //     });
+      //     setTimeout(() => setAnimating(false), 600);
+      //   }
+      // }, 5000);
     }
   };
 

@@ -110,7 +110,12 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
   };
 
   // Helper for active state
-  const isActive = (route) => location.pathname === route;
+  const isActive = (routes) => {
+    if (Array.isArray(routes)) {
+      return routes.some((route) => location.pathname === route);
+    }
+    return location.pathname === routes;
+  };
 
   return (
     <div className="hidden lg:flex space-x-8">
@@ -134,7 +139,7 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
           </button>
           <button
             className={`text-primary-700 rounded-full p-2 transition ${
-              isActive('/keranjang') ? 'bg-primary-700 text-white' : ''
+              isActive(['/keranjang', '/keranjang/checkout']) ? 'bg-primary-700 text-white' : ''
             }`}
             onClick={() => navigate('/keranjang')}
           >

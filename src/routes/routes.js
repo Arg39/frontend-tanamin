@@ -219,7 +219,7 @@ const publicRoutes = [
 
   { path: '/notifikasi', element: <Notification /> },
   { path: '/keranjang', element: <CourseCart /> },
-  { path: '/chart/checkout', element: <CheckoutCart /> },
+  { path: '/keranjang/checkout', element: <CheckoutCart /> },
 ];
 
 const PublicRoute = ({ children }) => {

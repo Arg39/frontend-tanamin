@@ -18,14 +18,15 @@ export default function Checkout({
   const [showTerms, setShowTerms] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
 
-  // Untuk multiple course
-  console.log(course);
   const courseList = multiple ? courses : course ? [course] : [];
-  const total = courseList.reduce((sum, c) => sum + (c.total || 0), 0);
-  const discount = courseList.reduce((sum, c) => sum + (c.discount || 0), 0);
-  const localPpn = total * 0.12;
+  // Untuk multiple, gunakan data dari API, bukan hitung manual
+  const total = multiple ? backendTotal : courseList.reduce((sum, c) => sum + (c.total || 0), 0);
+  const discount = multiple
+    ? courseList.reduce((sum, c) => sum + (c.discount || 0), 0)
+    : courseList.reduce((sum, c) => sum + (c.discount || 0), 0);
+  const localPpn = multiple ? ppn : total * 0.12;
+  const localGrandTotal = multiple ? grandTotal : total - discount + localPpn;
 
-  // Untuk single course dari backend
   const showCoupon = !!couponUsage;
   const couponLabel =
     couponUsage && couponUsage.type === 'percent'
@@ -34,7 +35,6 @@ export default function Checkout({
       ? `Kupon`
       : null;
 
-  // Modal Syarat & Ketentuan
   const TermsModal = () => {
     const handleBackdropClick = (e) => {
       if (e.target === e.currentTarget) {
@@ -144,7 +144,6 @@ export default function Checkout({
                 </div>
               ))}
             </div>
-            {/* Gradient putih hanya jika benefit > 3 dan tidak showAllBenefits */}
             {!showAllBenefits && benefit.length > 3 && (
               <div
                 className="pointer-events-none absolute bottom-0 left-0 w-full h-16 sm:h-32 bg-gradient-to-t from-white via-white/80 to-transparent transition-opacity duration-300"
@@ -152,7 +151,6 @@ export default function Checkout({
               />
             )}
           </div>
-          {/* Tombol tampilkan lebih banyak hanya jika benefit > 3 */}
           {benefit.length > 3 && (
             <div className="mt-2 flex justify-between items-center relative z-10">
               <button
@@ -190,22 +188,22 @@ export default function Checkout({
                   </div>
                 ))}
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">Sub Total</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(total)}</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">Diskon</p>
+                  <p className="text-sm sm:text-base text-primary-700">
+                    - {formatRupiah(discount)}
+                  </p>
                 </div>
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
-                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">Diskon</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(discount)}</p>
+                  <p className="w-8/12 sm:w-9/12 text-sm sm:text-base font-semibold">Sub Total</p>
+                  <p className="text-sm sm:text-base font-semibold">{formatRupiah(total)}</p>
                 </div>
                 <div className="pb-2 border-b border-gray-200 mb-2 sm:mb-4 flex justify-between items-center">
                   <p className="w-8/12 sm:w-9/12 text-sm sm:text-base">PPN 12%</p>
-                  <p className="text-sm sm:text-base">{formatRupiah(localPpn)}</p>
+                  <p className="text-sm sm:text-base text-red-600">+ {formatRupiah(localPpn)}</p>
                 </div>
                 <div className="mt-3 sm:mt-4 mb-3 sm:mb-4 flex justify-between items-center">
                   <p className="text-lg sm:text-xl font-bold">Total Bayar</p>
-                  <p className="text-lg sm:text-xl font-bold">
-                    {formatRupiah(total - discount + localPpn)}
-                  </p>
+                  <p className="text-lg sm:text-xl font-bold">{formatRupiah(localGrandTotal)}</p>
                 </div>
               </>
             ) : (

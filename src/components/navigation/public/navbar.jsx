@@ -59,13 +59,13 @@ export default function Navbar() {
     if (user) fetchUnreadCount();
   }, [user, fetchUnreadCount]);
 
-  useEffect(() => {
-    if (!user) return;
-    const interval = setInterval(() => {
-      fetchUnreadCount();
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [user, fetchUnreadCount]);
+  // useEffect(() => {
+  //   if (!user) return;
+  //   const interval = setInterval(() => {
+  //     fetchUnreadCount();
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, [user, fetchUnreadCount]);
 
   const openConfirmationModal = useConfirmationModalStore((state) => state.openModal);
 
@@ -224,7 +224,7 @@ export default function Navbar() {
   }, [isMenuOpen, isAccountMenuOpen]);
 
   return (
-    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 px-2 pt-2 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
+    <div className="tanamin-navbar xl:px-20 lg:px-10 md:px-14 sm:px-8 px-2 pt-2 pb-2 sm:pb-0 flex justify-between items-center bg-white fixed top-0 left-0 w-full z-40 shadow-md">
       <div>
         <img src="/assets/logo.png" alt="Logo-Tanamin" className="h-10 lg:h-12" />
       </div>
@@ -377,7 +377,7 @@ export default function Navbar() {
                         <Icon
                           type="cart-outline"
                           className={`w-5 h-5 mr-3 transition ${
-                            activeNav === 'cart' ? 'text-primary-700' : ''
+                            activeNav === 'keranjang' ? 'text-primary-700' : ''
                           }`}
                         />
                         Keranjang

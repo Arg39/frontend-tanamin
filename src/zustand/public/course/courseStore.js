@@ -51,6 +51,12 @@ const useCourseStore = create((set) => ({
   courseRatingsLoading: false,
   courseRatingsError: null,
 
+  setCourseInCart: (inCart) => {
+    set((state) => ({
+      course: state.course ? { ...state.course, in_cart: inCart } : state.course,
+    }));
+  },
+
   fetchCourses: async ({ page = 1, search = '', filters = {} } = {}) => {
     set({ coursesLoading: true, coursesError: null });
     try {
