@@ -404,7 +404,7 @@ export default function Navbar() {
                       </Link>
 
                       <Link
-                        to="/my-courses"
+                        to="/kursus-saya"
                         className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
                           activeNav === 'my-courses'
                             ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'

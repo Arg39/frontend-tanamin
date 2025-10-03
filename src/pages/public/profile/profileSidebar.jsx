@@ -131,7 +131,7 @@ export default function ProfileSidebar({ children }) {
   );
 
   return (
-    <Template activeNav="faq" locationKey={location.key}>
+    <Template locationKey={location.key}>
       <div className="flex w-full min-h-[60vh] px-0 sm:px-16">
         {/* Mobile: Floating Button */}
         {isMobile && (

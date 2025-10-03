@@ -50,6 +50,9 @@ const useCourseStore = create((set) => ({
   courseRatings: null,
   courseRatingsLoading: false,
   courseRatingsError: null,
+  myCourses: [],
+  myCoursesLoading: false,
+  myCoursesError: null,
 
   setCourseInCart: (inCart) => {
     set((state) => ({
@@ -248,6 +251,38 @@ const useCourseStore = create((set) => ({
         instructorCoursesError:
           error.response?.data?.message || 'Gagal mengambil kursus instruktur',
         instructorCoursesLoading: false,
+      });
+    }
+  },
+
+  fetchMyCourses: async (status = 'enrolled') => {
+    set({ myCoursesLoading: true, myCoursesError: null });
+    try {
+      const token = useAuthStore.getState().token;
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-courses/my-courses`,
+        {
+          params: { filter: status }, // Ubah dari 'status' ke 'filter'
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      if (response.status === 200) {
+        set({
+          myCourses: response.data.data.courses,
+          myCoursesLoading: false,
+        });
+      } else {
+        set({
+          myCoursesError: 'Gagal mengambil data kursus saya',
+          myCoursesLoading: false,
+        });
+      }
+    } catch (error) {
+      set({
+        myCoursesError: error.response?.data?.message || 'Gagal mengambil data kursus saya',
+        myCoursesLoading: false,
       });
     }
   },

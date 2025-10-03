@@ -150,9 +150,13 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
             <button
               ref={buttonRef}
               className={`flex items-center gap-2 text-primary-700 rounded-full p-2 px-4 transition ${
-                ['/profil', '/my-courses', '/purchase-history', '/bookmarks', '/settings'].includes(
-                  location.pathname
-                )
+                [
+                  '/profil',
+                  '/kursus-saya',
+                  '/purchase-history',
+                  '/bookmarks',
+                  '/settings',
+                ].includes(location.pathname)
                   ? 'bg-primary-700 text-white'
                   : ''
               }`}
@@ -187,7 +191,7 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                     </div>
                     <div className="flex flex-col justify-center ml-3">
                       <p
-                        className="text-sm font-semibold text-gray-800 max-w-[140px] line-clamp-2"
+                        className="text-sm font-semibold text-black max-w-[140px] line-clamp-2"
                         style={{
                           display: '-webkit-box',
                           WebkitLineClamp: 2,
@@ -203,57 +207,67 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                   </div>
                   <div className="border-t border-gray-100 my-2"></div>
                   <button
-                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
-                      isActive('/profil') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    className={`flex items-center w-full px-2 py-2 text-sm rounded ${
+                      isActive('/profil')
+                        ? 'bg-primary-700 text-white'
+                        : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
                       navigate('/profil');
                       setDropdownOpen(false);
                     }}
                   >
-                    <Icon type="user" className="w-5 h-5 mr-2 text-primary-700" />
+                    <Icon type="user" className="w-5 h-5 mr-2" />
                     Profil
                   </button>
                   <button
-                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
-                      isActive('/my-courses') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    className={`flex items-center w-full px-2 py-2 text-sm rounded ${
+                      isActive('/kursus-saya')
+                        ? 'bg-primary-700 text-white'
+                        : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
-                      navigate('/my-courses');
+                      navigate('/kursus-saya');
                       setDropdownOpen(false);
                     }}
                   >
-                    <Icon type="book" className="w-5 h-5 mr-2 text-primary-700" />
+                    <Icon type="book" className="w-5 h-5 mr-2" />
                     Course Saya
                   </button>
                   <button
-                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
-                      isActive('/purchase-history') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    className={`flex items-center w-full px-2 py-2 text-sm rounded ${
+                      isActive('/purchase-history')
+                        ? 'bg-primary-700 text-white'
+                        : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
                       navigate('/purchase-history');
                       setDropdownOpen(false);
                     }}
                   >
-                    <Icon type="work-history" className="w-5 h-5 mr-2 text-primary-700" />
+                    <Icon type="work-history" className="w-5 h-5 mr-2" />
                     Riwayat Pembelian
                   </button>
                   <button
-                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
-                      isActive('/bookmarks') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    className={`flex items-center w-full px-2 py-2 text-sm rounded ${
+                      isActive('/bookmarks')
+                        ? 'bg-primary-700 text-white'
+                        : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
                       navigate('/bookmarks');
                       setDropdownOpen(false);
                     }}
                   >
-                    <Icon type="bookmark" className="w-5 h-5 mr-2 text-primary-700" />
+                    <Icon type="bookmark" className="w-5 h-5 mr-2" />
                     Bookmark
                   </button>
                   <div className="border-t border-gray-100 my-2"></div>
                   <button
-                    className={`flex items-center w-full px-2 py-2 text-sm hover:bg-gray-100 rounded ${
-                      isActive('/settings') ? 'bg-primary-700 text-white' : 'text-gray-700'
+                    className={`flex items-center w-full px-2 py-2 text-sm rounded ${
+                      isActive('/settings')
+                        ? 'bg-primary-700 text-white'
+                        : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
                       navigate('/settings');
@@ -264,7 +278,7 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                     Pengaturan
                   </button>
                   <button
-                    className="flex items-center w-full px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                    className="flex items-center w-full px-2 py-2 text-sm text-black rounded hover:bg-red-200"
                     onClick={handleLogoutClick}
                   >
                     <Icon type="logout" className="w-5 h-5 mr-2 text-red-500" />

@@ -87,7 +87,7 @@ export default function Card({
   flexRow,
   cardHeight,
   disableLink,
-  disableShadow = false, // NEW PROP
+  disableShadow = false,
 }) {
   const isMobile = useIsMobile();
 
@@ -220,6 +220,12 @@ export default function Card({
           </div>
         </div>
       )}
+      {/* Progress bar if progress prop exists */}
+      {course.progress && (
+        <div className="mt-4">
+          <ProgressBar progress={course.progress} />
+        </div>
+      )}
     </motion.div>
   );
 
@@ -235,5 +241,24 @@ export default function Card({
     >
       {CardContent}
     </Link>
+  );
+}
+
+function ProgressBar({ progress }) {
+  const [current, total] = progress.split('/').map(Number);
+  const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+  return (
+    <div>
+      <div className="flex justify-between text-xs text-gray-600 mb-1">
+        <span>Complete</span>
+        <span>{percent}%</span>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-2">
+        <div
+          className="bg-green-500 h-2 rounded-full transition-all"
+          style={{ width: `${percent}%` }}
+        />
+      </div>
+    </div>
   );
 }
