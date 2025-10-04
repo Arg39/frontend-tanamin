@@ -153,8 +153,8 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                 [
                   '/profil',
                   '/kursus-saya',
-                  '/purchase-history',
-                  '/bookmarks',
+                  '/riwayat-pembelian',
+                  '/bookmark',
                   '/settings',
                 ].includes(location.pathname)
                   ? 'bg-primary-700 text-white'
@@ -236,12 +236,12 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                   </button>
                   <button
                     className={`flex items-center w-full px-2 py-2 text-sm rounded ${
-                      isActive('/purchase-history')
+                      isActive('/riwayat-pembelian')
                         ? 'bg-primary-700 text-white'
                         : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
-                      navigate('/purchase-history');
+                      navigate('/riwayat-pembelian');
                       setDropdownOpen(false);
                     }}
                   >
@@ -250,12 +250,12 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                   </button>
                   <button
                     className={`flex items-center w-full px-2 py-2 text-sm rounded ${
-                      isActive('/bookmarks')
+                      isActive('/bookmark')
                         ? 'bg-primary-700 text-white'
                         : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
-                      navigate('/bookmarks');
+                      navigate('/bookmark');
                       setDropdownOpen(false);
                     }}
                   >

@@ -178,10 +178,10 @@ export default function CourseAttributeAdd() {
                   <div key={idx} className="w-full flex gap-3">
                     <div className="flex-grow">
                       <TextInput
-                        name={`attribute-${idx}`}
+                        name={`deskripsi-${idx}`}
                         value={attr}
                         onChange={(e) => handleAttributeChange(idx, e)}
-                        placeholder={`Atribut ${idx + 1}`}
+                        placeholder={`Deskripsi ${idx + 1}`}
                         className="block w-full"
                       />
                     </div>

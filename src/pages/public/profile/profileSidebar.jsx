@@ -7,7 +7,7 @@ import { capitalizeWords } from '../../../components/dragAndDrop/utils';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
 
-export default function ProfileSidebar({ children }) {
+export default function ProfileSidebar({ children, activeNav }) {
   const location = useLocation();
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
@@ -43,6 +43,50 @@ export default function ProfileSidebar({ children }) {
     });
   };
 
+  // Navigasi sidebar
+  const navItems = [
+    {
+      key: 'profil',
+      label: 'Profil',
+      icon: 'user',
+      path: '/profil',
+    },
+    {
+      key: 'kursus-saya',
+      label: 'Course Saya',
+      icon: 'book',
+      path: '/kursus-saya',
+    },
+    {
+      key: 'riwayat-pembelian',
+      label: 'Riwayat Pembelian',
+      icon: 'work-history',
+      path: '/riwayat-pembelian',
+    },
+    {
+      key: 'bookmark',
+      label: 'Bookmark',
+      icon: 'bookmark',
+      path: '/bookmark',
+    },
+  ];
+
+  const settingItems = [
+    {
+      key: 'pengaturan',
+      label: 'Pengaturan',
+      icon: 'gear',
+      path: '/pengaturan',
+    },
+    {
+      key: 'logout',
+      label: 'Logout',
+      icon: 'logout',
+      action: handleLogoutClick,
+      isLogout: true,
+    },
+  ];
+
   // Sidebar content as a component for reuse
   const SidebarContent = (
     <nav className="w-80 h-[calc(100vh-64px)] sm:h-full border-4 border-primary-700 rounded-lg p-6 shadow-lg bg-white">
@@ -66,66 +110,52 @@ export default function ProfileSidebar({ children }) {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => {
-            navigate('/profil');
-            setSidebarOpen(false);
-          }}
-          className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-primary-700 transition-colors"
-        >
-          <Icon type={'user'} className="w-7 h-7" />
-          <span>Profil</span>
-        </button>
-        <button
-          onClick={() => {
-            navigate('/kursus-saya');
-            setSidebarOpen(false);
-          }}
-          className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-primary-700 transition-colors"
-        >
-          <Icon type={'book'} className="w-7 h-7" />
-          <span>Course Saya</span>
-        </button>
-        <button
-          onClick={() => {
-            navigate('/riwayat-pembelian');
-            setSidebarOpen(false);
-          }}
-          className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-primary-700 transition-colors"
-        >
-          <Icon type={'work-history'} className="w-7 h-7" />
-          <span>Riwayat Pembelian</span>
-        </button>
-        <button
-          onClick={() => {
-            navigate('/bookmark');
-            setSidebarOpen(false);
-          }}
-          className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-primary-700 transition-colors"
-        >
-          <Icon type={'bookmark'} className="w-7 h-7" />
-          <span>Bookmark</span>
-        </button>
+        {navItems.map((item) => (
+          <button
+            key={item.key}
+            onClick={() => {
+              navigate(item.path);
+              setSidebarOpen(false);
+            }}
+            className={`w-full flex items-center gap-4 pb-4 border-b border-gray-300 transition-colors
+              hover:text-primary-700
+              ${activeNav === item.key ? 'text-primary-700 font-semibold' : ''}
+            `}
+          >
+            <Icon type={item.icon} className="w-7 h-7" />
+            <span>{item.label}</span>
+          </button>
+        ))}
       </div>
       <div className="flex flex-col mt-12 gap-4">
         <p className="">User</p>
-        <button
-          onClick={() => {
-            navigate('/bookmark');
-            setSidebarOpen(false);
-          }}
-          className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-primary-700 transition-colors"
-        >
-          <Icon type={'gear'} className="w-7 h-7" />
-          <span>Pengaturan</span>
-        </button>
-        <button
-          onClick={handleLogoutClick}
-          className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-error-700 transition-colors"
-        >
-          <Icon type={'logout'} className="w-7 h-7" />
-          <span>Logout</span>
-        </button>
+        {settingItems.map((item) =>
+          item.isLogout ? (
+            <button
+              key={item.key}
+              onClick={item.action}
+              className="w-full flex items-center gap-4 pb-4 border-b border-gray-300 hover:text-error-700 transition-colors"
+            >
+              <Icon type={item.icon} className="w-7 h-7" />
+              <span>{item.label}</span>
+            </button>
+          ) : (
+            <button
+              key={item.key}
+              onClick={() => {
+                navigate(item.path);
+                setSidebarOpen(false);
+              }}
+              className={`w-full flex items-center gap-4 pb-4 border-b border-gray-300 transition-colors
+                hover:text-primary-700
+                ${activeNav === item.key ? 'text-primary-700 font-semibold' : ''}
+              `}
+            >
+              <Icon type={item.icon} className="w-7 h-7" />
+              <span>{item.label}</span>
+            </button>
+          )
+        )}
       </div>
     </nav>
   );

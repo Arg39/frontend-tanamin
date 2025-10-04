@@ -422,7 +422,7 @@ export default function Navbar() {
                       </Link>
 
                       <Link
-                        to="/purchase-history"
+                        to="/riwayat-pembelian"
                         className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
                           activeNav === 'purchase-history'
                             ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'
@@ -440,7 +440,7 @@ export default function Navbar() {
                       </Link>
 
                       <Link
-                        to="/bookmarks"
+                        to="/bookmark"
                         className={`flex items-center px-3 py-2 rounded hover:bg-gray-100 transition ${
                           activeNav === 'bookmarks'
                             ? 'bg-primary-100 text-primary-700 font-semibold ring-2 ring-primary-300 shadow'

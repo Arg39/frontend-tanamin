@@ -42,7 +42,15 @@ export default function Beranda() {
   const navigate = useNavigate();
 
   const { instructors, loading, error, fetchInstructors } = useInstructorStore();
-  const { courses, coursesLoading, coursesError, fetchCourses } = useCourseStore();
+  const {
+    courses,
+    coursesLoading,
+    coursesError,
+    fetchCourses,
+    pagination,
+    bookmarkLoading,
+    toggleBookmark,
+  } = useCourseStore();
 
   // Best courses store
   const { bestCourses, bestCoursesLoading, bestCoursesError, fetchBestCourses } = useBerandaStore();
@@ -199,7 +207,16 @@ export default function Beranda() {
               ) : coursesError ? (
                 <div className="col-span-4 text-center py-8 text-red-600">{coursesError}</div>
               ) : courses && courses.length > 0 ? (
-                courses.map((course) => <Card key={course.id} course={course} />)
+                courses.map((course) => (
+                  <Card
+                    key={course.id}
+                    course={course}
+                    showBookmark={true}
+                    bookmark={!!course.bookmark}
+                    onToggleBookmark={toggleBookmark}
+                    bookmarkLoading={!!bookmarkLoading?.[course.id]}
+                  />
+                ))
               ) : (
                 <div className="col-span-4 text-center py-8 text-primary-600">
                   Tidak ada course tersedia.

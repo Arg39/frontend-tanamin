@@ -62,6 +62,8 @@ import Notification from '../pages/public/notification/notification';
 import CourseCart from '../pages/public/cart/cart';
 import ProfileContent from '../pages/public/profile/profile/profileContent';
 import MyCourse from '../pages/public/profile/myCourse/myCourse';
+import PurchaseHistory from '../pages/public/profile/purchaseHistory/purchaseHistory';
+import Bookmark from '../pages/public/profile/bookmark/bookmark';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -224,6 +226,8 @@ const publicRoutes = [
   { path: '/keranjang/checkout', element: <CheckoutCart /> },
   { path: '/profil', element: <ProfileContent /> },
   { path: '/kursus-saya', element: <MyCourse /> },
+  { path: '/riwayat-pembelian', element: <PurchaseHistory /> },
+  { path: '/bookmark', element: <Bookmark /> },
 ];
 
 const PublicRoute = ({ children }) => {

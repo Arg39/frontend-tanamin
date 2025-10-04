@@ -197,8 +197,7 @@ export default function CourseCart() {
                 <p className="text-lg">{error}</p>
               </div>
             ) : cartItems.length === 0 ? (
-              <div className="text-center text-gray-500 py-16">
-                <Icon type="shopping-cart" className="mx-auto w-16 h-16 text-gray-300 mb-4" />
+              <div className="text-start text-gray-500 py-4">
                 <p className="text-lg">Keranjang kamu kosong.</p>
               </div>
             ) : (
@@ -207,7 +206,7 @@ export default function CourseCart() {
           </div>
           {/* Ringkasan & Checkout */}
           <div className="w-full md:w-1/2 mt-6 md:mt-0">
-            <CartSummary />
+            {cartItems.length > 0 && <CartSummary />}
           </div>
         </div>
       </main>

@@ -6,7 +6,7 @@ import useProfileStore from '../../../zustand/profileStore';
 import Icon from '../../../components/icons/icon';
 import useCourseStore from '../../../zustand/public/course/courseStore';
 import Card from '../../../components/card/card';
-import UserProfileContent from '../profile/profile/profileContent';
+import UserProfileContent from '../profile/content/profileContent';
 import { useFilterCourseStore } from '../../../zustand/public/course/filterCourseStore';
 
 // Custom hook for responsive breakpoint

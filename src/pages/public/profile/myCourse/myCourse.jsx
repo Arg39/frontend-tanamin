@@ -18,7 +18,7 @@ export default function MyCourse() {
   }, [activeTab, fetchMyCourses]);
 
   return (
-    <ProfileSidebar>
+    <ProfileSidebar activeNav={'kursus-saya'}>
       <div className="bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-semibold border-b-2 pb-4 mb-6">My Course</h1>
         {/* Mobile: Dropdown */}

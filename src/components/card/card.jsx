@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '../icons/icon';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
+import useAuthStore from '../../zustand/authStore';
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 640);
@@ -88,8 +90,27 @@ export default function Card({
   cardHeight,
   disableLink,
   disableShadow = false,
+  showBookmark = false,
+  bookmark = false,
+  onToggleBookmark,
+  bookmarkLoading = false,
 }) {
   const isMobile = useIsMobile();
+  const token = useAuthStore((state) => state.token);
+
+  const handleBookmarkClick = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (onToggleBookmark && !bookmarkLoading) {
+      onToggleBookmark(course.id, bookmark);
+      console.log(course.id, bookmark);
+      if (bookmark) {
+        toast.success('Bookmark dihapus');
+      } else {
+        toast.success('Bookmark ditambahkan');
+      }
+    }
+  };
 
   if (Array.isArray(course)) {
     if (flexRow) {
@@ -180,6 +201,31 @@ export default function Card({
                     ({course.total_rating || 0})
                   </p>
                 </div>
+                {showBookmark && token && !course.owned ? (
+                  <div>
+                    <button
+                      type="button"
+                      onClick={handleBookmarkClick}
+                      disabled={bookmarkLoading}
+                      className="focus:outline-none"
+                      aria-label={bookmark ? 'Hapus bookmark' : 'Tambah bookmark'}
+                    >
+                      {bookmarkLoading ? (
+                        <Icon
+                          type="loading"
+                          className="w-4 h-4 md:h-6 md:w-6 text-primary-700 animate-spin"
+                        />
+                      ) : bookmark ? (
+                        <Icon
+                          type="bookmark-filled"
+                          className="w-4 h-4 md:h-6 md:w-6 text-primary-700"
+                        />
+                      ) : (
+                        <Icon type="bookmark" className="w-4 h-4 md:h-6 md:w-6 text-primary-700" />
+                      )}
+                    </button>
+                  </div>
+                ) : null}
               </div>
 
               {/* Judul */}

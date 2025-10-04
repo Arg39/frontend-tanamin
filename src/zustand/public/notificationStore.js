@@ -21,7 +21,6 @@ const useNotificationStore = create((set) => ({
         }
       );
       const json = await res.json();
-      // Update here: use json.data.unread_notifications
       const unread = json?.data?.unread_notifications;
       if (res.ok && typeof unread === 'number') {
         set({
@@ -95,15 +94,14 @@ const useNotificationStore = create((set) => ({
       );
       const json = await res.json();
       if (res.ok) {
-        // Update notification as read in state
+        // Perbaiki di sini: ubah is_read menjadi true
         set((state) => ({
           notifications: state.notifications.map((notif) =>
-            notif.id === notificationId ? { ...notif, read: true } : notif
+            notif.id === notificationId ? { ...notif, is_read: true } : notif
           ),
           loading: false,
           error: null,
         }));
-        // Optionally, refresh unread count
         await useNotificationStore.getState().fetchUnreadCount();
       } else {
         set({

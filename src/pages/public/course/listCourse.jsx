@@ -40,7 +40,15 @@ export default function ListCourse() {
     { label: 'Kursus', path: location.pathname },
   ];
 
-  const { courses, coursesLoading, coursesError, fetchCourses, pagination } = useCourseStore();
+  const {
+    courses,
+    coursesLoading,
+    coursesError,
+    fetchCourses,
+    pagination,
+    bookmarkLoading,
+    toggleBookmark,
+  } = useCourseStore();
 
   // Ambil filter state dari zustand filterCourseStore
   const getActiveFilters = useFilterCourseStore((state) => state.getActiveFilters);
@@ -190,7 +198,16 @@ export default function ListCourse() {
                   ) : coursesError ? (
                     <div className="col-span-2 text-center py-8 text-red-600">{coursesError}</div>
                   ) : courses && courses.length > 0 ? (
-                    courses.map((course) => <Card key={course.id} course={course} />)
+                    courses.map((course) => (
+                      <Card
+                        key={course.id}
+                        course={course}
+                        showBookmark={true}
+                        bookmark={!!course.bookmark}
+                        onToggleBookmark={toggleBookmark}
+                        bookmarkLoading={!!bookmarkLoading?.[course.id]}
+                      />
+                    ))
                   ) : (
                     <div className="col-span-2 text-center py-8 text-primary-600">
                       Tidak ada course tersedia.
@@ -235,7 +252,16 @@ export default function ListCourse() {
                     ) : coursesError ? (
                       <div className="col-span-3 text-center py-8 text-red-600">{coursesError}</div>
                     ) : courses && courses.length > 0 ? (
-                      courses.map((course) => <Card key={course.id} course={course} />)
+                      courses.map((course) => (
+                        <Card
+                          key={course.id}
+                          course={course}
+                          showBookmark={true}
+                          bookmark={!!course.bookmark}
+                          onToggleBookmark={toggleBookmark}
+                          bookmarkLoading={!!bookmarkLoading?.[course.id]}
+                        />
+                      ))
                     ) : (
                       <div className="col-span-3 text-center py-8 text-primary-600">
                         Tidak ada course tersedia.

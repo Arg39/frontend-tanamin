@@ -53,6 +53,7 @@ const useCourseStore = create((set) => ({
   myCourses: [],
   myCoursesLoading: false,
   myCoursesError: null,
+  bookmarkLoading: {},
 
   setCourseInCart: (inCart) => {
     set((state) => ({
@@ -284,6 +285,46 @@ const useCourseStore = create((set) => ({
         myCoursesError: error.response?.data?.message || 'Gagal mengambil data kursus saya',
         myCoursesLoading: false,
       });
+    }
+  },
+
+  toggleBookmark: async (courseId, currentStatus) => {
+    set((state) => ({
+      bookmarkLoading: { ...state.bookmarkLoading, [courseId]: true },
+    }));
+    try {
+      const token = useAuthStore.getState().token;
+      const url = `${process.env.REACT_APP_BACKEND_BASE_URL}/api/bookmark/${courseId}/${
+        currentStatus ? 'remove' : 'add'
+      }`;
+      const response = await axios.post(
+        url,
+        {},
+        {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        }
+      );
+      if (response.data?.status === 'success') {
+        // Update courses array
+        set((state) => ({
+          courses: state.courses.map((c) =>
+            c.id === courseId ? { ...c, bookmark: !currentStatus } : c
+          ),
+          // Update course detail if open
+          course:
+            state.course && state.course.id === courseId
+              ? { ...state.course, bookmark: !currentStatus }
+              : state.course,
+        }));
+      }
+    } catch (e) {
+      // Optionally: handle error (toast, etc)
+    } finally {
+      set((state) => ({
+        bookmarkLoading: { ...state.bookmarkLoading, [courseId]: false },
+      }));
     }
   },
 }));
