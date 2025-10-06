@@ -83,7 +83,7 @@ export default function KontakKami() {
     },
     {
       label: 'Alamat',
-      icon: 'location',
+      icon: 'map',
       value: contact.address,
     },
     {
@@ -100,7 +100,7 @@ export default function KontakKami() {
     },
     {
       label: 'Twitter',
-      icon: 'twitter',
+      icon: 'twitter-x',
       value: contact.social_media?.twitter,
       isSocial: true,
     },

@@ -5,6 +5,14 @@ function getUnsetText(showEdit) {
   return showEdit ? 'Belum diatur, silahkan edit untuk mengaturnya!' : 'Belum diatur';
 }
 
+// Mapping platform ke icon type
+const SOCIAL_MEDIA_PLATFORMS = {
+  instagram: 'instagram',
+  twitter: 'twitter',
+  facebook: 'facebook',
+  linkedin: 'linkedin',
+};
+
 export default function ProfilePreview({
   profile,
   loading,
@@ -19,9 +27,12 @@ export default function ProfilePreview({
   const detail = profile?.detail || {};
   const photoCover = detail.photo_cover || '';
   const photoProfile = profile?.photo_profile || '';
-  const socialMedia = detail.social_media || [];
+  const socialMedia = (detail.social_media || []).filter(
+    (sm) => SOCIAL_MEDIA_PLATFORMS[sm.platform?.toLowerCase()]
+  );
   const expertise = detail.expertise || '';
   const about = detail.about || '';
+
   return (
     <div className="w-full bg-white rounded-md flex flex-col p-3 sm:p-6 shadow-md">
       {/* Back Button */}
@@ -78,7 +89,7 @@ export default function ProfilePreview({
             )}
           </div>
           <div className="flex flex-col md:flex-row gap-4 sm:gap-8">
-            {/* Photo & Social */}
+            {/* Photo & Username */}
             <div className="flex-shrink-0 w-full md:w-64 flex flex-col items-center bg-white rounded-lg p-4 sm:p-6 shadow border border-gray-100 mx-auto mb-4 md:mb-0">
               {photoProfile ? (
                 <img
@@ -93,20 +104,6 @@ export default function ProfilePreview({
               )}
               <div className="text-lg sm:text-xl text-primary-700 font-medium break-all text-center">
                 @{profile.username}
-              </div>
-              <div className="flex gap-2 sm:gap-3 mt-2 sm:mt-3 flex-wrap justify-center overflow-x-auto max-w-full">
-                {socialMedia.length > 0 &&
-                  socialMedia.map((sm, idx) => (
-                    <a
-                      key={idx}
-                      href={sm.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-500 hover:text-primary-600 transition"
-                    >
-                      <Icon type={sm.type} className="w-6 h-6 sm:w-7 sm:h-7" />
-                    </a>
-                  ))}
               </div>
             </div>
 
@@ -155,6 +152,38 @@ export default function ProfilePreview({
                     </span>
                   )}
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Media Container */}
+          <div className="w-full mt-6">
+            <div className="bg-white rounded-lg p-4 sm:p-6 shadow border flex flex-col">
+              <span className="block text-tertiary-500 text-sm sm:text-base font-medium mb-2">
+                Sosial Media
+              </span>
+              <div className="flex gap-3 flex-wrap items-center">
+                {socialMedia.length > 0 ? (
+                  socialMedia.map((sm, idx) => (
+                    <a
+                      key={idx}
+                      href={sm.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-2 bg-primary-50 rounded-md hover:bg-primary-100 transition text-primary-700"
+                    >
+                      <Icon
+                        type={SOCIAL_MEDIA_PLATFORMS[sm.platform?.toLowerCase()]}
+                        className="w-6 h-6"
+                      />
+                      <span className="capitalize">{sm.platform}</span>
+                    </a>
+                  ))
+                ) : (
+                  <span className="text-red-500 text-sm bg-error-100 rounded-md px-3 py-2">
+                    Belum ada sosial media
+                  </span>
+                )}
               </div>
             </div>
           </div>

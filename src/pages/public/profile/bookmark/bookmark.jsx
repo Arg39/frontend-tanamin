@@ -19,7 +19,7 @@ export default function Bookmark() {
 
   return (
     <ProfileSidebar activeNav={'bookmark'}>
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="min-h-[660px] bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-semibold border-b-2 pb-4 mb-6">Bookmark Saya</h1>
         {loading && <div>Loading...</div>}
         {error && <div className="text-red-500">Gagal memuat bookmark.</div>}

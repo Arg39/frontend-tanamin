@@ -61,6 +61,28 @@ const useProfileStore = create((set, get) => ({
     }
   },
 
+  updatePassword: async (newPassword) => {
+    set({ loading: true, error: null });
+    const { token } = useAuthStore.getState();
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/profile/password`,
+        { password: newPassword },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      set({ loading: false });
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Gagal mengubah password',
+        loading: false,
+      });
+      toast.error(err.response?.data?.message || 'Gagal mengubah password');
+      throw err;
+    }
+  },
+
   fetchUserProfileById: async (id) => {
     set({ userProfileLoading: true, userProfileError: null });
     const { token } = useAuthStore.getState();

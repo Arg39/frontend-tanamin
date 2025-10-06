@@ -19,7 +19,7 @@ export default function MyCourse() {
 
   return (
     <ProfileSidebar activeNav={'kursus-saya'}>
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="min-h-[660px] bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-semibold border-b-2 pb-4 mb-6">My Course</h1>
         {/* Mobile: Dropdown */}
         <div className="md:hidden mb-4">
@@ -42,8 +42,8 @@ export default function MyCourse() {
               key={tab.key}
               className={`w-full md:w-auto pb-2 md:pb-2 px-4 md:px-8 border-b-2 font-semibold text-base md:text-lg transition-colors ${
                 activeTab === tab.key
-                  ? 'border-tertiary-500'
-                  : 'border-transparent hover:border-tertiary-200'
+                  ? 'border-primary-500'
+                  : 'border-transparent hover:border-primary-200'
               }`}
               onClick={() => setActiveTab(tab.key)}
             >

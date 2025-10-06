@@ -34,7 +34,7 @@ export default function PurchaseHistory() {
 
   return (
     <ProfileSidebar activeNav={'riwayat-pembelian'}>
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="min-h-[660px] bg-white rounded-lg shadow-lg p-6">
         <h1 className="text-2xl font-semibold border-b-2 pb-4 mb-6">Riwayat Pembelian</h1>
         {loading && <div className="text-center py-8">Loading...</div>}
         {error && <div className="text-center text-red-600 py-8">{error}</div>}

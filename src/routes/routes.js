@@ -64,6 +64,7 @@ import ProfileContent from '../pages/public/profile/profile/profileContent';
 import MyCourse from '../pages/public/profile/myCourse/myCourse';
 import PurchaseHistory from '../pages/public/profile/purchaseHistory/purchaseHistory';
 import Bookmark from '../pages/public/profile/bookmark/bookmark';
+import Setting from '../pages/public/profile/setting/setting';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -228,6 +229,7 @@ const publicRoutes = [
   { path: '/kursus-saya', element: <MyCourse /> },
   { path: '/riwayat-pembelian', element: <PurchaseHistory /> },
   { path: '/bookmark', element: <Bookmark /> },
+  { path: '/pengaturan', element: <Setting /> },
 ];
 
 const PublicRoute = ({ children }) => {

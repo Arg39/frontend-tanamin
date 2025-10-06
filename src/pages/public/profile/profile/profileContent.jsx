@@ -11,7 +11,7 @@ export default function ProfileContent() {
 
   return (
     <ProfileSidebar activeNav={'profil'}>
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="min-h-[660px] bg-white rounded-lg shadow-lg p-6">
         {loading ? (
           <p>Loading...</p>
         ) : error ? (

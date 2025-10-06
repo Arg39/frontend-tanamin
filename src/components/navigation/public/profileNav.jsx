@@ -155,7 +155,7 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                   '/kursus-saya',
                   '/riwayat-pembelian',
                   '/bookmark',
-                  '/settings',
+                  '/pengaturan',
                 ].includes(location.pathname)
                   ? 'bg-primary-700 text-white'
                   : ''
@@ -265,12 +265,12 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                   <div className="border-t border-gray-100 my-2"></div>
                   <button
                     className={`flex items-center w-full px-2 py-2 text-sm rounded ${
-                      isActive('/settings')
+                      isActive('/pengaturan')
                         ? 'bg-primary-700 text-white'
                         : 'text-black hover:bg-primary-500'
                     }`}
                     onClick={() => {
-                      navigate('/settings');
+                      navigate('/pengaturan');
                       setDropdownOpen(false);
                     }}
                   >
