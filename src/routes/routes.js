@@ -119,7 +119,7 @@ const RoleBasedRedirect = () => {
 
 const ValidatedCourseDetailInstructor = () => {
   const { tab } = useParams();
-  const validTabs = ['ringkasan', 'atribut', 'materi', 'ulasan'];
+  const validTabs = ['ringkasan', 'atribut', 'materi', 'ulasan', 'siswa'];
 
   if (!validTabs.includes(tab)) {
     return <Navigate to="/not-found" replace />;

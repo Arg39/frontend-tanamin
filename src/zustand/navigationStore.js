@@ -95,6 +95,7 @@ const useNavigationStore = create((set) => ({
     { key: 'ringkasan', label: 'Ringkasan' },
     { key: 'atribut', label: 'Atribut' },
     { key: 'materi', label: 'Materi' },
+    { key: 'siswa', label: 'siswa' },
     { key: 'ulasan', label: 'Ulasan' },
   ],
 

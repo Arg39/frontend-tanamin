@@ -4,14 +4,26 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const CourseTopicChart = () => {
+const CourseTopicChart = ({ progress }) => {
+  // Default progress if not provided
+  const progressData = progress || {
+    new: 0,
+    edited: 0,
+    awaiting_approval: 0,
+    published: 0,
+  };
+
+  const chartLabels = ['Baru', 'Edit', 'Menunggu Persetujuan', 'Publish'];
+  const chartKeys = ['new', 'edited', 'awaiting_approval', 'published'];
+  const chartColors = ['#36d670', '#fbbf24', '#5d9ce0', '#8cd3e9'];
+
   const chartData = {
-    labels: ['Baru', 'Design', 'Publish'],
+    labels: chartLabels,
     datasets: [
       {
         label: 'Course Status',
-        data: [50, 30, 20],
-        backgroundColor: ['#36d670', '#5d9ce0', '#8cd3e9'],
+        data: chartKeys.map((key) => progressData[key] || 0),
+        backgroundColor: chartColors,
         borderWidth: 0,
         cutout: '70%',
       },
@@ -26,7 +38,7 @@ const CourseTopicChart = () => {
       tooltip: {
         callbacks: {
           label: function (context) {
-            return `${context.label}: ${context.parsed}%`;
+            return `${context.label}: ${context.parsed}`;
           },
         },
       },
@@ -36,7 +48,7 @@ const CourseTopicChart = () => {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <div className="relative w-48 h-48">
+      <div className="relative w-40 h-40 md:w-48 md:h-48">
         <Doughnut data={chartData} options={options} />
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <p className="text-xl font-bold text-center text-primary-400">{totalCourses}</p>
@@ -44,14 +56,14 @@ const CourseTopicChart = () => {
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-700">
-        {chartData.labels.map((label, index) => (
+        {chartLabels.map((label, index) => (
           <div key={index} className="flex items-center space-x-2">
             <span
               className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: chartData.datasets[0].backgroundColor[index] }}
+              style={{ backgroundColor: chartColors[index] }}
             ></span>
             <span>
-              {label} ({chartData.datasets[0].data[index]}%)
+              {label} ({chartData.datasets[0].data[index]})
             </span>
           </div>
         ))}

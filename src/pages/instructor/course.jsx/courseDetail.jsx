@@ -6,12 +6,14 @@ import CourseMateri from './tabs/materi/materi';
 import useNavigationStore from '../../../zustand/navigationStore';
 import useAuthStore from '../../../zustand/authStore';
 import UlasanCourse from './tabs/ulasan/ulasan';
+import Siswa from './tabs/siswa/siswa';
 
 const tabComponents = {
   informasiUtama: CourseRingkasan,
   atribut: CourseAttribute,
   materi: CourseMateri,
   ulasan: UlasanCourse,
+  siswa: Siswa,
 };
 
 export default function CuourseDetail({ editable }) {

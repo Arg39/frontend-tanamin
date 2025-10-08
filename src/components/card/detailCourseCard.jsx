@@ -217,7 +217,7 @@ export default function DetailCourseCard({ course, accessCourse }) {
         <p className="text-primary-700 font-semibold">Detail</p>
         <div className="flex flex-col gap-2 mt-2">
           {[
-            ['Peserta', course.participants],
+            ['Peserta', course.students_count],
             ['Level', translateLevel(course.level)],
             ['Total Materi', course.total_materials],
             ['Evaluasi', course.total_quizzes],
@@ -227,7 +227,9 @@ export default function DetailCourseCard({ course, accessCourse }) {
               className="flex justify-between items-center border-b-2 border-secondary-500 pb-1 mb-2"
             >
               <p className="text-secondary-700 font-medium">{label}</p>
-              <p className="p-1 px-2 bg-secondary-500 text-white rounded-lg">{value}</p>
+              <p className="min-w-8 flex justify-center p-1 px-2 bg-secondary-500 text-white rounded-lg">
+                {value}
+              </p>
             </div>
           ))}
         </div>
