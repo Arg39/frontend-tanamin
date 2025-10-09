@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import Icon from '../../../../../../components/icons/icon';
+import Icon from '../../../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
-import WysiwygContent from '../../../../../../components/content/wysiwyg/WysiwygContent';
-import useLessonStore from '../../../../../../zustand/material/lessonStore';
-import InstructorTemplate from '../../../../../../template/templateInstructor';
+import WysiwygContent from '../../../../../../../components/content/wysiwyg/WysiwygContent';
+import useLessonStore from '../../../../../../../zustand/material/lessonStore';
+import InstructorTemplate from '../../../../../../../template/templateInstructor';
 
 export default function LessonDetail() {
   const navigate = useNavigate();

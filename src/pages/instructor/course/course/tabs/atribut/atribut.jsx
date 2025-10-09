@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import Icon from '../../../../../components/icons/icon';
+import Icon from '../../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
-import useCourseAttributeStore from '../../../../../zustand/courseAttributeStore';
+import useCourseAttributeStore from '../../../../../../zustand/courseAttributeStore';
 
 export default function CourseAttribute({ editable }) {
   const { id } = useParams();

@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
-import Icon from '../../../../../components/icons/icon';
-import useCourseStore from '../../../../../zustand/courseStore';
+import Icon from '../../../../../../components/icons/icon';
+import useCourseStore from '../../../../../../zustand/courseStore';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import WysiwygContent from '../../../../../components/content/wysiwyg/WysiwygContent';
-import useAuthStore from '../../../../../zustand/authStore';
+import WysiwygContent from '../../../../../../components/content/wysiwyg/WysiwygContent';
+import useAuthStore from '../../../../../../zustand/authStore';
 import { toast } from 'react-toastify';
-import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
+import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 
 // Komponen pesan default
 function BelumDiatur() {

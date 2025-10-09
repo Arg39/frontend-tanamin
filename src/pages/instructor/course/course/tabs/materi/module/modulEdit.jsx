@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import InstructorTemplate from '../../../../../../template/templateInstructor';
-import TextInput from '../../../../../../components/form/textInput';
-import Icon from '../../../../../../components/icons/icon';
-import useModuleStore from '../../../../../../zustand/material/moduleStore';
+import InstructorTemplate from '../../../../../../../template/templateInstructor';
+import TextInput from '../../../../../../../components/form/textInput';
+import Icon from '../../../../../../../components/icons/icon';
+import useModuleStore from '../../../../../../../zustand/material/moduleStore';
 
 export default function ModulEdit() {
   const { courseId, moduleId } = useParams();

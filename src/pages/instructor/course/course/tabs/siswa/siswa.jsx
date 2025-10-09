@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useStudentCourseStore from '../../../../../zustand/studentCourseStore';
-import ReactTable from '../../../../../components/table/reactTable';
-import Icon from '../../../../../components/icons/icon';
-import TableFilter from '../../../../../components/table/tableFilter';
+import useStudentCourseStore from '../../../../../../zustand/studentCourseStore';
+import ReactTable from '../../../../../../components/table/reactTable';
+import Icon from '../../../../../../components/icons/icon';
+import TableFilter from '../../../../../../components/table/tableFilter';
 
 const BASE_IMAGE_URL = process.env.REACT_APP_BACKEND_BASE_URL + '/storage/';
 

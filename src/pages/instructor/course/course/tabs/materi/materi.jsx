@@ -4,13 +4,13 @@ import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import Icon from '../../../../../components/icons/icon';
-import SortableLesson from '../../../../../components/dragAndDrop/sortableLesson';
-import SortableModule from '../../../../../components/dragAndDrop/sortableModule';
-import useModuleStore from '../../../../../zustand/material/moduleStore';
-import useLessonStore from '../../../../../zustand/material/lessonStore';
-import useAuthStore from '../../../../../zustand/authStore';
-import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
+import Icon from '../../../../../../components/icons/icon';
+import SortableLesson from '../../../../../../components/dragAndDrop/sortableLesson';
+import SortableModule from '../../../../../../components/dragAndDrop/sortableModule';
+import useModuleStore from '../../../../../../zustand/material/moduleStore';
+import useLessonStore from '../../../../../../zustand/material/lessonStore';
+import useAuthStore from '../../../../../../zustand/authStore';
+import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 
 export default function ModuleList({ editable }) {
   const role = useAuthStore((state) => state.user?.role);

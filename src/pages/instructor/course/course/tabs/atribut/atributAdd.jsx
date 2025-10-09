@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import InstructorTemplate from '../../../../../template/templateInstructor';
-import Icon from '../../../../../components/icons/icon';
+import InstructorTemplate from '../../../../../../template/templateInstructor';
+import Icon from '../../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
-import TextInput from '../../../../../components/form/textInput';
-import useCourseAttributeStore from '../../../../../zustand/courseAttributeStore';
+import TextInput from '../../../../../../components/form/textInput';
+import useCourseAttributeStore from '../../../../../../zustand/courseAttributeStore';
 import { toast } from 'react-toastify';
 
 export default function CourseAttributeAdd() {

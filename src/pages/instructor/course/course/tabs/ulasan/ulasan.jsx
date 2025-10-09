@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useStudentCourseStore from '../../../../../zustand/studentCourseStore';
-import ReactTable from '../../../../../components/table/reactTable';
-import TableFilter from '../../../../../components/table/tableFilter';
-import Icon from '../../../../../components/icons/icon';
+import useStudentCourseStore from '../../../../../../zustand/studentCourseStore';
+import ReactTable from '../../../../../../components/table/reactTable';
+import TableFilter from '../../../../../../components/table/tableFilter';
+import Icon from '../../../../../../components/icons/icon';
 
 export default function UlasanCourse() {
   const { id } = useParams();

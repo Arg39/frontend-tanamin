@@ -1,5 +1,5 @@
 import React from 'react';
-import InstructorTemplate from '../../../template/templateInstructor';
+import InstructorTemplate from '../../../../template/templateInstructor';
 import CuourseDetail from './courseDetail';
 import { useLocation } from 'react-router-dom';
 

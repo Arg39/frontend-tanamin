@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import InstructorTemplate from '../../../template/templateInstructor';
-import ReactTable from '../../../components/table/reactTable';
-import TableFilter from '../../../components/table/tableFilter';
-import useCourseStore from '../../../zustand/courseStore';
+import InstructorTemplate from '../../../../template/templateInstructor';
+import ReactTable from '../../../../components/table/reactTable';
+import TableFilter from '../../../../components/table/tableFilter';
+import useCourseStore from '../../../../zustand/courseStore';
 import { Link, useLocation } from 'react-router-dom';
 
 export default function CourseAdmin() {

@@ -1,10 +1,10 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import Icon from '../../../components/icons/icon';
+import Icon from '../../../../components/icons/icon';
 import CourseRingkasan from './tabs/ringkasan/ringkasan';
 import CourseAttribute from './tabs/atribut/atribut';
 import CourseMateri from './tabs/materi/materi';
-import useNavigationStore from '../../../zustand/navigationStore';
-import useAuthStore from '../../../zustand/authStore';
+import useNavigationStore from '../../../../zustand/navigationStore';
+import useAuthStore from '../../../../zustand/authStore';
 import UlasanCourse from './tabs/ulasan/ulasan';
 import Siswa from './tabs/siswa/siswa';
 

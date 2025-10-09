@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import InstructorTemplate from '../../../../../../template/templateInstructor';
+import InstructorTemplate from '../../../../../../../template/templateInstructor';
 import { useNavigate, useParams } from 'react-router-dom';
-import Icon from '../../../../../../components/icons/icon';
-import TextInput from '../../../../../../components/form/textInput';
-import SelectOption from '../../../../../../components/form/selectOption';
-import WysiwygInput from '../../../../../../components/form/wysiwygInput';
-import QuizBuilder from '../../../../../../components/quizBuilder/quizBuilder';
-import useLessonStore from '../../../../../../zustand/material/lessonStore';
-import ConfirmationModal from '../../../../../../components/modal/confirmationModal';
+import Icon from '../../../../../../../components/icons/icon';
+import TextInput from '../../../../../../../components/form/textInput';
+import SelectOption from '../../../../../../../components/form/selectOption';
+import WysiwygInput from '../../../../../../../components/form/wysiwygInput';
+import QuizBuilder from '../../../../../../../components/quizBuilder/quizBuilder';
+import useLessonStore from '../../../../../../../zustand/material/lessonStore';
+import ConfirmationModal from '../../../../../../../components/modal/confirmationModal';
 import { toast } from 'react-toastify';
-import useAuthStore from '../../../../../../zustand/authStore';
-import Checkbox from '../../../../../../components/form/checkbox';
+import useAuthStore from '../../../../../../../zustand/authStore';
+import Checkbox from '../../../../../../../components/form/checkbox';
 
 export default function LessonEdit() {
   const { lessonId } = useParams();
