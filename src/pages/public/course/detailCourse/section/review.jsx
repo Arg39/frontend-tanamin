@@ -1,10 +1,21 @@
 import React, { useRef, useState, useEffect } from 'react';
 import ReviewCard from '../../../../../components/card/reviewCard';
+import useStudentCourseStore from '../../../../../zustand/studentCourseStore';
+import { useParams } from 'react-router-dom';
 
 export default function ReviewCourseDetail({ sectionRef, course, maxHeight = null }) {
   const containerRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
   const [clamped, setClamped] = useState(false);
+  const courseId = course?.id;
+
+  const { reviews, reviewsLoading, reviewsError, fetchReviews } = useStudentCourseStore();
+
+  useEffect(() => {
+    if (courseId) {
+      fetchReviews(courseId, { page: 1, perPage: 5 }); // limit to 5 reviews for featured
+    }
+  }, [courseId, fetchReviews]);
 
   useEffect(() => {
     if (!containerRef.current || !maxHeight) {
@@ -12,7 +23,7 @@ export default function ReviewCourseDetail({ sectionRef, course, maxHeight = nul
       return;
     }
     setClamped(containerRef.current.scrollHeight > maxHeight);
-  }, [course, maxHeight]);
+  }, [reviews, maxHeight]);
 
   return (
     <div
@@ -32,9 +43,20 @@ export default function ReviewCourseDetail({ sectionRef, course, maxHeight = nul
             : {}
         }
       >
-        <ReviewCard />
-        <ReviewCard />
-        <ReviewCard />
+        {reviewsLoading && <div>Loading...</div>}
+        {reviewsError && <div className="text-red-500">{reviewsError}</div>}
+        {!reviewsLoading && reviews.length === 0 && (
+          <div className="text-gray-500">Belum ada ulasan.</div>
+        )}
+        {reviews.map((review) => (
+          <ReviewCard
+            key={review.id}
+            user={review.user}
+            rating={review.rating}
+            comment={review.comment}
+            created_at={review.created_at}
+          />
+        ))}
       </div>
       {maxHeight && !expanded && clamped && (
         <>

@@ -335,7 +335,7 @@ export default function PublicCourse() {
                     <RatingCourseDetail course={course} sectionRef={ratingRef} />
 
                     {/* Review */}
-                    <ReviewCourseDetail sectionRef={reviewRef} maxHeight={350} />
+                    <ReviewCourseDetail course={course} sectionRef={reviewRef} maxHeight={350} />
                   </div>
                 )}
               </div>

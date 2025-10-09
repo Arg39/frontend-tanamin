@@ -5,15 +5,14 @@ import Login from '../pages/public/login';
 import Register from '../pages/public/register';
 import NotFound from '../pages/public/NotFound';
 import DashboardAdmin from '../pages/admin/dashboard/dashboard';
-import Category from '../pages/admin/course/category/category';
-import CategoryAdd from '../pages/admin/course/category/categoryAdd';
-import CategoryEdit from '../pages/admin/course/category/categoryEdit';
+import CategoryAdd from '../pages/admin/course/category/content/categoryAdd';
+import CategoryEdit from '../pages/admin/course/category/content/categoryEdit';
 import Course from '../pages/admin/course/course/course';
 import DashboardInstructor from '../pages/instructor/dashboard';
 import CourseAdd from '../pages/admin/course/course/courseAdd';
 import CourseAdmin from '../pages/instructor/course.jsx/course';
 import CuourseDetailInstructor from '../pages/instructor/course.jsx/courseDetailInstructor';
-import CuourseDetailAdmin from '../pages/admin/course/category/courseDetailAdmin';
+import CuourseDetailAdmin from '../pages/admin/course/course/courseDetailAdmin';
 import ModulAdd from '../pages/instructor/course.jsx/tabs/materi/module/modulAdd';
 import LessonAdd from '../pages/instructor/course.jsx/tabs/materi/lesson/lessonAdd';
 import LessonDetail from '../pages/instructor/course.jsx/tabs/materi/lesson/lessonDetail';
@@ -42,7 +41,7 @@ import FaqAdd from '../pages/admin/content/faq/faqAdd';
 import FaqEdit from '../pages/admin/content/faq/faqEdit';
 import HargaEdit from '../pages/admin/course/course/ringkasan/hargaEdit';
 import Coupon from '../pages/admin/promo/coupon/coupon';
-import CouponAdd from '../pages/admin/promo/coupon/couponAdd';
+import CouponAdd from '../pages/admin/promo/coupon/couponAdd.jsx';
 import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
 import Beranda from '../pages/public/beranda';
 import PublicCourse from '../pages/public/course/detailCourse/course';
@@ -65,6 +64,8 @@ import MyCourse from '../pages/public/profile/myCourse/myCourse';
 import PurchaseHistory from '../pages/public/profile/purchaseHistory/purchaseHistory';
 import Bookmark from '../pages/public/profile/bookmark/bookmark';
 import Setting from '../pages/public/profile/setting/setting';
+import CategoryAdmin from '../pages/admin/course/category/categoryAdmin';
+import CategoryInstructor from '../pages/instructor/course.jsx/category/categoryInstructor.jsx';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -153,7 +154,7 @@ const adminRoutes = [
   { path: 'siswa', element: <Student /> },
   { path: 'siswa/:id', element: <StudentDetail /> },
   // category
-  { path: 'kategori', element: <Category /> },
+  { path: 'kategori', element: <CategoryAdmin /> },
   { path: 'kategori/tambah', element: <CategoryAdd /> },
   { path: 'kategori/edit/:id', element: <CategoryEdit /> },
   // course
@@ -203,6 +204,7 @@ const instructorRoutes = [
   { path: 'kursus/:courseId/modul/:moduleId/materi/tambah', element: <LessonAdd /> },
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
   { path: 'materi/:lessonId/edit', element: <LessonEdit /> },
+  { path: 'kategori', element: <CategoryInstructor /> },
 ];
 
 const publicRoutes = [

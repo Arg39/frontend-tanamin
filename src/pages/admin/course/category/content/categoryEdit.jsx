@@ -1,29 +1,44 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import AdminTemplate from '../../../../template/templateAdmin';
-import Icon from '../../../../components/icons/icon';
-import TextInput from '../../../../components/form/textInput';
-import ImagePicker from '../../../../components/form/imagePicker';
-import Button from '../../../../components/button/button';
-import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
-import useCategoryStore from '../../../../zustand/categoryStore';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import AdminTemplate from '../../../../../template/templateAdmin';
+import Icon from '../../../../../components/icons/icon';
+import TextInput from '../../../../../components/form/textInput';
+import ImagePicker from '../../../../../components/form/imagePicker';
+import Button from '../../../../../components/button/button';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
+import useCategoryStore from '../../../../../zustand/categoryStore';
 
-export default function CategoryAdd() {
+export default function CategoryEdit() {
   const location = useLocation();
   const breadcrumbItems = [
     { label: 'Kategori', path: '/admin/kategori' },
-    { label: 'Tambah Kategori', path: location.pathname },
+    { label: 'Edit Kategori', path: location.pathname },
   ];
 
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { openModal, closeModal } = useConfirmationModalStore();
+  const { fetchCategoryById, updateCategory } = useCategoryStore();
+
   const [formData, setFormData] = useState({
     name: '',
     image: null,
+    existingImage: null,
   });
 
-  const { openModal, closeModal } = useConfirmationModalStore();
-  const { addCategory } = useCategoryStore();
+  useEffect(() => {
+    const loadCategory = async () => {
+      const category = await fetchCategoryById(id);
+      if (category) {
+        setFormData({
+          name: category.name,
+          image: null,
+          existingImage: category.image,
+        });
+      }
+    };
+    loadCategory();
+  }, [id, fetchCategoryById]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,22 +54,19 @@ export default function CategoryAdd() {
 
     openModal({
       title: 'Konfirmasi Simpan',
-      message: 'Apakah Anda yakin ingin menyimpan kategori ini?',
+      message: 'Apakah Anda yakin ingin menyimpan perubahan kategori ini?',
       variant: 'primary',
-      onConfirm: async () => {
+      onConfirm: () => {
         closeModal();
         const formDataToSend = new FormData();
         formDataToSend.append('name', formData.name);
-        formDataToSend.append('image', formData.image);
-
-        const result = await addCategory(formDataToSend);
-        console.log(result);
-        if (result.success) {
-          toast.success('Kategori berhasil ditambahkan');
-          navigate('/admin/kategori');
-        } else {
-          toast.error(`Gagal menambahkan kategori: ${result.message}`);
+        if (formData.image) {
+          formDataToSend.append('image', formData.image);
         }
+
+        updateCategory(id, formDataToSend).then(() => {
+          navigate('/admin/kategori');
+        });
       },
       onCancel: () => {
         closeModal();
@@ -73,7 +85,7 @@ export default function CategoryAdd() {
           <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
           <span>Kembali</span>
         </button>
-        <h2 className="text-2xl font-bold">Tambah Kategori</h2>
+        <h2 className="text-2xl font-bold">Edit Kategori</h2>
         <form onSubmit={handleSubmit} className="w-full mt-4 space-y-4">
           <TextInput
             label="Nama Kategori"
@@ -86,12 +98,13 @@ export default function CategoryAdd() {
             label="Gambar Kategori"
             name="image"
             onChange={handleFileChange}
+            preview={formData.existingImage}
             crop={true}
             cropAspect={16 / 9}
           />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">
-              Simpan
+              Simpan perubahan
             </Button>
           </div>
         </form>

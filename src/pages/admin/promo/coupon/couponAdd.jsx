@@ -8,8 +8,8 @@ import SelectOption from '../../../../components/form/selectOption';
 import DatePicker from '../../../../components/form/datePicker';
 import Checkbox from '../../../../components/form/checkbox';
 import useCouponStore from '../../../../zustand/couponStore';
-import useConfirmationModalStore from '../../../../zustand/confirmationModalStore'; // ADD
-import { toast } from 'react-toastify'; // ADD
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import { toast } from 'react-toastify';
 
 export default function CouponAdd() {
   const location = useLocation();
@@ -20,7 +20,7 @@ export default function CouponAdd() {
   const navigate = useNavigate();
 
   const addCoupon = useCouponStore((state) => state.addCoupon);
-  const { openModal, closeModal } = useConfirmationModalStore(); // ADD
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   // Form state
   const [form, setForm] = useState({

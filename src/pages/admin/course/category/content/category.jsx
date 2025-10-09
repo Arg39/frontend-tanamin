@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import AdminTemplate from '../../../../template/templateAdmin';
-import useCategoryStore from '../../../../zustand/categoryStore';
-import ReactTable from '../../../../components/table/reactTable';
-import Button from '../../../../components/button/button';
-import Icon from '../../../../components/icons/icon';
-import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
-import TableFilter from '../../../../components/table/tableFilter';
+import AdminTemplate from '../../../../../template/templateAdmin';
+import useCategoryStore from '../../../../../zustand/categoryStore';
+import ReactTable from '../../../../../components/table/reactTable';
+import Button from '../../../../../components/button/button';
+import Icon from '../../../../../components/icons/icon';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
+import TableFilter from '../../../../../components/table/tableFilter';
 import { Link, useLocation } from 'react-router-dom';
 
-export default function Category() {
-  const location = useLocation();
-  const breadcrumbItems = [{ label: 'Kategori', path: location.pathname }];
+export default function Category({ isEditable = 'false' }) {
+  // Convert isEditable to boolean
+  const editable = isEditable === true || isEditable === 'true';
 
   const {
     categories,
@@ -100,6 +100,7 @@ export default function Category() {
     },
   ];
 
+  // Define columns, conditionally add "Aksi" if editable
   const columns = [
     {
       Header: 'Nama',
@@ -138,44 +139,49 @@ export default function Category() {
         return new Intl.DateTimeFormat('id-ID', options).format(date);
       },
     },
-    {
-      Header: 'Aksi',
-      accessor: 'id',
-      width: '10%',
-      disableSort: true,
-      Cell: ({ value }) => (
-        <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
-          <Link
-            className="p-1 px-4 rounded-md bg-secondary-500 hover:bg-secondary-600 text-white"
-            to={`/admin/kategori/edit/${value}`}
-          >
-            Edit
-          </Link>
-          <button
-            className="p-1 px-4 rounded-md bg-error-600 hover:bg-error-700 text-white"
-            onClick={() => {
-              openModal({
-                title: 'Konfirmasi hapus',
-                message: 'Apakah Anda yakin menghapus kategori ini?',
-                onConfirm: () => {
-                  deleteCategory(value);
-                },
-                onCancel: () => {},
-              });
-            }}
-          >
-            Hapus
-          </button>
-        </div>
-      ),
-    },
+    // Only push the "Aksi" column if editable
+    ...(editable
+      ? [
+          {
+            Header: 'Aksi',
+            accessor: 'id',
+            width: '10%',
+            disableSort: true,
+            Cell: ({ value }) => (
+              <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
+                <Link
+                  className="p-1 px-4 rounded-md bg-secondary-500 hover:bg-secondary-600 text-white"
+                  to={`/admin/kategori/edit/${value}`}
+                >
+                  Edit
+                </Link>
+                <button
+                  className="p-1 px-4 rounded-md bg-error-600 hover:bg-error-700 text-white"
+                  onClick={() => {
+                    openModal({
+                      title: 'Konfirmasi hapus',
+                      message: 'Apakah Anda yakin menghapus kategori ini?',
+                      onConfirm: () => {
+                        deleteCategory(value);
+                      },
+                      onCancel: () => {},
+                    });
+                  }}
+                >
+                  Hapus
+                </button>
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
-    <AdminTemplate activeNav="kategori" breadcrumbItems={breadcrumbItems}>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
-          <h2 className="text-2xl font-bold">Daftar Kategori</h2>
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
+        <h2 className="text-2xl font-bold">Daftar Kategori</h2>
+        {editable && (
           <Button
             variant="primary"
             className="flex items-center px-2 gap-2"
@@ -184,31 +190,31 @@ export default function Category() {
             <Icon type="plus" className="size-6" color="black" />
             <span className="text-lg font-normal">Kategori</span>
           </Button>
-        </div>
-        <h4 className="mb-4 md:mb-2">Filtering</h4>
-        <div className="mb-2 md:mb-6">
-          <TableFilter
-            filters={filterConfigs}
-            values={filterValues}
-            onFilterChange={setFilterValues}
-            searchInput={searchInput}
-            setSearchInput={setSearchInput}
-          />
-        </div>
-        {error && <p className="text-red-500">{error}</p>}
-        <ReactTable
-          columns={columns}
-          data={categories}
-          numbering={true}
-          onSortChange={handleSortChange}
-          pagination={{ ...pagination, perPage }}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          loading={isLoading}
+        )}
+      </div>
+      <h4 className="mb-4 md:mb-2">Filtering</h4>
+      <div className="mb-2 md:mb-6">
+        <TableFilter
+          filters={filterConfigs}
+          values={filterValues}
+          onFilterChange={setFilterValues}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
         />
       </div>
-    </AdminTemplate>
+      {error && <p className="text-red-500">{error}</p>}
+      <ReactTable
+        columns={columns}
+        data={categories}
+        numbering={true}
+        onSortChange={handleSortChange}
+        pagination={{ ...pagination, perPage }}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        loading={isLoading}
+      />
+    </div>
   );
 }

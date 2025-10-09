@@ -20,7 +20,7 @@ export default function DashboardAdmin() {
   const location = useLocation();
   const breadcrumbItems = [{ label: 'Dashboard', path: location.pathname }];
 
-  const { data, loading, error, fetchDashboardData } = dashboardStore();
+  const { data, loading, error, fetchDashboardAdmin } = dashboardStore();
 
   const { start, end } = getDefaultDates();
   // State untuk input filter (belum trigger fetch)
@@ -31,7 +31,7 @@ export default function DashboardAdmin() {
   const [endDate, setEndDate] = useState(end);
 
   useEffect(() => {
-    fetchDashboardData(startDate, endDate);
+    fetchDashboardAdmin(startDate, endDate);
     // eslint-disable-next-line
   }, [startDate, endDate]);
 
