@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import ReactTable from '../../../../components/table/reactTable';
 import TableFilter from '../../../../components/table/tableFilter';
 import useCourseTransactionStore from '../../../../zustand/courseTransactionStore';
+import { formatRupiah } from '../../../../utils/formatRupiah';
 
 export default function CourseTransaction() {
   const location = useLocation();
@@ -112,9 +113,9 @@ export default function CourseTransaction() {
       disableSort: true,
     },
     {
-      Header: 'Status Pembayaran',
+      Header: 'Status',
       accessor: 'payment_status',
-      width: '15%',
+      width: '10%',
       disableSort: true,
       Cell: ({ value }) => {
         let label = '';
@@ -132,15 +133,19 @@ export default function CourseTransaction() {
             label = value;
             colorClass = 'bg-gray-100 text-gray-500';
         }
-        return <div className={`inline-block px-2 py-1 rounded ${colorClass}`}>{label}</div>;
+        return (
+          <div className="w-full flex justify-center">
+            <div className={`inline-block px-2 py-1 rounded ${colorClass}`}>{label}</div>
+          </div>
+        );
       },
     },
     {
-      Header: 'Tipe Pembayaran',
-      accessor: 'payment_type',
-      width: '15%',
+      Header: 'Harga',
+      accessor: 'price',
+      width: '20%',
       disableSort: true,
-      Cell: ({ value }) => (value ? value : '-'),
+      Cell: ({ value }) => (value ? formatRupiah(value) : '-'),
     },
   ];
 

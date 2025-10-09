@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import AdminTemplate from '../../../../template/templateAdmin';
+import AdminTemplate from '../../../../../template/templateAdmin';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import Icon from '../../../../components/icons/icon';
-import Button from '../../../../components/button/button';
-import TextInput from '../../../../components/form/textInput';
-import SelectOption from '../../../../components/form/selectOption';
-import DatePicker from '../../../../components/form/datePicker';
-import Checkbox from '../../../../components/form/checkbox';
-import useCouponStore from '../../../../zustand/couponStore';
-import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import Icon from '../../../../../components/icons/icon';
+import Button from '../../../../../components/button/button';
+import TextInput from '../../../../../components/form/textInput';
+import SelectOption from '../../../../../components/form/selectOption';
+import DatePicker from '../../../../../components/form/datePicker';
+import Checkbox from '../../../../../components/form/checkbox';
+import useCouponStore from '../../../../../zustand/couponStore';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
 import { toast } from 'react-toastify';
+import useAuthStore from '../../../../../zustand/authStore';
 
 // Helper: Convert "31 Juli 2025" to "2025-07-31"
 function indoDateToISO(dateStr) {
@@ -70,6 +71,7 @@ export default function CouponEdit() {
   ];
   const navigate = useNavigate();
   const { couponId } = useParams();
+  const user = useAuthStore((state) => state.user);
 
   const getCouponById = useCouponStore((state) => state.getCouponById);
   const updateCoupon = useCouponStore((state) => state.updateCoupon);
@@ -168,7 +170,11 @@ export default function CouponEdit() {
           };
           await updateCoupon(couponId, payload);
           toast.success('Kupon berhasil diupdate!');
-          navigate('/admin/kupon');
+          if (user?.role === 'admin') {
+            navigate('/admin/kupon');
+          } else {
+            navigate('/instruktur/kupon');
+          }
         } catch (err) {
           toast.error('Gagal mengupdate kupon: ' + err.message);
         }
@@ -180,111 +186,109 @@ export default function CouponEdit() {
   };
 
   return (
-    <AdminTemplate activeNav="kupon" breadcrumbItems={breadcrumbItems}>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
-          <button
-            className="flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
-            onClick={() => navigate(-1)}
-          >
-            <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
-            <span>Kembali</span>
-          </button>
-        </div>
-        <h2 className="text-2xl font-bold mb-4">Edit Kupon</h2>
-
-        {/* content */}
-        {loading ? (
-          <div className="text-center py-8">Memuat data kupon...</div>
-        ) : (
-          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-            <TextInput
-              label="Judul Kupon"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Masukkan judul kupon"
-              required
-            />
-            <TextInput
-              label="Kode Kupon"
-              name="code"
-              value={form.code}
-              onChange={handleChange}
-              placeholder="Masukkan kode kupon"
-              required
-              rightButton={
-                <button
-                  type="button"
-                  className="bg-primary-600 text-white px-2 py-1 rounded text-xs hover:bg-primary-700"
-                  onClick={generateCouponCode}
-                  tabIndex={-1}
-                  style={{ whiteSpace: 'nowrap' }}
-                >
-                  Generate
-                </button>
-              }
-            />
-            <SelectOption
-              label="Tipe Kupon"
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-              options={typeOptions}
-              placeholder="Pilih tipe kupon"
-              required
-            />
-            <TextInput
-              label={form.type === 'percent' ? 'Nilai Kupon (%)' : 'Nilai Kupon (Rp)'}
-              name="value"
-              value={form.value}
-              onChange={handleChange}
-              placeholder={
-                form.type === 'percent' ? 'Masukkan persen kupon' : 'Masukkan nominal kupon'
-              }
-              type={form.type === 'percent' ? 'number' : 'text'}
-              isPrice={form.type === 'nominal'}
-              disabled={!form.type}
-              min={form.type === 'percent' ? 0 : undefined}
-              max={form.type === 'percent' ? 100 : undefined}
-              required
-            />
-            <DatePicker
-              label="Tanggal Mulai"
-              name="start_at"
-              value={form.start_at}
-              onChange={handleDateChange}
-            />
-            <DatePicker
-              label="Tanggal Selesai"
-              name="end_at"
-              value={form.end_at}
-              onChange={handleDateChange}
-            />
-            <TextInput
-              label="Maksimal Penggunaan"
-              name="max_usage"
-              value={form.max_usage}
-              onChange={handleChange}
-              placeholder="Masukkan maksimal penggunaan (opsional)"
-              type="number"
-            />
-            <div className="flex items-center gap-2 mt-2">
-              <Checkbox
-                label="Aktifkan Kupon"
-                name="is_active"
-                checked={form.is_active}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="w-full flex justify-end">
-              <Button type="submit" variant="form">
-                Simpan
-              </Button>
-            </div>
-          </form>
-        )}
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
+        <button
+          className="flex items-center gap-2 bg-secondary-900 text-white px-4 py-2 rounded-md mb-4 hover:bg-secondary-800"
+          onClick={() => navigate(-1)}
+        >
+          <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
+          <span>Kembali</span>
+        </button>
       </div>
-    </AdminTemplate>
+      <h2 className="text-2xl font-bold mb-4">Edit Kupon</h2>
+
+      {/* content */}
+      {loading ? (
+        <div className="text-center py-8">Memuat data kupon...</div>
+      ) : (
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+          <TextInput
+            label="Judul Kupon"
+            name="title"
+            value={form.title}
+            onChange={handleChange}
+            placeholder="Masukkan judul kupon"
+            required
+          />
+          <TextInput
+            label="Kode Kupon"
+            name="code"
+            value={form.code}
+            onChange={handleChange}
+            placeholder="Masukkan kode kupon"
+            required
+            rightButton={
+              <button
+                type="button"
+                className="bg-primary-600 text-white px-2 py-1 rounded text-xs hover:bg-primary-700"
+                onClick={generateCouponCode}
+                tabIndex={-1}
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                Generate
+              </button>
+            }
+          />
+          <SelectOption
+            label="Tipe Kupon"
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            options={typeOptions}
+            placeholder="Pilih tipe kupon"
+            required
+          />
+          <TextInput
+            label={form.type === 'percent' ? 'Nilai Kupon (%)' : 'Nilai Kupon (Rp)'}
+            name="value"
+            value={form.value}
+            onChange={handleChange}
+            placeholder={
+              form.type === 'percent' ? 'Masukkan persen kupon' : 'Masukkan nominal kupon'
+            }
+            type={form.type === 'percent' ? 'number' : 'text'}
+            isPrice={form.type === 'nominal'}
+            disabled={!form.type}
+            min={form.type === 'percent' ? 0 : undefined}
+            max={form.type === 'percent' ? 100 : undefined}
+            required
+          />
+          <DatePicker
+            label="Tanggal Mulai"
+            name="start_at"
+            value={form.start_at}
+            onChange={handleDateChange}
+          />
+          <DatePicker
+            label="Tanggal Selesai"
+            name="end_at"
+            value={form.end_at}
+            onChange={handleDateChange}
+          />
+          <TextInput
+            label="Maksimal Penggunaan"
+            name="max_usage"
+            value={form.max_usage}
+            onChange={handleChange}
+            placeholder="Masukkan maksimal penggunaan (opsional)"
+            type="number"
+          />
+          <div className="flex items-center gap-2 mt-2">
+            <Checkbox
+              label="Aktifkan Kupon"
+              name="is_active"
+              checked={form.is_active}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="w-full flex justify-end">
+            <Button type="submit" variant="form">
+              Simpan
+            </Button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }

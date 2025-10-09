@@ -1,20 +1,19 @@
 import React, { useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import AdminTemplate from '../../../../template/templateAdmin';
-import Icon from '../../../../components/icons/icon';
-import Button from '../../../../components/button/button';
-import ReactTable from '../../../../components/table/reactTable';
-import useCouponStore from '../../../../zustand/couponStore';
-import useConfirmationModalStore from '../../../../zustand/confirmationModalStore';
+import AdminTemplate from '../../../../../template/templateAdmin';
+import Icon from '../../../../../components/icons/icon';
+import Button from '../../../../../components/button/button';
+import ReactTable from '../../../../../components/table/reactTable';
+import useCouponStore from '../../../../../zustand/couponStore';
+import useConfirmationModalStore from '../../../../../zustand/confirmationModalStore';
+import useAuthStore from '../../../../../zustand/authStore';
 
 export default function Coupon() {
-  const location = useLocation();
-  const breadcrumbItems = [{ label: 'Kupon', path: location.pathname }];
   const navigate = useNavigate();
   const { openModal, closeModal } = useConfirmationModalStore();
 
-  // Zustand store
-  // coupons: array of items, pagination: pagination object
+  const { user } = useAuthStore();
+
   const {
     coupons = [],
     pagination = { current_page: 1, last_page: 1, perPage: 10, total: 0 },
@@ -100,7 +99,11 @@ export default function Coupon() {
         <div className="w-fit flex flex-col gap-2 justify-center items-start text-md">
           <Link
             className="p-1 px-4 rounded-md bg-secondary-500 hover:bg-secondary-600 text-white"
-            to={`/admin/kupon/${value}/edit`}
+            to={
+              user?.role === 'admin'
+                ? `/admin/kupon/${value}/edit`
+                : `/instruktur/kupon/${value}/edit`
+            }
           >
             Edit
           </Link>
@@ -176,34 +179,32 @@ export default function Coupon() {
   };
 
   return (
-    <AdminTemplate activeNav="kupon" breadcrumbItems={breadcrumbItems}>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
-          <h2 className="text-2xl font-bold">Daftar Kupon</h2>
-          <Button
-            variant="primary"
-            className="flex items-center px-2 gap-2"
-            to={'/admin/kupon/tambah'}
-          >
-            <Icon type="plus" className="size-6" color="black" />
-            <span className="text-lg font-normal">Kupon</span>
-          </Button>
-        </div>
-
-        {/* Coupon Table */}
-        <ReactTable
-          columns={columns}
-          data={couponItems}
-          numbering={true}
-          onSortChange={handleSortChange}
-          pagination={paginationObj}
-          onPageChange={handlePageChange}
-          onPageSizeChange={handlePageSizeChange}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          loading={loading}
-        />
+    <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
+        <h2 className="text-2xl font-bold">Daftar Kupon</h2>
+        <Button
+          variant="primary"
+          className="flex items-center px-2 gap-2"
+          to={user.role === 'admin' ? '/admin/kupon/tambah' : '/instruktur/kupon/tambah'}
+        >
+          <Icon type="plus" className="size-6" color="black" />
+          <span className="text-lg font-normal">Kupon</span>
+        </Button>
       </div>
-    </AdminTemplate>
+
+      {/* Coupon Table */}
+      <ReactTable
+        columns={columns}
+        data={couponItems}
+        numbering={true}
+        onSortChange={handleSortChange}
+        pagination={paginationObj}
+        onPageChange={handlePageChange}
+        onPageSizeChange={handlePageSizeChange}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        loading={loading}
+      />
+    </div>
   );
 }

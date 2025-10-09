@@ -40,9 +40,12 @@ import KerjaSamaEdit from '../pages/admin/content/aboutCompany/tabs/kerjaSama/ke
 import FaqAdd from '../pages/admin/content/faq/faqAdd';
 import FaqEdit from '../pages/admin/content/faq/faqEdit';
 import HargaEdit from '../pages/admin/course/course/ringkasan/hargaEdit';
-import Coupon from '../pages/admin/promo/coupon/coupon';
-import CouponAdd from '../pages/admin/promo/coupon/couponAdd.jsx';
-import CouponEdit from '../pages/admin/promo/coupon/couponEdit';
+import CouponAdd from '../pages/admin/promo/coupon/content/couponAdd.jsx';
+import CouponAdmin from '../pages/admin/promo/coupon/couponAdmin.jsx';
+import CouponInstructor from '../pages/instructor/promo/couponInstructor.jsx';
+import CouponInstructorAdd from '../pages/instructor/promo/couponInstructorAdd.jsx';
+import CouponEditAdmin from '../pages/admin/promo/coupon/couponEditAdmin.jsx';
+import CouponInstructorEdit from '../pages/instructor/promo/couponInstructorEdit.jsx';
 import Beranda from '../pages/public/beranda';
 import PublicCourse from '../pages/public/course/detailCourse/course';
 import ListCourse from '../pages/public/course/listCourse';
@@ -166,9 +169,9 @@ const adminRoutes = [
   // transaction courses
   { path: 'transaksi-kursus', element: <CourseTransaction /> },
   // coupon
-  { path: 'kupon', element: <Coupon /> },
+  { path: 'kupon', element: <CouponAdmin /> },
   { path: 'kupon/tambah', element: <CouponAdd /> },
-  { path: 'kupon/:couponId/edit', element: <CouponEdit /> },
+  { path: 'kupon/:couponId/edit', element: <CouponEditAdmin /> },
   // income
   { path: 'pendapatan', element: <Income /> },
   // about company
@@ -205,6 +208,9 @@ const instructorRoutes = [
   { path: 'materi/:lessonId/lihat', element: <LessonDetail /> },
   { path: 'materi/:lessonId/edit', element: <LessonEdit /> },
   { path: 'kategori', element: <CategoryInstructor /> },
+  { path: 'kupon', element: <CouponInstructor /> },
+  { path: 'kupon/tambah', element: <CouponInstructorAdd /> },
+  { path: 'kupon/:couponId/edit', element: <CouponInstructorEdit /> },
 ];
 
 const publicRoutes = [
