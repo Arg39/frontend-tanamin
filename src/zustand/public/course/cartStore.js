@@ -10,15 +10,12 @@ const useCartStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
-      const res = await fetch(
-        `${process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'}/api/cart`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-        }
-      );
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/cart`, {
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Gagal mengambil keranjang');
       set({ cartItems: json.data, loading: false, error: null });
@@ -34,7 +31,7 @@ const useCartStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'}/api/cart/add/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/cart/add/${courseId}`,
         {
           method: 'POST',
           headers: {
@@ -60,7 +57,7 @@ const useCartStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'}/api/cart/remove/${courseId}`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/cart/remove/${courseId}`,
         {
           method: 'DELETE',
           headers: {

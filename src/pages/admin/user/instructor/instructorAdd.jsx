@@ -9,6 +9,9 @@ import PasswordInputGenerator from '../../../../components/form/passwordInputGen
 import useInstructorStore from '../../../../zustand/instructorStore';
 import SelectOption from '../../../../components/form/selectOption';
 import useCategoryStore from '../../../../zustand/categoryStore';
+import useConfirmationModalStore from '../../../../zustand/confirmationModalStore'; // Tambahan
+import { toast } from 'react-toastify'; // Tambahan
+import 'react-toastify/dist/ReactToastify.css'; // Pastikan ini diimpor di root app juga
 
 export default function InstructorAdd() {
   const location = useLocation();
@@ -32,6 +35,8 @@ export default function InstructorAdd() {
   const [categoryOptions, setCategoryOptions] = useState([]);
   const { fetchCategoryOptions } = useCategoryStore();
 
+  const openConfirmationModal = useConfirmationModalStore((state) => state.openModal); // Tambahan
+
   useEffect(() => {
     const loadCategories = async () => {
       const options = await fetchCategoryOptions();
@@ -52,18 +57,33 @@ export default function InstructorAdd() {
     setForm({ ...form, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Logic submit yang sebenarnya
+  const doSubmit = async () => {
     if (form.password !== form.confirmPassword) {
-      alert('Password dan konfirmasi password tidak sama');
+      toast.error('Password dan konfirmasi password tidak sama');
       return;
     }
     setLoading(true);
     const result = await addInstructor(form);
     setLoading(false);
     if (result.success) {
+      toast.success('Instruktur berhasil ditambahkan');
       navigate('/admin/instruktur');
+    } else {
+      toast.error(result?.message || 'Gagal menambah instruktur');
     }
+  };
+
+  // Handler submit form, tampilkan modal konfirmasi
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    openConfirmationModal({
+      title: 'Konfirmasi Tambah Instruktur',
+      message: 'Apakah Anda yakin ingin menambah instruktur baru?',
+      variant: 'primary',
+      onConfirm: doSubmit,
+      onCancel: () => {},
+    });
   };
 
   return (

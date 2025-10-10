@@ -10,9 +10,7 @@ const useReviewCourseStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${
-          process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'
-        }/api/tanamin-course/${courseId}/reviews`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-course/${courseId}/reviews`,
         {
           method: 'GET',
           headers: {
@@ -37,9 +35,7 @@ const useReviewCourseStore = create((set, get) => ({
     try {
       const token = useAuthStore.getState().token;
       const res = await fetch(
-        `${
-          process.env.REACT_APP_API_URL || 'http://127.0.0.1:8000'
-        }/api/tanamin-course/${courseId}/review`,
+        `${process.env.REACT_APP_BACKEND_BASE_URL}/api/tanamin-course/${courseId}/review`,
         {
           method: 'POST',
           headers: {
