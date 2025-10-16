@@ -212,6 +212,9 @@ const WysiwygInput = forwardRef(
               border-radius: 3px;
               margin-right: 4px;
             }
+            .ql-tooltip {
+              left: 0 !important;
+            }
           `}
         </style>
         {label && <label className="block mb-2 text-sm font-medium text-gray-700">{label}</label>}
@@ -228,6 +231,7 @@ const WysiwygInput = forwardRef(
         <script>
           {`
             const toolbar = document.querySelector('.ql-toolbar');
+            
             if (toolbar) {
               toolbar.setAttribute('aria-disabled', '${disabled}');
             }

@@ -26,6 +26,7 @@ function AnimatedCounter({ to, start }) {
       setDisplay(0);
     }
     return () => controls && controls.stop();
+
     // eslint-disable-next-line
   }, [to, start]);
 
@@ -79,6 +80,8 @@ export default function TentangKami() {
   // Ref for statistics section
   const statsRef = useRef(null);
   const isInView = useInView(statsRef, { once: true, margin: '-100px' });
+
+  const shouldStart = isInView || (aboutUs?.statistics?.length > 0 && window.scrollY === 0);
 
   return (
     <Template activeNav="tentang-kami" locationKey={location.key}>
@@ -146,11 +149,8 @@ export default function TentangKami() {
             )}
 
             {aboutUs.statistics && aboutUs.statistics.length > 0 && (
-              <section className="w-full mt-8 mb-8">
-                <div
-                  ref={statsRef}
-                  className="w-full flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm"
-                >
+              <section ref={statsRef} className="w-full mt-8 mb-8">
+                <div className="w-full flex flex-col md:flex-row items-center md:items-start gap-8 bg-gray-50 rounded-xl p-6 md:p-10 shadow-sm">
                   <div>
                     <h2 className="text-xl md:text-2xl font-bold text-primary-700 mb-2">
                       Statistik
@@ -178,7 +178,7 @@ export default function TentangKami() {
                           </span>
                           <div className="flex flex-row items-end gap-2 mt-auto">
                             <span className="text-2xl md:text-5xl font-bold text-primary-700">
-                              <AnimatedCounter to={stat.value} start={isInView} />
+                              <AnimatedCounter to={stat.value} start={shouldStart} />
                             </span>
                             <span className="text-base md:text-lg text-secondary-900 font-medium capitalize">
                               {stat.unit}
