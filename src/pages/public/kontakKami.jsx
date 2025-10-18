@@ -100,7 +100,7 @@ export default function KontakKami() {
     },
     {
       label: 'Twitter',
-      icon: 'twitter-x',
+      icon: 'twitter',
       value: contact.social_media?.twitter,
       isSocial: true,
     },

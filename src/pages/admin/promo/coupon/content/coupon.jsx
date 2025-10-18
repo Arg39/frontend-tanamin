@@ -59,12 +59,6 @@ export default function Coupon() {
       width: '13%',
     },
     {
-      Header: 'Masa Berlaku',
-      disableSort: true,
-      accessor: (row) => `${row.start_at} - ${row.end_at}`,
-      width: '18%',
-    },
-    {
       Header: 'Penggunaan',
       disableSort: true,
       accessor: (row) => `${row.used_count} / ${row.max_usage}`,
@@ -89,6 +83,12 @@ export default function Coupon() {
           {value ? 'Aktif' : 'Tidak Aktif'}
         </span>
       ),
+    },
+    {
+      Header: 'Masa Berlaku',
+      disableSort: true,
+      accessor: (row) => `${row.start_at} - ${row.end_at}`,
+      width: '18%',
     },
     {
       Header: 'Aksi',

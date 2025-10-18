@@ -68,7 +68,7 @@ export default function Footer({ contact, loading, error }) {
                       rel="noopener noreferrer"
                       className="w-10 h-10 flex items-center justify-center rounded-full border bg-gray-200 hover:bg-primary-700 text-primary-700 hover:text-white transition-colors"
                     >
-                      <Icon type={'twitter-x'} className={'w-6 h-6'} />
+                      <Icon type={'twitter'} className={'w-6 h-6'} />
                     </a>
                   )}
                   {social_media.linkedin && social_media.linkedin.trim() !== '' && (

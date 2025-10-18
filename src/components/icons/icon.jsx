@@ -863,7 +863,7 @@ const Icon = ({ type, className, color = 'currentColor', strokeWidth = 1.5 }) =>
           </g>
         </svg>
       );
-    case 'twitter-x':
+    case 'twitter':
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"

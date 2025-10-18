@@ -12,7 +12,7 @@ const SOCIAL_TYPES = [
   { type: 'facebook', label: 'Facebook' },
   { type: 'instagram', label: 'Instagram' },
   { type: 'linkedin', label: 'LinkedIn' },
-  { type: 'twitter-x', label: 'Twitter-X' },
+  { type: 'twitter', label: 'twitter' },
 ];
 
 function getInitialForm(profile) {

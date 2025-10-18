@@ -27,9 +27,29 @@ export default function ProfilePreview({
   const detail = profile?.detail || {};
   const photoCover = detail.photo_cover || '';
   const photoProfile = profile?.photo_profile || '';
-  const socialMedia = (detail.social_media || []).filter(
-    (sm) => SOCIAL_MEDIA_PLATFORMS[sm.platform?.toLowerCase()]
-  );
+
+  // Normalize social media entries to support different field names from API (type, platform, url)
+  const socialMedia = (detail.social_media || [])
+    .map((sm) => {
+      const raw = String(sm.platform || sm.type || sm.url || '').trim();
+      const rawLower = raw.toLowerCase();
+
+      // normalize to known keys for icons
+      let iconKey = rawLower;
+      if (rawLower.includes('twitter')) iconKey = 'twitter';
+      else if (rawLower.includes('insta')) iconKey = 'instagram';
+      else if (rawLower.includes('facebook') || rawLower === 'fb') iconKey = 'facebook';
+      else if (rawLower.includes('linkedin')) iconKey = 'linkedin';
+
+      return {
+        ...sm,
+        platformDisplay: sm.platform || sm.type || sm.url || '',
+        iconKey,
+        href: sm.url || '', // keep as provided; do not assume full URL
+      };
+    })
+    .filter((sm) => !!SOCIAL_MEDIA_PLATFORMS[sm.iconKey]);
+
   const expertise = detail.expertise || '';
   const about = detail.about || '';
 
@@ -167,16 +187,13 @@ export default function ProfilePreview({
                   socialMedia.map((sm, idx) => (
                     <a
                       key={idx}
-                      href={sm.url}
+                      href={sm.href || sm.url || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 px-3 py-2 bg-primary-50 rounded-md hover:bg-primary-100 transition text-primary-700"
                     >
-                      <Icon
-                        type={SOCIAL_MEDIA_PLATFORMS[sm.platform?.toLowerCase()]}
-                        className="w-6 h-6"
-                      />
-                      <span className="capitalize">{sm.platform}</span>
+                      <Icon type={SOCIAL_MEDIA_PLATFORMS[sm.iconKey]} className="w-6 h-6" />
+                      <span className="capitalize">{sm.platformDisplay}</span>
                     </a>
                   ))
                 ) : (
