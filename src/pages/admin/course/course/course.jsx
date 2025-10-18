@@ -289,7 +289,7 @@ export default function Course() {
 
             {course.status === 'published' ? (
               <button
-                className="p-1 px-4 rounded-md bg-yellow-500 hover:bg-yellow-700 text-white text-left"
+                className="w-fit p-1 px-4 rounded-md bg-yellow-500 hover:bg-yellow-700 text-white text-left"
                 onClick={() =>
                   openModal({
                     title: 'Konfirmasi Ubah Status',

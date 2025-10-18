@@ -241,7 +241,7 @@ export default function CourseRingkasan({ editable }) {
               onClick={() => navigate(`/admin/kursus/${id}/edit/harga`)}
             >
               <Icon type="tag-label" className="h-5 w-5" />
-              Harga & Diskon
+              Edit Harga & Diskon
             </button>
           )}
           {role !== 'admin' && (

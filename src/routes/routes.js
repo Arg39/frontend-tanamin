@@ -69,6 +69,7 @@ import Bookmark from '../pages/public/profile/bookmark/bookmark';
 import Setting from '../pages/public/profile/setting/setting';
 import CategoryAdmin from '../pages/admin/course/category/categoryAdmin';
 import CategoryInstructor from '../pages/instructor/course/category/categoryInstructor.jsx';
+import CouponAdminAdd from '../pages/admin/promo/coupon/couponAdminAdd.jsx';
 
 const ProtectedRoute = ({ children, requiredRole }) => {
   const { user, fetchUserData } = useAuthStore();
@@ -170,7 +171,7 @@ const adminRoutes = [
   { path: 'transaksi-kursus', element: <CourseTransaction /> },
   // coupon
   { path: 'kupon', element: <CouponAdmin /> },
-  { path: 'kupon/tambah', element: <CouponAdd /> },
+  { path: 'kupon/tambah', element: <CouponAdminAdd /> },
   { path: 'kupon/:couponId/edit', element: <CouponEditAdmin /> },
   // income
   { path: 'pendapatan', element: <Income /> },
