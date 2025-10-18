@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LazyImage from '../../components/image/lazyImage';
@@ -19,9 +19,40 @@ export default function Login() {
 
   const navigate = useNavigate();
 
+  // ref untuk mengukur tinggi gambar / kiri container
+  const imageRef = useRef(null);
+  const [minHeight, setMinHeight] = useState(null);
+
   const handleChange = (e) => {
     setState({ ...state, [e.target.name]: e.target.value });
   };
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (imageRef.current) {
+        const h = imageRef.current.clientHeight;
+        setMinHeight(h);
+      }
+    };
+
+    updateHeight();
+
+    let ro;
+    if (typeof ResizeObserver !== 'undefined' && imageRef.current) {
+      ro = new ResizeObserver(() => {
+        updateHeight();
+      });
+      ro.observe(imageRef.current);
+    }
+
+    const onResize = () => updateHeight();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (ro) ro.disconnect();
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -62,13 +93,17 @@ export default function Login() {
   };
 
   return (
-    <Template activeNav="login" locationKey={location.key}>
-      <div className="flex flex-col lg:flex-row justify-between items-center pt-12">
-        <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-          <LazyImage src="/images/login.png" alt="Login" className="w-full lg:w-[600px]" />
+    <Template activeNav="login">
+      <div className="flex flex-col lg:flex-row justify-between items-start px-0 md:px-24 pt-12 gap-8">
+        <div ref={imageRef} className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+          <LazyImage src="/images/login.png" alt="Login" className="w-full" />
         </div>
         <div className="w-full lg:w-1/2 flex justify-center">
-          <div className="w-full lg:w-[600px] p-6 lg:p-20 py-10 lg:py-24 bg-white shadow-lg rounded-lg">
+          {/* terapkan minHeight yang mengikuti tinggi gambar */}
+          <div
+            className="w-full p-6 lg:p-16 py-10 lg:pt-24 bg-white shadow-lg rounded-lg"
+            style={{ minHeight: minHeight ? `${minHeight}px` : undefined }}
+          >
             <h2 className="text-start text-xl lg:text-2xl text-primary-900 font-bold mb-6 lg:mb-10">
               Masuk ke Akun Anda
             </h2>
@@ -103,17 +138,8 @@ export default function Login() {
                   <Icon type={showPassword ? 'eye-off' : 'eye'} />
                 </button>
               </div>
-              <div className="flex flex-row justify-end items-center mb-6">
-                {/* <label className="flex items-center mb-0 mr-4">
-                  <input type="checkbox" className="mr-2" disabled={loading} />
-                  Ingat Saya
-                </label> */}
-                <button className="hover:underline ml-4" disabled={loading}>
-                  Lupa Password?
-                </button>
-              </div>
-              <div className="w-full flex justify-center mb-6 lg:mb-10">
-                <span>Belum Memiliki Akun? </span>
+              <div className="w-full flex justify-center mb-6 mt-16 lg:mb-10 gap-2">
+                <span>Belum Memiliki Akun?</span>
                 <Link to={'/daftar'} className="text-primary-800 font-semibold hover:underline">
                   Daftar Sekarang
                 </Link>

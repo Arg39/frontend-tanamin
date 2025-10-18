@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import LazyImage from '../../components/image/lazyImage';
@@ -20,9 +20,40 @@ export default function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State untuk konfirmasi password
   const navigate = useNavigate();
 
+  // ref untuk mengukur tinggi gambar / kiri container
+  const imageRef = useRef(null);
+  const [minHeight, setMinHeight] = useState(null);
+
   const handleChange = (e) => {
     setState((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (imageRef.current) {
+        const h = imageRef.current.clientHeight;
+        setMinHeight(h);
+      }
+    };
+
+    updateHeight();
+
+    let ro;
+    if (typeof ResizeObserver !== 'undefined' && imageRef.current) {
+      ro = new ResizeObserver(() => {
+        updateHeight();
+      });
+      ro.observe(imageRef.current);
+    }
+
+    const onResize = () => updateHeight();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      if (ro) ro.disconnect();
+    };
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,14 +86,17 @@ export default function Register() {
 
   return (
     <Template activeNav="register">
-      <div className="flex flex-col lg:flex-row justify-between items-center pt-12">
+      <div className="flex flex-col lg:flex-row justify-between items-start px-0 md:px-24 pt-12 gap-8">
         {/* Left image */}
-        <div className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
-          <LazyImage src="/images/daftar.png" alt="Daftar" className="w-full lg:w-[600px]" />
+        <div ref={imageRef} className="w-full lg:w-1/2 flex justify-center mb-4 lg:mb-0">
+          <LazyImage src="/images/daftar.png" alt="Daftar" className="w-full" />
         </div>
         {/* Form */}
         <div className="w-full lg:w-1/2 flex justify-center">
-          <div className="w-full lg:w-[600px] p-6 lg:p-20 py-10 lg:py-24 bg-white shadow-lg rounded-lg">
+          <div
+            className="w-full p-6 lg:p-16 py-10 lg:pt-24 bg-white shadow-lg rounded-lg"
+            style={{ minHeight: minHeight ? `${minHeight}px` : undefined }}
+          >
             <h2 className="text-start text-xl lg:text-2xl text-primary-900 font-bold mb-6 lg:mb-10">
               Daftar Akun Baru
             </h2>
@@ -148,7 +182,7 @@ export default function Register() {
                 </button>
               </div>
               {/** Link to login **/}
-              <div className="text-start mb-6 lg:mb-10">
+              <div className="text-center mb-6 mt-16 lg:mb-10">
                 <span>Sudah Memiliki Akun? </span>
                 <Link to="/masuk" className="text-primary-800 font-semibold hover:underline">
                   Login ke Akun Saya
