@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Icon from '../../../components/icons/icon';
 import useConfirmationModalStore from '../../../zustand/confirmationModalStore';
 import useCartStore from '../../../zustand/public/course/cartStore';
+import { toast } from 'react-toastify';
 
 // Custom hook untuk deteksi mobile
 function useIsMobile(breakpoint = 640) {
@@ -75,6 +76,7 @@ export default function CourseCart() {
       variant: 'danger',
       onConfirm: async () => {
         await removeFromCart(id);
+        toast.success('Course berhasil dihapus dari cart.');
       },
       onCancel: () => {},
     });

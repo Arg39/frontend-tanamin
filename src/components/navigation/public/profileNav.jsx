@@ -163,7 +163,7 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
               onClick={() => setDropdownOpen((prev) => !prev)}
             >
               <Icon type="user" className="h-6 w-6" />
-              {user?.username || 'student'}
+              <span>Halo, {user?.username}</span>
               <Icon type={dropdownOpen ? 'chevron-up' : 'chevron-down'} className="w-4 h-4" />
             </button>
             {dropdownOpen &&
