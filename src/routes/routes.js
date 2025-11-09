@@ -124,7 +124,7 @@ const RoleBasedRedirect = () => {
 
 const ValidatedCourseDetailInstructor = () => {
   const { tab } = useParams();
-  const validTabs = ['ringkasan', 'atribut', 'materi', 'ulasan', 'siswa'];
+  const validTabs = ['ringkasan', 'atribut', 'materi', 'ulasan', 'peserta'];
 
   if (!validTabs.includes(tab)) {
     return <Navigate to="/not-found" replace />;
@@ -155,8 +155,8 @@ const adminRoutes = [
   { path: 'instruktur/:id', element: <InstructorDetail /> },
   { path: 'instruktur/tambah', element: <InstructorAdd /> },
   // student
-  { path: 'siswa', element: <Student /> },
-  { path: 'siswa/:id', element: <StudentDetail /> },
+  { path: 'peserta', element: <Student /> },
+  { path: 'peserta/:id', element: <StudentDetail /> },
   // category
   { path: 'kategori', element: <CategoryAdmin /> },
   { path: 'kategori/tambah', element: <CategoryAdd /> },

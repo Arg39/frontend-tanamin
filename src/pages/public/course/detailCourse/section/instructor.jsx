@@ -83,7 +83,7 @@ export default function InstructorCourseDetail({
               </p>
               <p className="flex items-center text-md text-black">
                 <Icon type={'users'} className="w-6 h-6 inline-block mr-2" />
-                {instructor.total_student || 0} Siswa
+                {instructor.total_student || 0} Peserta
               </p>
             </div>
             <p className="flex items-center text-md text-black">

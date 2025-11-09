@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 export default function Student() {
   const location = useLocation();
   const navigate = useNavigate();
-  const breadcrumbItems = [{ label: 'Siswa', path: location.pathname }];
+  const breadcrumbItems = [{ label: 'Peserta', path: location.pathname }];
 
   const { students, fetchStudents, pagination, sortBy, sortOrder, perPage, error } =
     useStudentStore();
@@ -104,7 +104,7 @@ export default function Student() {
       label: 'Cari Nama',
       type: 'search',
       withButton: true,
-      placeholder: 'Nama siswa',
+      placeholder: 'Nama Peserta',
     },
     {
       key: 'created_at',
@@ -163,7 +163,7 @@ export default function Student() {
             <button
               className="p-1 px-4 rounded-md bg-primary-700 text-white hover:bg-primary-800"
               onClick={() => {
-                navigate(`/admin/siswa/${value}`);
+                navigate(`/admin/peserta/${value}`);
               }}
             >
               Lihat
@@ -185,10 +185,10 @@ export default function Student() {
   ];
 
   return (
-    <AdminTemplate activeNav="siswa" breadcrumbItems={breadcrumbItems}>
+    <AdminTemplate activeNav="peserta" breadcrumbItems={breadcrumbItems}>
       <div className="bg-white p-6 rounded-lg shadow-md">
         <div className="flex flex-col sm:flex-row sm:justify-between gap-2 items-start mb-4">
-          <h2 className="text-2xl font-bold mb-4">Daftar Siswa</h2>
+          <h2 className="text-2xl font-bold mb-4">Daftar Peserta</h2>
         </div>
         {/* Filter */}
         <TableFilter

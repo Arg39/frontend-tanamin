@@ -237,7 +237,7 @@ export default function PublicCourse() {
                               className="w-5 h-5 inline-block"
                               color="currentColor"
                             />
-                            {course?.students_count} Siswa
+                            {course?.students_count} Peserta
                           </p>
                           <div className="flex items-end gap-2">
                             <p className="text-base sm:text-lg text-primary-700 font-medium">

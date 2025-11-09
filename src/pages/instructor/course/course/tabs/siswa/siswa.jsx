@@ -38,7 +38,7 @@ export default function Siswa() {
       label: 'Cari Nama',
       type: 'search',
       withButton: true,
-      placeholder: 'Nama siswa',
+      placeholder: 'Nama Peserta',
     },
   ];
 
@@ -109,7 +109,9 @@ export default function Siswa() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xl sm:text-2xl font-bold text-primary-800 mb-2 sm:mb-0">Daftar Siswa</p>
+        <p className="text-xl sm:text-2xl font-bold text-primary-800 mb-2 sm:mb-0">
+          Daftar Peserta
+        </p>
       </div>
       <TableFilter
         filters={filterConfig}
@@ -118,7 +120,6 @@ export default function Siswa() {
         searchInput={searchInput}
         setSearchInput={setSearchInput}
       />
-      {error && <div className="text-red-500 mb-2">{error}</div>}
       <ReactTable
         columns={columns}
         data={students}

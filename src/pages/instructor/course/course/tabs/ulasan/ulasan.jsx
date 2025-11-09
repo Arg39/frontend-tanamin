@@ -33,7 +33,7 @@ export default function UlasanCourse() {
       label: 'Cari Nama',
       type: 'search',
       withButton: true,
-      placeholder: 'Nama siswa',
+      placeholder: 'Nama Peserta',
     },
     {
       key: 'rating',
@@ -146,7 +146,6 @@ export default function UlasanCourse() {
         searchInput={searchInput}
         setSearchInput={setSearchInput}
       />
-      {reviewsError && <div className="text-red-500 mb-2">{reviewsError}</div>}
       <ReactTable
         columns={columns}
         data={reviews}

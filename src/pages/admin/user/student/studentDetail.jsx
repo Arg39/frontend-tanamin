@@ -7,8 +7,8 @@ import useProfileStore from '../../../../zustand/profileStore';
 export default function StudentDetail() {
   const location = useLocation();
   const breadcrumbItems = [
-    { label: 'Siswa', path: '/admin/siswa' },
-    { label: 'Detail Siswa', path: location.pathname },
+    { label: 'Peserta', path: '/admin/peserta' },
+    { label: 'Detail Peserta', path: location.pathname },
   ];
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function StudentDetail() {
   }, [id]);
 
   return (
-    <AdminTemplate activeNav={'siswa'} breadcrumbItems={breadcrumbItems}>
+    <AdminTemplate activeNav={'peserta'} breadcrumbItems={breadcrumbItems}>
       <ProfilePreview
         profile={userProfile}
         loading={userProfileLoading}

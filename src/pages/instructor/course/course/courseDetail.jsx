@@ -13,7 +13,7 @@ const tabComponents = {
   atribut: CourseAttribute,
   materi: CourseMateri,
   ulasan: UlasanCourse,
-  siswa: Siswa,
+  peserta: Siswa,
 };
 
 export default function CuourseDetail({ editable }) {

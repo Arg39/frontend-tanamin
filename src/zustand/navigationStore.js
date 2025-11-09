@@ -37,7 +37,7 @@ const useNavigationStore = create((set) => ({
       label: 'pengguna',
       links: [
         { text: 'instruktur', href: '/admin/instruktur', icon: 'user-filled' },
-        { text: 'siswa', href: '/admin/siswa', icon: 'user-filled' },
+        { text: 'peserta', href: '/admin/peserta', icon: 'user-filled' },
       ],
     },
     {
@@ -95,7 +95,7 @@ const useNavigationStore = create((set) => ({
     { key: 'ringkasan', label: 'Ringkasan' },
     { key: 'atribut', label: 'Atribut' },
     { key: 'materi', label: 'Materi' },
-    { key: 'siswa', label: 'siswa' },
+    { key: 'peserta', label: 'peserta' },
     { key: 'ulasan', label: 'Ulasan' },
   ],
 
