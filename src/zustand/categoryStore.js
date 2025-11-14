@@ -84,18 +84,15 @@ const useCategoryStore = create((set) => ({
       );
 
       if (response.status === 201) {
-        toast.success('Kategori berhasil ditambahkan');
         set((state) => ({
           categories: [...state.categories, response.data.data],
         }));
         return { success: true };
       } else {
-        toast.error('Gagal menambahkan kategori');
         return { success: false };
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Gagal menambahkan kategori';
-      toast.error(errorMessage);
       return { success: false };
     }
   },

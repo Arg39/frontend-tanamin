@@ -245,7 +245,7 @@ export default function LessonEdit() {
                 type="submit"
                 className="bg-primary-700 text-white px-4 py-2 rounded hover:bg-primary-600"
               >
-                Simpan Perubahan
+                Simpan
               </button>
             </div>
           </form>

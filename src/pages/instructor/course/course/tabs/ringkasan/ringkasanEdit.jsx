@@ -9,7 +9,7 @@ import SelectOption from '../../../../../../components/form/selectOption';
 import WysiwygInput from '../../../../../../components/form/wysiwygInput';
 import useAuthStore from '../../../../../../zustand/authStore';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 
 const LEVEL_OPTIONS = [
   { value: 'beginner', label: 'Pemula' },
@@ -30,6 +30,7 @@ export default function RingkasanEdit() {
     updateCourseDetail,
   } = useCourseStore();
   const token = useAuthStore((state) => state.token);
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   const [form, setForm] = useState({
     title: '',
@@ -83,9 +84,8 @@ export default function RingkasanEdit() {
     }
   };
 
-  // Handle submit
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Pemrosesan submit aktual dipisah agar bisa dipanggil setelah konfirmasi
+  const doSubmit = async () => {
     setSubmitting(true);
     setSubmitError('');
     setSubmitSuccess(false);
@@ -112,21 +112,39 @@ export default function RingkasanEdit() {
       });
 
       if (res.status === 'success') {
-        toast.success(res.message || 'Berhasil memperbarui ringkasan!');
+        toast.success('Berhasil memperbarui ringkasan!');
         setSubmitSuccess(true);
         setTimeout(() => setSubmitSuccess(false), 2000);
         navigate(-1);
       } else {
-        toast.error(res.message || 'Gagal memperbarui ringkasan');
-        setSubmitError(res.message || 'Gagal memperbarui ringkasan');
+        toast.error('Gagal memperbarui ringkasan');
+        setSubmitError('Gagal memperbarui ringkasan');
       }
     } catch (err) {
       console.error(err);
-      toast.error(err.message || 'Gagal menyimpan data');
-      setSubmitError(err.message || 'Gagal menyimpan data');
+      toast.error('Gagal menyimpan data');
+      setSubmitError('Gagal menyimpan data');
     } finally {
       setSubmitting(false);
     }
+  };
+
+  // Handle submit: buka konfirmasi terlebih dahulu
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    openModal({
+      title: 'Konfirmasi Simpan',
+      message: 'Apakah Anda yakin ingin menyimpan perubahan ringkasan ini?',
+      variant: 'primary',
+      onConfirm: async () => {
+        closeModal();
+        await doSubmit();
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   if (courseDetailLoading) {
@@ -150,7 +168,7 @@ export default function RingkasanEdit() {
           <Icon type="arrow-left" className="size-[1rem] text-white" />
           Kembali
         </button>
-        <h1 className="text-2xl font-bold mb-4 text-primary-900">Edit Ringkasans</h1>
+        <h1 className="text-2xl font-bold mb-4 text-primary-900">Edit Ringkasan</h1>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit} encType="multipart/form-data">
           {/* Nama Kursus */}
           <TextInput
@@ -219,7 +237,7 @@ export default function RingkasanEdit() {
               className="bg-primary-700 text-white px-6 py-2 rounded hover:bg-primary-800 font-semibold"
               disabled={submitting}
             >
-              {submitting ? 'Menyimpan...' : 'Simpan Perubahan'}
+              {submitting ? 'Menyimpan...' : 'Simpan'}
             </button>
             {submitSuccess && (
               <span className="text-green-600 font-semibold">Berhasil disimpan!</span>

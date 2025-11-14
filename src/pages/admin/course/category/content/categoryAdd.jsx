@@ -48,7 +48,6 @@ export default function CategoryAdd() {
         formDataToSend.append('image', formData.image);
 
         const result = await addCategory(formDataToSend);
-        console.log(result);
         if (result.success) {
           toast.success('Kategori berhasil ditambahkan');
           navigate('/admin/kategori');

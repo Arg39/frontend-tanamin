@@ -132,16 +132,13 @@ const useInstructorStore = create((set) => ({
       );
 
       if (response.status === 201 || response.status === 200) {
-        toast.success('Instruktur berhasil ditambahkan');
         return { success: true };
       } else {
-        toast.error('Gagal menambah instruktur');
         return { success: false, message: 'Gagal menambah instruktur' };
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || 'Gagal menambah instruktur';
       set({ error: errorMessage });
-      toast.error(errorMessage);
       return { success: false, message: errorMessage };
     }
   },

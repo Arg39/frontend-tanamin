@@ -24,17 +24,39 @@ export default function ModuleList({ editable }) {
     error,
     updateModuleOrder,
     deleteModule,
+    statusCourse,
   } = useModuleStore();
   const { updateLessonOrder, deleteLesson } = useLessonStore();
+
+  const effectiveEditable = useMemo(
+    () => (statusCourse === 'published' || statusCourse === 'awaiting_approval' ? false : editable),
+    [statusCourse, editable]
+  );
 
   const modules = Array.isArray(rawModules) ? rawModules : [];
   const [activeId, setActiveId] = useState(null);
   const [overId, setOverId] = useState(null);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  useEffect(() => {
+    if (statusCourse !== null && statusCourse !== undefined) {
+    }
+  }, [statusCourse]);
+
+  const updateLoadingToast = (id, { message, type }) => {
+    toast.update(id, {
+      render: message,
+      type,
+      isLoading: false,
+      autoClose: type === 'success' ? 2000 : 3000,
+      closeOnClick: true,
+      draggable: true,
+    });
+  };
 
   useEffect(() => {
-    fetchModules(courseId).catch((err) => toast.error(err.message || 'Failed to fetch modules'));
+    fetchModules(courseId).catch((err) =>
+      toast.error(err.message || 'Failed to fetch modules', { autoClose: 3000 })
+    );
   }, [courseId, fetchModules]);
 
   const findLessonLocation = useCallback(
@@ -62,7 +84,10 @@ export default function ModuleList({ editable }) {
       order: idx,
     }));
 
-    const toastId = toast.loading('Mengubah urutan modul...');
+    const toastId = toast.loading('Mengubah urutan modul...', {
+      closeOnClick: false,
+      draggable: false,
+    });
 
     try {
       const movedModule = newOrder.find((m) => m.id === active.id);
@@ -70,18 +95,14 @@ export default function ModuleList({ editable }) {
 
       useModuleStore.setState({ modules: updated });
 
-      toast.update(toastId, {
-        render: 'Urutan modul berhasil diubah',
+      updateLoadingToast(toastId, {
+        message: 'Urutan modul berhasil diubah',
         type: 'success',
-        isLoading: false,
-        autoClose: 2000,
       });
     } catch (err) {
-      toast.update(toastId, {
-        render: err.message || 'Gagal mengubah urutan modul',
+      updateLoadingToast(toastId, {
+        message: err.message || 'Gagal mengubah urutan modul',
         type: 'error',
-        isLoading: false,
-        autoClose: 3000,
       });
     }
   };
@@ -125,8 +146,10 @@ export default function ModuleList({ editable }) {
 
     newModules[toModuleIdx] = { ...newModules[toModuleIdx], lessons: targetLessons };
 
-    // Loading toast
-    const toastId = toast.loading('Mengubah urutan materi...');
+    const toastId = toast.loading('Mengubah urutan materi...', {
+      closeOnClick: false,
+      draggable: false,
+    });
 
     try {
       await updateLessonOrder({
@@ -135,21 +158,16 @@ export default function ModuleList({ editable }) {
         order: newOrder,
       });
 
-      // Update state
       useModuleStore.setState({ modules: newModules });
 
-      toast.update(toastId, {
-        render: 'Materi berhasil dipindahkan',
+      updateLoadingToast(toastId, {
+        message: 'Materi berhasil dipindahkan',
         type: 'success',
-        isLoading: false,
-        autoClose: 2000,
       });
     } catch (err) {
-      toast.update(toastId, {
-        render: err.message || 'Gagal mengubah urutan materi',
+      updateLoadingToast(toastId, {
+        message: err.message || 'Gagal mengubah urutan materi',
         type: 'error',
-        isLoading: false,
-        autoClose: 3000,
       });
     }
   };
@@ -163,7 +181,6 @@ export default function ModuleList({ editable }) {
     if (!over) return;
 
     const moduleIds = modules.map((m) => m.id);
-
     const isModule = moduleIds.includes(active.id) && moduleIds.includes(over.id);
 
     if (isModule) {
@@ -181,31 +198,34 @@ export default function ModuleList({ editable }) {
   const handleEditLesson = (moduleId, lessonId) => navigate(`/instruktur/materi/${lessonId}/edit`);
   const handleNavigateLesson = (lessonId) =>
     navigate(`${role === 'instructor' ? '/instruktur' : '/admin'}/materi/${lessonId}/lihat`);
+
   const handleDeleteModule = async (moduleId) => {
     const module = modules.find((m) => m.id === moduleId);
     if (!module) return;
     if (module.lessons && module.lessons.length > 0) {
-      toast.info('Modul belum bisa dihapus karena ada materi pembelajaran didalamnya');
+      toast.info('Modul belum bisa dihapus karena ada materi pembelajaran didalamnya', {
+        autoClose: 3000,
+      });
       return;
     }
-    const toastId = toast.loading('Menghapus modul...');
+    const toastId = toast.loading('Menghapus modul...', {
+      closeOnClick: false,
+      draggable: false,
+    });
     try {
       await deleteModule({ courseId, moduleId });
-      toast.update(toastId, {
-        render: 'Modul berhasil dihapus',
+      updateLoadingToast(toastId, {
+        message: 'Modul berhasil dihapus',
         type: 'success',
-        isLoading: false,
-        autoClose: 2000,
       });
     } catch (err) {
-      toast.update(toastId, {
-        render: err.message || 'Gagal menghapus modul',
+      updateLoadingToast(toastId, {
+        message: err.message || 'Gagal menghapus modul',
         type: 'error',
-        isLoading: false,
-        autoClose: 3000,
       });
     }
   };
+
   const handleDeleteLesson = async (moduleId, lessonId) => {
     const module = modules.find((m) => m.id === moduleId);
     if (!module) return;
@@ -219,28 +239,26 @@ export default function ModuleList({ editable }) {
       variant: 'danger',
       onConfirm: async () => {
         closeModal();
-        const toastId = toast.loading('Menghapus materi...');
+        const toastId = toast.loading('Menghapus materi...', {
+          closeOnClick: false,
+          draggable: false,
+        });
         try {
           await deleteLesson({ lessonId });
 
-          // Remove lesson from state
           const newModules = modules.map((m) =>
             m.id === moduleId ? { ...m, lessons: m.lessons.filter((l) => l.id !== lessonId) } : m
           );
           useModuleStore.setState({ modules: newModules });
 
-          toast.update(toastId, {
-            render: 'Materi berhasil dihapus',
+          updateLoadingToast(toastId, {
+            message: 'Materi berhasil dihapus',
             type: 'success',
-            isLoading: false,
-            autoClose: 2000,
           });
         } catch (err) {
-          toast.update(toastId, {
-            render: err.message || 'Gagal menghapus materi',
+          updateLoadingToast(toastId, {
+            message: err.message || 'Gagal menghapus materi',
             type: 'error',
-            isLoading: false,
-            autoClose: 3000,
           });
         }
       },
@@ -256,10 +274,10 @@ export default function ModuleList({ editable }) {
   return (
     <>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
-        <h1 className="text-xl sm:text-2xl font-bold text-primary-800 mb-2 sm:mb-0">
+        <h1 className="text-xl sm:text-2xl font-bold text-black mb-2 sm:mb-0">
           Daftar Materi Kursus
         </h1>
-        {editable && (
+        {effectiveEditable && (
           <button
             onClick={handleAddModule}
             className="w-full sm:w-auto px-4 py-2 bg-primary-700 text-white rounded hover:bg-primary-800 flex items-center gap-2"
@@ -272,7 +290,7 @@ export default function ModuleList({ editable }) {
       <div className="p-2 sm:p-4 bg-gray-100 rounded-md overflow-x-auto">
         {modules.length === 0 ? (
           <p className="text-center text-gray-500 italic">Tidak ada modul, silahkan tambahkan.</p>
-        ) : editable ? (
+        ) : effectiveEditable ? (
           <DndContext
             collisionDetection={rectIntersection}
             onDragStart={handleDragStart}
@@ -290,10 +308,10 @@ export default function ModuleList({ editable }) {
                     id={module.id}
                     module={module}
                     isOver={overId === module.id}
-                    onAddLesson={editable ? handleAddLesson : undefined}
-                    onDeleteModule={editable ? handleDeleteModule : undefined}
-                    onEditModule={editable ? handleEditModule : undefined}
-                    editable={editable}
+                    onAddLesson={effectiveEditable ? handleAddLesson : undefined}
+                    onDeleteModule={effectiveEditable ? handleDeleteModule : undefined}
+                    onEditModule={effectiveEditable ? handleEditModule : undefined}
+                    editable={effectiveEditable}
                   >
                     <SortableContext
                       items={module.lessons.map((l) => l.id)}
@@ -310,10 +328,10 @@ export default function ModuleList({ editable }) {
                           lesson={lesson}
                           moduleId={module.id}
                           activeId={activeId}
-                          onDelete={editable ? handleDeleteLesson : undefined}
-                          onEdit={editable ? handleEditLesson : undefined}
+                          onDelete={effectiveEditable ? handleDeleteLesson : undefined}
+                          onEdit={effectiveEditable ? handleEditLesson : undefined}
                           onNavigate={handleNavigateLesson}
-                          editable={editable}
+                          editable={effectiveEditable}
                         />
                       ))}
                     </SortableContext>
@@ -326,7 +344,12 @@ export default function ModuleList({ editable }) {
         ) : (
           <div className="flex flex-col gap-3 sm:gap-4">
             {modules.map((module) => (
-              <SortableModule key={module.id} id={module.id} module={module} editable={editable}>
+              <SortableModule
+                key={module.id}
+                id={module.id}
+                module={module}
+                editable={effectiveEditable}
+              >
                 {module.lessons.length === 0 && (
                   <li className="text-xs sm:text-sm text-gray-400 italic px-2 py-1">
                     (Belum ada pembelajaran)
@@ -338,7 +361,7 @@ export default function ModuleList({ editable }) {
                     lesson={lesson}
                     moduleId={module.id}
                     onNavigate={handleNavigateLesson}
-                    editable={editable}
+                    editable={effectiveEditable}
                   />
                 ))}
               </SortableModule>

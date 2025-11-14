@@ -5,6 +5,8 @@ import TextInput from '../../../../../../../components/form/textInput';
 import SelectOption from '../../../../../../../components/form/selectOption';
 import Icon from '../../../../../../../components/icons/icon';
 import useModuleStore from '../../../../../../../zustand/material/moduleStore';
+import useConfirmationModalStore from '../../../../../../../zustand/confirmationModalStore';
+import { toast } from 'react-toastify';
 
 export default function ModulAdd() {
   const { courseId } = useParams();
@@ -15,6 +17,7 @@ export default function ModulAdd() {
   });
 
   const { addModule, loading, error } = useModuleStore();
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,12 +29,24 @@ export default function ModulAdd() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await addModule({ courseId: courseId, title: formData.title });
-      navigate(-1);
-    } catch (err) {
-      // Error sudah di-handle oleh store, bisa tampilkan pesan jika mau
-    }
+    openModal({
+      title: 'Konfirmasi Simpan',
+      message: 'Apakah Anda yakin ingin menyimpan modul ini?',
+      variant: 'primary',
+      onConfirm: async () => {
+        closeModal();
+        try {
+          await addModule({ courseId: courseId, title: formData.title });
+          toast.success('Modul berhasil ditambahkan');
+          navigate(-1);
+        } catch (err) {
+          toast.error('Gagal menambahkan modul');
+        }
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   return (
@@ -47,7 +62,7 @@ export default function ModulAdd() {
             <Icon type="arrow-left" className="size-[1rem] text-white" />
             <span className="text-white">Kembali</span>
           </button>
-          <h4 className="text-primary-700 text-lg sm:text-2xl font-bold">Tambah modul kursus</h4>
+          <h4 className="text-black text-lg sm:text-2xl font-bold">Tambah modul kursus</h4>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <TextInput
@@ -65,7 +80,7 @@ export default function ModulAdd() {
               className="w-fit bg-primary-700 text-white px-4 py-2 rounded-md hover:bg-primary-600"
               disabled={loading}
             >
-              {loading ? 'Menyimpan...' : 'Simpan Modul'}
+              {loading ? 'Menyimpan...' : 'Simpan'}
             </button>
           </div>
         </form>

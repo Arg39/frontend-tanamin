@@ -29,19 +29,53 @@ export default function LessonAdd() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [pendingSubmit, setPendingSubmit] = useState(null);
   const wysiwygRef = useRef(null);
+  const quizBuilderRef = useRef(null); // ref for quiz validation
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handler untuk checkbox visible
   const handleVisibleChange = (e) => {
     setFormData((prev) => ({ ...prev, visible: e.target.checked }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Quiz validation before confirmation modal
+    if (formData.type === 'quiz') {
+      if (!formData.quizContent.length) {
+        toast.error('Belum ada pertanyaan quiz. Tambahkan minimal 1 pertanyaan sebelum menyimpan.');
+        return;
+      }
+      if (quizBuilderRef.current) {
+        const validation = quizBuilderRef.current.validate();
+        if (!validation.valid) {
+          if (validation.reason === 'empty') {
+            toast.error('Belum ada pertanyaan quiz.');
+          } else if (validation.reason === 'incomplete') {
+            toast.error(
+              'Pertanyaan atau opsi jawaban belum lengkap. Lengkapi semua pertanyaan, semua opsi jawaban, dan pilih jawaban benar.'
+            );
+          }
+          return;
+        }
+      }
+    }
+
+    // Material: ensure title & content basic (optional minimal)
+    if (formData.type === 'material') {
+      if (!formData.title.trim()) {
+        toast.error('Judul tidak boleh kosong.');
+        return;
+      }
+      if (!formData.materialContent || !formData.materialContent.trim()) {
+        toast.error('Konten materi tidak boleh kosong.');
+        return;
+      }
+    }
+
     setPendingSubmit({ ...formData });
     setIsModalOpen(true);
   };
@@ -53,6 +87,21 @@ export default function LessonAdd() {
       const token = useAuthStore.getState().token;
       let finalMaterialContent = pendingSubmit.materialContent;
       let quizContent = pendingSubmit.quizContent;
+
+      // Revalidate quiz (defensive)
+      if (pendingSubmit.type === 'quiz') {
+        if (!quizContent.length) {
+          toast.error('Belum ada pertanyaan quiz.');
+          return;
+        }
+        const validation = quizBuilderRef.current?.validate();
+        if (validation && !validation.valid) {
+          toast.error(
+            'Pertanyaan atau opsi jawaban belum lengkap. Lengkapi semua sebelum menyimpan.'
+          );
+          return;
+        }
+      }
 
       if (pendingSubmit.type === 'material' && wysiwygRef.current) {
         finalMaterialContent = await wysiwygRef.current.uploadLocalImages(token);
@@ -66,7 +115,6 @@ export default function LessonAdd() {
           pendingSubmit.quizContent.map(async (q) => {
             const wrapper = document.createElement('div');
             wrapper.innerHTML = q.question;
-
             const imgElements = Array.from(wrapper.querySelectorAll('img'));
 
             await Promise.all(
@@ -76,8 +124,8 @@ export default function LessonAdd() {
 
                 try {
                   const blob = await (await fetch(src)).blob();
-                  const formData = new FormData();
-                  formData.append('image', blob, `quizimg_${Date.now()}_${Math.random()}.png`);
+                  const fd = new FormData();
+                  fd.append('image', blob, `quizimg_${Date.now()}_${Math.random()}.png`);
 
                   const res = await fetch(`${baseUrl}/api/image`, {
                     method: 'POST',
@@ -85,7 +133,7 @@ export default function LessonAdd() {
                       Authorization: `Bearer ${token}`,
                       Accept: 'application/json',
                     },
-                    body: formData,
+                    body: fd,
                   });
 
                   if (!res.ok) throw new Error('Upload gambar gagal');
@@ -119,13 +167,12 @@ export default function LessonAdd() {
       const result = {
         title: pendingSubmit.title,
         type: pendingSubmit.type,
-        visible: pendingSubmit.visible, // Sertakan visible
+        visible: pendingSubmit.visible,
         ...(pendingSubmit.type === 'material' && { materialContent: finalMaterialContent }),
         ...(pendingSubmit.type === 'quiz' && { quizContent }),
       };
 
       await addLesson({ moduleId, data: result });
-
       toast.success('Materi berhasil ditambahkan');
       navigate(-1);
     } catch (err) {
@@ -150,7 +197,9 @@ export default function LessonAdd() {
           <span>Kembali</span>
         </button>
 
-        <h2 className="text-xl font-bold text-primary-700 mb-4">Tambah Pembelajaran Kursus</h2>
+        <h2 className="text-black text-lg sm:text-2xl font-bold mb-4">
+          Tambah Pembelajaran Kursus
+        </h2>
 
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <TextInput
@@ -192,6 +241,7 @@ export default function LessonAdd() {
           )}
           {formData.type === 'quiz' && (
             <QuizBuilder
+              ref={quizBuilderRef}
               quizContent={formData.quizContent}
               setQuizContent={(q) => setFormData((prev) => ({ ...prev, quizContent: q }))}
             />
@@ -201,8 +251,9 @@ export default function LessonAdd() {
             <button
               type="submit"
               className="bg-primary-700 text-white px-4 py-2 rounded hover:bg-primary-600"
+              disabled={loading}
             >
-              Simpan Materi
+              Simpan
             </button>
           </div>
         </form>

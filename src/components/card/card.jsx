@@ -103,7 +103,6 @@ export default function Card({
     e.preventDefault();
     if (onToggleBookmark && !bookmarkLoading) {
       onToggleBookmark(course.id, bookmark);
-      console.log(course.id, bookmark);
       if (bookmark) {
         toast.success('Bookmark dihapus');
       } else {

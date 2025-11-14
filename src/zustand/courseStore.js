@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import useAuthStore from './authStore';
+import { toast } from 'react-toastify';
 
 const useCourseStore = create((set, get) => ({
   courses: [],
@@ -85,17 +86,13 @@ const useCourseStore = create((set, get) => ({
     set({ loading: true, error: null });
     try {
       const token = useAuthStore.getState().token;
-      const params = new URLSearchParams({
-        title,
-        category_id,
-        instructor_id,
-      }).toString();
-      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/course?${params}`, {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_BASE_URL}/api/course`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        body: JSON.stringify({ title, category_id, instructor_id }),
       });
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Gagal menambah kursus');
@@ -211,10 +208,9 @@ const useCourseStore = create((set, get) => ({
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_BASE_URL}/api/course/${id}/overview/update`,
         {
-          method: 'POST', // or 'PUT' if needed
+          method: 'POST',
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            // 'Content-Type' intentionally omitted for FormData
           },
           body: data,
         }

@@ -130,12 +130,6 @@ export default function Instructor() {
       withButton: true,
       placeholder: 'Nama instruktur',
     },
-    {
-      key: 'created_at',
-      label: 'Tanggal Bergabung',
-      type: 'dateRange',
-      placeholder: 'Pilih rentang tanggal',
-    },
   ];
 
   const columns = [

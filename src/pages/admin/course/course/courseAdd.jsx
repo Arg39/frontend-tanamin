@@ -9,7 +9,7 @@ import useCategoryStore from '../../../../zustand/categoryStore';
 import SelectOption from '../../../../components/form/selectOption';
 import useInstructorStore from '../../../../zustand/instructorStore';
 import useCourseStore from '../../../../zustand/courseStore';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function CourseAdd() {
@@ -41,7 +41,6 @@ export default function CourseAdd() {
     loadCategories();
   }, []);
 
-  // Fetch instructors when category_id changes
   useEffect(() => {
     const loadInstructors = async () => {
       if (formData.category_id) {
@@ -52,9 +51,7 @@ export default function CourseAdd() {
       }
     };
     loadInstructors();
-    // Reset instructor selection when category changes
     setFormData((prev) => ({ ...prev, instructor_id: '' }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formData.category_id]);
 
   const handleInputChange = (e) => {
@@ -94,12 +91,10 @@ export default function CourseAdd() {
             category_id: formData.category_id,
             instructor_id: formData.instructor_id,
           });
+          toast.success('Kursus berhasil ditambahkan!');
           navigate('/admin/kursus');
         } catch (err) {
-          toast.error('Gagal menambah kursus: ' + err.message, {
-            position: 'top-right',
-            autoClose: 3000,
-          });
+          toast.error(`Gagal menambah kursuss: ${err.message}`);
         }
       },
       onCancel: () => {
@@ -110,7 +105,6 @@ export default function CourseAdd() {
 
   return (
     <AdminTemplate activeNav="kursus" breadcrumbItems={breadcrumbItems}>
-      <ToastContainer />
       <div className="wf-full bg-white p-6 rounded-lg shadow-md">
         {/* Back Button */}
         <button
@@ -118,7 +112,7 @@ export default function CourseAdd() {
           onClick={() => navigate(-1)}
         >
           <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
-          <span>Kembali</span>
+          <span>Kembalis</span>
         </button>
         <h2 className="text-2xl font-bold">Tambah Kursus</h2>
         <form onSubmit={handleSubmit} className="w-full mt-4 space-y-4">

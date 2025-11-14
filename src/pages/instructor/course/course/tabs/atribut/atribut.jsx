@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import Icon from '../../../../../../components/icons/icon';
 import { useNavigate, useParams } from 'react-router-dom';
 import useCourseAttributeStore from '../../../../../../zustand/courseAttributeStore';
+import useAuthStore from '../../../../../../zustand/authStore';
 
 export default function CourseAttribute({ editable }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const { attribute, attributeLoading, attributeError, fetchAttribute } = useCourseAttributeStore();
+  const role = useAuthStore((state) => state.user.role);
 
   useEffect(() => {
     if (id) fetchAttribute({ id });
@@ -38,16 +40,18 @@ export default function CourseAttribute({ editable }) {
         <>
           {/* Header */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
-            <p className="text-xl sm:text-2xl font-bold text-primary-800">Atribut Kursus</p>
-            {editable && (
-              <button
-                onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}
-                className="w-full sm:w-auto bg-primary-700 text-white px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center justify-center mt-2 md:mt-0"
-              >
-                <Icon type="edit" className="mr-2" />
-                Edit
-              </button>
-            )}
+            <p className="text-xl sm:text-2xl font-bold text-black">Atribut Kursus</p>
+            {editable &&
+              role === 'instructor' &&
+              (attribute?.status === 'new' || attribute?.status === 'edited') && (
+                <button
+                  onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}
+                  className="w-full sm:w-auto bg-secondary-500 text-white px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center justify-center mt-2 md:mt-0"
+                >
+                  <Icon type="edit" className="mr-2" />
+                  Edit
+                </button>
+              )}
           </div>
 
           {/* Persyaratan */}

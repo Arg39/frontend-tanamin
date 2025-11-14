@@ -1,10 +1,7 @@
 import Icon from '../icons/icon';
 
 export default function SearchFields({ categories }) {
-  const handleSubmit = (event) => {
-    // Tambahkan logika submit di sini
-    console.log('Form submitted');
-  };
+  const handleSubmit = (event) => {};
   return (
     <div className="w-full h-full bg-white">
       <form onSubmit={handleSubmit} className="relative w-full">

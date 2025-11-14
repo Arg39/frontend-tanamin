@@ -136,7 +136,7 @@ export default function KerjaSamaEdit() {
               className="w-fit mt-4 bg-primary-700 hover:bg-primary-800 text-white px-6 py-2 rounded-md font-semibold"
               disabled={loading}
             >
-              {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
+              {loading ? 'Menyimpan...' : 'Simpan'}
             </button>
           </div>
         </div>

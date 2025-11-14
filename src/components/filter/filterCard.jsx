@@ -82,7 +82,6 @@ export default function FilterCard({ isMobile = false, onResetFilter }) {
 
   useEffect(() => {
     const activeFilters = getActiveFilters();
-    // console.log('Active Filters:', activeFilters);
   }, [
     checkedCategories,
     checkedInstructor,

@@ -224,16 +224,25 @@ export default function CourseRingkasan({ editable }) {
   return (
     <>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-        <p className="text-2xl font-bold text-primary-900">Ringkasan</p>
+        <p className="text-2xl font-bold text-black">Ringkasan</p>
         <div className="flex flex-col md:flex-row gap-2">
           {role === 'instructor' && (data.status === 'new' || data.status === 'edited') && (
-            <button
-              className="p-2 px-4 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
-              onClick={handlePublish}
-            >
-              <Icon type="send" className="h-5 w-5" />
-              Ajukan Publikasi
-            </button>
+            <>
+              <button
+                className="p-2 px-4 bg-tertiary-600 rounded-md text-white flex gap-1 items-center"
+                onClick={handlePublish}
+              >
+                <Icon type="send" className="h-5 w-5" />
+                Ajukan Publikasi
+              </button>
+              <Link
+                to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
+                className="flex items-center gap-2 bg-secondary-500 text-white px-4 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
+              >
+                <Icon type="edit" className="h-3 w-3" />
+                Edit
+              </Link>
+            </>
           )}
           {role === 'admin' && (
             <button
@@ -243,15 +252,6 @@ export default function CourseRingkasan({ editable }) {
               <Icon type="tag-label" className="h-5 w-5" />
               Edit Harga & Diskon
             </button>
-          )}
-          {role !== 'admin' && (
-            <Link
-              to={`/${role === 'admin' ? 'admin' : 'instruktur'}/kursus/${id}/edit/ringkasan`}
-              className="flex items-center gap-2 bg-secondary-500 text-white px-4 py-1 md:py-2 rounded-lg shadow hover:bg-secondary-600 transition font-medium text-base"
-            >
-              <Icon type="edit" className="h-3 w-3" />
-              Edit
-            </Link>
           )}
         </div>
       </div>

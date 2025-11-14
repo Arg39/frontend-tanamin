@@ -5,12 +5,16 @@ import { useNavigate, useParams } from 'react-router-dom';
 import TextInput from '../../../../../../components/form/textInput';
 import useCourseAttributeStore from '../../../../../../zustand/courseAttributeStore';
 import { toast } from 'react-toastify';
+// NEW: import confirmation modal store
+import useConfirmationModalStore from '../../../../../../zustand/confirmationModalStore';
 
 export default function CourseAttributeAdd() {
   const navigate = useNavigate();
   const { courseId } = useParams();
   const { addAttributesBulk, attributeLoading, attributeError, attribute, fetchAttribute } =
     useCourseAttributeStore();
+  // NEW: get modal actions
+  const { openModal, closeModal } = useConfirmationModalStore();
 
   // State for attributes, benefits, and prerequisites
   const [description, setDescription] = useState(['']);
@@ -75,6 +79,7 @@ export default function CourseAttributeAdd() {
   const removePrerequisiteField = (idx) =>
     setPrerequisites(prerequisites.filter((_, i) => i !== idx));
 
+  // Save logic (unchanged)
   const handleSave = async () => {
     setLoading(true);
     try {
@@ -101,6 +106,23 @@ export default function CourseAttributeAdd() {
       toast.error(e.message || 'Terjadi kesalahan');
     }
     setLoading(false);
+  };
+
+  // NEW: confirmation before save (like in courseAdd.jsx)
+  const handleConfirmSave = () => {
+    if (loading) return;
+    openModal({
+      title: 'Konfirmasi Simpan',
+      message: 'Apakah Anda yakin ingin menyimpan atribut kursus ini?',
+      variant: 'primary',
+      onConfirm: async () => {
+        closeModal();
+        await handleSave();
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   return (
@@ -243,7 +265,7 @@ export default function CourseAttributeAdd() {
             {/* Submit Button */}
             <div className="flex justify-end mt-4">
               <button
-                onClick={handleSave}
+                onClick={handleConfirmSave}
                 className="bg-primary-700 text-white px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center"
                 disabled={loading}
               >

@@ -6,6 +6,7 @@ const useModuleStore = create((set, get) => ({
   loading: false,
   error: null,
   createdModule: null,
+  statusCourse: null, // added state
 
   async fetchModules(courseId) {
     set({ loading: true, error: null });
@@ -29,9 +30,10 @@ const useModuleStore = create((set, get) => ({
           }))
         : [];
 
-      set({ modules, loading: false, error: null });
+      // set statusCourse from response
+      set({ modules, loading: false, error: null, statusCourse: json.status_course || null });
     } catch (e) {
-      set({ modules: [], loading: false, error: e.message });
+      set({ modules: [], loading: false, error: e.message, statusCourse: null });
       throw e;
     }
   },
@@ -58,13 +60,11 @@ const useModuleStore = create((set, get) => ({
 
       set((prev) => ({
         modules: Array.isArray(prev.modules)
-          ? [
-              ...prev.modules.filter((m) => String(m.id) !== String(moduleId)),
-              newModule,
-            ]
+          ? [...prev.modules.filter((m) => String(m.id) !== String(moduleId)), newModule]
           : [newModule],
         loading: false,
         error: null,
+        // statusCourse unchanged here
       }));
 
       return newModule;
@@ -87,7 +87,6 @@ const useModuleStore = create((set, get) => ({
           method: 'POST',
           headers: {
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
-            // Do not set Content-Type, browser will set it for multipart/form-data
           },
           body: formData,
         }
@@ -182,7 +181,6 @@ const useModuleStore = create((set, get) => ({
       );
       const json = await res.json();
       if (json.status !== 'success') throw new Error(json.message || 'Gagal menghapus modul');
-      // Remove module from state
       set((state) => ({
         modules: state.modules.filter((m) => String(m.id) !== String(moduleId)),
       }));

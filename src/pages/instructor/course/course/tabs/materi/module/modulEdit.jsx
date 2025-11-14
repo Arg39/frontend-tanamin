@@ -4,6 +4,9 @@ import InstructorTemplate from '../../../../../../../template/templateInstructor
 import TextInput from '../../../../../../../components/form/textInput';
 import Icon from '../../../../../../../components/icons/icon';
 import useModuleStore from '../../../../../../../zustand/material/moduleStore';
+import useConfirmationModalStore from '../../../../../../../zustand/confirmationModalStore'; // <-- added
+import { toast } from 'react-toastify'; // <-- added
+import 'react-toastify/dist/ReactToastify.css'; // <-- added
 
 export default function ModulEdit() {
   const { courseId, moduleId } = useParams();
@@ -14,6 +17,7 @@ export default function ModulEdit() {
   });
 
   const { getModuleById, updateModule, loading, error } = useModuleStore();
+  const { openModal, closeModal } = useConfirmationModalStore(); // <-- added
 
   useEffect(() => {
     async function fetchModule() {
@@ -38,18 +42,36 @@ export default function ModulEdit() {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  // Modified: now opens confirmation modal
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.title.trim()) {
-      // Prevent submit if title is empty
+    const trimmedTitle = formData.title.trim();
+    if (!trimmedTitle) {
+      toast.error('Judul modul wajib diisi.', { position: 'top-right', autoClose: 3000 });
       return;
     }
-    try {
-      await updateModule({ moduleId, courseId, title: formData.title.trim() });
-      navigate(-1);
-    } catch (err) {
-      // Error handled by store
-    }
+
+    openModal({
+      title: 'Konfirmasi Simpan',
+      message: 'Apakah Anda yakin ingin menyimpan perubahan modul?',
+      variant: 'primary',
+      onConfirm: async () => {
+        closeModal();
+        try {
+          await updateModule({ moduleId, courseId, title: trimmedTitle });
+          toast.success('Modul berhasil diperbarui.', { position: 'top-right', autoClose: 3000 });
+          navigate(-1);
+        } catch (err) {
+          toast.error(`Gagal memperbarui modul: ${err.message || 'Terjadi kesalahan.'}`, {
+            position: 'top-right',
+            autoClose: 3000,
+          });
+        }
+      },
+      onCancel: () => {
+        closeModal();
+      },
+    });
   };
 
   return (
@@ -65,7 +87,7 @@ export default function ModulEdit() {
             <Icon type="arrow-left" className="size-[1rem] text-white" />
             <span className="text-white">Kembali</span>
           </button>
-          <h4 className="text-primary-700 text-lg sm:text-2xl font-bold">Edit modul kursus</h4>
+          <h4 className="text-black text-lg sm:text-2xl font-bold">Edit modul kursus</h4>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <TextInput
@@ -75,7 +97,7 @@ export default function ModulEdit() {
             onChange={handleChange}
             placeholder="Masukkan judul modul"
             disabled={loading}
-            required // <-- add required attribute
+            required
           />
           {!formData.title.trim() && (
             <div className="text-red-500 text-sm">Judul modul wajib diisi.</div>
@@ -87,7 +109,7 @@ export default function ModulEdit() {
               className="w-fit bg-primary-700 text-white px-4 py-2 rounded-md hover:bg-primary-600"
               disabled={loading || !formData.title.trim()}
             >
-              {loading ? 'Menyimpan...' : 'Update Modul'}
+              {loading ? 'Menyimpan...' : 'Simpan'}
             </button>
           </div>
         </form>

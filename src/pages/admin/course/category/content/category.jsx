@@ -93,11 +93,6 @@ export default function Category({ isEditable = 'false' }) {
       placeholder: 'Cari kategori...',
       withButton: true,
     },
-    {
-      key: 'dateRange',
-      type: 'dateRange',
-      label: 'Tanggal',
-    },
   ];
 
   // Define columns, conditionally add "Aksi" if editable

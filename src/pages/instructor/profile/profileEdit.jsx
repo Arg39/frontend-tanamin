@@ -261,7 +261,7 @@ export default function InstructorProfileEdit() {
                 className="flex items-center gap-2 px-6 py-2 bg-primary-700 text-white rounded-md hover:bg-primary-800 transition-colors font-semibold"
               >
                 <Icon type="save" />
-                Simpan Perubahan
+                Simpan
               </button>
             </div>
           </div>

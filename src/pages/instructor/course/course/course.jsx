@@ -165,12 +165,6 @@ export default function CourseAdmin() {
           >
             Lihat Kursus
           </Link>
-          <Link
-            to={`/instruktur/kursus/peserta/${value}`}
-            className="p-2 px-4 rounded-md bg-tertiary-500 hover:bg-tertiary-600"
-          >
-            Lihat Peserta
-          </Link>
         </div>
       ),
     },

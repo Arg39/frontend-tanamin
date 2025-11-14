@@ -104,7 +104,7 @@ export default function CategoryEdit() {
           />
           <div className="w-full flex justify-end">
             <Button type="submit" variant="form">
-              Simpan perubahan
+              Simpan
             </Button>
           </div>
         </form>

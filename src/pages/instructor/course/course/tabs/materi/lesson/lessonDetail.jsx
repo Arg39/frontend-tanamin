@@ -43,16 +43,19 @@ export default function LessonDetail() {
           <span>Kembali</span>
         </button>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-primary-700">
+          <h2 className="text-2xl font-bold text-black">
             Detail{' '}
             {lessonData?.type === 'quiz' ? 'Quiz' : lessonData?.type === 'material' ? 'Materi' : ''}
           </h2>
-          <button
-            className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white gap-2"
-            onClick={() => navigate(`/instruktur/materi/${lessonId}/edit`)}
-          >
-            <Icon type={'edit'} className={'w-3 h-3'} /> Edit
-          </button>
+          {lessonData?.course_status !== 'published' &&
+            lessonData?.course_status !== 'awaiting_approval' && (
+              <button
+                className="p-2 px-4 rounded-md flex bg-tertiary-600 text-white gap-2"
+                onClick={() => navigate(`/instruktur/materi/${lessonId}/edit`)}
+              >
+                <Icon type={'edit'} className={'w-3 h-3'} /> Edit
+              </button>
+            )}
         </div>
         {error && (
           <div className="text-red-500 mb-4">

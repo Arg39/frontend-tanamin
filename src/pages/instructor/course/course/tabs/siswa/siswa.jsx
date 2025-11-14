@@ -109,9 +109,7 @@ export default function Siswa() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <p className="text-xl sm:text-2xl font-bold text-primary-800 mb-2 sm:mb-0">
-          Daftar Peserta
-        </p>
+        <p className="text-xl sm:text-2xl font-bold text-black mb-2 sm:mb-0">Daftar Peserta</p>
       </div>
       <TableFilter
         filters={filterConfig}
