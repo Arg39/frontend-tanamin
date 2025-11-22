@@ -20,9 +20,7 @@ export default function KontakPerusahaan() {
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-2">
-        <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-2 sm:mb-4">
-          Kontak Perusahaan
-        </h2>
+        <h2 className="text-lg sm:text-2xl font-bold text-black mb-2 sm:mb-4">Kontak Perusahaan</h2>
         <button
           className="flex gap-2 p-2 px-4 text-white bg-primary-700 hover:bg-primary-800 rounded-md w-full sm:w-auto"
           onClick={() => navigate('/admin/tentang-perusahaan/kontak/edit')}

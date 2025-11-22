@@ -118,9 +118,7 @@ export default function AdminProfilPerusahaanEdit() {
             <Icon type="arrow-left" className="w-4 h-4" color="currentColor" />
             <span>Kembali</span>
           </button>
-          <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-0">
-            Edit Profil Perusahaan
-          </h2>
+          <h2 className="text-lg sm:text-2xl font-bold text-black mb-4">Edit Profil Perusahaan</h2>
 
           {/* Tentang Perusahaan */}
           <div className="bg-white rounded-lg p-4 sm:p-6 shadow border mb-6">

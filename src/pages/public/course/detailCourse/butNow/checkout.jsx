@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Icon from '../../../../../components/icons/icon';
 import { formatRupiah } from '../../../../../utils/formatRupiah';
 
@@ -17,6 +17,8 @@ export default function Checkout({
   const [showAllBenefits, setShowAllBenefits] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  // Guard to prevent double invocation of snap.pay (PopupInView -> PopupInView error)
+  const paymentStartedRef = useRef(false);
 
   const courseList = multiple ? courses : course ? [course] : [];
   // Untuk multiple, gunakan data dari API, bukan hitung manual
@@ -90,6 +92,25 @@ export default function Checkout({
         </div>
       </div>
     );
+  };
+
+  const payDisabled = !isChecked || enrollLoading || paymentStartedRef.current;
+
+  const handlePayClick = () => {
+    if (payDisabled) return;
+    paymentStartedRef.current = true; // prevent second snap.pay call
+    try {
+      const maybePromise = onPay && onPay();
+      // If onPay returns a promise, reset guard only on error/cancel (success will redirect)
+      if (maybePromise && typeof maybePromise.then === 'function') {
+        maybePromise.catch(() => {
+          paymentStartedRef.current = false; // allow retry if failed
+        });
+      }
+    } catch (e) {
+      paymentStartedRef.current = false;
+      // Optionally handle error toast here
+    }
   };
 
   return (
@@ -262,17 +283,14 @@ export default function Checkout({
             </div>
             <button
               className={`bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 sm:py-4 px-4 rounded-lg w-full ${
-                !isChecked || enrollLoading ? 'opacity-50 cursor-not-allowed' : ''
+                payDisabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
               }`}
               type="button"
-              disabled={!isChecked || enrollLoading}
-              onClick={() => {
-                if (isChecked && typeof onPay === 'function' && !enrollLoading) {
-                  onPay();
-                }
-              }}
+              aria-disabled={payDisabled}
+              disabled={payDisabled}
+              onClick={handlePayClick}
             >
-              {enrollLoading ? 'Memproses...' : 'Lanjutkan Pembayaran'}
+              {enrollLoading || paymentStartedRef.current ? 'Memproses...' : 'Lanjutkan Pembayaran'}
             </button>
           </div>
         </div>

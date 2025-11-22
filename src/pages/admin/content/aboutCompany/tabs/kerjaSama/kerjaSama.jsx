@@ -132,9 +132,7 @@ export default function KerjaSama() {
   return (
     <>
       <div className="flex justify-between items-start mb-2">
-        <h2 className="text-lg sm:text-2xl font-bold text-primary-700 mb-4">
-          Kerja Sama Perusahaan
-        </h2>
+        <h2 className="text-lg sm:text-2xl font-bold text-black mb-4">Kerja Sama Perusahaan</h2>
         <button
           className="flex gap-2 p-2 px-4 items-center text-white bg-primary-700 hover:bg-primary-800 rounded-md"
           onClick={() => navigate('/admin/tentang-perusahaan/kerja-sama/tambah')}
@@ -143,7 +141,6 @@ export default function KerjaSama() {
           Tambah
         </button>
       </div>
-      {error && <div className="mb-2 text-error-600 bg-error-50 p-2 rounded">{error}</div>}
       <ReactTable
         columns={columns}
         data={tableData}

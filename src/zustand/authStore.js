@@ -14,8 +14,8 @@ const useAuthStore = create((set, get) => ({
       );
       return response.data;
     } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Registration failed';
-      throw new Error(errorMessage); // Throw error for error handling
+      const errorMessage = error.response?.data?.message || 'Pendaftaran gagal';
+      throw new Error(errorMessage);
     }
   },
 
@@ -33,10 +33,20 @@ const useAuthStore = create((set, get) => ({
 
       set({ token: tokenData, user: userData, error: null });
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        (error.response?.data?.status === 'failed' && error.response?.data?.message) ||
-        'Login failed';
+      const backendMessage = error.response?.data?.message;
+      let errorMessage;
+
+      switch (backendMessage) {
+        case 'Invalid credentials':
+          errorMessage = 'Username atau password salah.';
+          break;
+        case 'Account inactive':
+          errorMessage = 'Akun Anda tidak aktif. Silakan hubungi admin.';
+          break;
+        default:
+          errorMessage = 'Login gagal. Silakan coba lagi.';
+      }
+
       set({ error: errorMessage });
     }
   },

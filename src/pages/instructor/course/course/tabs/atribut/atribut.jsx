@@ -41,17 +41,15 @@ export default function CourseAttribute({ editable }) {
           {/* Header */}
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-4">
             <p className="text-xl sm:text-2xl font-bold text-black">Atribut Kursus</p>
-            {editable &&
-              role === 'instructor' &&
-              (attribute?.status === 'new' || attribute?.status === 'edited') && (
-                <button
-                  onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}
-                  className="w-full sm:w-auto bg-secondary-500 text-white px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center justify-center mt-2 md:mt-0"
-                >
-                  <Icon type="edit" className="mr-2" />
-                  Edit
-                </button>
-              )}
+            {editable && role === 'instructor' && attribute?.stats_course !== 'published' && (
+              <button
+                onClick={() => navigate(`/instruktur/kursus/${id}/tambah/persyaratan-deskripsi`)}
+                className="w-full sm:w-auto bg-secondary-500 text-white px-6 py-2 rounded-lg shadow hover:bg-primary-800 transition font-medium text-base flex items-center justify-center mt-2 md:mt-0"
+              >
+                <Icon type="edit" className="mr-2" />
+                Edit
+              </button>
+            )}
           </div>
 
           {/* Persyaratan */}

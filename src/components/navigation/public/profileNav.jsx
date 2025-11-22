@@ -33,7 +33,6 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
     return () => clearInterval(interval);
   }, [user, fetchUnreadCount]);
 
-  // Fungsi untuk update posisi dropdown
   const updateDropdownPosition = () => {
     if (dropdownOpen && buttonRef.current) {
       const buttonRect = buttonRef.current.getBoundingClientRect();
@@ -177,9 +176,9 @@ export default function ProfileNav({ notificationCount = 0, cartCount = 0 }) {
                 >
                   <div className="flex flex-row mb-2">
                     <div className="flex justify-center mb-1">
-                      {user?.profile_picture ? (
+                      {user?.photo_profile ? (
                         <img
-                          src={user.profile_picture}
+                          src={user.photo_profile}
                           alt="Foto Profil"
                           className="w-12 h-12 rounded-full object-cover border border-gray-200"
                         />

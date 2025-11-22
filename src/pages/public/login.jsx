@@ -19,7 +19,6 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  // ref untuk mengukur tinggi gambar / kiri container
   const imageRef = useRef(null);
   const [minHeight, setMinHeight] = useState(null);
 
@@ -77,10 +76,8 @@ export default function Login() {
           toast.success(`Login berhasil! Selamat datang kembali ${user.first_name}!`);
           navigate('/');
         }
-      } else if (error === 'Account inactive') {
-        toast.error('Akun Anda tidak aktif. Silakan hubungi admin.');
       } else if (error) {
-        toast.error(error);
+        toast.error(error); // localized error from FE
       } else {
         toast.error('Login gagal. Silakan periksa kredensial Anda.');
       }
@@ -99,7 +96,6 @@ export default function Login() {
           <LazyImage src="/images/login.png" alt="Login" className="w-full" />
         </div>
         <div className="w-full lg:w-1/2 flex justify-center">
-          {/* terapkan minHeight yang mengikuti tinggi gambar */}
           <div
             className="w-full p-6 lg:p-16 py-10 lg:pt-24 bg-white shadow-lg rounded-lg"
             style={{ minHeight: minHeight ? `${minHeight}px` : undefined }}

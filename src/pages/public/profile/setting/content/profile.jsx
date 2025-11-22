@@ -162,11 +162,9 @@ export default function Profile() {
         ...oldUser.detail,
         expertise: updatedFields.job,
         about: updatedFields.aboutMe,
-        // update photo jika ada
         ...(updatedFields.photo_profile && { photo_profile: updatedFields.photo_profile }),
         ...(updatedFields.photo_cover && { photo_cover: updatedFields.photo_cover }),
       },
-      // update photo_profile jika ada
       ...(updatedFields.photo_profile && { photo_profile: updatedFields.photo_profile }),
     };
     localStorage.setItem('userData', JSON.stringify(newUser));

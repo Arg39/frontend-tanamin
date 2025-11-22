@@ -29,7 +29,7 @@ export default function ModuleList({ editable }) {
   const { updateLessonOrder, deleteLesson } = useLessonStore();
 
   const effectiveEditable = useMemo(
-    () => (statusCourse === 'published' || statusCourse === 'awaiting_approval' ? false : editable),
+    () => (statusCourse === 'published' ? false : editable),
     [statusCourse, editable]
   );
 
